@@ -330,6 +330,200 @@
     .footer-copy { font-size: 12px; }
     .footer-disc { font-size: 11px; color: rgba(255,255,255,.25); max-width: 580px; line-height: 1.65; }
 
+    /* ═══ EMBEDDED DIME CALCULATOR ═══ */
+    .dime-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .dime-progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .dime-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all .3s;
+    }
+    .dime-dot-active { background: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.12); transform: scale(1.2); }
+    .dime-dot-done   { background: #1e7d4f; }
+
+    .dime-card {
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 36px;
+      display: none;
+      animation: dimeSlide .32s ease;
+      box-shadow: var(--sh-sm);
+    }
+    .dime-card.dime-active { display: block; }
+    @keyframes dimeSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dime-card-hd {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 26px; padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dime-ico {
+      width: 42px; height: 42px;
+      border-radius: 10px; background: var(--navy-lt);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .dime-card-title { font-family: 'Lora', serif; font-size: 18px; color: var(--text); margin-bottom: 3px; }
+    .dime-card-desc  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .dime-field { margin-bottom: 18px; }
+    .dime-label {
+      display: block; font-size: 11px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .dime-input-wrap { position: relative; }
+    .dime-prefix {
+      position: absolute; left: 13px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted); font-weight: 600; font-size: 14px;
+      pointer-events: none;
+    }
+    .dime-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 13px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+    .dime-input::-webkit-inner-spin-button,
+    .dime-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .dime-input.dime-has-prefix { padding-left: 30px; }
+    .dime-input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: #fff; }
+    .dime-select { cursor: pointer; }
+    .dime-hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+    .dime-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .dime-divider-row { border-top: 1px solid var(--border); margin: 14px 0 18px; }
+
+    .dime-toggle-group {
+      display: flex; border: 1.5px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+      margin-bottom: 18px; background: var(--bg);
+    }
+    .dime-toggle {
+      flex: 1; padding: 11px;
+      background: transparent; color: var(--muted);
+      border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      transition: all .2s;
+    }
+    .dime-toggle:first-child { border-right: 1.5px solid var(--border); }
+    .dime-toggle-active { background: var(--navy); color: #fff; }
+
+    .dime-info-box {
+      background: #d4eddf; border: 1px solid rgba(30,125,79,.2);
+      border-radius: 8px; padding: 12px 15px;
+      font-size: 13px; color: #1a5e3a;
+      line-height: 1.6; margin-bottom: 16px;
+    }
+    .dime-info-box strong { color: #1e7d4f; }
+
+    .dime-btn-group { display: flex; gap: 10px; margin-top: 8px; }
+    .dime-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 48px; padding: 0 22px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; border: none; line-height: 1;
+      transition: all .2s;
+    }
+    .dime-btn-primary  { background: var(--navy); color: #fff; flex: 1; }
+    .dime-btn-primary:hover  { background: #264060; transform: translateY(-1px); }
+    .dime-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+    .dime-btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* Results */
+    .dime-results {
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 36px;
+      display: none;
+      animation: dimeSlide .35s ease;
+      box-shadow: var(--sh-sm);
+    }
+    .dime-results.dime-active { display: block; }
+
+    .dime-result-total {
+      text-align: center; padding: 28px;
+      background: var(--navy); border-radius: var(--r-lg);
+      margin-bottom: 28px;
+    }
+    .dime-result-label  { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 10px; }
+    .dime-result-amount { font-family: 'Lora', serif; font-size: clamp(32px,7vw,52px); color: #fff; line-height: 1; margin-bottom: 6px; }
+    .dime-result-sub    { font-size: 12px; color: rgba(255,255,255,.45); }
+
+    .dime-breakdown-title { font-family: 'Lora', serif; font-size: 17px; color: var(--text); margin-bottom: 14px; }
+    .dime-b-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .dime-b-item:last-child { border-bottom: none; }
+    .dime-b-left { display: flex; align-items: center; gap: 11px; }
+    .dime-b-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .dime-b-name { font-size: 13.5px; color: var(--text); font-weight: 500; }
+    .dime-b-note { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .dime-b-val  { font-size: 14px; font-weight: 600; color: var(--navy); }
+
+    .dime-bar-chart { margin: 16px 0 20px; }
+    .dime-bar-row   { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .dime-bar-lbl   { font-size: 11px; color: var(--muted); width: 70px; flex-shrink: 0; text-align: right; }
+    .dime-bar-track { flex: 1; height: 7px; background: var(--bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .dime-bar-fill  { height: 100%; border-radius: 20px; transition: width 1s cubic-bezier(.16,1,.3,1); }
+    .dime-bar-amt   { font-size: 11px; color: var(--text); width: 80px; flex-shrink: 0; text-align: right; font-weight: 600; }
+
+    .dime-offset-row { display: flex; justify-content: space-between; padding: 13px 15px; background: #fdf0ee; border-radius: 8px; margin-top: 10px; }
+    .dime-offset-label { color: var(--muted); font-size: 13.5px; }
+    .dime-offset-value { color: #c0392b; font-size: 14px; font-weight: 600; }
+    .dime-final-row  { display: flex; justify-content: space-between; align-items: center; padding: 16px 15px; background: #d4eddf; border: 1px solid rgba(30,125,79,.2); border-radius: 8px; margin-top: 8px; }
+    .dime-final-label { font-size: 14px; font-weight: 600; color: #1e7d4f; }
+    .dime-final-value { font-family: 'Lora', serif; font-size: 24px; color: #1e7d4f; }
+
+    .dime-result-cta {
+      background: var(--navy-lt);
+      border: 1px solid rgba(30,49,72,.1);
+      border-radius: var(--r-lg);
+      padding: 26px; text-align: center;
+      margin-top: 24px;
+    }
+    .dime-result-cta-title { font-family: 'Lora', serif; font-size: 19px; color: var(--text); margin-bottom: 7px; }
+    .dime-result-cta-text  { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .dime-result-cta-btns  { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .dime-cta-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 48px; padding: 0 22px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; line-height: 1;
+      transition: all .2s;
+    }
+    .dime-cta-primary  { background: var(--orange); color: #fff; border: 2px solid var(--orange); }
+    .dime-cta-primary:hover { background: var(--orange-h); border-color: var(--orange-h); color: #fff; transform: translateY(-1px); }
+    .dime-cta-secondary { background: #fff; color: var(--navy); border: 2px solid var(--border); }
+    .dime-cta-secondary:hover { border-color: var(--navy); color: var(--navy); }
+    .dime-full-link { display: block; font-size: 12px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; margin-bottom: 6px; }
+    .dime-full-link:hover { color: var(--navy); }
+    .dime-restart { display: block; text-align: center; margin-top: 16px; font-size: 12.5px; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .dime-restart:hover { color: var(--navy); }
+
     @media (max-width: 1020px) {
       .page-hero-inner { grid-template-columns: 1fr; }
       .hero-cta-card { display: none; }
@@ -344,6 +538,7 @@
       .related-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
+      .dime-row { grid-template-columns: 1fr; }
       .sec { padding: 60px 0; }
       .moments-grid { grid-template-columns: 1fr; }
       .related-grid { grid-template-columns: 1fr; }
@@ -414,7 +609,7 @@
         <div class="hero-cta-card-title">Get a Life Insurance Quote</div>
         <div class="hero-cta-card-sub">Or use our free calculator to estimate your needs first.</div>
         <a href="/contact.html" class="btn btn-primary">Request a Quote</a>
-        <a href="/life-insurance-calculator.html" class="btn btn-ghost-w">Try the Calculator</a>
+        <a href="https://lifecalculator.thescheiderichagency.com" class="btn btn-ghost-w">Try the Calculator</a>
         <div class="hero-cta-card-divider">— or call us directly —</div>
         <div class="hero-cta-phone-lbl">Direct line</div>
         <a href="tel:7702684418" class="hero-cta-phone">770-268-4418</a>
@@ -434,7 +629,7 @@
         <p>The number one reason Georgia families delay life insurance is cost — and the number one surprise they have when they actually get a quote is how affordable it is. <strong>A healthy person in their 30s can often get $500,000 in coverage for less than the cost of a monthly streaming subscription.</strong></p>
         <p>The real cost is not the premium. The real cost is waiting. <strong>Life insurance rates are based on your age and health at the time you purchase.</strong> Every year you wait, the rate goes up. A policy purchased at 30 will cost meaningfully less than the same policy purchased at 40 — and the difference compounds over the life of the policy.</p>
         <p>This is a conversation worth having when you are buying a home, when you have your first child, or when you start a business. These are the moments when the people around you need protecting — and when getting the right coverage is most straightforward and most affordable.</p>
-        <a href="/life-insurance-calculator.html" class="btn btn-primary">Try Our Free Life Insurance Calculator</a>
+        <a href="https://lifecalculator.thescheiderichagency.com" class="btn btn-primary">Try Our Free Life Insurance Calculator</a>
       </div>
       <div class="afford-card">
         <div class="afford-card-inner">
@@ -632,20 +827,240 @@
 </section>
 
 
-<!-- CALCULATOR CTA -->
-<section class="sec sec-w">
+<!-- ═══════════════════════════════════════════════
+     EMBEDDED DIME CALCULATOR
+═══════════════════════════════════════════════ -->
+<section class="sec sec-w" id="calculator" aria-labelledby="calc-h2">
   <div class="container">
-    <div class="calc-cta">
-      <div class="calc-cta-inner">
-        <h3>Not Sure How Much Coverage You Need?</h3>
-        <p>Our free life insurance calculator walks you through income replacement, mortgage balance, dependents, and other factors to give you a personalized coverage estimate in minutes — no personal information required to get started.</p>
-      </div>
-      <div class="calc-cta-action">
-        <a href="/life-insurance-calculator.html" class="btn btn-white">Try the Free Calculator</a>
-        <a href="/contact.html" class="btn btn-ghost-w">Or talk to our team</a>
-        <div class="calc-cta-note">Free · No obligation · Takes about 2 minutes</div>
-      </div>
+
+    <div class="sec-hd sec-hd-c">
+      <span class="label">Free tool — no sign-up required</span>
+      <h2 class="sec-title" id="calc-h2">How Much Life Insurance Does Your Family Actually Need?</h2>
+      <p class="sec-sub">Answer a few questions about your financial picture. We'll calculate your recommended coverage using the proven DIME method — in under two minutes.</p>
     </div>
+
+    <!-- Calculator shell -->
+    <div class="dime-wrap">
+
+      <!-- Progress dots -->
+      <div class="dime-progress" id="dimeProgress">
+        <div class="dime-dot dime-dot-active" id="ddot0"></div>
+        <div class="dime-dot" id="ddot1"></div>
+        <div class="dime-dot" id="ddot2"></div>
+        <div class="dime-dot" id="ddot3"></div>
+        <div class="dime-dot" id="ddot4"></div>
+      </div>
+
+      <!-- STEP 0 — Personal -->
+      <div class="dime-card dime-active" id="dstep0">
+        <div class="dime-card-hd">
+          <div class="dime-ico">👤</div>
+          <div>
+            <div class="dime-card-title">Let's start with you</div>
+            <div class="dime-card-desc">Basic information to personalize your results.</div>
+          </div>
+        </div>
+        <div class="dime-field">
+          <label class="dime-label">Your First Name</label>
+          <input type="text" id="dFirstName" class="dime-input" placeholder="e.g. Sarah" />
+        </div>
+        <div class="dime-row">
+          <div class="dime-field">
+            <label class="dime-label">Your Age</label>
+            <input type="number" id="dAge" class="dime-input" placeholder="e.g. 35" min="18" max="85" />
+          </div>
+          <div class="dime-field">
+            <label class="dime-label">Marital Status</label>
+            <select id="dMarital" class="dime-input dime-select">
+              <option value="">Select...</option>
+              <option value="married">Married / Partnered</option>
+              <option value="single">Single</option>
+            </select>
+          </div>
+        </div>
+        <div class="dime-btn-group">
+          <button class="dime-btn dime-btn-primary" onclick="dGoTo(1)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 1 — Debt -->
+      <div class="dime-card" id="dstep1">
+        <div class="dime-card-hd">
+          <div class="dime-ico">💳</div>
+          <div>
+            <div class="dime-card-title">D — Debt</div>
+            <div class="dime-card-desc">Outstanding debts your family would need to pay off. Enter 0 if not applicable.</div>
+          </div>
+        </div>
+        <div class="dime-row">
+          <div class="dime-field">
+            <label class="dime-label">Credit Card Balances</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dCreditCard" class="dime-input dime-has-prefix" placeholder="0" min="0" /></div>
+          </div>
+          <div class="dime-field">
+            <label class="dime-label">Car Loans</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dCarLoans" class="dime-input dime-has-prefix" placeholder="0" min="0" /></div>
+          </div>
+        </div>
+        <div class="dime-row">
+          <div class="dime-field">
+            <label class="dime-label">Personal / Other Loans</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dOtherDebt" class="dime-input dime-has-prefix" placeholder="0" min="0" /></div>
+          </div>
+          <div class="dime-field">
+            <label class="dime-label">Final Expense Estimate</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dFinalExpense" class="dime-input dime-has-prefix" placeholder="15000" min="0" /></div>
+            <div class="dime-hint">Funeral, burial, end-of-life costs. Average is $15,000.</div>
+          </div>
+        </div>
+        <div class="dime-btn-group">
+          <button class="dime-btn dime-btn-secondary" onclick="dGoTo(0)">← Back</button>
+          <button class="dime-btn dime-btn-primary"   onclick="dGoTo(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 — Income -->
+      <div class="dime-card" id="dstep2">
+        <div class="dime-card-hd">
+          <div class="dime-ico">💼</div>
+          <div>
+            <div class="dime-card-title">I — Income Replacement</div>
+            <div class="dime-card-desc">How much income would your family need to maintain their lifestyle?</div>
+          </div>
+        </div>
+        <div class="dime-field">
+          <label class="dime-label">Annual Household Income</label>
+          <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dIncome" class="dime-input dime-has-prefix" placeholder="75000" min="0" /></div>
+          <div class="dime-hint">The total income your family depends on today.</div>
+        </div>
+        <div class="dime-field">
+          <label class="dime-label">Years of Income Replacement Needed</label>
+          <select id="dIncomeYears" class="dime-input dime-select">
+            <option value="">Select number of years...</option>
+            <option value="5">5 years</option><option value="10">10 years</option>
+            <option value="15">15 years</option>
+            <option value="20" selected>20 years — most common</option>
+            <option value="25">25 years</option><option value="30">30 years</option>
+          </select>
+          <div class="dime-hint">Tip: Until your youngest child turns 18, or your planned retirement age — whichever is longer.</div>
+        </div>
+        <div class="dime-btn-group">
+          <button class="dime-btn dime-btn-secondary" onclick="dGoTo(1)">← Back</button>
+          <button class="dime-btn dime-btn-primary"   onclick="dGoTo(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 — Housing -->
+      <div class="dime-card" id="dstep3">
+        <div class="dime-card-hd">
+          <div class="dime-ico">🏠</div>
+          <div>
+            <div class="dime-card-title">M — Housing</div>
+            <div class="dime-card-desc">Your housing situation affects how your family would be protected.</div>
+          </div>
+        </div>
+        <label class="dime-label">Do you own or rent your home?</label>
+        <div class="dime-toggle-group">
+          <button class="dime-toggle dime-toggle-active" id="dToggleOwn"  onclick="dSetHousing('own')">🏡 I Own</button>
+          <button class="dime-toggle"                    id="dToggleRent" onclick="dSetHousing('rent')">🏢 I Rent</button>
+        </div>
+        <div id="dMortgageSection">
+          <div class="dime-field">
+            <label class="dime-label">Remaining Mortgage Balance</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dMortgage" class="dime-input dime-has-prefix" placeholder="0" min="0" /></div>
+            <div class="dime-hint">Enter 0 if your home is fully paid off.</div>
+          </div>
+        </div>
+        <div id="dRentSection" style="display:none;">
+          <div class="dime-info-box">
+            <strong>Good news:</strong> your income replacement already covers ongoing rent. We add a <strong>3-year housing buffer</strong> to give your family time to adjust and stabilize.
+          </div>
+          <div class="dime-field">
+            <label class="dime-label">Monthly Rent Payment</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dMonthlyRent" class="dime-input dime-has-prefix" placeholder="1500" min="0" /></div>
+            <div class="dime-hint">We'll multiply this by 36 months (3 years) as your housing buffer.</div>
+          </div>
+        </div>
+        <div class="dime-btn-group">
+          <button class="dime-btn dime-btn-secondary" onclick="dGoTo(2)">← Back</button>
+          <button class="dime-btn dime-btn-primary"   onclick="dGoTo(4)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 — Education & Offsets -->
+      <div class="dime-card" id="dstep4">
+        <div class="dime-card-hd">
+          <div class="dime-ico">🎓</div>
+          <div>
+            <div class="dime-card-title">E — Education &amp; Offsets</div>
+            <div class="dime-card-desc">College funding for your children, and existing assets that reduce your need.</div>
+          </div>
+        </div>
+        <div class="dime-row">
+          <div class="dime-field">
+            <label class="dime-label">Number of Children</label>
+            <input type="number" id="dNumChildren" class="dime-input" placeholder="0" min="0" max="10" />
+          </div>
+          <div class="dime-field">
+            <label class="dime-label">College Cost Per Child</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dCollegeCost" class="dime-input dime-has-prefix" placeholder="100000" min="0" /></div>
+            <div class="dime-hint">Average 4-year public university ~$100,000.</div>
+          </div>
+        </div>
+        <div class="dime-divider-row"></div>
+        <div class="dime-card-desc" style="margin-bottom:14px;">Subtract assets your family already has — these reduce how much new coverage you need.</div>
+        <div class="dime-row">
+          <div class="dime-field">
+            <label class="dime-label">Existing Life Insurance</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dExistingIns" class="dime-input dime-has-prefix" placeholder="0" min="0" /></div>
+            <div class="dime-hint">Group policy through work, etc.</div>
+          </div>
+          <div class="dime-field">
+            <label class="dime-label">Liquid Savings / Investments</label>
+            <div class="dime-input-wrap"><span class="dime-prefix">$</span><input type="number" id="dSavings" class="dime-input dime-has-prefix" placeholder="0" min="0" /></div>
+            <div class="dime-hint">Emergency fund, brokerage accounts.</div>
+          </div>
+        </div>
+        <div class="dime-btn-group">
+          <button class="dime-btn dime-btn-secondary" onclick="dGoTo(3)">← Back</button>
+          <button class="dime-btn dime-btn-primary"   onclick="dCalculate()">Calculate My Coverage →</button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="dime-results" id="dResults">
+        <div class="dime-result-total">
+          <div class="dime-result-label">Recommended Death Benefit</div>
+          <div class="dime-result-amount" id="dTotalDisplay">$0</div>
+          <div class="dime-result-sub">Based on your DIME analysis</div>
+        </div>
+
+        <div class="dime-breakdown-title">How We Got There</div>
+        <div class="dime-bar-chart" id="dBarChart"></div>
+        <div id="dBreakdownList"></div>
+
+        <div class="dime-offset-row">
+          <span class="dime-offset-label">Less: Existing Assets</span>
+          <span class="dime-offset-value" id="dOffsetDisplay">-$0</span>
+        </div>
+        <div class="dime-final-row">
+          <span class="dime-final-label">Your Coverage Gap</span>
+          <span class="dime-final-value" id="dFinalDisplay">$0</span>
+        </div>
+
+        <div class="dime-result-cta">
+          <div class="dime-result-cta-title">Ready to find the right policy, <span id="dCtaName"></span>?</div>
+          <div class="dime-result-cta-text">This estimate is your starting point. Our local team in Buford can help you find the right coverage at the right price — often for less than you'd expect.</div>
+          <div class="dime-result-cta-btns">
+            <a href="/contact.html"       class="dime-cta-btn dime-cta-primary">Request a Quote</a>
+            <a href="tel:+17702684418"    class="dime-cta-btn dime-cta-secondary">📞 770-268-4418</a>
+          </div>
+          <a href="/life-insurance-calculator.html" class="dime-full-link">Open full calculator page →</a>
+        </div>
+        <span class="dime-restart" onclick="dRestart()">← Start Over</span>
+      </div>
+
+    </div><!-- /dime-wrap -->
   </div>
 </section>
 
@@ -661,7 +1076,7 @@
     <div class="faq-list" role="list">
       <div class="faq-item" role="listitem">
         <div class="faq-q">How much does life insurance cost in Georgia?</div>
-        <div class="faq-a">Life insurance is significantly more affordable than most people expect. A healthy 30-year-old can often get $500,000 in term coverage for well under $30 per month. Rates are based on age, health, coverage amount, and policy type — and they lock in at purchase. The longer you wait, the higher the rate. Use our <a href="/life-insurance-calculator.html" style="color:var(--navy);font-weight:600;">free calculator</a> for a personalized estimate, or call us directly.</div>
+        <div class="faq-a">Life insurance is significantly more affordable than most people expect. A healthy 30-year-old can often get $500,000 in term coverage for well under $30 per month. Rates are based on age, health, coverage amount, and policy type — and they lock in at purchase. The longer you wait, the higher the rate. Use our <a href="https://lifecalculator.thescheiderichagency.com" style="color:var(--navy);font-weight:600;">free calculator</a> for a personalized estimate, or call us directly.</div>
       </div>
       <div class="faq-item" role="listitem">
         <div class="faq-q">What is the difference between term and whole life insurance?</div>
@@ -669,7 +1084,7 @@
       </div>
       <div class="faq-item" role="listitem">
         <div class="faq-q">How much life insurance do I need?</div>
-        <div class="faq-a">A common starting point is 10 to 12 times your annual income, but the right amount depends on your mortgage balance, number of dependents, your spouse's income, and how many years until your children are financially independent. Our <a href="/life-insurance-calculator.html" style="color:var(--navy);font-weight:600;">free life insurance calculator</a> can give you a personalized estimate in minutes.</div>
+        <div class="faq-a">A common starting point is 10 to 12 times your annual income, but the right amount depends on your mortgage balance, number of dependents, your spouse's income, and how many years until your children are financially independent. Our <a href="https://lifecalculator.thescheiderichagency.com" style="color:var(--navy);font-weight:600;">free life insurance calculator</a> can give you a personalized estimate in minutes.</div>
       </div>
       <div class="faq-item" role="listitem">
         <div class="faq-q">When is the best time to buy life insurance?</div>
@@ -711,7 +1126,7 @@
           <div class="related-card-sub">Make sure your family is protected on the road</div>
         </div>
       </a>
-      <a href="/life-insurance-calculator.html" class="related-card">
+      <a href="https://lifecalculator.thescheiderichagency.com" class="related-card">
         <div class="related-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
         <div>
           <div class="related-card-title">Life Insurance Calculator</div>
@@ -734,7 +1149,7 @@
       </div>
       <div class="cta-actions">
         <a href="/contact.html" class="btn btn-primary">Request a Quote</a>
-        <a href="/life-insurance-calculator.html" class="btn btn-white">Try the Calculator</a>
+        <a href="https://lifecalculator.thescheiderichagency.com" class="btn btn-white">Try the Calculator</a>
         <div class="cta-divider">— or call us —</div>
         <div>
           <div class="cta-phone-lbl">Direct line</div>
@@ -779,7 +1194,7 @@
         <ul class="footer-links">
           <li><a href="/about.html">About Our Team</a></li>
           <li><a href="/contact.html">Contact Us</a></li>
-          <li><a href="/life-insurance-calculator.html">Life Calculator</a></li>
+          <li><a href="https://lifecalculator.thescheiderichagency.com">Life Calculator</a></li>
         </ul>
       </div>
       <div>
@@ -801,5 +1216,155 @@
   </div>
 </footer>
 
+<script>
+/* ═══════════════════════════════════════════
+   EMBEDDED DIME CALCULATOR — life-insurance.html
+═══════════════════════════════════════════ */
+(function() {
+  let dStep = 0;
+  let dHousing = 'own';
+  const COLORS = ['#1e3148','#1e7d4f','#2563a8','#c0392b'];
+
+  function dFmt(n) {
+    if (n >= 1000000) return '$' + (n/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+    if (n >= 1000)    return '$' + Math.round(n/1000) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+  function dFmtFull(n) {
+    return '$' + Math.round(n).toLocaleString();
+  }
+  function dVal(id, fallback) {
+    const v = parseFloat(document.getElementById(id)?.value);
+    return isNaN(v) ? (fallback ?? 0) : v;
+  }
+
+  window.dGoTo = function(step) {
+    const prev = document.getElementById('dstep' + dStep);
+    if (prev) prev.classList.remove('dime-active');
+    document.getElementById('dResults').classList.remove('dime-active');
+
+    for (let i = 0; i <= 4; i++) {
+      const d = document.getElementById('ddot' + i);
+      if (!d) continue;
+      d.className = 'dime-dot';
+      if (i < step) d.classList.add('dime-dot-done');
+      if (i === step) d.classList.add('dime-dot-active');
+    }
+    dStep = step;
+    const el = document.getElementById('dstep' + step);
+    if (el) {
+      el.classList.add('dime-active');
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  window.dSetHousing = function(mode) {
+    dHousing = mode;
+    document.getElementById('dToggleOwn').classList.toggle('dime-toggle-active',  mode === 'own');
+    document.getElementById('dToggleRent').classList.toggle('dime-toggle-active', mode === 'rent');
+    document.getElementById('dMortgageSection').style.display = mode === 'own'  ? 'block' : 'none';
+    document.getElementById('dRentSection').style.display     = mode === 'rent' ? 'block' : 'none';
+  };
+
+  window.dCalculate = function() {
+    const creditCard = dVal('dCreditCard');
+    const carLoans   = dVal('dCarLoans');
+    const otherDebt  = dVal('dOtherDebt');
+    const finalExp   = dVal('dFinalExpense', 15000);
+    const debt       = creditCard + carLoans + otherDebt + finalExp;
+
+    const income      = dVal('dIncome');
+    const incomeYears = dVal('dIncomeYears', 20);
+    const incomeTotal = income * incomeYears;
+
+    let housing = 0;
+    if (dHousing === 'own') {
+      housing = dVal('dMortgage');
+    } else {
+      housing = dVal('dMonthlyRent', 0) * 36;
+    }
+
+    const numChildren = dVal('dNumChildren');
+    const collegeCost = dVal('dCollegeCost', 100000);
+    const education   = numChildren * collegeCost;
+
+    const gross   = debt + incomeTotal + housing + education;
+    const offsets = dVal('dExistingIns') + dVal('dSavings');
+    const net     = Math.max(0, gross - offsets);
+
+    const name = (document.getElementById('dFirstName')?.value || '').trim();
+
+    // Hide current step, mark all dots done
+    const prev = document.getElementById('dstep' + dStep);
+    if (prev) prev.classList.remove('dime-active');
+    for (let i = 0; i <= 4; i++) {
+      const d = document.getElementById('ddot' + i);
+      if (d) { d.className = 'dime-dot dime-dot-done'; }
+    }
+
+    document.getElementById('dTotalDisplay').textContent  = dFmtFull(gross);
+    document.getElementById('dOffsetDisplay').textContent = '-' + dFmtFull(offsets);
+    document.getElementById('dFinalDisplay').textContent  = dFmtFull(net);
+    document.getElementById('dCtaName').textContent       = name || 'You';
+
+    // Bar chart
+    const items = [
+      { label: 'Debt',      value: debt,        color: COLORS[0] },
+      { label: 'Income',    value: incomeTotal,  color: COLORS[1] },
+      { label: 'Housing',   value: housing,      color: COLORS[2] },
+      { label: 'Education', value: education,    color: COLORS[3] },
+    ];
+    const maxVal = Math.max(...items.map(i => i.value), 1);
+    document.getElementById('dBarChart').innerHTML = items.map(item => `
+      <div class="dime-bar-row">
+        <div class="dime-bar-lbl">${item.label}</div>
+        <div class="dime-bar-track">
+          <div class="dime-bar-fill" style="width:${(item.value/maxVal*100).toFixed(1)}%;background:${item.color}"></div>
+        </div>
+        <div class="dime-bar-amt">${dFmt(item.value)}</div>
+      </div>`).join('');
+
+    // Breakdown list
+    const breakItems = [
+      { name: 'Debt &amp; Final Expenses', note: 'Credit cards, loans, funeral costs', value: debt,       color: COLORS[0] },
+      { name: 'Income Replacement',        note: `${Math.round(incomeYears)} yrs × ${dFmtFull(income)}/yr`, value: incomeTotal, color: COLORS[1] },
+      { name: dHousing === 'own' ? 'Mortgage Payoff' : 'Housing Buffer', note: dHousing === 'own' ? 'Remaining balance' : '36 months rent', value: housing, color: COLORS[2] },
+      { name: 'Education Fund',            note: `${Math.round(numChildren)} ${numChildren===1?'child':'children'} × ${dFmtFull(collegeCost)}`, value: education, color: COLORS[3] },
+    ];
+    document.getElementById('dBreakdownList').innerHTML = breakItems.map(item => `
+      <div class="dime-b-item">
+        <div class="dime-b-left">
+          <div class="dime-b-dot" style="background:${item.color}"></div>
+          <div>
+            <div class="dime-b-name">${item.name}</div>
+            <div class="dime-b-note">${item.note}</div>
+          </div>
+        </div>
+        <div class="dime-b-val">${dFmtFull(item.value)}</div>
+      </div>`).join('');
+
+    const res = document.getElementById('dResults');
+    res.classList.add('dime-active');
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.dRestart = function() {
+    document.getElementById('dResults').classList.remove('dime-active');
+    ['dFirstName','dAge','dMarital','dCreditCard','dCarLoans','dOtherDebt',
+     'dFinalExpense','dIncome','dIncomeYears','dMortgage','dMonthlyRent',
+     'dNumChildren','dCollegeCost','dExistingIns','dSavings'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    const iy = document.getElementById('dIncomeYears');
+    if (iy) iy.value = '20';
+    dSetHousing('own');
+    dGoTo(0);
+  };
+
+  // Init
+  dSetHousing('own');
+})();
+</script>
 </body>
 </html>
