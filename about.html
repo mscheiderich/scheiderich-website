@@ -171,28 +171,31 @@
     }
     .intro-content p:last-of-type { margin-bottom: 40px; }
 
-    /* Values strip — 4 col on wide, 2 on mid, 1 on mobile */
     .values-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
     }
     .value-item {
-      display: flex; gap: 14px; align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
       background: var(--bg-w);
       border: 1px solid var(--border);
       border-radius: var(--r);
-      padding: 18px 16px;
+      padding: 22px 18px;
     }
     .value-ico {
-      width: 40px; height: 40px;
-      border-radius: 9px; background: var(--navy-lt);
+      width: 44px; height: 44px;
+      border-radius: 10px; background: var(--navy-lt);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      margin-bottom: 12px;
     }
-    .value-ico svg { width: 18px; height: 18px; color: var(--navy); }
-    .value-title { font-family: 'Lora', serif; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-    .value-body  { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+    .value-ico svg { width: 20px; height: 20px; color: var(--navy); }
+    .value-title { font-family: 'Lora', serif; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .value-body  { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
     /* Team grid — 3 col */
     .team-grid {
@@ -254,17 +257,19 @@
     .stats-bar {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      margin-bottom: 0;
+      gap: 16px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      overflow: visible;
     }
     .stat-cell {
       background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
       padding: 36px 24px;
       text-align: center;
+      box-shadow: var(--sh-sm);
     }
     .stat-num {
       font-family: 'Lora', serif;
@@ -510,6 +515,8 @@
 
     <div class="team-grid">
 
+      <!-- Row 1: Mike, Crissy, Iris -->
+
       <!-- Mike -->
       <div class="team-card featured">
         <div class="team-photo">
@@ -545,40 +552,6 @@
         </div>
       </div>
 
-      <!-- Scott -->
-      <div class="team-card">
-        <div class="team-photo">
-          <img src="scott-kesler.png"
-               alt="Scott Kesler, licensed insurance agent at The Scheiderich Agency" />
-        </div>
-        <div class="team-body">
-          <div class="team-name">Scott Kesler</div>
-          <div class="team-title">Licensed Insurance Agent</div>
-          <p class="team-bio">Scott focuses on helping clients navigate coverage decisions efficiently and accurately. He is detail-oriented, responsive, and committed to addressing insurance considerations early. Scott operates within a team structure that prioritizes clarity and continuity for every client relationship.</p>
-          <div class="team-loc">
-            <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
-            Buford, GA
-          </div>
-        </div>
-      </div>
-
-      <!-- Mark -->
-      <div class="team-card">
-        <div class="team-photo">
-          <img src="mark-hill.png"
-               alt="Mark Hill, licensed insurance agent at The Scheiderich Agency" />
-        </div>
-        <div class="team-body">
-          <div class="team-name">Mark Hill</div>
-          <div class="team-title">Licensed Insurance Agent</div>
-          <p class="team-bio">Mark is a seasoned insurance professional with a global perspective and a natural ability to connect with people from diverse backgrounds. His approachable communication style and problem-solving mindset help ensure coverage decisions stay aligned with each client's needs and timeline.</p>
-          <div class="team-loc">
-            <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
-            Buford, GA
-          </div>
-        </div>
-      </div>
-
       <!-- Iris -->
       <div class="team-card">
         <div class="team-photo">
@@ -597,6 +570,25 @@
         </div>
       </div>
 
+      <!-- Row 2: Mark, Wendy, Scott -->
+
+      <!-- Mark -->
+      <div class="team-card">
+        <div class="team-photo">
+          <img src="mark-hill.png"
+               alt="Mark Hill, licensed insurance agent at The Scheiderich Agency" />
+        </div>
+        <div class="team-body">
+          <div class="team-name">Mark Hill</div>
+          <div class="team-title">Licensed Insurance Agent</div>
+          <p class="team-bio">Mark is a seasoned insurance professional with a global perspective and a natural ability to connect with people from diverse backgrounds. His approachable communication style and problem-solving mindset help ensure coverage decisions stay aligned with each client's needs and timeline.</p>
+          <div class="team-loc">
+            <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
+            Buford, GA
+          </div>
+        </div>
+      </div>
+
       <!-- Wendy -->
       <div class="team-card">
         <div class="team-photo">
@@ -608,6 +600,23 @@
           <div class="team-name">Wendy Alaniz</div>
           <div class="team-title">Licensed Customer Service Rep · Bilingual (EN/ES)</div>
           <p class="team-bio">Wendy is often the first point of contact for clients reaching out to the agency. Fully bilingual in English and Spanish, she is known for her friendly, professional approach, strong follow-up, and ability to help clients feel understood and supported from the very first interaction.</p>
+          <div class="team-loc">
+            <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
+            Buford, GA
+          </div>
+        </div>
+      </div>
+
+      <!-- Scott -->
+      <div class="team-card">
+        <div class="team-photo">
+          <img src="scott-kesler.png"
+               alt="Scott Kesler, licensed insurance agent at The Scheiderich Agency" />
+        </div>
+        <div class="team-body">
+          <div class="team-name">Scott Kesler</div>
+          <div class="team-title">Licensed Insurance Agent</div>
+          <p class="team-bio">Scott focuses on helping clients navigate coverage decisions efficiently and accurately. He is detail-oriented, responsive, and committed to addressing insurance considerations early. Scott operates within a team structure that prioritizes clarity and continuity for every client relationship.</p>
           <div class="team-loc">
             <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
             Buford, GA
