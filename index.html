@@ -732,11 +732,15 @@
     .cta-sub   { font-size: 16px; color: rgba(255,255,255,.6); max-width: 540px; }
     .cta-actions {
       display: flex; flex-direction: column;
-      gap: 10px; align-items: stretch;
-      flex-shrink: 0; min-width: 210px;
+      gap: 10px; align-items: center;
+      text-align: center;
+      flex-shrink: 0;
+      width: 260px;
     }
-    .cta-divider { text-align: center; font-size: 11px; color: rgba(255,255,255,.3); letter-spacing: .05em; }
-    .cta-phone-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.38); margin-bottom: 4px; text-align:center; }
+    /* Buttons inside CTA block always fill the fixed container */
+    .cta-actions .btn { width: 100%; }
+    .cta-divider { text-align: center; font-size: 11px; color: rgba(255,255,255,.3); letter-spacing: .05em; width: 100%; }
+    .cta-phone-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.38); margin-bottom: 4px; text-align: center; }
     .cta-phone {
       font-family: 'Lora', serif; font-size: 22px;
       color: #fff; font-weight: 600; text-decoration: none;
@@ -821,7 +825,7 @@
       .proc-grid::before { display: none; }
       .area-grid { grid-template-columns: 1fr; }
       .cta-inner { grid-template-columns: 1fr; }
-      .cta-actions { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+      .cta-actions { align-items: center; text-align: center; }
       .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
     }
     @media (max-width: 680px) {
@@ -1354,8 +1358,8 @@
         <p class="cta-sub">Whether you are shopping for the first time or reviewing what you have, our team makes the process straightforward. Reach out and we will take it from there.</p>
       </div>
       <div class="cta-actions">
-        <a href="/contact.html" class="btn btn-primary btn-full">Request a Quote</a>
-        <a href="/contact.html" class="btn btn-white btn-full">Schedule a Review</a>
+        <a href="/contact.html" class="btn btn-primary">Request a Quote</a>
+        <a href="/contact.html" class="btn btn-white">Schedule a Review</a>
         <div class="cta-divider">— or call us —</div>
         <div>
           <div class="cta-phone-lbl">Direct line</div>
