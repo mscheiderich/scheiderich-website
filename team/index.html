@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DD Tracker | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:     #1e3148;
+      --navy-mid: #264060;
+      --navy-lt:  #e8edf4;
+      --orange:   #d9682a;
+      --orange-h: #bf5821;
+      --bg:       #f6f4f1;
+      --bg-w:     #ffffff;
+      --bg-s:     #eeebe6;
+      --text:     #1c2330;
+      --muted:    #5f6b79;
+      --border:   #dedad4;
+      --r:        8px;
+      --r-lg:     12px;
+      --sh-sm:    0 1px 4px rgba(30,49,72,.07);
+      --sh-md:    0 4px 16px rgba(30,49,72,.11);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .app-header { background: var(--navy); padding: 0 24px; }
+    .app-header-row {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      gap: 16px;
+    }
+    .app-logo {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .app-title {
+      font-size: 13px;
+      color: rgba(255,255,255,.55);
+      font-weight: 500;
+      flex: 1;
+      text-align: center;
+    }
+    .header-actions { display: flex; gap: 10px; flex-shrink: 0; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .18s, border-color .18s, color .18s;
+      text-decoration: none;
+    }
+    .btn-primary   { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .btn-primary:hover { background: var(--orange-h); border-color: var(--orange-h); }
+    .btn-outline-w { background: transparent; color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.35); }
+    .btn-outline-w:hover { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.6); }
+    .btn-outline   { background: transparent; color: var(--navy); border-color: var(--border); }
+    .btn-outline:hover { border-color: var(--navy); background: var(--navy-lt); }
+    .btn-danger    { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .btn-danger:hover { background: #b91c1c; }
+
+    /* ── STAT BAR ── */
+    .stat-bar {
+      background: var(--navy-mid);
+      padding: 12px 24px;
+      display: flex;
+      gap: 12px;
+    }
+    .stat-card {
+      flex: 1;
+      border-radius: var(--r);
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .stat-card:hover { opacity: .88; transform: translateY(-1px); }
+    .stat-card.active { border-color: rgba(255,255,255,.65); }
+    .stat-card.s-overdue  { background: #dc2626; }
+    .stat-card.s-due-soon { background: #ea580c; }
+    .stat-card.s-pending  { background: #d97706; }
+    .stat-card.s-complete { background: #16a34a; }
+    .stat-num { font-family: 'Lora', serif; font-size: 28px; font-weight: 700; color: #fff; line-height: 1; }
+    .stat-lbl { font-size: 11px; color: rgba(255,255,255,.82); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-top: 4px; }
+
+    /* ── ERROR BANNER ── */
+    .error-banner {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 11px 24px;
+      font-size: 13.5px;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .error-banner.visible { display: flex; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: var(--bg-w);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      height: 32px;
+      padding: 0 13px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-lt); }
+    .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .filter-search {
+      height: 32px;
+      padding: 0 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg-w);
+      width: 190px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .filter-search:focus { border-color: var(--navy); }
+    .filter-select {
+      height: 32px;
+      padding: 0 8px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg-w);
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-select:focus { border-color: var(--navy); }
+    .filter-spacer { flex: 1; }
+    .record-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead {
+      background: var(--bg-s);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    th {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    tbody tr { border-left: 3px solid transparent; }
+    tbody tr:nth-child(even) { background: #faf9f7; }
+    tbody tr:hover { background: #eef2f8; cursor: pointer; }
+    tbody tr.row-overdue  { border-left-color: #dc2626; }
+    tbody tr.row-due-soon { border-left-color: var(--orange); }
+
+    .client-name { font-weight: 600; color: var(--text); }
+    .days-overdue  { color: #dc2626; font-weight: 700; }
+    .days-due-soon { color: var(--orange); font-weight: 600; }
+    .date-overdue  { color: #dc2626; font-weight: 700; }
+    .date-due-soon { color: #ea580c; font-weight: 600; }
+
+    .icon-check { color: #16a34a; }
+    .icon-x     { color: #dc2626; }
+    .icon-dash  { color: var(--border); }
+    .icon-click { cursor: pointer; transition: opacity .15s; display: inline-block; font-size: 15px; }
+    .icon-click:hover { opacity: .65; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .badge-overdue  { background: #fee2e2; color: #dc2626; }
+    .badge-due-soon { background: #ffedd5; color: #ea580c; }
+    .badge-pending  { background: #fef3c7; color: #92400e; }
+    .badge-complete { background: #dcfce7; color: #15803d; }
+    .badge-removed  { background: #f1f5f9; color: #64748b; }
+
+    .action-btns { display: flex; gap: 5px; }
+    .btn-action {
+      width: 28px; height: 28px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: var(--bg-w);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, color .15s, border-color .15s;
+      font-size: 13px;
+    }
+    .btn-action:hover        { background: var(--navy-lt); color: var(--navy); border-color: var(--navy); }
+    .btn-action.delete:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+    /* ── STATES ── */
+    .loading-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 80px 24px;
+      gap: 16px;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--muted); }
+    .empty-icon  { font-size: 36px; margin-bottom: 12px; opacity: .4; }
+    .clear-link  { color: var(--navy); font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,28,45,.55);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bg-w);
+      border-radius: var(--r-lg);
+      box-shadow: 0 20px 60px rgba(15,28,45,.3);
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(12px);
+      transition: transform .2s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-sm { max-width: 420px; }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: var(--bg-w); z-index: 1;
+    }
+    .modal-title { font-family: 'Lora', serif; font-size: 18px; font-weight: 700; color: var(--text); }
+    .modal-close {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: none; background: var(--bg-s);
+      color: var(--muted); cursor: pointer;
+      font-size: 15px; display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text); }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px 20px;
+      border-top: 1px solid var(--border);
+      gap: 12px;
+      position: sticky; bottom: 0; background: var(--bg-w);
+    }
+
+    /* ── FORM ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      height: 36px;
+      padding: 0 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: var(--text);
+      background: var(--bg-w);
+      outline: none;
+      transition: border-color .15s;
+    }
+    textarea { height: auto; padding: 10px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: var(--navy); }
+    input.err, select.err { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,.12); }
+
+    .toggle-row { display: flex; gap: 8px; }
+    .toggle-opt {
+      flex: 1;
+      height: 36px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-w);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .toggle-opt.yes { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .toggle-opt.no  { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+    .status-display {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--bg-s);
+      color: var(--muted);
+      border: 1.5px solid var(--border);
+    }
+
+    /* ── TOAST ── */
+    .toast-container {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 9999;
+      display: flex; flex-direction: column; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.18);
+      animation: toastIn .2s ease, toastOut .3s ease 2.7s forwards;
+    }
+    .toast-success { background: #16a34a; }
+    .toast-error   { background: #dc2626; }
+    @keyframes toastIn  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(4px); } }
+
+    @media (max-width: 768px) {
+      .filter-search { width: 140px; }
+      .stat-num { font-size: 22px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .app-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="app-header-row">
+    <div class="app-logo">The Scheiderich Agency</div>
+    <div class="app-title">Defensive Driving &amp; Good Student Discount Tracker</div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openAddModal()">+ Add Client</button>
+      <button class="btn btn-outline-w" onclick="refreshData()">&#8635; Refresh</button>
+    </div>
+  </div>
+</header>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat-card s-overdue"  id="stat-Overdue"          onclick="filterByStatCard('Overdue')">
+    <div class="stat-num" id="cnt-overdue">0</div>
+    <div class="stat-lbl">Overdue</div>
+  </div>
+  <div class="stat-card s-due-soon" id="stat-Due-Soon"         onclick="filterByStatCard('Due Soon')">
+    <div class="stat-num" id="cnt-due-soon">0</div>
+    <div class="stat-lbl">Due Soon</div>
+  </div>
+  <div class="stat-card s-pending"  id="stat-Pending"          onclick="filterByStatCard('Pending')">
+    <div class="stat-num" id="cnt-pending">0</div>
+    <div class="stat-lbl">Pending</div>
+  </div>
+  <div class="stat-card s-complete" id="stat-Complete"         onclick="filterByStatCard('Complete')">
+    <div class="stat-num" id="cnt-complete">0</div>
+    <div class="stat-lbl">Complete This Month</div>
+  </div>
+</div>
+
+<!-- ERROR BANNER -->
+<div class="error-banner" id="errorBanner">
+  &#9888; Unable to load data. Check your connection and refresh.
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" id="fb-all"              onclick="setStatusFilter('all')">Show All</button>
+  <button class="filter-btn"        id="fb-Overdue"          onclick="setStatusFilter('Overdue')">Overdue</button>
+  <button class="filter-btn"        id="fb-Due-Soon"         onclick="setStatusFilter('Due Soon')">Due Soon</button>
+  <button class="filter-btn"        id="fb-Pending"          onclick="setStatusFilter('Pending')">Pending</button>
+  <button class="filter-btn"        id="fb-Complete"         onclick="setStatusFilter('Complete')">Complete</button>
+  <button class="filter-btn"        id="fb-Discount-Removed" onclick="setStatusFilter('Discount Removed')">Discount Removed</button>
+  <input  class="filter-search" type="text" id="searchInput" placeholder="Search name, producer&#8230;" oninput="renderTable()" />
+  <select class="filter-select" id="producerFilter" onchange="renderTable()">
+    <option value="">All Producers</option>
+    <option>Mike</option><option>Crissy</option><option>Iris</option>
+    <option>Mark</option><option>Wendy</option><option>Scott</option>
+  </select>
+  <div class="filter-spacer"></div>
+  <div class="record-count" id="recordCount">Loading&#8230;</div>
+</div>
+
+<!-- MAIN -->
+<div id="loadingState" class="loading-state">
+  <div class="spinner"></div>
+  <span>Loading clients&#8230;</span>
+</div>
+
+<div id="tableArea" style="display:none;">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client Name</th>
+          <th>Producer</th>
+          <th>Policy Date</th>
+          <th>Due Date</th>
+          <th>Days</th>
+          <th>DD</th>
+          <th>DD Cert</th>
+          <th>GS</th>
+          <th>GS Cert</th>
+          <th>Discount $</th>
+          <th>Thank You</th>
+          <th>Welcome Call</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="clientTableBody"></tbody>
+    </table>
+  </div>
+  <div id="emptyState" class="empty-state" style="display:none;">
+    <div class="empty-icon">&#128269;</div>
+    <p>No clients match this filter.</p>
+    <span class="clear-link" onclick="clearFilters()">Clear filters</span>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="clientModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add Client</div>
+      <button class="modal-close" onclick="closeModal('clientModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="f_firstName" placeholder="First name" />
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="f_lastName" placeholder="Last name" />
+        </div>
+        <div class="form-group">
+          <label>Producer *</label>
+          <select id="f_producer">
+            <option value="">Select agent&#8230;</option>
+            <option>Mike</option><option>Crissy</option><option>Iris</option>
+            <option>Mark</option><option>Wendy</option><option>Scott</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Discount Amount</label>
+          <input type="text" id="f_discountAmount" placeholder="$0.00" />
+        </div>
+        <div class="form-group">
+          <label>Policy Date *</label>
+          <input type="date" id="f_policyDate" oninput="autoCalcDueDate()" />
+        </div>
+        <div class="form-group">
+          <label>Due Date *</label>
+          <input type="date" id="f_dueDate" oninput="updateStatusDisplay()" />
+        </div>
+
+        <!-- DD toggle -->
+        <div class="form-group">
+          <label>Defensive Driving Discount</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-ddDiscount-Y" onclick="setToggle('ddDiscount','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-ddDiscount-N" onclick="setToggle('ddDiscount','N')">No</button>
+          </div>
+        </div>
+        <!-- DD Received — shown only when ddDiscount=Y -->
+        <div class="form-group" id="grp-ddReceived" style="display:none;">
+          <label>DD Certificate Received</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-ddReceived-Y" onclick="setToggle('ddReceived','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-ddReceived-N" onclick="setToggle('ddReceived','N')">No</button>
+          </div>
+        </div>
+
+        <!-- GS toggle -->
+        <div class="form-group">
+          <label>Good Student Discount</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-gsDiscount-Y" onclick="setToggle('gsDiscount','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-gsDiscount-N" onclick="setToggle('gsDiscount','N')">No</button>
+          </div>
+        </div>
+        <!-- GS Received — shown only when gsDiscount=Y -->
+        <div class="form-group" id="grp-gsReceived" style="display:none;">
+          <label>GS Grades Received</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-gsReceived-Y" onclick="setToggle('gsReceived','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-gsReceived-N" onclick="setToggle('gsReceived','N')">No</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Status Override</label>
+          <select id="f_statusOverride" onchange="updateStatusDisplay()">
+            <option value="">Auto-calculated</option>
+            <option value="Discount Removed">Discount Removed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Calculated Status</label>
+          <div class="status-display" id="f_statusDisplay">&#8212;</div>
+        </div>
+
+        <div class="form-group full">
+          <label>Contact Notes</label>
+          <textarea id="f_contactNote" rows="4" placeholder="Running notes on client contact attempts&#8230;"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('clientModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES MODAL -->
+<div class="modal-overlay" id="notesModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div class="modal-title" id="notesModalTitle">Update Note</div>
+      <button class="modal-close" onclick="closeModal('notesModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <textarea id="n_contactNote" rows="7" style="width:100%;" placeholder="Running notes&#8230;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('notesModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNote()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div class="modal-title">Confirm Delete</div>
+      <button class="modal-close" onclick="closeModal('deleteModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <p id="deleteMsg" style="font-size:14px; line-height:1.6; color:var(--text);"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="btn btn-danger"  onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  /* ═══════════════════════════════════════
+     CONFIGURATION
+  ═══════════════════════════════════════ */
+  const SHEET_ID   = '1GNDONX_yupxaHs4Amxr_7TwX7bJ-3djouayzIzpR79c';
+  const API_KEY    = 'AIzaSyAqfMT5AKrCEuPChn2YD2MbfT10sG660B8';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxtQwMbJ4PQuqsfSnyF7V-it3sfmfGNtsR_OJBwuQcB-M5gzbdlFj92jSAWE5ge8bD/exec';
+
+  /* ═══════════════════════════════════════
+     DATA LAYER
+  ═══════════════════════════════════════ */
+  const DataLayer = {
+    async getClients() {
+      try {
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clients!A:U?key=${API_KEY}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const rows = json.values || [];
+        if (rows.length < 2) return { success: true, data: [] };
+        const headers = rows[0];
+        const data = rows.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = row[i] !== undefined ? row[i] : ''; });
+          return obj;
+        });
+        return { success: true, data };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    async addClient(clientObj) {
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'add', client: clientObj })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        return { success: true, data: json };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    async updateClient(clientObj) {
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'update', client: clientObj })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        return { success: true, data: json };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    async deleteClient(id) {
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', id })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        return { success: true, data: json };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    }
+  };
+
+  /* ═══════════════════════════════════════
+     APP STATE
+  ═══════════════════════════════════════ */
+  let allClients   = [];
+  let statusFilter = 'all';
+  let editingId    = null;
+  let deletingId   = null;
+  let notesId      = null;
+  let formToggles  = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
+
+  /* ═══════════════════════════════════════
+     DATE HELPERS (local, never UTC)
+  ═══════════════════════════════════════ */
+  function todayMidnight() {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function parseDateLocal(str) {
+    if (!str) return null;
+    const parts = str.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) return null;
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  function formatDate(str) {
+    if (!str) return '—';
+    const d = parseDateLocal(str);
+    if (!d) return '—';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function daysUntil(dueDateStr) {
+    const today = todayMidnight();
+    const due   = parseDateLocal(dueDateStr);
+    if (!due) return null;
+    return Math.floor((due - today) / 86400000);
+  }
+
+  function addDays(dateStr, n) {
+    const d = parseDateLocal(dateStr);
+    if (!d) return '';
+    d.setDate(d.getDate() + n);
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+
+  /* ═══════════════════════════════════════
+     STATUS CALCULATION
+  ═══════════════════════════════════════ */
+  function calcStatus(c) {
+    if (c.status === 'Discount Removed') return 'Discount Removed';
+    const ddOk = c.ddDiscount !== 'Y' || c.ddReceived === 'Y';
+    const gsOk = c.gsDiscount !== 'Y' || c.gsReceived === 'Y';
+    if (ddOk && gsOk) return 'Complete';
+    const days = daysUntil(c.dueDate);
+    if (days !== null && days < 0) return 'Overdue';
+    if (days !== null && days <= 3) return 'Due Soon';
+    return 'Pending';
+  }
+
+  /* ═══════════════════════════════════════
+     SORT — priority order, never alpha
+  ═══════════════════════════════════════ */
+  const STATUS_RANK = { 'Overdue': 0, 'Due Soon': 1, 'Pending': 2, 'Complete': 3, 'Discount Removed': 4 };
+
+  function sortClients(clients) {
+    return [...clients].sort((a, b) => {
+      const sa = calcStatus(a), sb = calcStatus(b);
+      const ra = STATUS_RANK[sa] ?? 99, rb = STATUS_RANK[sb] ?? 99;
+      if (ra !== rb) return ra - rb;
+      if (sa === 'Overdue') {
+        // Most days overdue first (most negative days first)
+        return daysUntil(a.dueDate) - daysUntil(b.dueDate);
+      }
+      if (sa === 'Due Soon' || sa === 'Pending') {
+        const da = parseDateLocal(a.dueDate) || new Date(0);
+        const db = parseDateLocal(b.dueDate) || new Date(0);
+        return da - db;
+      }
+      if (sa === 'Complete') {
+        const da = a.ddReceivedDate || a.gsReceivedDate || '';
+        const db = b.ddReceivedDate || b.gsReceivedDate || '';
+        return db.localeCompare(da);
+      }
+      // Discount Removed — most recent first
+      return (b.createdAt || '').localeCompare(a.createdAt || '');
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     STATS
+  ═══════════════════════════════════════ */
+  function updateStats(clients) {
+    const now = new Date();
+    const thisMonth = now.getMonth();
+    const thisYear  = now.getFullYear();
+    let overdue = 0, dueSoon = 0, pending = 0, completeMonth = 0;
+    clients.forEach(c => {
+      const s = calcStatus(c);
+      if (s === 'Overdue')  overdue++;
+      if (s === 'Due Soon') dueSoon++;
+      if (s === 'Pending')  pending++;
+      if (s === 'Complete') {
+        const ds = c.ddReceivedDate || c.gsReceivedDate || '';
+        if (ds) {
+          const d = parseDateLocal(ds);
+          if (d && d.getMonth() === thisMonth && d.getFullYear() === thisYear) completeMonth++;
+        }
+      }
+    });
+    document.getElementById('cnt-overdue').textContent  = overdue;
+    document.getElementById('cnt-due-soon').textContent = dueSoon;
+    document.getElementById('cnt-pending').textContent  = pending;
+    document.getElementById('cnt-complete').textContent = completeMonth;
+  }
+
+  /* ═══════════════════════════════════════
+     RENDER TABLE
+  ═══════════════════════════════════════ */
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function certIcon(received, discount) {
+    if (discount !== 'Y') return '<span class="icon-dash">&#8212;</span>';
+    return received === 'Y'
+      ? '<span class="icon-check">&#10003;</span>'
+      : '<span class="icon-x">&#10007;</span>';
+  }
+
+  function discountIcon(val) {
+    return val === 'Y'
+      ? '<span class="icon-check">&#10003;</span>'
+      : '<span class="icon-dash">&#8212;</span>';
+  }
+
+  function renderTable() {
+    const search   = (document.getElementById('searchInput').value || '').toLowerCase();
+    const producer = document.getElementById('producerFilter').value;
+
+    const filtered = allClients.filter(c => {
+      const s = calcStatus(c);
+      if (statusFilter !== 'all' && s !== statusFilter) return false;
+      if (producer && c.producer !== producer) return false;
+      if (search) {
+        const hay = `${c.firstName} ${c.lastName} ${c.producer}`.toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+
+    const sorted = sortClients(filtered);
+    const tbody  = document.getElementById('clientTableBody');
+    tbody.innerHTML = '';
+
+    document.getElementById('recordCount').textContent =
+      `Showing ${sorted.length} of ${allClients.length} clients`;
+    document.getElementById('emptyState').style.display = sorted.length === 0 ? 'block' : 'none';
+
+    sorted.forEach(c => {
+      const status = calcStatus(c);
+      const days   = daysUntil(c.dueDate);
+
+      // Days cell
+      let daysHtml = '—';
+      if (days !== null) {
+        if (days < 0)
+          daysHtml = `<span class="days-overdue">${days} days</span>`;
+        else if (days <= 3)
+          daysHtml = `<span class="days-due-soon">${days} days</span>`;
+        else
+          daysHtml = `${days} days`;
+      }
+
+      // Due date class
+      let dueCls = '';
+      if (status === 'Overdue')  dueCls = 'date-overdue';
+      if (status === 'Due Soon') dueCls = 'date-due-soon';
+
+      // Badge
+      const badgeCls = {
+        'Overdue':          'badge-overdue',
+        'Due Soon':         'badge-due-soon',
+        'Pending':          'badge-pending',
+        'Complete':         'badge-complete',
+        'Discount Removed': 'badge-removed'
+      }[status] || 'badge-pending';
+
+      // Inline toggleable icons
+      const tyIcon = c.thankYouSent === 'Y'
+        ? `<span class="icon-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#10003;</span>`
+        : `<span class="icon-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#8212;</span>`;
+
+      const wcIcon = c.welcomeCallSent === 'Y'
+        ? `<span class="icon-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#10003;</span>`
+        : `<span class="icon-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#8212;</span>`;
+
+      const tr = document.createElement('tr');
+      if (status === 'Overdue')  tr.classList.add('row-overdue');
+      if (status === 'Due Soon') tr.classList.add('row-due-soon');
+
+      tr.innerHTML = `
+        <td><span class="client-name">${esc(c.firstName)} ${esc(c.lastName)}</span></td>
+        <td>${esc(c.producer)}</td>
+        <td>${formatDate(c.policyDate)}</td>
+        <td class="${dueCls}">${formatDate(c.dueDate)}</td>
+        <td>${daysHtml}</td>
+        <td>${discountIcon(c.ddDiscount)}</td>
+        <td>${certIcon(c.ddReceived, c.ddDiscount)}</td>
+        <td>${discountIcon(c.gsDiscount)}</td>
+        <td>${certIcon(c.gsReceived, c.gsDiscount)}</td>
+        <td>${c.discountAmount ? esc(c.discountAmount) : '—'}</td>
+        <td>${tyIcon}</td>
+        <td>${wcIcon}</td>
+        <td><span class="badge ${badgeCls}">${status}</span></td>
+        <td>
+          <div class="action-btns" onclick="event.stopPropagation()">
+            <button class="btn-action"        title="Edit"   onclick="openEditModal('${c.id}')">&#9998;</button>
+            <button class="btn-action"        title="Notes"  onclick="openNotesModal('${c.id}')">&#128172;</button>
+            <button class="btn-action delete" title="Delete" onclick="openDeleteModal('${c.id}')">&#128465;</button>
+          </div>
+        </td>
+      `;
+
+      tr.addEventListener('click', e => {
+        if (!e.target.closest('.action-btns') && !e.target.classList.contains('icon-click')) {
+          openEditModal(c.id);
+        }
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     FILTER CONTROLS
+  ═══════════════════════════════════════ */
+  function statusToFbId(s) {
+    if (s === 'all') return 'fb-all';
+    return 'fb-' + s.replace(/\s+/g, '-');
+  }
+
+  function setStatusFilter(val) {
+    statusFilter = val;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active'));
+    const fb = document.getElementById(statusToFbId(val));
+    if (fb) fb.classList.add('active');
+    renderTable();
+  }
+
+  function filterByStatCard(status) {
+    setStatusFilter(status);
+    const scId = 'stat-' + status.replace(/\s+/g, '-');
+    const sc = document.getElementById(scId);
+    if (sc) sc.classList.add('active');
+  }
+
+  function clearFilters() {
+    document.getElementById('searchInput').value    = '';
+    document.getElementById('producerFilter').value = '';
+    setStatusFilter('all');
+  }
+
+  /* ═══════════════════════════════════════
+     DATA LOAD / REFRESH
+  ═══════════════════════════════════════ */
+  async function loadData() {
+    showLoading(true);
+    hideError();
+    const result = await DataLayer.getClients();
+    showLoading(false);
+    if (!result.success) { showError(); return; }
+    allClients = result.data;
+    updateStats(allClients);
+    renderTable();
+  }
+
+  async function refreshData() {
+    const savedSearch   = document.getElementById('searchInput').value;
+    const savedProducer = document.getElementById('producerFilter').value;
+    const savedFilter   = statusFilter;
+    await loadData();
+    document.getElementById('searchInput').value    = savedSearch;
+    document.getElementById('producerFilter').value = savedProducer;
+    statusFilter = savedFilter;
+    // Restore active filter button
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const fb = document.getElementById(statusToFbId(savedFilter));
+    if (fb) fb.classList.add('active');
+    renderTable();
+  }
+
+  function showLoading(show) {
+    document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+    document.getElementById('tableArea').style.display    = show ? 'none' : 'block';
+  }
+  function showError() { document.getElementById('errorBanner').classList.add('visible'); }
+  function hideError() { document.getElementById('errorBanner').classList.remove('visible'); }
+
+  /* ═══════════════════════════════════════
+     INLINE TOGGLES (Thank You / Welcome Call)
+  ═══════════════════════════════════════ */
+  async function toggleField(e, id, field, dateField) {
+    e.stopPropagation();
+    const client = allClients.find(c => c.id === id);
+    if (!client) return;
+    const updated = Object.assign({}, client);
+    if (updated[field] === 'Y') {
+      updated[field]     = 'N';
+      updated[dateField] = '';
+    } else {
+      updated[field]     = 'Y';
+      updated[dateField] = todayStr();
+    }
+    updated.updatedAt = new Date().toISOString();
+    const result = await DataLayer.updateClient(updated);
+    if (result.success) {
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     ADD / EDIT MODAL
+  ═══════════════════════════════════════ */
+  function openAddModal() {
+    editingId = null;
+    resetForm();
+    document.getElementById('modalTitle').textContent = 'Add Client';
+    openModal('clientModal');
+  }
+
+  function openEditModal(id) {
+    const c = allClients.find(x => x.id === id);
+    if (!c) return;
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'Edit Client';
+    populateForm(c);
+    openModal('clientModal');
+  }
+
+  function resetForm() {
+    ['f_firstName','f_lastName','f_discountAmount','f_contactNote'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f_producer').value      = '';
+    document.getElementById('f_policyDate').value    = '';
+    document.getElementById('f_dueDate').value       = '';
+    document.getElementById('f_statusOverride').value = '';
+    formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
+    applyToggles();
+    updateConditionals();
+    updateStatusDisplay();
+    clearFieldErrors();
+  }
+
+  function populateForm(c) {
+    document.getElementById('f_firstName').value      = c.firstName || '';
+    document.getElementById('f_lastName').value       = c.lastName  || '';
+    document.getElementById('f_producer').value       = c.producer  || '';
+    document.getElementById('f_policyDate').value     = c.policyDate || '';
+    document.getElementById('f_dueDate').value        = c.dueDate   || '';
+    document.getElementById('f_discountAmount').value = c.discountAmount || '';
+    document.getElementById('f_contactNote').value    = c.contactNote || '';
+    document.getElementById('f_statusOverride').value = c.status === 'Discount Removed' ? 'Discount Removed' : '';
+    formToggles = {
+      ddDiscount: c.ddDiscount || 'N',
+      ddReceived: c.ddReceived || 'N',
+      gsDiscount: c.gsDiscount || 'N',
+      gsReceived: c.gsReceived || 'N'
+    };
+    applyToggles();
+    updateConditionals();
+    updateStatusDisplay();
+    clearFieldErrors();
+  }
+
+  function setToggle(field, val) {
+    formToggles[field] = val;
+    // If discount toggled to N, reset received
+    if (field === 'ddDiscount' && val === 'N') formToggles.ddReceived = 'N';
+    if (field === 'gsDiscount' && val === 'N') formToggles.gsReceived = 'N';
+    applyToggles();
+    updateConditionals();
+    updateStatusDisplay();
+  }
+
+  const TOGGLE_IDS = {
+    ddDiscount: ['tog-ddDiscount-Y', 'tog-ddDiscount-N'],
+    ddReceived: ['tog-ddReceived-Y', 'tog-ddReceived-N'],
+    gsDiscount: ['tog-gsDiscount-Y', 'tog-gsDiscount-N'],
+    gsReceived: ['tog-gsReceived-Y', 'tog-gsReceived-N']
+  };
+
+  function applyToggles() {
+    Object.entries(TOGGLE_IDS).forEach(([field, [yId, nId]]) => {
+      const val  = formToggles[field];
+      const yBtn = document.getElementById(yId);
+      const nBtn = document.getElementById(nId);
+      if (yBtn) yBtn.className = `toggle-opt${val === 'Y' ? ' yes' : ''}`;
+      if (nBtn) nBtn.className = `toggle-opt${val === 'N' ? ' no'  : ''}`;
+    });
+  }
+
+  function updateConditionals() {
+    document.getElementById('grp-ddReceived').style.display = formToggles.ddDiscount === 'Y' ? '' : 'none';
+    document.getElementById('grp-gsReceived').style.display = formToggles.gsDiscount === 'Y' ? '' : 'none';
+  }
+
+  function updateStatusDisplay() {
+    const override = document.getElementById('f_statusOverride').value;
+    if (override === 'Discount Removed') {
+      document.getElementById('f_statusDisplay').textContent = 'Discount Removed';
+      return;
+    }
+    const mock = {
+      ddDiscount: formToggles.ddDiscount,
+      ddReceived: formToggles.ddReceived,
+      gsDiscount: formToggles.gsDiscount,
+      gsReceived: formToggles.gsReceived,
+      dueDate:    document.getElementById('f_dueDate').value,
+      status:     ''
+    };
+    document.getElementById('f_statusDisplay').textContent = calcStatus(mock);
+  }
+
+  function autoCalcDueDate() {
+    const policy = document.getElementById('f_policyDate').value;
+    if (policy) document.getElementById('f_dueDate').value = addDays(policy, 7);
+    updateStatusDisplay();
+  }
+
+  function clearFieldErrors() {
+    document.querySelectorAll('.err').forEach(el => el.classList.remove('err'));
+  }
+
+  async function saveClient() {
+    clearFieldErrors();
+    const firstName  = document.getElementById('f_firstName').value.trim();
+    const lastName   = document.getElementById('f_lastName').value.trim();
+    const producer   = document.getElementById('f_producer').value;
+    const policyDate = document.getElementById('f_policyDate').value;
+    const dueDate    = document.getElementById('f_dueDate').value;
+
+    let valid = true;
+    if (!firstName)  { document.getElementById('f_firstName').classList.add('err');  valid = false; }
+    if (!lastName)   { document.getElementById('f_lastName').classList.add('err');   valid = false; }
+    if (!producer)   { document.getElementById('f_producer').classList.add('err');   valid = false; }
+    if (!policyDate) { document.getElementById('f_policyDate').classList.add('err'); valid = false; }
+    if (!dueDate)    { document.getElementById('f_dueDate').classList.add('err');    valid = false; }
+    if (!valid) return;
+
+    const override = document.getElementById('f_statusOverride').value;
+    const now      = new Date().toISOString();
+
+    let clientObj;
+    if (editingId) {
+      const existing = allClients.find(c => c.id === editingId) || {};
+      clientObj = Object.assign({}, existing, {
+        firstName, lastName, producer, policyDate, dueDate,
+        ddDiscount:    formToggles.ddDiscount,
+        ddReceived:    formToggles.ddReceived,
+        gsDiscount:    formToggles.gsDiscount,
+        gsReceived:    formToggles.gsReceived,
+        discountAmount: document.getElementById('f_discountAmount').value.trim(),
+        contactNote:    document.getElementById('f_contactNote').value.trim(),
+        status:         override || existing.status || '',
+        updatedAt:      now
+      });
+      // Auto-stamp / clear received dates
+      if (formToggles.ddReceived === 'Y' && !clientObj.ddReceivedDate) clientObj.ddReceivedDate = todayStr();
+      if (formToggles.ddReceived === 'N') clientObj.ddReceivedDate = '';
+      if (formToggles.gsReceived === 'Y' && !clientObj.gsReceivedDate) clientObj.gsReceivedDate = todayStr();
+      if (formToggles.gsReceived === 'N') clientObj.gsReceivedDate = '';
+    } else {
+      clientObj = {
+        id:              `id_${Date.now()}_${Math.random().toString(36).substr(2,9)}`,
+        firstName, lastName, producer, policyDate, dueDate,
+        ddDiscount:      formToggles.ddDiscount,
+        ddReceived:      formToggles.ddReceived,
+        ddReceivedDate:  formToggles.ddReceived === 'Y' ? todayStr() : '',
+        gsDiscount:      formToggles.gsDiscount,
+        gsReceived:      formToggles.gsReceived,
+        gsReceivedDate:  formToggles.gsReceived === 'Y' ? todayStr() : '',
+        discountAmount:  document.getElementById('f_discountAmount').value.trim(),
+        status:          override || '',
+        contactNote:     document.getElementById('f_contactNote').value.trim(),
+        thankYouSent:    'N',
+        thankYouDate:    '',
+        welcomeCallSent: 'N',
+        welcomeCallDate: '',
+        createdAt:       now,
+        updatedAt:       now
+      };
+    }
+
+    closeModal('clientModal');
+    const result = editingId
+      ? await DataLayer.updateClient(clientObj)
+      : await DataLayer.addClient(clientObj);
+
+    if (result.success) {
+      showToast('Client saved successfully', 'success');
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     NOTES MODAL
+  ═══════════════════════════════════════ */
+  function openNotesModal(id) {
+    const c = allClients.find(x => x.id === id);
+    if (!c) return;
+    notesId = id;
+    document.getElementById('notesModalTitle').textContent = `${c.firstName} ${c.lastName} — Notes`;
+    document.getElementById('n_contactNote').value = c.contactNote || '';
+    openModal('notesModal');
+  }
+
+  async function saveNote() {
+    const c = allClients.find(x => x.id === notesId);
+    if (!c) return;
+    const updated = Object.assign({}, c, {
+      contactNote: document.getElementById('n_contactNote').value,
+      updatedAt:   new Date().toISOString()
+    });
+    closeModal('notesModal');
+    const result = await DataLayer.updateClient(updated);
+    if (result.success) {
+      showToast('Note updated', 'success');
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     DELETE MODAL
+  ═══════════════════════════════════════ */
+  function openDeleteModal(id) {
+    const c = allClients.find(x => x.id === id);
+    if (!c) return;
+    deletingId = id;
+    document.getElementById('deleteMsg').textContent =
+      `Delete ${c.firstName} ${c.lastName}? This cannot be undone.`;
+    openModal('deleteModal');
+  }
+
+  async function confirmDelete() {
+    closeModal('deleteModal');
+    const result = await DataLayer.deleteClient(deletingId);
+    if (result.success) {
+      showToast('Client deleted', 'success');
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     MODAL HELPERS
+  ═══════════════════════════════════════ */
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) overlay.classList.remove('open');
+    });
+  });
+
+  /* ═══════════════════════════════════════
+     TOAST
+  ═══════════════════════════════════════ */
+  function showToast(msg, type) {
+    const el = document.createElement('div');
+    el.className = `toast toast-${type || 'success'}`;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+
+  /* ═══════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════ */
+  loadData();
+</script>
+</body>
+</html>
