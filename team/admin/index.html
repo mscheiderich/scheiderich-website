@@ -211,6 +211,31 @@
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_1XOHxoV9aH62NzFMlG2nxzb-jVpGBd3VqTLY6Yn_WuoSZWAhL8xOHrH91OCOZdzb/exec';
 
+  function fetchFromScript() {
+    return new Promise((resolve, reject) => {
+      const callbackName = 'cb_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => {
+        delete window[callbackName];
+        script.remove();
+        reject(new Error('Timeout'));
+      }, 12000);
+      window[callbackName] = function(data) {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        script.remove();
+        resolve(data);
+      };
+      script.src = SCRIPT_URL + '?callback=' + callbackName + '&t=' + Date.now();
+      script.onerror = () => {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        reject(new Error('Script load error'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
   const URGENCY_RANK = { 'Critical':1, 'High':2, 'Medium':3, 'Low':4 };
   const STATUS_RANK  = { 'New':1, 'Acknowledged':2, 'In Progress':3, 'Resolved':4, 'Shared with Allstate':5 };
 
@@ -222,19 +247,7 @@
     document.getElementById('loadingState').style.display = 'block';
     document.getElementById('tableArea').style.display    = 'none';
     try {
-      const url = SCRIPT_URL + '?action=get&t=' + Date.now();
-      const res = await fetch(url, {
-        method: 'GET',
-        redirect: 'follow'
-      });
-      const text = await res.text();
-      let json;
-      try {
-        json = JSON.parse(text);
-      } catch(parseErr) {
-        console.error('Parse error. Raw response:', text);
-        throw new Error('Invalid JSON from script');
-      }
+      const json = await fetchFromScript();
       allData = json.data || [];
       updateStats();
       renderTable();
@@ -243,6 +256,7 @@
     } catch(err) {
       console.error('Load error:', err);
       showToast('Error loading data — check connection and try refresh', 'error');
+    } finally {
       document.getElementById('loadingState').style.display = 'none';
       document.getElementById('tableArea').style.display    = 'block';
     }
