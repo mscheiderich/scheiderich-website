@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Process Improvement | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:    #1e3148;
+      --navy-mid:#264060;
+      --navy-lt: #e8edf4;
+      --orange:  #d9682a;
+      --orange-h:#bf5821;
+      --bg:      #f6f4f1;
+      --bg-w:    #ffffff;
+      --bg-s:    #eeebe6;
+      --text:    #1c2330;
+      --muted:   #5f6b79;
+      --border:  #dedad4;
+      --r:       8px;
+      --r-lg:    12px;
+      --sh-sm:   0 1px 4px rgba(30,49,72,.07);
+      --sh-md:   0 4px 16px rgba(30,49,72,.11);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* HEADER */
+    .app-header { background: var(--navy); padding: 0 24px; }
+    .app-header-row { display: flex; align-items: center; height: 56px; gap: 16px; }
+    .app-logo { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: #fff; white-space: nowrap; flex-shrink: 0; text-decoration: none; }
+    .app-title { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 500; flex: 1; text-align: center; }
+    .back-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; transition: all .2s; white-space: nowrap; }
+    .back-btn:hover { color: #fff; border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
+
+    /* MAIN */
+    .main { flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; padding: 40px 24px; display: grid; grid-template-columns: 420px 1fr; gap: 40px; align-items: start; }
+
+    /* FORM CARD */
+    .form-card { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-md); overflow: hidden; }
+    .form-card-header { background: var(--navy); padding: 24px 28px; }
+    .form-card-icon { font-size: 28px; margin-bottom: 10px; }
+    .form-card-title { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .form-card-sub { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.55; }
+    .anon-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; padding: 5px 12px; font-size: 11.5px; color: rgba(255,255,255,.7); font-weight: 600; }
+    .form-card-body { padding: 28px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .form-group label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .form-group select, .form-group textarea { padding: 10px 12px; border: 1.5px solid var(--border); border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border-color .15s, box-shadow .15s; width: 100%; }
+    .form-group select { height: 44px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; background-color: var(--bg); }
+    .form-group textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
+    .form-group select:focus, .form-group textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: #fff; }
+    .form-group select.err, .form-group textarea.err { border-color: #dc2626; }
+
+    /* URGENCY BUTTONS */
+    .urgency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .urgency-btn { height: 44px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .urgency-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-lt); }
+    .urgency-btn.active-critical { background: #fee2e2; border-color: #dc2626; color: #dc2626; }
+    .urgency-btn.active-high     { background: #ffedd5; border-color: #ea580c; color: #ea580c; }
+    .urgency-btn.active-medium   { background: #fef3c7; border-color: #d97706; color: #92400e; }
+    .urgency-btn.active-low      { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+
+    /* SUBMIT */
+    .btn-submit { width: 100%; height: 48px; background: var(--orange); color: #fff; border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .18s, transform .15s; margin-top: 8px; }
+    .btn-submit:hover { background: var(--orange-h); transform: translateY(-1px); }
+    .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+
+    /* SUCCESS STATE */
+    .success-state { display: none; text-align: center; padding: 48px 28px; }
+    .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-title { font-family: 'Lora', serif; font-size: 22px; color: var(--text); margin-bottom: 10px; }
+    .success-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .btn-another { height: 44px; padding: 0 24px; background: var(--navy); color: #fff; border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .18s; }
+    .btn-another:hover { background: var(--navy-mid); }
+
+    /* BOARD */
+    .board-col {}
+    .board-header { margin-bottom: 24px; }
+    .board-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+    .board-title { font-family: 'Lora', serif; font-size: 22px; color: var(--text); margin-bottom: 6px; }
+    .board-sub { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+    /* FILTER BAR */
+    .board-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn { height: 32px; padding: 0 14px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    /* BOARD CARDS */
+    .board-empty { text-align: center; padding: 60px 24px; background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); color: var(--muted); }
+    .board-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: .4; }
+    .board-loading { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .submission-card { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px 22px; margin-bottom: 12px; box-shadow: var(--sh-sm); transition: box-shadow .2s; }
+    .submission-card:hover { box-shadow: var(--sh-md); }
+    .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .cat-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 700; background: var(--navy-lt); color: var(--navy); }
+    .urgency-tag { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .urg-Critical { background: #fee2e2; color: #dc2626; }
+    .urg-High     { background: #ffedd5; color: #ea580c; }
+    .urg-Medium   { background: #fef3c7; color: #92400e; }
+    .urg-Low      { background: #dcfce7; color: #15803d; }
+    .status-tag { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: auto; }
+    .st-Acknowledged  { background: #eff6ff; color: #1d4ed8; }
+    .st-In\ Progress  { background: #fef3c7; color: #92400e; }
+    .st-Resolved      { background: #dcfce7; color: #15803d; }
+    .st-Shared        { background: #f3e8ff; color: #7e22ce; }
+    .card-text { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 10px; }
+    .card-meta { font-size: 11.5px; color: var(--muted); }
+    .card-admin-note { margin-top: 10px; padding: 10px 14px; background: var(--navy-lt); border-radius: var(--r); font-size: 13px; color: var(--navy-mid); line-height: 1.55; border-left: 3px solid var(--navy); }
+    .card-admin-note-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--navy); margin-bottom: 4px; }
+
+    /* FOOTER */
+    .portal-footer { background: var(--bg-w); border-top: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-text { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .urgency-grid { grid-template-columns: 1fr 1fr; } .app-title { display: none; } }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-row">
+    <a href="/team/" class="back-btn">← Dashboard</a>
+    <div class="app-logo">The Scheiderich Agency</div>
+    <div class="app-title">Process Improvement</div>
+    <div style="width:100px;"></div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- SUBMISSION FORM -->
+  <div>
+    <div class="form-card">
+      <div class="form-card-header">
+        <div class="form-card-icon">⚙️</div>
+        <div class="form-card-title">Submit an Idea or Issue</div>
+        <div class="form-card-sub">Help make the agency better. All submissions are completely anonymous — no names, no tracking, no way to identify who submitted.</div>
+        <div class="anon-badge">🔒 Fully Anonymous</div>
+      </div>
+      <div class="form-card-body" id="formBody">
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="f-category">
+            <option value="" disabled selected>Select a category...</option>
+            <option value="Process Inefficiency">Process Inefficiency — something takes too long or is unclear</option>
+            <option value="Product Gap">Product Gap — a coverage clients ask for that we don't offer</option>
+            <option value="Technology Suggestion">Technology Suggestion — a system or tool improvement</option>
+            <option value="Communication Issue">Communication Issue — internal coordination or info flow</option>
+            <option value="Client Experience">Client Experience — affects how clients perceive the agency</option>
+            <option value="General Idea">General Idea — doesn't fit another category</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Urgency *</label>
+          <div class="urgency-grid">
+            <button class="urgency-btn" data-urgency="Critical" onclick="setUrgency('Critical')">🚨 Critical</button>
+            <button class="urgency-btn" data-urgency="High"     onclick="setUrgency('High')">⚠️ High</button>
+            <button class="urgency-btn" data-urgency="Medium"   onclick="setUrgency('Medium')">📋 Medium</button>
+            <button class="urgency-btn" data-urgency="Low"      onclick="setUrgency('Low')">💡 Low</button>
+          </div>
+          <input type="hidden" id="f-urgency" value="" />
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="f-submission" placeholder="Describe the issue or idea clearly. The more specific you are, the easier it is to act on. You can include examples, frequency, impact, or any suggested solutions."></textarea>
+        </div>
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Anonymously</button>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:10px;text-align:center;">No name. No identifying information. Completely anonymous.</p>
+      </div>
+      <div class="success-state" id="successState">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Submission Received</div>
+        <div class="success-sub">Your idea has been submitted anonymously. Mike will review it and move it to the board once acknowledged. Thank you for helping make the agency better.</div>
+        <button class="btn-another" onclick="resetForm()">Submit Another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM BOARD -->
+  <div class="board-col">
+    <div class="board-header">
+      <div class="board-label">Team Board</div>
+      <h2 class="board-title">Acknowledged Ideas &amp; Issues</h2>
+      <p class="board-sub">These submissions have been reviewed by Mike and are visible to the full team. Items appear here once acknowledged — new submissions are reviewed before posting.</p>
+    </div>
+    <div class="board-filters">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('Process Inefficiency', this)">Process</button>
+      <button class="filter-btn" onclick="setFilter('Product Gap', this)">Product Gap</button>
+      <button class="filter-btn" onclick="setFilter('Technology Suggestion', this)">Technology</button>
+      <button class="filter-btn" onclick="setFilter('Communication Issue', this)">Communication</button>
+      <button class="filter-btn" onclick="setFilter('Client Experience', this)">Client Exp.</button>
+      <button class="filter-btn" onclick="setFilter('General Idea', this)">General</button>
+    </div>
+    <div id="boardContent">
+      <div class="board-loading"><div class="spinner"></div>Loading submissions...</div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="portal-footer">
+  <div class="footer-text">© 2026 The Scheiderich Agency · Internal Use Only</div>
+  <div class="footer-text">All submissions are anonymous</div>
+</footer>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_1XOHxoV9aH62NzFMlG2nxzb-jVpGBd3VqTLY6Yn_WuoSZWAhL8xOHrH91OCOZdzb/exec';
+
+  const VISIBLE_STATUSES = ['Acknowledged', 'In Progress', 'Resolved', 'Shared with Allstate'];
+
+  let selectedUrgency = '';
+  let allSubmissions  = [];
+  let currentFilter   = 'all';
+
+  /* ── URGENCY SELECTOR ── */
+  function setUrgency(val) {
+    selectedUrgency = val;
+    document.getElementById('f-urgency').value = val;
+    document.querySelectorAll('.urgency-btn').forEach(btn => {
+      btn.className = 'urgency-btn';
+      if (btn.dataset.urgency === val) {
+        btn.classList.add('active-' + val.toLowerCase());
+      }
+    });
+  }
+
+  /* ── FILTER ── */
+  function setFilter(val, el) {
+    currentFilter = val;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderBoard();
+  }
+
+  /* ── SUBMIT ── */
+  async function submitForm() {
+    const category   = document.getElementById('f-category').value;
+    const urgency    = document.getElementById('f-urgency').value;
+    const submission = document.getElementById('f-submission').value.trim();
+
+    let valid = true;
+    document.getElementById('f-category').classList.remove('err');
+    document.getElementById('f-submission').classList.remove('err');
+
+    if (!category)   { document.getElementById('f-category').classList.add('err');   valid = false; }
+    if (!urgency)    { alert('Please select an urgency level.'); valid = false; }
+    if (!submission) { document.getElementById('f-submission').classList.add('err'); valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'add', category, urgency, submission })
+      });
+      document.getElementById('formBody').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+    } catch (err) {
+      alert('Submission failed. Please try again or contact Mike directly.');
+      btn.disabled = false;
+      btn.textContent = 'Submit Anonymously';
+    }
+  }
+
+  /* ── RESET ── */
+  function resetForm() {
+    document.getElementById('f-category').value     = '';
+    document.getElementById('f-submission').value   = '';
+    document.getElementById('f-urgency').value      = '';
+    selectedUrgency = '';
+    document.querySelectorAll('.urgency-btn').forEach(b => b.className = 'urgency-btn');
+    document.getElementById('formBody').style.display     = 'block';
+    document.getElementById('successState').style.display = 'none';
+    document.getElementById('submitBtn').disabled    = false;
+    document.getElementById('submitBtn').textContent = 'Submit Anonymously';
+  }
+
+  /* ── LOAD BOARD ── */
+  async function loadBoard() {
+    try {
+      const res  = await fetch(SCRIPT_URL);
+      const json = await res.json();
+      allSubmissions = (json.data || []).filter(s => VISIBLE_STATUSES.includes(s.Status));
+      renderBoard();
+    } catch (err) {
+      document.getElementById('boardContent').innerHTML =
+        '<div class="board-empty"><div class="board-empty-icon">⚠️</div><p>Could not load submissions. Refresh to try again.</p></div>';
+    }
+  }
+
+  /* ── RENDER BOARD ── */
+  function renderBoard() {
+    const filtered = currentFilter === 'all'
+      ? allSubmissions
+      : allSubmissions.filter(s => s.Category === currentFilter);
+
+    const sorted = [...filtered].sort((a, b) =>
+      new Date(b['Submitted At']) - new Date(a['Submitted At'])
+    );
+
+    if (sorted.length === 0) {
+      document.getElementById('boardContent').innerHTML =
+        '<div class="board-empty"><div class="board-empty-icon">📋</div><p style="color:var(--muted);font-size:14px;">No acknowledged submissions yet' +
+        (currentFilter !== 'all' ? ' in this category' : '') + '.<br>Be the first to submit an idea.</p></div>';
+      return;
+    }
+
+    const catIcon = {
+      'Process Inefficiency':   '⚙️',
+      'Product Gap':            '📦',
+      'Technology Suggestion':  '💻',
+      'Communication Issue':    '💬',
+      'Client Experience':      '🤝',
+      'General Idea':           '💡'
+    };
+
+    const statusClass = s => 'st-' + s.replace(/\s+/g, '\\ ');
+
+    document.getElementById('boardContent').innerHTML = sorted.map(s => {
+      const date = s['Submitted At']
+        ? new Date(s['Submitted At']).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        : '';
+      const icon = catIcon[s.Category] || '📋';
+      const adminNote = s['Admin Notes']
+        ? `<div class="card-admin-note"><div class="card-admin-note-label">Note from Mike</div>${esc(s['Admin Notes'])}</div>`
+        : '';
+      return `
+        <div class="submission-card">
+          <div class="card-top">
+            <span class="cat-badge">${icon} ${esc(s.Category)}</span>
+            <span class="urgency-tag urg-${esc(s.Urgency)}">${esc(s.Urgency)}</span>
+            <span class="status-tag st-${esc(s.Status.replace(/ /g,'-'))}">${esc(s.Status)}</span>
+          </div>
+          <div class="card-text">${esc(s.Submission)}</div>
+          ${adminNote}
+          <div class="card-meta">Submitted ${date}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadBoard();
+</script>
+</body>
+</html>
