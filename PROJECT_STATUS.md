@@ -90,14 +90,14 @@
 
 | File | Status | Notes |
 |------|--------|-------|
-| index.html | ✅ Live | Homepage — city buttons updated to link to new landing pages |
-| about.html | ✅ Live | Team grid, stats bar, value cards |
-| contact.html | ✅ Live | Hours updated: Mon–Fri 8AM–5PM, Sat by appt, Sun closed |
-| home-insurance.html | ✅ Live | Full service page with FAQ schema |
-| auto-insurance.html | ✅ Live | Liability truth section, UM/UIM deep dive |
-| life-insurance.html | ✅ Live | Embedded DIME calculator, term vs whole comparison |
-| business-insurance.html | ✅ Live | GL vs BOP comparison |
-| life-insurance-calculator.html | ✅ Live | Standalone calculator page |
+| index.html | ✅ Live | Homepage — city buttons link to landing pages; Team Login link in header |
+| about.html | ✅ Live | Team grid, stats bar, value cards; Team Login link in header |
+| contact.html | ✅ Live | Hours: Mon–Fri 8AM–5PM, Sat by appt, Sun closed; Team Login in header |
+| home-insurance.html | ✅ Live | Full service page with FAQ schema; Team Login in header |
+| auto-insurance.html | ✅ Live | Liability truth section, UM/UIM deep dive; Team Login in header |
+| life-insurance.html | ✅ Live | Embedded DIME calculator, term vs whole; Team Login in header |
+| business-insurance.html | ✅ Live | GL vs BOP comparison; Team Login in header |
+| life-insurance-calculator.html | ✅ Live | Standalone calculator page; Team Login in header |
 | privacy-policy.html | ✅ Live | Full privacy policy with sidebar TOC |
 | terms-of-use.html | ✅ Live | Full terms with sidebar TOC |
 | disclaimer.html | ✅ Live | Insurance-specific disclaimer |
@@ -107,7 +107,8 @@
 | buford-ga-insurance.html | ✅ Live | City landing page — local SEO, embedded mini form |
 | gwinnett-county-insurance.html | ✅ Live | City landing page — local SEO, embedded mini form |
 | suwanee-ga-insurance.html | ✅ Live | City landing page — local SEO, embedded mini form |
-| team/index.html | ✅ Committed | Internal DD & GS Tracker — password protected at /team/ |
+| team/index.html | ✅ Live | Agent portal dashboard — password protected |
+| team/dd-tracker/index.html | ✅ Live | DD & GS Tracker — moved from /team/ |
 
 ---
 
@@ -122,13 +123,28 @@ Home | Auto | Life | More Coverage ▾ | About | Contact    [Get a Quote]
                    Umbrella Insurance
 ```
 
+**Team Login link:** Small unobtrusive link (top-left of header, 
+rgba(255,255,255,0.4)) on all public pages → links to /team/
+
 ---
 
 ## Internal Team Portal (/team/)
 
-### DD & Good Student Discount Tracker
+### Agent Portal Dashboard
 - **URL:** thescheiderichagency.com/team/
 - **Password protected:** via cPanel Directory Privacy on /team/ folder
+  (all subfolders inherit protection automatically)
+- **What it shows:**
+  - Time-aware greeting
+  - Live DD Tracker stats strip (Overdue / Due Soon / Pending counts)
+  - 6 tool cards: DD Tracker (live), Hero Profiler (live), 
+    Sales Tracker (coming soon), Process Improvement (coming soon),
+    Marketing Ideas (coming soon), Resource Library (coming soon)
+- **Hero Profiler card:** Agent dropdown selector builds URL with 
+  ?agent=[firstname] parameter before launching
+
+### DD & Good Student Discount Tracker
+- **URL:** thescheiderichagency.com/team/dd-tracker/
 - **Primary user:** Wendy Alaniz (Licensed Customer Service Rep)
 - **Database:** Google Sheets
   - Sheet ID: 1GNDONX_yupxaHs4Amxr_7TwX7bJ-3djouayzIzpR79c
@@ -136,17 +152,42 @@ Home | Auto | Life | More Coverage ▾ | About | Contact    [Get a Quote]
   - Clients tab: 21 columns (id through updatedAt)
   - Config tab: lastUpdated setting
 - **Google Cloud project:** DD Tracker
-- **API Key:** AIzaSyAqfMT5AKrCEuPChn2YD2MbfT10sG660B8 (restricted to Sheets API + domain)
-- **Apps Script Web App URL:** https://script.google.com/macros/s/AKfycbxxtQwMbJ4PQuqsfSnyF7V-it3sfmfGNtsR_OJBwuQcB-M5gzbdlFj92jSAWE5ge8bD/exec
-- **Architecture:** DataLayer object isolated at top of script for easy migration to Supabase later
-- **Status logic:** Auto-calculated (Overdue/Due Soon/Pending/Complete) — only Discount Removed is manual
-- **Priority sort:** Overdue → Due Soon → Pending → Complete → Discount Removed
+- **API Key:** AIzaSyAqfMT5AKrCEuPChn2YD2MbfT10sG660B8
+  (restricted to Sheets API + thescheiderichagency.com domain)
+- **Apps Script Web App URL:**
+  https://script.google.com/macros/s/AKfycbxxtQwMbJ4PQuqsfSnyF7V-it3sfmfGNtsR_OJBwuQcB-M5gzbdlFj92jSAWE5ge8bD/exec
+- **Architecture:** DataLayer object isolated for easy Supabase migration later
+- **CORS fix:** All fetch calls use mode: 'no-cors', Content-Type: text/plain
+- **Statuses:** Overdue / Due Soon / Pending / Complete (auto-calculated)
+  Discount Removed / Archived (manual)
+- **Archive/Unarchive:** Full restore with auto status recalculation
+- **Inline toggles:** Thank You and Welcome Call — click to toggle,
+  auto-stamps date (date only, no time), no modal required
+- **Migration:** 31 historical records loaded via localStorage 
+  migration (runs once only — localStorage key: migrationComplete)
+- **Priority sort:** Overdue → Due Soon → Pending → Complete → 
+  Discount Removed → Archived (hidden by default)
+
+### Hero Profiler
+- **URL:** hero-profiler.thescheiderichagency.com
+- **Hosted on:** Vercel (project: hero-profiler, account: mike-2004s)
+- **Repo:** separate GitHub repo — hero-profiler
+- **Agent URL pattern:** ?agent=[firstname] 
+  e.g. hero-profiler.thescheiderichagency.com?agent=mike
+- **Agent values:** mike, crissy, iris, mark, wendy, scott
+- **Old domain removed:** hero-profiler.gahomeinsuranceexperts.com
+- **Environment variables:** stored in Vercel (GOOGLE_CLIENT_ID, 
+  GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN)
+- **Note:** Cannot be moved to VPS — requires Vercel serverless 
+  functions. Keep on Vercel permanently.
 
 ### Planned Team Portal Modules (not yet built)
-- [ ] Sales & Referral Tracker with 3-level attribution and gamification leaderboard
-- [ ] Process Improvement submission form (anonymous)
+- [ ] Sales & Referral Tracker — 3-level attribution (industry → 
+      company → partner), gamification leaderboard, real-time display
+      NOTE: Mike needs to provide metrics spreadsheet before build
+- [ ] Process Improvement submission form (anonymous submissions)
 - [ ] Marketing Ideas submission form (attributed, bonus-eligible)
-- [ ] Resource links dashboard (shared docs, PPT folder, external tools)
+- [ ] Resource Library (shared docs, PPT folder, external tool links)
 
 ---
 
@@ -154,17 +195,19 @@ Home | Auto | Life | More Coverage ▾ | About | Contact    [Get a Quote]
 - **Live at:** thescheiderichagency.com/life-insurance-calculator.html
 - **Also embedded in:** life-insurance.html
 - **Old Vercel subdomain:** lifecalculator.thescheiderichagency.com (still live)
-- **Medium profile link** needs updating from old subdomain to new URL — still pending
+- **Medium profile link** needs updating from old subdomain to new URL — STILL PENDING
 
 ---
 
 ## Pending Tasks
 
 ### IMMEDIATE (next session)
-- [ ] Test DD Tracker live at thescheiderichagency.com/team/ — add test client, verify Google Sheet populates
-- [ ] Fix CORS issue if Apps Script POST fails from live domain (one-line fix ready)
-- [ ] Update Medium profile link from old Vercel subdomain to new calculator URL
-- [ ] Fix DD Tracker header title: "DD & GS Tracker" → "Defensive Driving & Good Student Discount Tracker"
+- [ ] Verify Team Login link rendering correctly on all public pages
+- [ ] Verify dashboard live stats strip loading DD Tracker data
+- [ ] Verify Hero Profiler agent dropdown builds correct URL
+- [ ] Update Medium profile link from lifecalculator.thescheiderichagency.com
+      to thescheiderichagency.com/life-insurance-calculator.html
+- [ ] Test DD Tracker add/edit/delete on live site with Wendy
 
 ### CITY PAGES — NEXT TO BUILD
 - [ ] atlanta-ga-insurance.html
@@ -176,21 +219,25 @@ Home | Auto | Life | More Coverage ▾ | About | Contact    [Get a Quote]
 
 ### NAVIGATION & INTERNAL LINKS
 - [ ] Add internal links from home/auto pages to umbrella-insurance.html
-- [ ] Add internal link from home-insurance.html gaps section to additional-coverage.html
+- [ ] Add internal link from home-insurance.html gaps section 
+      to additional-coverage.html
 
 ### TEAM PORTAL — NEXT MODULES
-- [ ] Sales & Referral Tracker (needs detailed metrics spreadsheet from Mike first)
+- [ ] Sales & Referral Tracker 
+      PREREQUISITE: Mike provides metrics/tracking spreadsheet first
 - [ ] Process improvement + marketing idea submission pages
-- [ ] Resource links dashboard
+- [ ] Resource library page
 
 ### THIRD-PARTY & INTEGRATIONS
-- [ ] Elfsight Google Reviews widget — needs Google Business Profile connected in Elfsight dashboard
-- [ ] Confirm Formspree notification email set to info@gahomeinsuranceexperts.com in dashboard
-- [ ] Google Analytics setup (already covered broadly in privacy policy)
-- [ ] DIIB analytics setup (same — already covered in privacy policy)
+- [ ] Elfsight Google Reviews widget — needs Google Business Profile 
+      connected in Elfsight dashboard
+- [ ] Confirm Formspree notification email set to 
+      info@gahomeinsuranceexperts.com in dashboard
+- [ ] Google Analytics setup
+- [ ] DIIB analytics setup
 
 ### LEGAL PAGES
-- [ ] Review all three legal pages with an attorney (recommended — not required to launch)
+- [ ] Review all three legal pages with an attorney (recommended)
 
 ---
 
@@ -208,42 +255,55 @@ Home | Auto | Life | More Coverage ▾ | About | Contact    [Get a Quote]
 
 ## Formspree
 - Endpoint: mgoqnelq (all city pages use this same endpoint)
-- Hidden source field on each city page identifies lead origin: _source
+- Hidden _source field on each city page identifies lead origin
 - Current plan: Free (1 form, 50 submissions/month)
 - Upgrade to Basic ($10/mo) if lead volume exceeds 50/month
 
 ---
 
 ## Content Philosophy (applied to all pages)
-1. **Personal service is #1** — not an 800 number, come to our office, real agents
-2. **Honest about rates** — maximize value at reasonable price, never overpromise
-3. **Educational/informational tone** — written for AI search authority, not just keywords
-4. **Local Georgia specifics** — Georgia law, Georgia drivers, Georgia homeowners throughout
-5. **Never overpromise** — no guaranteed savings, no carrier-specific claims beyond approved
+1. **Personal service is #1** — not an 800 number, real agents, come to our office
+2. **Honest about rates** — maximize value, never overpromise
+3. **Educational/informational tone** — written for AI search authority
+4. **Local Georgia specifics** — Georgia law, Georgia drivers, Georgia homeowners
+5. **Never overpromise** — no guaranteed savings, no carrier-specific claims
 
 ---
 
 ## SEO Structure
-- Every service page: H1 → H2 → H3 hierarchy, FAQPage schema, InsuranceAgency schema
+- Every service page: H1 → H2 → H3, FAQPage schema, InsuranceAgency schema
 - City pages: LocalBusiness schema, BreadcrumbList, FAQPage schema
 - Calculator page: WebApplication schema
-- Legal pages: indexed but not schema-marked
+- Legal pages: indexed, no schema
+- Team portal: noindex, nofollow
 - Internal linking: service pages cross-link to related coverage and bundle page
-- All calculator links: point to /life-insurance-calculator.html (not Vercel subdomain)
+- All calculator links: /life-insurance-calculator.html (not Vercel subdomain)
 
 ---
 
 ## Umbrella Insurance — Special Note
-Market conditions are actively evolving. Page is intentionally broad — no carrier names, no specific dollar minimums. When Allstate brings back umbrella product later in 2026, update umbrella-insurance.html with current requirements. DO NOT add specific minimums until product is confirmed stable.
+Market conditions actively evolving. Page intentionally broad — no carrier 
+names, no specific minimums. Update umbrella-insurance.html when Allstate 
+brings back umbrella product later in 2026. DO NOT add minimums until confirmed.
 
 ---
 
 ## VIP / Scheduled Personal Property — Key Differentiator
-Written as standalone policy (not homeowners endorsement). Key benefits to always mention:
-1. Claim on VIP policy does NOT appear on homeowners claims history
+Standalone policy (not homeowners endorsement). Always mention:
+1. Claim does NOT appear on homeowners claims history
 2. More flexible deductible options than endorsement allows
-3. Full appraised value coverage vs. homeowners category caps
+3. Full appraised value vs. homeowners category caps
 
 ---
 
-*This file lives in the project root. Update it whenever pages are added, tasks completed, or site direction changes.*
+## Cloudflare DNS — Active Subdomains
+| Subdomain | Points To | Purpose |
+|-----------|-----------|---------|
+| thescheiderichagency.com | 50.6.200.218 (VPS) | Main website |
+| hero-profiler.thescheiderichagency.com | cname.vercel-dns.com | Hero Profiler app |
+| lifecalculator.thescheiderichagency.com | Vercel (old) | Old calculator — no redirect needed |
+
+---
+
+*This file lives in the project root. Update whenever pages are added, 
+tasks completed, or site direction changes.*
