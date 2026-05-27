@@ -231,6 +231,33 @@
     .icon-click { cursor: pointer; transition: opacity .15s; display: inline-block; font-size: 15px; }
     .icon-click:hover { opacity: .65; }
 
+    /* ── INLINE TOGGLES (Thank You / Welcome Call) ── */
+    .toggle-dash {
+      color: #9ca3af;
+      font-size: 18px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+      display: inline-block;
+    }
+    .toggle-dash:hover { background: #f0fdf4; color: #16a34a; }
+    .toggle-check {
+      color: #16a34a;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      display: inline-block;
+    }
+    .toggle-date {
+      font-size: 11px;
+      color: #5f6b79;
+      display: block;
+      margin-top: 2px;
+    }
+
     .badge {
       display: inline-block;
       padding: 3px 9px;
@@ -864,6 +891,15 @@
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   }
 
+  function formatDateShort(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) return '';
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const [y, m, d] = parts;
+    return `${MONTHS[m - 1]} ${d} ${y}`;
+  }
+
   /* ═══════════════════════════════════════
      STATUS CALCULATION
      Archived and Discount Removed are manual-only overrides.
@@ -1018,13 +1054,17 @@
       }[status] || 'badge-pending';
 
       // Thank You / Welcome Call inline toggles
+      const tyDate = c.thankYouDate
+        ? `<span class="toggle-date">${formatDateShort(c.thankYouDate)}</span>` : '';
       const tyIcon = c.thankYouSent === 'Y'
-        ? `<span class="icon-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#10003;</span>`
-        : `<span class="icon-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#8212;</span>`;
+        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#10003;${tyDate}</span>`
+        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#8212;</span>`;
 
+      const wcDate = c.welcomeCallDate
+        ? `<span class="toggle-date">${formatDateShort(c.welcomeCallDate)}</span>` : '';
       const wcIcon = c.welcomeCallSent === 'Y'
-        ? `<span class="icon-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#10003;</span>`
-        : `<span class="icon-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#8212;</span>`;
+        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#10003;${wcDate}</span>`
+        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#8212;</span>`;
 
       // Actions: archived rows show Unarchive instead of Edit pencil
       const actionsHtml = archived
@@ -1148,6 +1188,8 @@
     updated.updatedAt = new Date().toISOString();
     const result = await DataLayer.updateClient(updated);
     if (result.success) {
+      const msg = field === 'thankYouSent' ? 'Thank you note recorded' : 'Welcome call recorded';
+      showToast(msg, 'success');
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
