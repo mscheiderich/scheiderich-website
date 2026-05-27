@@ -268,8 +268,22 @@
     .footer-social a { color: rgba(255,255,255,0.45); transition: color .2s; display: flex; }
     .footer-social a:hover { color: rgba(255,255,255,0.85); }
     .footer-social svg { width: 20px; height: 20px; }
-    .team-login-link { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); text-decoration: none; letter-spacing: 0.05em; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; white-space: nowrap; }
-    .team-login-link:hover { color: rgba(255,255,255,0.75); }
+    .team-login-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .team-login-link:hover {
+      color: var(--navy);
+      background: var(--navy-lt);
+    }
     @media (max-width: 960px) {
       .storm-grid { grid-template-columns: 1fr; }
       .storm-stats { grid-template-columns: repeat(4, 1fr); }
