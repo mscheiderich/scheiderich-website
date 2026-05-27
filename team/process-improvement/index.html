@@ -216,6 +216,32 @@
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_1XOHxoV9aH62NzFMlG2nxzb-jVpGBd3VqTLY6Yn_WuoSZWAhL8xOHrH91OCOZdzb/exec';
 
+  function fetchFromScript() {
+    return new Promise((resolve, reject) => {
+      const callbackName = 'cb_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => {
+        delete window[callbackName];
+        script.remove();
+        reject(new Error('Timeout'));
+      }, 15000);
+      window[callbackName] = function(data) {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        script.remove();
+        resolve(data);
+      };
+      script.src = SCRIPT_URL + '?callback=' + callbackName + '&t=' + Date.now();
+      script.onerror = () => {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        script.remove();
+        reject(new Error('Script load error'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
   const VISIBLE_STATUSES = ['Acknowledged', 'In Progress', 'Resolved', 'Shared with Allstate'];
 
   let selectedUrgency = '';
@@ -293,10 +319,7 @@
   /* ── LOAD BOARD ── */
   async function loadBoard() {
     try {
-      const url = SCRIPT_URL + '?action=get&t=' + Date.now();
-      const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-      const text = await res.text();
-      const json = JSON.parse(text);
+      const json = await fetchFromScript();
       allSubmissions = (json.data || []).filter(s => VISIBLE_STATUSES.includes(s.Status));
       renderBoard();
     } catch (err) {
