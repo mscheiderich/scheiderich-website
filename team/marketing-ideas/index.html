@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Marketing Ideas | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:    #1e3148;
+      --navy-mid:#264060;
+      --navy-lt: #e8edf4;
+      --orange:  #d9682a;
+      --orange-h:#bf5821;
+      --bg:      #f6f4f1;
+      --bg-w:    #ffffff;
+      --bg-s:    #eeebe6;
+      --text:    #1c2330;
+      --muted:   #5f6b79;
+      --border:  #dedad4;
+      --r:       8px;
+      --r-lg:    12px;
+      --sh-sm:   0 1px 4px rgba(30,49,72,.07);
+      --sh-md:   0 4px 16px rgba(30,49,72,.11);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .app-header { background: var(--navy); padding: 0 24px; }
+    .app-header-row { display: flex; align-items: center; height: 56px; gap: 16px; }
+    .app-logo { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: #fff; white-space: nowrap; flex-shrink: 0; text-decoration: none; }
+    .app-title { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 500; flex: 1; text-align: center; }
+    .back-btn { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; transition: all .2s; white-space: nowrap; }
+    .back-btn:hover { color: #fff; border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
+
+    .bonus-bar { background: linear-gradient(90deg, var(--orange) 0%, #c45a22 100%); padding: 10px 24px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .bonus-bar-text { font-size: 13px; font-weight: 600; color: #fff; }
+    .bonus-bar-badge { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3); border-radius: 20px; padding: 3px 12px; font-size: 11.5px; font-weight: 700; color: #fff; white-space: nowrap; }
+
+    .main { flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; padding: 40px 24px; display: grid; grid-template-columns: 400px 1fr; gap: 40px; align-items: start; }
+
+    .form-card { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-md); overflow: hidden; }
+    .form-card-header { background: var(--navy); padding: 24px 28px; }
+    .form-card-icon { font-size: 28px; margin-bottom: 10px; }
+    .form-card-title { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .form-card-sub { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.55; }
+    .bonus-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; background: rgba(217,104,42,.3); border: 1px solid rgba(217,104,42,.5); border-radius: 20px; padding: 5px 12px; font-size: 11.5px; color: #ffb380; font-weight: 600; }
+
+    .form-card-body { padding: 28px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .form-group label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1.5px solid var(--border); border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border-color .15s, box-shadow .15s; width: 100%; }
+    .form-group input, .form-group select { height: 44px; }
+    .form-group textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: #fff; }
+    .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; background-color: var(--bg); }
+    .form-group input.err, .form-group select.err, .form-group textarea.err { border-color: #dc2626; }
+
+    .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .agent-btn { height: 44px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; }
+    .agent-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-lt); }
+    .agent-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    .btn-submit { width: 100%; height: 48px; background: var(--orange); color: #fff; border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .18s, transform .15s; margin-top: 8px; }
+    .btn-submit:hover { background: var(--orange-h); transform: translateY(-1px); }
+    .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+
+    .success-state { display: none; text-align: center; padding: 48px 28px; }
+    .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-title { font-family: 'Lora', serif; font-size: 22px; color: var(--text); margin-bottom: 10px; }
+    .success-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .btn-another { height: 44px; padding: 0 24px; background: var(--navy); color: #fff; border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-another:hover { background: var(--navy-mid); }
+
+    .board-col {}
+    .board-header { margin-bottom: 24px; }
+    .board-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+    .board-title { font-family: 'Lora', serif; font-size: 22px; color: var(--text); margin-bottom: 6px; }
+    .board-sub { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+    .board-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn { height: 32px; padding: 0 14px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    .board-loading { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .board-empty { text-align: center; padding: 60px 24px; background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); color: var(--muted); }
+
+    .idea-card { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px 22px; margin-bottom: 12px; box-shadow: var(--sh-sm); transition: box-shadow .2s; }
+    .idea-card:hover { box-shadow: var(--sh-md); }
+    .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .agent-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: var(--navy); color: #fff; }
+    .agent-tag-initial { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+    .cat-badge { padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; background: var(--navy-lt); color: var(--navy); }
+    .status-tag { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: auto; }
+    .st-New              { background: #f1f5f9; color: #64748b; }
+    .st-Acknowledged     { background: #eff6ff; color: #1d4ed8; }
+    .st-In-Progress      { background: #fef3c7; color: #92400e; }
+    .st-Selected-for-Bonus { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+    .st-Implemented      { background: #dcfce7; color: #15803d; }
+    .card-idea { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 10px; }
+    .card-meta { font-size: 11.5px; color: var(--muted); }
+    .card-admin-note { margin-top: 10px; padding: 10px 14px; background: var(--navy-lt); border-radius: var(--r); font-size: 13px; color: var(--navy-mid); line-height: 1.55; border-left: 3px solid var(--navy); }
+    .card-admin-note-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--navy); margin-bottom: 4px; }
+
+    .portal-footer { background: var(--bg-w); border-top: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-text { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .agent-grid { grid-template-columns: 1fr 1fr; } .app-title { display: none; } }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-row">
+    <a href="/team/" class="back-btn">← Dashboard</a>
+    <div class="app-logo">The Scheiderich Agency</div>
+    <div class="app-title">Marketing Ideas</div>
+    <div style="width:100px;"></div>
+  </div>
+</header>
+
+<div class="bonus-bar">
+  <span class="bonus-bar-text">💡 Selected ideas earn a bonus — put your name on it and make your mark</span>
+  <span class="bonus-bar-badge">Bonus Eligible</span>
+</div>
+
+<div class="main">
+
+  <!-- SUBMISSION FORM -->
+  <div>
+    <div class="form-card">
+      <div class="form-card-header">
+        <div class="form-card-icon">💡</div>
+        <div class="form-card-title">Submit a Marketing Idea</div>
+        <div class="form-card-sub">Got an idea for growing the agency? Submit it here. The best ideas get implemented — and recognized. Put your name on it.</div>
+        <div class="bonus-badge">🏆 Selected ideas earn a bonus</div>
+      </div>
+      <div class="form-card-body" id="formBody">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <div class="agent-grid">
+            <button class="agent-btn" data-agent="Mike Scheiderich"  onclick="setAgent('Mike Scheiderich')">Mike S.</button>
+            <button class="agent-btn" data-agent="Crissy Shatzel"    onclick="setAgent('Crissy Shatzel')">Crissy S.</button>
+            <button class="agent-btn" data-agent="Iris Salgado"      onclick="setAgent('Iris Salgado')">Iris S.</button>
+            <button class="agent-btn" data-agent="Mark Hill"         onclick="setAgent('Mark Hill')">Mark H.</button>
+            <button class="agent-btn" data-agent="Wendy Alaniz"      onclick="setAgent('Wendy Alaniz')">Wendy A.</button>
+            <button class="agent-btn" data-agent="Scott Kesler"      onclick="setAgent('Scott Kesler')">Scott K.</button>
+          </div>
+          <input type="hidden" id="f-agent" value="" />
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="f-category">
+            <option value="" disabled selected>Select a category...</option>
+            <option value="Social Media">Social Media</option>
+            <option value="Events & Community">Events &amp; Community</option>
+            <option value="Referral Programs">Referral Programs</option>
+            <option value="Client Retention">Client Retention</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="New Market / Audience">New Market / Audience</option>
+            <option value="General Idea">General Idea</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Idea *</label>
+          <textarea id="f-idea" placeholder="Describe your idea clearly. Include what it involves, who it targets, what you think the outcome could be, and any details that would help bring it to life."></textarea>
+        </div>
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">Submit My Idea</button>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:10px;text-align:center;">Your name will appear on the team board with your submission.</p>
+      </div>
+      <div class="success-state" id="successState">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Idea Submitted!</div>
+        <div class="success-sub">Your idea has been sent to Mike for review. If selected, you'll be recognized and eligible for a bonus. Keep the ideas coming.</div>
+        <button class="btn-another" onclick="resetForm()">Submit Another Idea</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM BOARD -->
+  <div class="board-col">
+    <div class="board-header">
+      <div class="board-label">Team Ideas Board</div>
+      <h2 class="board-title">Ideas from the Team</h2>
+      <p class="board-sub">All acknowledged ideas are visible here. See what your teammates are thinking, build on their ideas, and watch what gets implemented.</p>
+    </div>
+    <div class="board-filters">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('Social Media',this)">Social Media</button>
+      <button class="filter-btn" onclick="setFilter('Events & Community',this)">Events</button>
+      <button class="filter-btn" onclick="setFilter('Referral Programs',this)">Referrals</button>
+      <button class="filter-btn" onclick="setFilter('Client Retention',this)">Retention</button>
+      <button class="filter-btn" onclick="setFilter('Digital Marketing',this)">Digital</button>
+      <button class="filter-btn" onclick="setFilter('New Market / Audience',this)">New Market</button>
+      <button class="filter-btn" onclick="setFilter('General Idea',this)">General</button>
+    </div>
+    <div id="boardContent">
+      <div class="board-loading"><div class="spinner"></div>Loading ideas...</div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="portal-footer">
+  <div class="footer-text">© 2026 The Scheiderich Agency · Internal Use Only</div>
+  <div class="footer-text">Selected ideas earn a recognition bonus</div>
+</footer>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypR3WvAhTfIl7t-Mx_Nn5g0c2L5M3daSbVJwDCbZ-nIbHKRrSqQjagOHzQvKH8Awc/exec';
+  const VISIBLE_STATUSES = ['Acknowledged','In Progress','Selected for Bonus','Implemented'];
+
+  let selectedAgent = '';
+  let allIdeas = [];
+  let currentFilter = 'all';
+
+  function setAgent(name) {
+    selectedAgent = name;
+    document.getElementById('f-agent').value = name;
+    document.querySelectorAll('.agent-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.agent === name);
+    });
+  }
+
+  function setFilter(val, el) {
+    currentFilter = val;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderBoard();
+  }
+
+  async function submitForm() {
+    const agentName = document.getElementById('f-agent').value;
+    const category  = document.getElementById('f-category').value;
+    const idea      = document.getElementById('f-idea').value.trim();
+
+    let valid = true;
+    document.getElementById('f-category').classList.remove('err');
+    document.getElementById('f-idea').classList.remove('err');
+
+    if (!agentName) { alert('Please select your name.'); valid = false; }
+    if (!category)  { document.getElementById('f-category').classList.add('err'); valid = false; }
+    if (!idea)      { document.getElementById('f-idea').classList.add('err'); valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action:'add', agentName, category, idea })
+      });
+      document.getElementById('formBody').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+    } catch(err) {
+      alert('Submission failed. Please try again or contact Mike directly.');
+      btn.disabled = false;
+      btn.textContent = 'Submit My Idea';
+    }
+  }
+
+  function resetForm() {
+    selectedAgent = '';
+    document.getElementById('f-agent').value = '';
+    document.getElementById('f-category').value = '';
+    document.getElementById('f-idea').value = '';
+    document.querySelectorAll('.agent-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('formBody').style.display = 'block';
+    document.getElementById('successState').style.display = 'none';
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('submitBtn').textContent = 'Submit My Idea';
+  }
+
+  function fetchFromScript() {
+    return new Promise((resolve, reject) => {
+      const callbackName = 'cb_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => {
+        delete window[callbackName]; script.remove();
+        reject(new Error('Timeout'));
+      }, 15000);
+      window[callbackName] = function(data) {
+        clearTimeout(timeout); delete window[callbackName]; script.remove();
+        resolve(data);
+      };
+      script.src = SCRIPT_URL + '?callback=' + callbackName + '&t=' + Date.now();
+      script.onerror = () => {
+        clearTimeout(timeout); delete window[callbackName]; script.remove();
+        reject(new Error('Script load error'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  async function loadBoard() {
+    try {
+      const json = await fetchFromScript();
+      allIdeas = (json.data || []).filter(s => VISIBLE_STATUSES.includes(s.Status));
+      renderBoard();
+    } catch(err) {
+      document.getElementById('boardContent').innerHTML =
+        '<div class="board-empty"><p style="color:var(--muted);font-size:14px;">Could not load ideas. Refresh to try again.</p></div>';
+    }
+  }
+
+  function renderBoard() {
+    const filtered = currentFilter === 'all'
+      ? allIdeas
+      : allIdeas.filter(s => s.Category === currentFilter);
+    const sorted = [...filtered].sort((a,b) =>
+      new Date(b['Submitted At']) - new Date(a['Submitted At'])
+    );
+
+    if (sorted.length === 0) {
+      document.getElementById('boardContent').innerHTML =
+        '<div class="board-empty" style="font-size:14px;">💡 No ideas posted yet' +
+        (currentFilter !== 'all' ? ' in this category' : '') +
+        '.<br><span style="color:var(--muted)">Be the first to submit one.</span></div>';
+      return;
+    }
+
+    const catIcon = {
+      'Social Media':'📱','Events & Community':'🎉',
+      'Referral Programs':'🤝','Client Retention':'💼',
+      'Digital Marketing':'💻','New Market / Audience':'🎯',
+      'General Idea':'💡'
+    };
+
+    document.getElementById('boardContent').innerHTML = sorted.map(s => {
+      const date = s['Submitted At']
+        ? new Date(s['Submitted At']).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+        : '';
+      const initial = (s['Agent Name']||'?').charAt(0).toUpperCase();
+      const icon = catIcon[s.Category] || '💡';
+      const stClass = 'st-' + (s.Status||'New').replace(/\s+/g,'-');
+      const adminNote = s['Admin Notes']
+        ? `<div class="card-admin-note"><div class="card-admin-note-label">Note from Mike</div>${esc(s['Admin Notes'])}</div>`
+        : '';
+      return `
+        <div class="idea-card">
+          <div class="card-top">
+            <span class="agent-tag"><span class="agent-tag-initial">${esc(initial)}</span>${esc(s['Agent Name'])}</span>
+            <span class="cat-badge">${icon} ${esc(s.Category)}</span>
+            <span class="status-tag ${stClass}">${esc(s.Status)}</span>
+          </div>
+          <div class="card-idea">${esc(s.Idea)}</div>
+          ${adminNote}
+          <div class="card-meta">Submitted ${date}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadBoard();
+</script>
+</body>
+</html>
