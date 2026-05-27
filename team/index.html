@@ -747,14 +747,13 @@
 
     async addClient(clientObj) {
       try {
-        const res = await fetch(SCRIPT_URL, {
+        const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'add', client: clientObj })
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(Object.assign({}, clientObj, { action: 'add' }))
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        return { success: true, data: json };
+        return { success: true };
       } catch (e) {
         return { success: false, error: e.message };
       }
@@ -762,14 +761,13 @@
 
     async updateClient(clientObj) {
       try {
-        const res = await fetch(SCRIPT_URL, {
+        const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'update', client: clientObj })
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(Object.assign({}, clientObj, { action: 'update' }))
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        return { success: true, data: json };
+        return { success: true };
       } catch (e) {
         return { success: false, error: e.message };
       }
@@ -777,14 +775,13 @@
 
     async deleteClient(id) {
       try {
-        const res = await fetch(SCRIPT_URL, {
+        const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'delete', id })
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'delete', id: id })
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        return { success: true, data: json };
+        return { success: true };
       } catch (e) {
         return { success: false, error: e.message };
       }
@@ -1057,14 +1054,14 @@
       const tyDate = c.thankYouDate
         ? `<span class="toggle-date">${formatDateShort(c.thankYouDate)}</span>` : '';
       const tyIcon = c.thankYouSent === 'Y'
-        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#10003;${tyDate}</span>`
-        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#8212;</span>`;
+        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField('${c.id}','thankYouSent','Y',event)">&#10003;${tyDate}</span>`
+        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField('${c.id}','thankYouSent','N',event)">&#8212;</span>`;
 
       const wcDate = c.welcomeCallDate
         ? `<span class="toggle-date">${formatDateShort(c.welcomeCallDate)}</span>` : '';
       const wcIcon = c.welcomeCallSent === 'Y'
-        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#10003;${wcDate}</span>`
-        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#8212;</span>`;
+        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField('${c.id}','welcomeCallSent','Y',event)">&#10003;${wcDate}</span>`
+        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField('${c.id}','welcomeCallSent','N',event)">&#8212;</span>`;
 
       // Actions: archived rows show Unarchive instead of Edit pencil
       const actionsHtml = archived
@@ -1173,26 +1170,54 @@
   /* ═══════════════════════════════════════
      INLINE TOGGLES (Thank You / Welcome Call)
   ═══════════════════════════════════════ */
-  async function toggleField(e, id, field, dateField) {
-    e.stopPropagation();
-    const client = allClients.find(c => c.id === id);
-    if (!client) return;
-    const updated = Object.assign({}, client);
-    if (updated[field] === 'Y') {
-      updated[field]     = 'N';
-      updated[dateField] = '';
-    } else {
-      updated[field]     = 'Y';
-      updated[dateField] = todayStr();
+  async function toggleField(clientId, field, currentValue, event) {
+    if (event) event.stopPropagation();
+
+    const client = allClients.find(c => String(c.id) === String(clientId));
+    if (!client) {
+      showToast('Client not found — please refresh', 'error');
+      return;
     }
+
+    const updated = Object.assign({}, client);
+    const today = new Date();
+    const dateStr = today.getFullYear() + '-' +
+      String(today.getMonth()+1).padStart(2,'0') + '-' +
+      String(today.getDate()).padStart(2,'0');
+
+    if (field === 'thankYouSent') {
+      updated.thankYouSent = currentValue === 'Y' ? 'N' : 'Y';
+      updated.thankYouDate = updated.thankYouSent === 'Y' ? dateStr : '';
+    } else if (field === 'welcomeCallSent') {
+      updated.welcomeCallSent = currentValue === 'Y' ? 'N' : 'Y';
+      updated.welcomeCallDate = updated.welcomeCallSent === 'Y' ? dateStr : '';
+    }
+
     updated.updatedAt = new Date().toISOString();
-    const result = await DataLayer.updateClient(updated);
-    if (result.success) {
+    updated.action = 'update';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(updated)
+      });
+
+      // no-cors returns opaque response — update local state optimistically
+      const idx = allClients.findIndex(c => String(c.id) === String(clientId));
+      if (idx !== -1) allClients[idx] = updated;
+
       const msg = field === 'thankYouSent' ? 'Thank you note recorded' : 'Welcome call recorded';
       showToast(msg, 'success');
-      await refreshData();
-    } else {
+      renderTable();
+
+      // Refresh from source after short delay to confirm write succeeded
+      setTimeout(async () => { await loadData(); }, 2000);
+
+    } catch(err) {
       showToast('Error saving — please try again', 'error');
+      console.error('Toggle error:', err);
     }
   }
 
