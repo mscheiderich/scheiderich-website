@@ -35,6 +35,28 @@
       min-height: 100vh;
     }
 
+    .back-to-dashboard {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-to-dashboard:hover {
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.08);
+    }
+
     /* ── HEADER ── */
     .app-header { background: var(--navy); padding: 0 24px; }
     .app-header-row {
@@ -467,6 +489,7 @@
 <!-- HEADER -->
 <header class="app-header">
   <div class="app-header-row">
+    <a href="/team/" class="back-to-dashboard">← Dashboard</a>
     <div class="app-logo">The Scheiderich Agency</div>
     <div class="app-title">Defensive Driving &amp; Good Student Discount Tracker</div>
     <div class="header-actions">
