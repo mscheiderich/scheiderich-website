@@ -219,7 +219,7 @@
         delete window[callbackName];
         script.remove();
         reject(new Error('Timeout'));
-      }, 12000);
+      }, 15000);
       window[callbackName] = function(data) {
         clearTimeout(timeout);
         delete window[callbackName];
@@ -230,6 +230,7 @@
       script.onerror = () => {
         clearTimeout(timeout);
         delete window[callbackName];
+        script.remove();
         reject(new Error('Script load error'));
       };
       document.head.appendChild(script);
