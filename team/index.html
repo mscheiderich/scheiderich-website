@@ -151,6 +151,8 @@
     }
     .filter-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-lt); }
     .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    /* Archived filter button uses muted gray when active */
+    #fb-Archived.active { background: #64748b; color: #fff; border-color: #64748b; }
     .filter-search {
       height: 32px;
       padding: 0 10px;
@@ -211,6 +213,11 @@
     tbody tr:hover { background: #eef2f8; cursor: pointer; }
     tbody tr.row-overdue  { border-left-color: #dc2626; }
     tbody tr.row-due-soon { border-left-color: var(--orange); }
+    /* Archived rows — muted text, no left border color */
+    tbody tr.row-archived td { color: #94a3b8; }
+    tbody tr.row-archived .client-name { color: #94a3b8; font-weight: 500; }
+    tbody tr.row-archived { border-left-color: transparent; }
+    tbody tr.row-archived:hover { background: #f8f8f8; }
 
     .client-name { font-weight: 600; color: var(--text); }
     .days-overdue  { color: #dc2626; font-weight: 700; }
@@ -238,6 +245,7 @@
     .badge-pending  { background: #fef3c7; color: #92400e; }
     .badge-complete { background: #dcfce7; color: #15803d; }
     .badge-removed  { background: #f1f5f9; color: #64748b; }
+    .badge-archived { background: #f1f5f9; color: #94a3b8; }
 
     .action-btns { display: flex; gap: 5px; }
     .btn-action {
@@ -251,8 +259,10 @@
       transition: background .15s, color .15s, border-color .15s;
       font-size: 13px;
     }
-    .btn-action:hover        { background: var(--navy-lt); color: var(--navy); border-color: var(--navy); }
-    .btn-action.delete:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+    .btn-action:hover         { background: var(--navy-lt); color: var(--navy); border-color: var(--navy); }
+    .btn-action.delete:hover  { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+    .btn-action.unarchive     { border-color: var(--navy); color: var(--navy); }
+    .btn-action.unarchive:hover { background: var(--navy); color: #fff; }
 
     /* ── STATES ── */
     .loading-state {
@@ -384,6 +394,17 @@
       border: 1.5px solid var(--border);
     }
 
+    .archive-warning {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #fef3c7;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #92400e;
+      line-height: 1.55;
+      display: none;
+    }
+
     /* ── TOAST ── */
     .toast-container {
       position: fixed;
@@ -430,19 +451,19 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar">
-  <div class="stat-card s-overdue"  id="stat-Overdue"          onclick="filterByStatCard('Overdue')">
+  <div class="stat-card s-overdue"  id="stat-Overdue"   onclick="filterByStatCard('Overdue')">
     <div class="stat-num" id="cnt-overdue">0</div>
     <div class="stat-lbl">Overdue</div>
   </div>
-  <div class="stat-card s-due-soon" id="stat-Due-Soon"         onclick="filterByStatCard('Due Soon')">
+  <div class="stat-card s-due-soon" id="stat-Due-Soon"  onclick="filterByStatCard('Due Soon')">
     <div class="stat-num" id="cnt-due-soon">0</div>
     <div class="stat-lbl">Due Soon</div>
   </div>
-  <div class="stat-card s-pending"  id="stat-Pending"          onclick="filterByStatCard('Pending')">
+  <div class="stat-card s-pending"  id="stat-Pending"   onclick="filterByStatCard('Pending')">
     <div class="stat-num" id="cnt-pending">0</div>
     <div class="stat-lbl">Pending</div>
   </div>
-  <div class="stat-card s-complete" id="stat-Complete"         onclick="filterByStatCard('Complete')">
+  <div class="stat-card s-complete" id="stat-Complete"  onclick="filterByStatCard('Complete')">
     <div class="stat-num" id="cnt-complete">0</div>
     <div class="stat-lbl">Complete This Month</div>
   </div>
@@ -461,6 +482,7 @@
   <button class="filter-btn"        id="fb-Pending"          onclick="setStatusFilter('Pending')">Pending</button>
   <button class="filter-btn"        id="fb-Complete"         onclick="setStatusFilter('Complete')">Complete</button>
   <button class="filter-btn"        id="fb-Discount-Removed" onclick="setStatusFilter('Discount Removed')">Discount Removed</button>
+  <button class="filter-btn"        id="fb-Archived"         onclick="setStatusFilter('Archived')">Archived</button>
   <input  class="filter-search" type="text" id="searchInput" placeholder="Search name, producer&#8230;" oninput="renderTable()" />
   <select class="filter-select" id="producerFilter" onchange="renderTable()">
     <option value="">All Producers</option>
@@ -580,16 +602,21 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Status Override</label>
-          <select id="f_statusOverride" onchange="updateStatusDisplay()">
-            <option value="">Auto-calculated</option>
-            <option value="Discount Removed">Discount Removed</option>
-          </select>
-        </div>
+        <!-- Status: auto-calc display + manual override -->
         <div class="form-group">
           <label>Calculated Status</label>
           <div class="status-display" id="f_statusDisplay">&#8212;</div>
+        </div>
+        <div class="form-group">
+          <label>Manual Override</label>
+          <select id="f_statusOverride" onchange="updateStatusDisplay()">
+            <option value="">(none) &#8212; auto-calculate</option>
+            <option value="Discount Removed">Discount Removed</option>
+            <option value="Archived">Archived</option>
+          </select>
+          <div class="archive-warning" id="archiveWarning">
+            Archiving hides this record from the main view. Use Unarchive to restore it at any time.
+          </div>
         </div>
 
         <div class="form-group full">
@@ -635,6 +662,23 @@
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
       <button class="btn btn-danger"  onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNARCHIVE MODAL -->
+<div class="modal-overlay" id="unarchiveModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div class="modal-title">Restore Client</div>
+      <button class="modal-close" onclick="closeModal('unarchiveModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <p id="unarchiveMsg" style="font-size:14px; line-height:1.65; color:var(--text);"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('unarchiveModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmUnarchive()">Restore</button>
     </div>
   </div>
 </div>
@@ -721,14 +765,61 @@
   };
 
   /* ═══════════════════════════════════════
+     MIGRATION RECORDS (runs once via localStorage gate)
+  ═══════════════════════════════════════ */
+  const MIGRATION_RECORDS = [
+    { id:'id_mig_001', firstName:'Robert',   lastName:'Rice',             producer:'', policyDate:'2026-02-26', dueDate:'2026-03-05', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'left vm and sent email',           thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_002', firstName:'Doretha',  lastName:'Rice',             producer:'', policyDate:'2026-02-26', dueDate:'2026-03-05', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'left vm and sent email',           thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_003', firstName:'Mohammad', lastName:'Dandachy',         producer:'', policyDate:'2026-03-11', dueDate:'2026-03-18', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'Spoke with and emailed link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_004', firstName:'David',    lastName:'Gibson',           producer:'', policyDate:'2026-03-12', dueDate:'2026-03-19', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$70.87', status:'Overdue',   contactNote:'Spoke with David sent link',        thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_005', firstName:'Peggy',    lastName:'Gibson',           producer:'', policyDate:'2026-03-12', dueDate:'2026-03-19', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$70.87', status:'Overdue',   contactNote:'Spoke with David sent link',        thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_006', firstName:'Kari',     lastName:'Lemoine',          producer:'', policyDate:'2026-03-31', dueDate:'2026-04-07', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'called left vm sent link in email', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_007', firstName:'Timothy',  lastName:'Lemoine',          producer:'', policyDate:'2026-03-31', dueDate:'2026-04-07', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'called left vm sent link in email', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_008', firstName:'Selah',    lastName:'Gregory',          producer:'', policyDate:'2026-04-07', dueDate:'2026-04-14', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$157.64',status:'Overdue',   contactNote:'Spoke with Selah and emailed link to DD', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_009', firstName:'Katelyn',  lastName:'Smelt',            producer:'', policyDate:'2026-04-14', dueDate:'2026-04-21', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$74.49', status:'Overdue',   contactNote:'sent email left vm',               thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_010', firstName:'Nikki',    lastName:'Matthews',         producer:'', policyDate:'2026-04-15', dueDate:'2026-04-22', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$166.29',status:'Overdue',   contactNote:'Spoke with Nikki sent link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_011', firstName:'Zachary',  lastName:'Mitchell',         producer:'', policyDate:'2026-04-15', dueDate:'2026-04-22', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$166.29',status:'Overdue',   contactNote:'Spoke with Nikki sent link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_012', firstName:'Wayne',    lastName:'Adcock',           producer:'', policyDate:'2026-04-17', dueDate:'2026-04-24', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$53.01', status:'Overdue',   contactNote:'Spoke with Wayne and sent link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_013', firstName:'Alvaro',   lastName:'Sanchez',          producer:'', policyDate:'2026-04-28', dueDate:'2026-05-05', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$52.86', status:'Overdue',   contactNote:'Emailed link again and sent reminder', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_014', firstName:'Stephan',  lastName:'Fiala',            producer:'', policyDate:'2026-05-01', dueDate:'2026-05-08', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$89.19', status:'Overdue',   contactNote:'emailed reminder',                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_015', firstName:'Jonathan', lastName:'Gonzalez',         producer:'', policyDate:'2026-05-01', dueDate:'2026-05-08', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$160.15',status:'Overdue',   contactNote:'emailed reminder',                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_016', firstName:'Andrea',   lastName:'Espinoza',         producer:'', policyDate:'2026-05-01', dueDate:'2026-05-08', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$160.15',status:'Overdue',   contactNote:'emailed reminder',                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_017', firstName:'Jacob',    lastName:'Lattie',           producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$88.56', status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_018', firstName:'Abigail',  lastName:'Lattie',           producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$88.56', status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_019', firstName:'Brian',    lastName:'Perez',            producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$294.71',status:'Overdue',   contactNote:'spoke with Felix emailed link',    thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_020', firstName:'Sherlyn',  lastName:'Perez Trejo',      producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$294.71',status:'Overdue',   contactNote:'spoke with Felix emailed link',    thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_021', firstName:'Tiffany',  lastName:'Sanders Crawford', producer:'', policyDate:'2026-05-09', dueDate:'2026-05-16', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$205.40',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_022', firstName:'Michael',  lastName:'Crawford',         producer:'', policyDate:'2026-05-09', dueDate:'2026-05-16', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$205.40',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_023', firstName:'Regina',   lastName:'Sanders',          producer:'', policyDate:'2026-05-09', dueDate:'2026-05-16', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$205.40',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_024', firstName:'Jason',    lastName:'Davis',            producer:'', policyDate:'2026-05-10', dueDate:'2026-05-17', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$173.63',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_025', firstName:'Destiny',  lastName:'Buendia',          producer:'', policyDate:'2026-05-10', dueDate:'2026-05-17', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$173.63',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_026', firstName:'Dena',     lastName:'Merrill',          producer:'', policyDate:'2026-05-14', dueDate:'2026-05-21', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$72.92', status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_027', firstName:'Erin',     lastName:'Byrd',             producer:'', policyDate:'2026-05-18', dueDate:'2026-05-25', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$76.98', status:'Overdue',   contactNote:'Spoke with Eryn emailed link',     thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_028', firstName:'Carolyn',  lastName:'Kupfer',           producer:'', policyDate:'2026-05-22', dueDate:'2026-05-29', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Due Soon',  contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_029', firstName:'Danny',    lastName:'Kupfer',           producer:'', policyDate:'2026-05-22', dueDate:'2026-05-29', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Due Soon',  contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_030', firstName:'Hokil',    lastName:'Kahng',            producer:'', policyDate:'2026-06-08', dueDate:'2026-06-15', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$153.27',status:'Pending',   contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
+    { id:'id_mig_031', firstName:'Moon',     lastName:'Kahng',            producer:'', policyDate:'2026-05-08', dueDate:'2026-05-15', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$153.27',status:'Overdue',   contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' }
+  ];
+
+  async function runMigration() {
+    if (localStorage.getItem('migrationComplete')) return;
+    for (const record of MIGRATION_RECORDS) {
+      await DataLayer.addClient(record);
+      await new Promise(r => setTimeout(r, 400));
+    }
+    localStorage.setItem('migrationComplete', 'true');
+  }
+
+  /* ═══════════════════════════════════════
      APP STATE
   ═══════════════════════════════════════ */
-  let allClients   = [];
-  let statusFilter = 'all';
-  let editingId    = null;
-  let deletingId   = null;
-  let notesId      = null;
-  let formToggles  = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
+  let allClients    = [];
+  let statusFilter  = 'all';
+  let editingId     = null;
+  let deletingId    = null;
+  let notesId       = null;
+  let unarchivingId = null;
+  let formToggles   = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
 
   /* ═══════════════════════════════════════
      DATE HELPERS (local, never UTC)
@@ -775,14 +866,17 @@
 
   /* ═══════════════════════════════════════
      STATUS CALCULATION
+     Archived and Discount Removed are manual-only overrides.
+     Archived takes precedence over Discount Removed.
   ═══════════════════════════════════════ */
   function calcStatus(c) {
+    if (c.status === 'Archived')         return 'Archived';
     if (c.status === 'Discount Removed') return 'Discount Removed';
     const ddOk = c.ddDiscount !== 'Y' || c.ddReceived === 'Y';
     const gsOk = c.gsDiscount !== 'Y' || c.gsReceived === 'Y';
     if (ddOk && gsOk) return 'Complete';
     const days = daysUntil(c.dueDate);
-    if (days !== null && days < 0) return 'Overdue';
+    if (days !== null && days < 0)  return 'Overdue';
     if (days !== null && days <= 3) return 'Due Soon';
     return 'Pending';
   }
@@ -790,17 +884,17 @@
   /* ═══════════════════════════════════════
      SORT — priority order, never alpha
   ═══════════════════════════════════════ */
-  const STATUS_RANK = { 'Overdue': 0, 'Due Soon': 1, 'Pending': 2, 'Complete': 3, 'Discount Removed': 4 };
+  const STATUS_RANK = {
+    'Overdue': 0, 'Due Soon': 1, 'Pending': 2,
+    'Complete': 3, 'Discount Removed': 4, 'Archived': 5
+  };
 
   function sortClients(clients) {
     return [...clients].sort((a, b) => {
       const sa = calcStatus(a), sb = calcStatus(b);
       const ra = STATUS_RANK[sa] ?? 99, rb = STATUS_RANK[sb] ?? 99;
       if (ra !== rb) return ra - rb;
-      if (sa === 'Overdue') {
-        // Most days overdue first (most negative days first)
-        return daysUntil(a.dueDate) - daysUntil(b.dueDate);
-      }
+      if (sa === 'Overdue') return daysUntil(a.dueDate) - daysUntil(b.dueDate);
       if (sa === 'Due Soon' || sa === 'Pending') {
         const da = parseDateLocal(a.dueDate) || new Date(0);
         const db = parseDateLocal(b.dueDate) || new Date(0);
@@ -811,13 +905,12 @@
         const db = b.ddReceivedDate || b.gsReceivedDate || '';
         return db.localeCompare(da);
       }
-      // Discount Removed — most recent first
       return (b.createdAt || '').localeCompare(a.createdAt || '');
     });
   }
 
   /* ═══════════════════════════════════════
-     STATS
+     STATS — archived records excluded from all counts
   ═══════════════════════════════════════ */
   function updateStats(clients) {
     const now = new Date();
@@ -826,6 +919,7 @@
     let overdue = 0, dueSoon = 0, pending = 0, completeMonth = 0;
     clients.forEach(c => {
       const s = calcStatus(c);
+      if (s === 'Archived') return; // exclude archived from all counts
       if (s === 'Overdue')  overdue++;
       if (s === 'Due Soon') dueSoon++;
       if (s === 'Pending')  pending++;
@@ -867,8 +961,13 @@
     const search   = (document.getElementById('searchInput').value || '').toLowerCase();
     const producer = document.getElementById('producerFilter').value;
 
+    // Active (non-archived) clients — used for "Y of N" denominator when not in Archived view
+    const activeClients = allClients.filter(c => calcStatus(c) !== 'Archived');
+
     const filtered = allClients.filter(c => {
       const s = calcStatus(c);
+      // "Show All" hides archived — must explicitly switch to Archived filter to see them
+      if (statusFilter === 'all' && s === 'Archived') return false;
       if (statusFilter !== 'all' && s !== statusFilter) return false;
       if (producer && c.producer !== producer) return false;
       if (search) {
@@ -882,29 +981,31 @@
     const tbody  = document.getElementById('clientTableBody');
     tbody.innerHTML = '';
 
+    // Y = active count unless viewing Archived filter
+    const denominator = statusFilter === 'Archived' ? allClients.length : activeClients.length;
     document.getElementById('recordCount').textContent =
-      `Showing ${sorted.length} of ${allClients.length} clients`;
+      `Showing ${sorted.length} of ${denominator} clients`;
     document.getElementById('emptyState').style.display = sorted.length === 0 ? 'block' : 'none';
 
     sorted.forEach(c => {
-      const status = calcStatus(c);
-      const days   = daysUntil(c.dueDate);
+      const status   = calcStatus(c);
+      const archived = status === 'Archived';
+      const days     = daysUntil(c.dueDate);
 
       // Days cell
       let daysHtml = '—';
-      if (days !== null) {
-        if (days < 0)
-          daysHtml = `<span class="days-overdue">${days} days</span>`;
-        else if (days <= 3)
-          daysHtml = `<span class="days-due-soon">${days} days</span>`;
-        else
-          daysHtml = `${days} days`;
+      if (!archived && days !== null) {
+        if (days < 0)       daysHtml = `<span class="days-overdue">${days} days</span>`;
+        else if (days <= 3) daysHtml = `<span class="days-due-soon">${days} days</span>`;
+        else                daysHtml = `${days} days`;
       }
 
-      // Due date class
+      // Due date class (not applied to archived)
       let dueCls = '';
-      if (status === 'Overdue')  dueCls = 'date-overdue';
-      if (status === 'Due Soon') dueCls = 'date-due-soon';
+      if (!archived) {
+        if (status === 'Overdue')  dueCls = 'date-overdue';
+        if (status === 'Due Soon') dueCls = 'date-due-soon';
+      }
 
       // Badge
       const badgeCls = {
@@ -912,10 +1013,11 @@
         'Due Soon':         'badge-due-soon',
         'Pending':          'badge-pending',
         'Complete':         'badge-complete',
-        'Discount Removed': 'badge-removed'
+        'Discount Removed': 'badge-removed',
+        'Archived':         'badge-archived'
       }[status] || 'badge-pending';
 
-      // Inline toggleable icons
+      // Thank You / Welcome Call inline toggles
       const tyIcon = c.thankYouSent === 'Y'
         ? `<span class="icon-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#10003;</span>`
         : `<span class="icon-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','thankYouSent','thankYouDate')">&#8212;</span>`;
@@ -924,9 +1026,18 @@
         ? `<span class="icon-check icon-click" title="Mark unsent" onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#10003;</span>`
         : `<span class="icon-dash icon-click"  title="Mark sent"   onclick="toggleField(event,'${c.id}','welcomeCallSent','welcomeCallDate')">&#8212;</span>`;
 
+      // Actions: archived rows show Unarchive instead of Edit pencil
+      const actionsHtml = archived
+        ? `<button class="btn-action unarchive" title="Unarchive" onclick="openUnarchiveModal('${c.id}')">&#8635;</button>
+           <button class="btn-action delete"    title="Delete"    onclick="openDeleteModal('${c.id}')">&#128465;</button>`
+        : `<button class="btn-action"           title="Edit"      onclick="openEditModal('${c.id}')">&#9998;</button>
+           <button class="btn-action"           title="Notes"     onclick="openNotesModal('${c.id}')">&#128172;</button>
+           <button class="btn-action delete"    title="Delete"    onclick="openDeleteModal('${c.id}')">&#128465;</button>`;
+
       const tr = document.createElement('tr');
-      if (status === 'Overdue')  tr.classList.add('row-overdue');
-      if (status === 'Due Soon') tr.classList.add('row-due-soon');
+      if (!archived && status === 'Overdue')  tr.classList.add('row-overdue');
+      if (!archived && status === 'Due Soon') tr.classList.add('row-due-soon');
+      if (archived)                           tr.classList.add('row-archived');
 
       tr.innerHTML = `
         <td><span class="client-name">${esc(c.firstName)} ${esc(c.lastName)}</span></td>
@@ -942,13 +1053,7 @@
         <td>${tyIcon}</td>
         <td>${wcIcon}</td>
         <td><span class="badge ${badgeCls}">${status}</span></td>
-        <td>
-          <div class="action-btns" onclick="event.stopPropagation()">
-            <button class="btn-action"        title="Edit"   onclick="openEditModal('${c.id}')">&#9998;</button>
-            <button class="btn-action"        title="Notes"  onclick="openNotesModal('${c.id}')">&#128172;</button>
-            <button class="btn-action delete" title="Delete" onclick="openDeleteModal('${c.id}')">&#128465;</button>
-          </div>
-        </td>
+        <td><div class="action-btns" onclick="event.stopPropagation()">${actionsHtml}</div></td>
       `;
 
       tr.addEventListener('click', e => {
@@ -980,8 +1085,7 @@
 
   function filterByStatCard(status) {
     setStatusFilter(status);
-    const scId = 'stat-' + status.replace(/\s+/g, '-');
-    const sc = document.getElementById(scId);
+    const sc = document.getElementById('stat-' + status.replace(/\s+/g, '-'));
     if (sc) sc.classList.add('active');
   }
 
@@ -1013,7 +1117,6 @@
     document.getElementById('searchInput').value    = savedSearch;
     document.getElementById('producerFilter').value = savedProducer;
     statusFilter = savedFilter;
-    // Restore active filter button
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     const fb = document.getElementById(statusToFbId(savedFilter));
     if (fb) fb.classList.add('active');
@@ -1074,9 +1177,9 @@
     ['f_firstName','f_lastName','f_discountAmount','f_contactNote'].forEach(id => {
       document.getElementById(id).value = '';
     });
-    document.getElementById('f_producer').value      = '';
-    document.getElementById('f_policyDate').value    = '';
-    document.getElementById('f_dueDate').value       = '';
+    document.getElementById('f_producer').value       = '';
+    document.getElementById('f_policyDate').value     = '';
+    document.getElementById('f_dueDate').value        = '';
     document.getElementById('f_statusOverride').value = '';
     formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
     applyToggles();
@@ -1093,7 +1196,9 @@
     document.getElementById('f_dueDate').value        = c.dueDate   || '';
     document.getElementById('f_discountAmount').value = c.discountAmount || '';
     document.getElementById('f_contactNote').value    = c.contactNote || '';
-    document.getElementById('f_statusOverride').value = c.status === 'Discount Removed' ? 'Discount Removed' : '';
+    const manualStatuses = ['Discount Removed', 'Archived'];
+    document.getElementById('f_statusOverride').value =
+      manualStatuses.includes(c.status) ? c.status : '';
     formToggles = {
       ddDiscount: c.ddDiscount || 'N',
       ddReceived: c.ddReceived || 'N',
@@ -1108,7 +1213,6 @@
 
   function setToggle(field, val) {
     formToggles[field] = val;
-    // If discount toggled to N, reset received
     if (field === 'ddDiscount' && val === 'N') formToggles.ddReceived = 'N';
     if (field === 'gsDiscount' && val === 'N') formToggles.gsReceived = 'N';
     applyToggles();
@@ -1139,9 +1243,12 @@
   }
 
   function updateStatusDisplay() {
-    const override = document.getElementById('f_statusOverride').value;
-    if (override === 'Discount Removed') {
-      document.getElementById('f_statusDisplay').textContent = 'Discount Removed';
+    const override      = document.getElementById('f_statusOverride').value;
+    const archiveWarn   = document.getElementById('archiveWarning');
+    archiveWarn.style.display = override === 'Archived' ? 'block' : 'none';
+
+    if (override === 'Discount Removed' || override === 'Archived') {
+      document.getElementById('f_statusDisplay').textContent = override;
       return;
     }
     const mock = {
@@ -1189,16 +1296,15 @@
       const existing = allClients.find(c => c.id === editingId) || {};
       clientObj = Object.assign({}, existing, {
         firstName, lastName, producer, policyDate, dueDate,
-        ddDiscount:    formToggles.ddDiscount,
-        ddReceived:    formToggles.ddReceived,
-        gsDiscount:    formToggles.gsDiscount,
-        gsReceived:    formToggles.gsReceived,
+        ddDiscount:     formToggles.ddDiscount,
+        ddReceived:     formToggles.ddReceived,
+        gsDiscount:     formToggles.gsDiscount,
+        gsReceived:     formToggles.gsReceived,
         discountAmount: document.getElementById('f_discountAmount').value.trim(),
         contactNote:    document.getElementById('f_contactNote').value.trim(),
-        status:         override || existing.status || '',
+        status:         override || '',
         updatedAt:      now
       });
-      // Auto-stamp / clear received dates
       if (formToggles.ddReceived === 'Y' && !clientObj.ddReceivedDate) clientObj.ddReceivedDate = todayStr();
       if (formToggles.ddReceived === 'N') clientObj.ddReceivedDate = '';
       if (formToggles.gsReceived === 'Y' && !clientObj.gsReceivedDate) clientObj.gsReceivedDate = todayStr();
@@ -1291,6 +1397,36 @@
   }
 
   /* ═══════════════════════════════════════
+     UNARCHIVE MODAL
+  ═══════════════════════════════════════ */
+  function openUnarchiveModal(id) {
+    const c = allClients.find(x => x.id === id);
+    if (!c) return;
+    unarchivingId = id;
+    document.getElementById('unarchiveMsg').textContent =
+      `Restore ${c.firstName} ${c.lastName} to active tracking? Their status will be recalculated based on their current due date.`;
+    openModal('unarchiveModal');
+  }
+
+  async function confirmUnarchive() {
+    const c = allClients.find(x => x.id === unarchivingId);
+    if (!c) return;
+    const updated = Object.assign({}, c, {
+      status:    '',   // clear so calcStatus() runs fresh
+      updatedAt: new Date().toISOString()
+    });
+    closeModal('unarchiveModal');
+    const result = await DataLayer.updateClient(updated);
+    if (result.success) {
+      showToast('Client restored to active tracking', 'success');
+      setStatusFilter('all'); // switch back to main view so restored record is visible
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  /* ═══════════════════════════════════════
      MODAL HELPERS
   ═══════════════════════════════════════ */
   function openModal(id)  { document.getElementById(id).classList.add('open'); }
@@ -1316,7 +1452,14 @@
   /* ═══════════════════════════════════════
      INIT
   ═══════════════════════════════════════ */
-  loadData();
+  (async () => {
+    await loadData();
+    await runMigration();
+    if (!localStorage.getItem('migrationComplete')) {
+      // Migration just ran — reload to show the new records
+      await loadData();
+    }
+  })();
 </script>
 </body>
 </html>
