@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin — Process Improvement | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:    #1e3148;
+      --navy-mid:#264060;
+      --navy-lt: #e8edf4;
+      --orange:  #d9682a;
+      --orange-h:#bf5821;
+      --bg:      #f6f4f1;
+      --bg-w:    #ffffff;
+      --bg-s:    #eeebe6;
+      --text:    #1c2330;
+      --muted:   #5f6b79;
+      --border:  #dedad4;
+      --r:       8px;
+      --r-lg:    12px;
+      --sh-sm:   0 1px 4px rgba(30,49,72,.07);
+      --sh-md:   0 4px 16px rgba(30,49,72,.11);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+    /* HEADER */
+    .app-header { background: var(--navy); padding: 0 24px; }
+    .app-header-row { display: flex; align-items: center; height: 56px; gap: 16px; }
+    .app-logo { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: #fff; white-space: nowrap; flex-shrink: 0; }
+    .app-title { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 500; flex: 1; text-align: center; }
+    .back-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; transition: all .2s; white-space: nowrap; }
+    .back-btn:hover { color: #fff; border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
+    .admin-badge { background: var(--orange); color: #fff; font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: .05em; text-transform: uppercase; }
+
+    /* STAT BAR */
+    .stat-bar { background: var(--navy-mid); padding: 14px 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .stat-pill { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: var(--r); padding: 10px 18px; text-align: center; min-width: 90px; }
+    .stat-num { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; color: #fff; line-height: 1; }
+    .stat-lbl { font-size: 10.5px; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; font-weight: 600; }
+    .stat-pill.s-new  .stat-num { color: #f87171; }
+    .stat-pill.s-prog .stat-num { color: #fbbf24; }
+    .stat-pill.s-done .stat-num { color: #4ade80; }
+
+    /* TOOLBAR */
+    .toolbar { background: var(--bg-w); border-bottom: 1px solid var(--border); padding: 10px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .filter-btn { height: 32px; padding: 0 14px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .toolbar-spacer { flex: 1; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 16px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all .18s; text-decoration: none; }
+    .btn-export  { background: var(--navy); color: #fff; }
+    .btn-export:hover  { background: var(--navy-mid); }
+    .btn-print   { background: var(--bg-s); color: var(--text); border: 1px solid var(--border); }
+    .btn-print:hover { background: var(--border); }
+    .btn-refresh { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+    .btn-refresh:hover { border-color: var(--navy); color: var(--navy); }
+    .sort-select { height: 32px; padding: 0 10px; border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 12.5px; color: var(--text); background: #fff; outline: none; cursor: pointer; }
+
+    /* TABLE */
+    .table-wrap { padding: 24px; overflow-x: auto; }
+    .submissions-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .submissions-table thead { background: var(--bg-s); border-bottom: 2px solid var(--border); }
+    .submissions-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .submissions-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .submissions-table tbody tr:hover { background: #f0f4fa; cursor: pointer; }
+    .submission-text { max-width: 340px; line-height: 1.55; color: var(--text); }
+    .submission-text.expanded { max-width: none; white-space: pre-wrap; }
+
+    .urgency-tag { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; display: inline-block; }
+    .urg-Critical { background: #fee2e2; color: #dc2626; }
+    .urg-High     { background: #ffedd5; color: #ea580c; }
+    .urg-Medium   { background: #fef3c7; color: #92400e; }
+    .urg-Low      { background: #dcfce7; color: #15803d; }
+    .cat-tag { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--navy-lt); color: var(--navy); white-space: nowrap; display: inline-block; }
+
+    .status-select { height: 30px; padding: 0 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--text); background: #fff; outline: none; cursor: pointer; min-width: 150px; transition: border-color .15s; }
+    .status-select:focus { border-color: var(--navy); }
+    .status-select.st-New              { border-color: #94a3b8; color: #64748b; }
+    .status-select.st-Acknowledged     { border-color: #3b82f6; color: #1d4ed8; background: #eff6ff; }
+    .status-select.st-In-Progress      { border-color: #f59e0b; color: #92400e; background: #fef3c7; }
+    .status-select.st-Resolved         { border-color: #22c55e; color: #15803d; background: #dcfce7; }
+    .status-select.st-Shared           { border-color: #a855f7; color: #7e22ce; background: #f3e8ff; }
+
+    .notes-input { width: 100%; min-width: 160px; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text); background: #fff; outline: none; resize: vertical; min-height: 36px; transition: border-color .15s; }
+    .notes-input:focus { border-color: var(--navy); }
+    .save-btn { height: 30px; padding: 0 12px; background: var(--orange); color: #fff; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .18s; white-space: nowrap; margin-top: 6px; }
+    .save-btn:hover { background: var(--orange-h); }
+    .save-btn.saved { background: #16a34a; }
+
+    .date-cell { white-space: nowrap; color: var(--muted); font-size: 12px; }
+    .loading-state { text-align: center; padding: 80px 24px; color: var(--muted); }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--muted); font-size: 14px; }
+
+    /* TOAST */
+    .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { padding: 11px 18px; border-radius: 8px; font-size: 13.5px; font-weight: 600; color: #fff; box-shadow: 0 4px 16px rgba(0,0,0,.18); animation: tin .2s ease, tout .3s ease 2.7s forwards; }
+    .toast-success { background: #16a34a; }
+    .toast-error   { background: #dc2626; }
+    @keyframes tin  { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+    @keyframes tout { from { opacity:1; } to { opacity:0; } }
+
+    @media print {
+      .app-header, .stat-bar, .toolbar, .portal-footer { display: none !important; }
+      .table-wrap { padding: 0; }
+      .status-select, .notes-input, .save-btn { display: none; }
+      body { background: #fff; }
+    }
+
+    .portal-footer { background: var(--bg-w); border-top: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
+    .footer-text { font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-row">
+    <a href="/team/admin/" class="back-btn">← Admin Hub</a>
+    <div class="app-logo">The Scheiderich Agency</div>
+    <div class="app-title">Process Improvement — Admin</div>
+    <span class="admin-badge">Admin Only</span>
+  </div>
+</header>
+
+<div class="stat-bar" id="statBar">
+  <div class="stat-pill s-new">
+    <div class="stat-num" id="cnt-new">—</div>
+    <div class="stat-lbl">New</div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-num" id="cnt-ack">—</div>
+    <div class="stat-lbl">Acknowledged</div>
+  </div>
+  <div class="stat-pill s-prog">
+    <div class="stat-num" id="cnt-prog">—</div>
+    <div class="stat-lbl">In Progress</div>
+  </div>
+  <div class="stat-pill s-done">
+    <div class="stat-num" id="cnt-res">—</div>
+    <div class="stat-lbl">Resolved</div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-num" id="cnt-shared">—</div>
+    <div class="stat-lbl">Shared</div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-num" id="cnt-total">—</div>
+    <div class="stat-lbl">Total</div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" onclick="setFilter('New',this)">🔴 New</button>
+  <button class="filter-btn" onclick="setFilter('Acknowledged',this)">🔵 Acknowledged</button>
+  <button class="filter-btn" onclick="setFilter('In Progress',this)">🟡 In Progress</button>
+  <button class="filter-btn" onclick="setFilter('Resolved',this)">🟢 Resolved</button>
+  <button class="filter-btn" onclick="setFilter('Shared with Allstate',this)">🟣 Shared</button>
+  <div class="toolbar-spacer"></div>
+  <select class="sort-select" id="sortSelect" onchange="renderTable()">
+    <option value="newest">Newest First</option>
+    <option value="oldest">Oldest First</option>
+    <option value="urgency">By Urgency</option>
+    <option value="category">By Category</option>
+    <option value="status">By Status</option>
+  </select>
+  <button class="btn btn-refresh" onclick="loadData()">↻ Refresh</button>
+  <button class="btn btn-print"   onclick="window.print()">🖨 Print</button>
+  <button class="btn btn-export"  onclick="exportCSV()">⬇ Export CSV</button>
+</div>
+
+<div id="loadingState" class="loading-state">
+  <div class="spinner"></div>
+  <p>Loading submissions...</p>
+</div>
+
+<div id="tableArea" style="display:none;">
+  <div class="table-wrap">
+    <table class="submissions-table" id="subTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Urgency</th>
+          <th>Submission</th>
+          <th>Status</th>
+          <th>Admin Notes</th>
+          <th>Save</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none;">No submissions match this filter.</div>
+  </div>
+</div>
+
+<footer class="portal-footer">
+  <div class="footer-text">© 2026 The Scheiderich Agency · Admin Access Only</div>
+  <div class="footer-text" id="lastRefresh"></div>
+</footer>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_1XOHxoV9aH62NzFMlG2nxzb-jVpGBd3VqTLY6Yn_WuoSZWAhL8xOHrH91OCOZdzb/exec';
+
+  function fetchFromScript() {
+    return new Promise((resolve, reject) => {
+      const callbackName = 'cb_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => {
+        delete window[callbackName];
+        script.remove();
+        reject(new Error('Timeout'));
+      }, 15000);
+      window[callbackName] = function(data) {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        script.remove();
+        resolve(data);
+      };
+      script.src = SCRIPT_URL + '?callback=' + callbackName + '&t=' + Date.now();
+      script.onerror = () => {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        script.remove();
+        reject(new Error('Script load error'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  const URGENCY_RANK = { 'Critical':1, 'High':2, 'Medium':3, 'Low':4 };
+  const STATUS_RANK  = { 'New':1, 'Acknowledged':2, 'In Progress':3, 'Resolved':4, 'Shared with Allstate':5 };
+
+  let allData      = [];
+  let currentFilter = 'all';
+
+  /* ── LOAD ── */
+  async function loadData() {
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('tableArea').style.display    = 'none';
+    try {
+      const json = await fetchFromScript();
+      allData = json.data || [];
+      updateStats();
+      renderTable();
+      const now = new Date().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+      document.getElementById('lastRefresh').textContent = 'Last refreshed: ' + now;
+    } catch(err) {
+      console.error('Load error:', err);
+      showToast('Error loading data — check connection and try refresh', 'error');
+    } finally {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('tableArea').style.display    = 'block';
+    }
+  }
+
+  /* ── STATS ── */
+  function updateStats() {
+    const counts = { 'New':0, 'Acknowledged':0, 'In Progress':0, 'Resolved':0, 'Shared with Allstate':0 };
+    allData.forEach(s => { if (counts[s.Status] !== undefined) counts[s.Status]++; });
+    document.getElementById('cnt-new').textContent    = counts['New'];
+    document.getElementById('cnt-ack').textContent    = counts['Acknowledged'];
+    document.getElementById('cnt-prog').textContent   = counts['In Progress'];
+    document.getElementById('cnt-res').textContent    = counts['Resolved'];
+    document.getElementById('cnt-shared').textContent = counts['Shared with Allstate'];
+    document.getElementById('cnt-total').textContent  = allData.length;
+  }
+
+  /* ── FILTER ── */
+  function setFilter(val, el) {
+    currentFilter = val;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderTable();
+  }
+
+  /* ── SORT ── */
+  function getSorted(data) {
+    const sort = document.getElementById('sortSelect').value;
+    return [...data].sort((a,b) => {
+      if (sort === 'newest')   return new Date(b['Submitted At']) - new Date(a['Submitted At']);
+      if (sort === 'oldest')   return new Date(a['Submitted At']) - new Date(b['Submitted At']);
+      if (sort === 'urgency')  return (URGENCY_RANK[a.Urgency]||9) - (URGENCY_RANK[b.Urgency]||9);
+      if (sort === 'category') return (a.Category||'').localeCompare(b.Category||'');
+      if (sort === 'status')   return (STATUS_RANK[a.Status]||9) - (STATUS_RANK[b.Status]||9);
+      return 0;
+    });
+  }
+
+  /* ── RENDER ── */
+  function renderTable() {
+    const filtered = currentFilter === 'all'
+      ? allData
+      : allData.filter(s => s.Status === currentFilter);
+    const sorted = getSorted(filtered);
+
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    document.getElementById('emptyState').style.display = sorted.length === 0 ? 'block' : 'none';
+
+    sorted.forEach((s, idx) => {
+      const date = s['Submitted At']
+        ? new Date(s['Submitted At']).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
+        : '—';
+      const stClass = 'st-' + (s.Status||'New').replace(/\s+/g,'-');
+      const tr = document.createElement('tr');
+      tr.id = 'row-' + s.ID;
+      tr.innerHTML = `
+        <td class="date-cell" style="font-size:12px;color:var(--muted);">${idx+1}</td>
+        <td class="date-cell">${date}</td>
+        <td><span class="cat-tag">${esc(s.Category)}</span></td>
+        <td><span class="urgency-tag urg-${esc(s.Urgency)}">${esc(s.Urgency)}</span></td>
+        <td><div class="submission-text">${esc(s.Submission)}</div></td>
+        <td>
+          <select class="status-select ${stClass}" id="status-${esc(s.ID)}" onchange="styleStatus(this)">
+            <option ${s.Status==='New'?'selected':''}>New</option>
+            <option ${s.Status==='Acknowledged'?'selected':''}>Acknowledged</option>
+            <option ${s.Status==='In Progress'?'selected':''}>In Progress</option>
+            <option ${s.Status==='Resolved'?'selected':''}>Resolved</option>
+            <option ${s.Status==='Shared with Allstate'?'selected':''}>Shared with Allstate</option>
+          </select>
+        </td>
+        <td>
+          <textarea class="notes-input" id="notes-${esc(s.ID)}" rows="2" placeholder="Optional note visible to team...">${esc(s['Admin Notes']||'')}</textarea>
+        </td>
+        <td>
+          <button class="save-btn" id="save-${esc(s.ID)}" onclick="saveRow('${esc(s.ID)}')">Save</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function styleStatus(sel) {
+    sel.className = 'status-select st-' + sel.value.replace(/\s+/g,'-');
+  }
+
+  /* ── SAVE ROW ── */
+  async function saveRow(id) {
+    const status     = document.getElementById('status-' + id).value;
+    const adminNotes = document.getElementById('notes-'  + id).value;
+    const btn        = document.getElementById('save-'   + id);
+    btn.textContent  = 'Saving...';
+    btn.disabled     = true;
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action:'update', id, status, adminNotes })
+      });
+      // optimistic update
+      const rec = allData.find(s => s.ID === id);
+      if (rec) { rec.Status = status; rec['Admin Notes'] = adminNotes; }
+      updateStats();
+      btn.textContent = '✓ Saved';
+      btn.classList.add('saved');
+      setTimeout(() => {
+        btn.textContent = 'Save';
+        btn.disabled = false;
+        btn.classList.remove('saved');
+      }, 2200);
+      showToast('Saved successfully', 'success');
+    } catch(err) {
+      showToast('Error saving — try again', 'error');
+      btn.textContent = 'Save';
+      btn.disabled = false;
+    }
+  }
+
+  /* ── EXPORT CSV ── */
+  function exportCSV() {
+    const filtered = currentFilter === 'all' ? allData : allData.filter(s => s.Status === currentFilter);
+    const sorted   = getSorted(filtered);
+    const headers  = ['ID','Submitted At','Category','Urgency','Submission','Status','Admin Notes','Updated At'];
+    const rows     = sorted.map(s => headers.map(h => '"' + String(s[h]||'').replace(/"/g,'""') + '"').join(','));
+    const csv      = [headers.join(','), ...rows].join('\n');
+    const blob     = new Blob([csv], { type:'text/csv' });
+    const url      = URL.createObjectURL(blob);
+    const a        = document.createElement('a');
+    a.href         = url;
+    a.download     = 'process-improvements-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('CSV exported', 'success');
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg, type) {
+    const el = document.createElement('div');
+    el.className = 'toast toast-' + (type||'success');
+    el.textContent = msg;
+    document.getElementById('toastWrap').appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadData();
+</script>
+</body>
+</html>
