@@ -222,16 +222,27 @@
     document.getElementById('loadingState').style.display = 'block';
     document.getElementById('tableArea').style.display    = 'none';
     try {
-      const res  = await fetch(SCRIPT_URL + '?t=' + Date.now());
-      const json = await res.json();
+      const url = SCRIPT_URL + '?action=get&t=' + Date.now();
+      const res = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+      const text = await res.text();
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch(parseErr) {
+        console.error('Parse error. Raw response:', text);
+        throw new Error('Invalid JSON from script');
+      }
       allData = json.data || [];
       updateStats();
       renderTable();
       const now = new Date().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
       document.getElementById('lastRefresh').textContent = 'Last refreshed: ' + now;
     } catch(err) {
-      showToast('Error loading data — check connection', 'error');
-    } finally {
+      console.error('Load error:', err);
+      showToast('Error loading data — check connection and try refresh', 'error');
       document.getElementById('loadingState').style.display = 'none';
       document.getElementById('tableArea').style.display    = 'block';
     }

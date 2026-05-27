@@ -293,11 +293,14 @@
   /* ── LOAD BOARD ── */
   async function loadBoard() {
     try {
-      const res  = await fetch(SCRIPT_URL);
-      const json = await res.json();
+      const url = SCRIPT_URL + '?action=get&t=' + Date.now();
+      const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+      const text = await res.text();
+      const json = JSON.parse(text);
       allSubmissions = (json.data || []).filter(s => VISIBLE_STATUSES.includes(s.Status));
       renderBoard();
     } catch (err) {
+      console.error('Board load error:', err);
       document.getElementById('boardContent').innerHTML =
         '<div class="board-empty"><div class="board-empty-icon">⚠️</div><p>Could not load submissions. Refresh to try again.</p></div>';
     }
