@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -405,6 +405,39 @@
       color: var(--navy);
       background: var(--navy-lt);
     }
+
+    /* ── Community teaser band ── */
+    .comm-teaser {
+      display: flex; align-items: center; gap: 48px;
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 40px 48px;
+      box-shadow: var(--sh-sm);
+    }
+    .comm-teaser-logo {
+      flex-shrink: 0;
+      width: 110px; height: 110px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .comm-teaser-logo img { width: 78px; display: block; }
+    .comm-teaser-text { flex: 1; }
+    .comm-teaser-text .sec-title { margin-bottom: 12px; }
+    .comm-teaser-text p { font-size: 15.5px; color: var(--muted); line-height: 1.72; margin-bottom: 20px; }
+    .comm-teaser-link {
+      font-size: 14.5px; font-weight: 600; color: var(--navy);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+      transition: color .2s;
+    }
+    .comm-teaser-link:hover { color: var(--orange); }
+    .comm-teaser-arrow { color: var(--orange); }
+    @media (max-width: 640px) {
+      .comm-teaser { flex-direction: column; gap: 24px; padding: 28px 24px; align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
@@ -673,6 +706,23 @@
 </section>
 
 
+<!-- IN OUR COMMUNITY TEASER -->
+<section class="sec sec-alt" aria-labelledby="comm-teaser-h2">
+  <div class="container">
+    <div class="comm-teaser">
+      <div class="comm-teaser-logo">
+        <img src="the-bean-logo.png" alt="The Bean — Brightside Empower Ability Network logo" />
+      </div>
+      <div class="comm-teaser-text">
+        <h2 class="sec-title" id="comm-teaser-h2">In Our Community</h2>
+        <p>As a member of The Bean and a proud partner of the Brightside Forever Foundation, we support inclusive employment right here in Buford.</p>
+        <a href="/community.html" class="comm-teaser-link">See our community involvement <span class="comm-teaser-arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <!-- FINAL CTA -->
 <section class="cta-sec" aria-labelledby="cta-h2">
   <div class="container">
@@ -730,6 +780,7 @@
         <div class="footer-col-title">Agency</div>
         <ul class="footer-links">
           <li><a href="/about.html">About Our Team</a></li>
+          <li><a href="/community.html">Community</a></li>
           <li><a href="/contact.html">Contact Us</a></li>
           <li><a href="/life-insurance-calculator.html">Life Calculator</a></li>
         </ul>
