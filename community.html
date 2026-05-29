@@ -154,7 +154,7 @@
       color: var(--orange); margin-bottom: 10px;
     }
     .label-lt { color: rgba(255,255,255,.38); }
-    .sec { padding: 88px 0; }
+    .sec { padding: 44px 0; }
     .sec-w { background: var(--bg-w); }
     .sec-alt { background: var(--bg-s); }
     .sec-navy { background: var(--navy); }
@@ -369,7 +369,7 @@
       .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
     }
     @media (max-width: 640px) {
-      .sec { padding: 60px 0; }
+      .sec { padding: 36px 0; }
       .values-strip { grid-template-columns: 1fr; }
       .team-grid { grid-template-columns: 1fr; }
       .stats-bar { grid-template-columns: 1fr 1fr; }
@@ -398,23 +398,26 @@
       background: var(--navy-lt);
     }
 
-    /* ── Community hero — off-white band ── */
+    /* ── Community hero — navy gradient ── */
     .comm-hero {
-      background: var(--bg);
-      padding: 64px 0;
+      background: linear-gradient(135deg, #1e3148 0%, #2c4a66 100%);
+      padding: 48px 0;
       text-align: center;
-      border-bottom: 1px solid var(--border);
     }
-    .comm-hero h1 { font-size: clamp(28px, 3.5vw, 44px); color: var(--navy); margin-bottom: 16px; }
-    .comm-hero-sub { font-size: 17px; color: var(--muted); max-width: 600px; margin: 0 auto; line-height: 1.65; }
+    .comm-hero h1 { font-size: clamp(28px, 3.5vw, 44px); color: #fff; margin-bottom: 10px; }
+    .comm-hero-accent {
+      width: 60px; height: 4px; background: #d9682a; border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+    .comm-hero-sub { font-size: 17px; color: rgba(255,255,255,.75); max-width: 600px; margin: 0 auto; line-height: 1.65; }
     .comm-breadcrumb {
       display: flex; align-items: center; justify-content: center; gap: 8px;
-      font-size: 12px; color: var(--muted); margin-bottom: 20px;
+      font-size: 12px; color: rgba(255,255,255,.45); margin-bottom: 20px;
     }
-    .comm-breadcrumb a { color: var(--muted); transition: color .2s; }
-    .comm-breadcrumb a:hover { color: var(--navy); }
+    .comm-breadcrumb a { color: rgba(255,255,255,.45); transition: color .2s; }
+    .comm-breadcrumb a:hover { color: rgba(255,255,255,.75); }
     .comm-breadcrumb svg { width: 12px; height: 12px; }
-    @media (max-width: 640px) { .comm-hero { padding: 44px 0; } }
+    @media (max-width: 640px) { .comm-hero { padding: 36px 0; } }
 
     /* ── Brightside stat callout ── */
     .brightside-stats {
@@ -427,7 +430,7 @@
       max-width: 560px;
       margin: 0 auto 10px;
     }
-    .brightside-stat { padding: 36px 28px; text-align: center; }
+    .brightside-stat { padding: 24px 20px; text-align: center; }
     .brightside-stat + .brightside-stat { border-left: 1px solid var(--border); }
     .brightside-stat-source { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 44px; }
     @media (max-width: 640px) {
@@ -443,10 +446,15 @@
       align-items: start;
     }
     .natalie-photo {
-      background: var(--bg-s);
       border-radius: var(--r-lg);
       aspect-ratio: 4/5;
       border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .natalie-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
     }
     .natalie-text .label { display: block; }
     .natalie-text .sec-title { margin-bottom: 20px; }
@@ -561,13 +569,14 @@
       Community
     </div>
     <h1 id="page-h1">Community Involvement</h1>
+    <div class="comm-hero-accent" aria-hidden="true"></div>
     <p class="comm-hero-sub">The Scheiderich Agency is proud to call Buford home. Beyond insurance, we believe in investing in the people and places that make this community what it is — through local partnerships, sponsorships, and hands-on support.</p>
   </div>
 </section>
 
 
 <!-- BRIGHTSIDE FOREVER FOUNDATION -->
-<section class="sec sec-alt" aria-labelledby="brightside-h2">
+<section class="sec sec-w" aria-labelledby="brightside-h2">
   <div class="container">
     <div class="intro-content">
       <span class="label">Local Partnership</span>
@@ -608,9 +617,8 @@
   <div class="container">
     <div class="natalie-feature">
 
-      <div class="natalie-photo" role="img" aria-label="Natalie photo placeholder">
-        <!-- Natalie photo: replace this placeholder with
-        <img src="natalie.jpg" alt="Natalie, The Scheiderich Agency team member"> -->
+      <div class="natalie-photo">
+        <img src="natalie.jpg" alt="Natalie, The Scheiderich Agency team member">
       </div>
 
       <div class="natalie-text">
@@ -682,7 +690,7 @@
 
 
 <!-- AROUND THE COMMUNITY -->
-<section class="sec sec-w" aria-labelledby="community-events-h2">
+<section class="sec" aria-labelledby="community-events-h2">
   <div class="container">
     <div class="sec-hd">
       <span class="label">Local Events</span>
