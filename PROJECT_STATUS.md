@@ -1,6 +1,6 @@
 # The Scheiderich Agency — Project Status
-**Last Updated:** May 29, 2026
-**Session:** Community Involvement Page + Sitewide Integration
+**Last Updated:** June 5, 2026
+**Session:** GA4, DIIB, Sitemap, SEO Optimization, Performance Fixes
 
 ---
 
@@ -76,8 +76,9 @@
 | GoDaddy | Domain registration only | Never touch DNS here |
 | Vercel | Life calculator + Hero Profiler hosting | Separate repos |
 | Formspree | Website contact forms | Endpoint: mgoqnelq |
-| Elfsight | Google reviews widget | Not yet connected |
-| MailerLite | Email marketing | Not yet set up |
+| Google Analytics 4 | Website tracking | Property ID: 540449345, Measurement ID: G-HPQZJLZB78 |
+| DIIB | SEO monitoring dashboard | Synced with GA4, Facebook, Instagram |
+| Elfsight | Google reviews widget | Live and connected to Google Business Profile |
 | Google Sheets | Backend data for portal tools | |
 | Google Apps Script | API layer for portal tools | |
 
@@ -152,6 +153,8 @@ Windows treats them as identical. Keep all filenames and references lowercase.
 | privacy-policy.html | Privacy Policy |
 | terms-of-use.html | Terms of Use |
 | disclaimer.html | Disclaimer |
+| sitemap.xml | XML Sitemap — submitted to Google Search Console June 5, 2026, 24 pages |
+| robots.txt | Robots file — blocks /team/, references sitemap |
 
 ### Images in Root (no images folder — all assets sit in root)
 | File | Use |
@@ -370,36 +373,46 @@ items built this session.
 - **Filenames:** lowercase, server is case-sensitive.
 - **Verifying changes:** cPanel pull, then hard-refresh (Ctrl+Shift+R) — browser
   cache will otherwise show the old page.
+- **Sitemap rule:** Every new HTML page added to the site must include
+  a simultaneous update to sitemap.xml in the same Claude Code prompt.
+  Never add a page without updating the sitemap.
 
 ---
 
-## Pending Tasks — Priority Order
+## Pending Tasks
 
-### First thing next session (verify)
-- [ ] Confirm footer Community link, the index + about teaser bands, and
-      Natalie's photo + quote are all live (pull + hard refresh)
-
-### Immediate (security)
+### Security (do next session)
 - [ ] Password protect `/team/admin/` in cPanel Directory Privacy
 - [ ] Password protect `/team/admin/process-improvement/` in cPanel
 - [ ] Password protect `/team/admin/marketing/` in cPanel
 
-### High priority (saves repeated effort)
-- [ ] Convert header/footer to JS includes (one session, all pages)
+### Formspree
+- [ ] Verify notification email → info@gahomeinsuranceexperts.com
+- [ ] Enable hCAPTCHA spam filtering
+- [ ] Set custom email domain via Cloudflare DNS
 
-### Next Build Session
+### SEO — Completed This Session ✅
+- [x] Google Analytics GA4 installed sitewide
+- [x] Sitemap.xml created and submitted to Google Search Console
+- [x] robots.txt created
+- [x] Non-descriptive link text fixed sitewide (44 instances across 10 files)
+- [x] Google Maps iframe replaced with lightweight address link
+- [x] SEO PageSpeed score hit 100 on both mobile and desktop
+- [x] Desktop performance: 97, Mobile performance: 81
+
+### Search Console
+- [ ] Connect Google Search Console to GA4
+      Admin → Search Console links in GA4
+
+### Content
+- [ ] Publish Medium articles 2–5 on weekly cadence
+- [ ] Update life calculator article cards as Medium articles publish
+      ARTICLES array in lifecalculator.thescheiderichagency.com/index.html
+
+### Team Portal
 - [ ] Sales & Referral Tracker — Mike provides metrics spreadsheet first
 - [ ] Resource Library page — `/team/resource-library/`
-- [ ] Update life calculator Medium article links as articles publish
-- [ ] Add new community event cards to community.html as events happen
 
-### Real-world (not code)
-- [ ] Order a Scheiderich-Agency-branded table banner / feather flag so future
-      event photos are usable (current photos are all Allstate-branded)
-
-### Third-Party Setup
-- [ ] Elfsight — connect Google Business Profile
-- [ ] Google Analytics — install tracking code
-- [ ] DIIB — install
-- [ ] MailerLite — configure
-- [ ] Formspree — verify email, hCAPTCHA, custom domain
+### Real-world
+- [ ] Order Scheiderich-Agency-branded table banner/feather flag
+      for usable event photos (current photos are Allstate-branded)
