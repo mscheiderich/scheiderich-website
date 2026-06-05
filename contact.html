@@ -453,33 +453,8 @@
           <h2 class="form-title" id="contact-h2">Request a Quote or Ask a Question</h2>
           <p class="form-sub">Fill out the form below and a member of our team will follow up with you promptly — typically the same business day.</p>
 
-          <!-- Success message (hidden until form submits) -->
-          <div data-fs-success style="display:none;
-               background:#e8f5ee; border:1px solid #b6ddc8;
-               border-radius:var(--r); padding:24px 22px; margin-bottom:24px;
-               text-align:center;">
-            <svg width="40" height="40" fill="none" stroke="#2d8a5e" stroke-width="2"
-                 viewBox="0 0 24 24" style="margin:0 auto 12px;" aria-hidden="true">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <p style="font-family:'Lora',serif; font-size:17px; font-weight:600;
-                      color:#1a5c3a; margin-bottom:6px;">Request Received — Thank You!</p>
-            <p style="font-size:13.5px; color:#2d6e4a; line-height:1.6;">
-              A member of our team will follow up at
-              <strong>info@gahomeinsuranceexperts.com</strong> or by phone — typically
-              the same business day. If you need immediate assistance, call us at
-              <a href="tel:7702684418" style="color:#1a5c3a; font-weight:600;">770-268-4418</a>.
-            </p>
-          </div>
 
-          <!-- Form-level error message -->
-          <div data-fs-error style="display:none;
-               background:#fdf0ee; border:1px solid #f0c4bb;
-               border-radius:var(--r); padding:16px 18px; margin-bottom:20px;
-               font-size:13.5px; color:#a63a2a;">
-          </div>
-
-          <form id="contact-form" novalidate>
+          <form id="contact-form" action="https://formspree.io/f/mgoqnelq" method="POST" novalidate>
 
             <div class="form-row">
               <div class="form-group">
@@ -551,17 +526,13 @@
             </p>
           </form>
 
-          <!-- Formspree Ajax SDK -->
-          <script>
-            window.formspree = window.formspree || function () {
-              (formspree.q = formspree.q || []).push(arguments);
-            };
-            formspree('initForm', {
-              formElement: '#contact-form',
-              formId: 'mgoqnelq'
-            });
-          </script>
-          <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+          <div id="form-confirmation" style="display:none; text-align:center; padding:40px 20px;">
+            <div style="font-size:64px; color:#1e7d4f; line-height:1; margin-bottom:20px;">&#10003;</div>
+            <h2 style="font-family:'Lora',serif; font-size:26px; color:var(--text); margin-bottom:12px;">Message Received</h2>
+            <p style="font-size:15px; color:var(--muted); line-height:1.65; margin-bottom:20px; max-width:380px; margin-left:auto; margin-right:auto;">Thank you for reaching out to The Scheiderich Agency. We'll review your message and be in touch within one business day.</p>
+            <p style="font-size:14px; color:var(--muted); margin-bottom:28px;">Need a faster response? Call us directly:<br><a href="tel:+17702684418" style="font-size:18px; font-weight:700; color:#1e7d4f; text-decoration:none; display:inline-block; margin-top:6px;">770-268-4418</a></p>
+            <button id="reset-form-btn" class="btn btn-outline" style="display:block; margin:0 auto;">Send Another Message</button>
+          </div>
         </div>
       </div>
 
@@ -741,5 +712,56 @@
   </div>
 </footer>
 
+<script>
+  (function () {
+    var form = document.querySelector('form[action*="mgoqnelq"]');
+    var confirmation = document.getElementById('form-confirmation');
+    var resetBtn = document.getElementById('reset-form-btn');
+    var submitBtn = form.querySelector('[type="submit"]');
+    var originalBtnText = submitBtn.textContent;
+    var errorEl = null;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+
+      fetch('https://formspree.io/f/mgoqnelq', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      })
+      .then(function (res) {
+        if (res.ok) {
+          form.style.display = 'none';
+          confirmation.style.display = 'block';
+          confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          throw new Error('server');
+        }
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        errorEl = document.createElement('p');
+        errorEl.style.cssText = 'color:#c0392b; font-size:13.5px; margin-top:12px; line-height:1.5;';
+        errorEl.textContent = 'Something went wrong. Please try again or call us at 770-268-4418.';
+        submitBtn.insertAdjacentElement('afterend', errorEl);
+      });
+    });
+
+    resetBtn.addEventListener('click', function () {
+      confirmation.style.display = 'none';
+      form.style.display = 'block';
+      form.reset();
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+    });
+  })();
+</script>
 </body>
 </html>
