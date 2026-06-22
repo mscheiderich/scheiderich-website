@@ -482,6 +482,186 @@
       .form-grid { grid-template-columns: 1fr; }
       .app-title { display: none; }
     }
+
+    /* ═══════════════════════════════════════
+       HOUSEHOLD CARD LIST  (grouped view)
+    ═══════════════════════════════════════ */
+    .hh-list { padding: 16px 24px 32px; display: flex; flex-direction: column; gap: 14px; }
+
+    .hh-card {
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-left: 4px solid transparent;
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-sm);
+      overflow: hidden;
+    }
+    .hh-card.hh-overdue  { border-left-color: #dc2626; }
+    .hh-card.hh-due-soon { border-left-color: var(--orange); }
+    .hh-card.hh-archived { opacity: .92; }
+
+    .hh-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--navy-lt);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hh-head-main { min-width: 0; flex: 1; }
+    .hh-name {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .hh-count {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 9px;
+    }
+    .hh-shared {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .hh-shared b { color: var(--text); font-weight: 600; }
+    .hh-shared .date-overdue  { color: #dc2626; font-weight: 700; }
+    .hh-shared .date-due-soon { color: #ea580c; font-weight: 600; }
+    .hh-head-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .hh-addmem {
+      background: transparent;
+      border: 1.5px dashed var(--border);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      height: 36px;
+      padding: 0 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s, border-color .15s;
+    }
+    .hh-addmem:hover { background: var(--bg-w); border-color: var(--navy); }
+
+    .hh-members { display: flex; flex-direction: column; }
+
+    .mem-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 18px;
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .15s;
+      flex-wrap: wrap;
+    }
+    .hh-members .mem-row:first-child { border-top: none; }
+    .mem-row:hover { background: #eef2f8; }
+    .mem-row.mem-archived { background: #f8f8f8; }
+    .mem-row.mem-archived .mem-name-txt { color: #94a3b8; }
+    .mem-name { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; min-width: 0; }
+    .mem-name-txt { font-weight: 600; color: var(--text); }
+    .mem-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    /* Inline DD / GS discount toggles */
+    .cert-toggle {
+      height: 30px;
+      min-width: 52px;
+      padding: 0 11px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-w);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .cert-toggle:hover { border-color: var(--navy); }
+    .cert-toggle.on { background: #dcfce7; color: #15803d; border-color: #86efac; }
+
+    /* ═══════════════════════════════════════
+       HOUSEHOLD EDIT MODAL
+    ═══════════════════════════════════════ */
+    .he-section-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 4px 0 10px;
+    }
+    .he-members { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+    .he-mem {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--bg);
+      flex-wrap: wrap;
+    }
+    .he-mem .he-names { display: flex; gap: 8px; flex: 1; min-width: 180px; }
+    .he-mem .he-names input { flex: 1; min-width: 0; }
+    .he-mem-toggles { display: flex; gap: 6px; }
+    .he-trash {
+      width: 36px; height: 36px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-w);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .he-trash:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+    .he-add-btn {
+      margin-top: 12px;
+      width: 100%;
+      height: 38px;
+      border: 1.5px dashed var(--border);
+      background: transparent;
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .he-add-btn:hover { background: var(--navy-lt); border-color: var(--navy); }
+
+    @media (max-width: 768px) {
+      .hh-list { padding: 12px 12px 28px; }
+      .hh-head, .mem-row { padding-left: 14px; padding-right: 14px; }
+      .hh-head-actions { width: 100%; }
+      .hh-head-actions .btn, .hh-addmem { flex: 1; }
+    }
   </style>
 
   <!-- Google Analytics -->
@@ -559,29 +739,7 @@
 </div>
 
 <div id="tableArea" style="display:none;">
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Client Name</th>
-          <th>Producer</th>
-          <th>Policy Date</th>
-          <th>Due Date</th>
-          <th>Days</th>
-          <th>DD</th>
-          <th>DD Cert</th>
-          <th>GS</th>
-          <th>GS Cert</th>
-          <th>Discount $</th>
-          <th>Thank You</th>
-          <th>Welcome Call</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="clientTableBody"></tbody>
-    </table>
-  </div>
+  <div id="householdList" class="hh-list"></div>
   <div id="emptyState" class="empty-state" style="display:none;">
     <div class="empty-icon">&#128269;</div>
     <p>No clients match this filter.</p>
@@ -678,6 +836,23 @@
           </div>
         </div>
 
+        <!-- Thank You note -->
+        <div class="form-group">
+          <label>Thank You Note Sent</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-thankYouSent-Y" onclick="setToggle('thankYouSent','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-thankYouSent-N" onclick="setToggle('thankYouSent','N')">No</button>
+          </div>
+        </div>
+        <!-- Welcome call -->
+        <div class="form-group">
+          <label>Welcome Call Made</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-welcomeCallSent-Y" onclick="setToggle('welcomeCallSent','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-welcomeCallSent-N" onclick="setToggle('welcomeCallSent','N')">No</button>
+          </div>
+        </div>
+
         <div class="form-group full">
           <label>Contact Notes</label>
           <textarea id="f_contactNote" rows="4" placeholder="Running notes on client contact attempts&#8230;"></textarea>
@@ -685,8 +860,57 @@
       </div>
     </div>
     <div class="modal-footer">
+      <button class="btn btn-danger" id="clientModalDelete" onclick="closeModal('clientModal'); openDeleteModal(editingId)" style="margin-right:auto;">Delete</button>
       <button class="btn btn-outline" onclick="closeModal('clientModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOUSEHOLD EDIT MODAL -->
+<div class="modal-overlay" id="householdModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="householdModalTitle">Edit Household</div>
+      <button class="modal-close" onclick="closeModal('householdModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="he-section-label">Shared household info</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Household Name *</label>
+          <input type="text" id="he_householdName" placeholder="The Smith Household" />
+        </div>
+        <div class="form-group">
+          <label>Producer *</label>
+          <select id="he_producer">
+            <option value="">Select agent&#8230;</option>
+            <option>Mike</option><option>Crissy</option><option>Iris</option>
+            <option>Mark</option><option>Wendy</option><option>Scott</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Discount Amount</label>
+          <div class="status-display" style="background:var(--bg-w);">Per-member &#8212; edit in detail</div>
+        </div>
+        <div class="form-group">
+          <label>Policy Date *</label>
+          <input type="date" id="he_policyDate" oninput="heAutoCalcDueDate()" />
+        </div>
+        <div class="form-group">
+          <label>Due Date *</label>
+          <input type="date" id="he_dueDate" />
+        </div>
+      </div>
+
+      <div class="he-section-label" style="margin-top:18px;">Household members</div>
+      <div class="he-members" id="he_members"></div>
+      <button class="he-add-btn" onclick="addHouseholdMemberRow()">+ Add household member</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="confirmDeleteHousehold()" style="margin-right:auto;">Delete Household</button>
+      <button class="btn btn-outline" onclick="closeModal('householdModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveHousehold()">Save Household</button>
     </div>
   </div>
 </div>
@@ -759,7 +983,7 @@
   const DataLayer = {
     async getClients() {
       try {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clients!A:U?key=${API_KEY}`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clients!A:Z?key=${API_KEY}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
@@ -817,8 +1041,45 @@
       } catch (e) {
         return { success: false, error: e.message };
       }
+    },
+
+    // One call saves the whole household edit screen:
+    // shared{} written onto every member, members[] upserted, deletedIds[] removed.
+    async saveHousehold(payload) {
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(Object.assign({}, payload, { action: 'saveHousehold' }))
+        });
+        return { success: true };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    async deleteHousehold(householdId) {
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'deleteHousehold', householdId: householdId })
+        });
+        return { success: true };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
     }
   };
+
+  /* ═══════════════════════════════════════
+     ID GENERATION (single source — used for client + household ids)
+  ═══════════════════════════════════════ */
+  function genId() {
+    return `id_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
+  }
 
   /* ═══════════════════════════════════════
      MIGRATION RECORDS (runs once via localStorage gate)
@@ -875,7 +1136,10 @@
   let deletingId    = null;
   let notesId       = null;
   let unarchivingId = null;
-  let formToggles   = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
+  let formToggles   = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N' };
+  let householdEditId      = null;   // householdId currently open in the household edit screen
+  let householdMembers     = [];     // working copy of that household's member objects
+  let householdDeletedIds  = [];     // member ids removed in the edit screen (sent on save)
 
   /* ═══════════════════════════════════════
      DATE HELPERS (local, never UTC)
@@ -975,6 +1239,57 @@
   }
 
   /* ═══════════════════════════════════════
+     HOUSEHOLD GROUPING + NEWEST-FIRST SORT
+     - Group by householdId (legacy rows w/o one = household of their own id).
+     - Household "created" = EARLIEST createdAt among members (the primary).
+     - Households sorted by that time DESC (newest at top).
+     - Within a household: primary first (earliest createdAt), then ascending.
+  ═══════════════════════════════════════ */
+  function householdKey(c) {
+    return (c.householdId && String(c.householdId).trim()) || c.id;
+  }
+
+  function groupHouseholds(clients) {
+    const map = new Map();
+    clients.forEach(c => {
+      const key = householdKey(c);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(c);
+    });
+
+    const households = [];
+    map.forEach((members, key) => {
+      members.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+      const primary = members[0];
+      households.push({
+        householdId:   key,
+        members,
+        created:       primary.createdAt || '',
+        householdName: (primary.householdName && String(primary.householdName).trim())
+                         || `The ${primary.lastName || ''} Household`.trim(),
+        producer:      primary.producer   || '',
+        policyDate:    primary.policyDate  || '',
+        dueDate:       primary.dueDate     || ''
+      });
+    });
+
+    households.sort((a, b) => (b.created || '').localeCompare(a.created || ''));
+    return households;
+  }
+
+  // Most-urgent active status across a household's members (drives card accent + due-date color).
+  function householdStatus(members) {
+    let best = 99, bestStatus = '';
+    members.forEach(m => {
+      const s = calcStatus(m);
+      if (s === 'Archived') return;
+      const r = STATUS_RANK[s] ?? 99;
+      if (r < best) { best = r; bestStatus = s; }
+    });
+    return bestStatus;
+  }
+
+  /* ═══════════════════════════════════════
      STATS — archived records excluded from all counts
   ═══════════════════════════════════════ */
   function updateStats(clients) {
@@ -1022,6 +1337,46 @@
       : '<span class="icon-dash">&#8212;</span>';
   }
 
+  const BADGE_CLS = {
+    'Overdue':          'badge-overdue',
+    'Due Soon':         'badge-due-soon',
+    'Pending':          'badge-pending',
+    'Complete':         'badge-complete',
+    'Discount Removed': 'badge-removed',
+    'Archived':         'badge-archived'
+  };
+
+  // One member row inside a household card.
+  function memberRowHtml(c) {
+    const status   = calcStatus(c);
+    const archived = status === 'Archived';
+    const badgeCls = BADGE_CLS[status] || 'badge-pending';
+
+    const ddOn = c.ddDiscount === 'Y' ? ' on' : '';
+    const gsOn = c.gsDiscount === 'Y' ? ' on' : '';
+
+    const ddToggle = `<button class="cert-toggle${ddOn}" title="Defensive Driving discount" onclick="toggleDiscount('${c.id}','ddDiscount',event)">DD${c.ddDiscount === 'Y' ? ' &#10003;' : ''}</button>`;
+    const gsToggle = `<button class="cert-toggle${gsOn}" title="Good Student discount" onclick="toggleDiscount('${c.id}','gsDiscount',event)">GS${c.gsDiscount === 'Y' ? ' &#10003;' : ''}</button>`;
+
+    const archActions = archived
+      ? `<button class="btn-action unarchive" title="Unarchive" onclick="openUnarchiveModal('${c.id}')">&#8635;</button>
+         <button class="btn-action delete"    title="Delete"    onclick="openDeleteModal('${c.id}')">&#128465;</button>`
+      : '';
+
+    return `
+      <div class="mem-row${archived ? ' mem-archived' : ''}" onclick="openEditModal('${c.id}')">
+        <div class="mem-name">
+          <span class="mem-name-txt">${esc(c.firstName)} ${esc(c.lastName)}</span>
+          <span class="badge ${badgeCls}">${status}</span>
+        </div>
+        <div class="mem-controls" onclick="event.stopPropagation()">
+          ${ddToggle}
+          ${gsToggle}
+          ${archActions}
+        </div>
+      </div>`;
+  }
+
   function renderTable() {
     const search   = (document.getElementById('searchInput').value || '').toLowerCase();
     const producer = document.getElementById('producerFilter').value;
@@ -1029,6 +1384,7 @@
     // Active (non-archived) clients — used for "Y of N" denominator when not in Archived view
     const activeClients = allClients.filter(c => calcStatus(c) !== 'Archived');
 
+    // Filter individual members first (preserves existing filter/search semantics)
     const filtered = allClients.filter(c => {
       const s = calcStatus(c);
       // "Show All" hides archived — must explicitly switch to Archived filter to see them
@@ -1042,96 +1398,55 @@
       return true;
     });
 
-    const sorted = sortClients(filtered);
-    const tbody  = document.getElementById('clientTableBody');
-    tbody.innerHTML = '';
+    // Group the matching members into households (newest household first)
+    const households = groupHouseholds(filtered);
+    const list = document.getElementById('householdList');
+    list.innerHTML = '';
 
     // Y = active count unless viewing Archived filter
     const denominator = statusFilter === 'Archived' ? allClients.length : activeClients.length;
     document.getElementById('recordCount').textContent =
-      `Showing ${sorted.length} of ${denominator} clients`;
-    document.getElementById('emptyState').style.display = sorted.length === 0 ? 'block' : 'none';
+      `Showing ${filtered.length} of ${denominator} clients`;
+    document.getElementById('emptyState').style.display = households.length === 0 ? 'block' : 'none';
 
-    sorted.forEach(c => {
-      const status   = calcStatus(c);
-      const archived = status === 'Archived';
-      const days     = daysUntil(c.dueDate);
+    households.forEach(h => {
+      const urgency = householdStatus(h.members);
+      let cardCls = 'hh-card';
+      if (urgency === 'Overdue')  cardCls += ' hh-overdue';
+      if (urgency === 'Due Soon') cardCls += ' hh-due-soon';
+      if (urgency === '')         cardCls += ' hh-archived'; // all members archived
 
-      // Days cell
-      let daysHtml = '—';
-      if (!archived && days !== null) {
-        if (days < 0)       daysHtml = `<span class="days-overdue">${days} days</span>`;
-        else if (days <= 3) daysHtml = `<span class="days-due-soon">${days} days</span>`;
-        else                daysHtml = `${days} days`;
-      }
-
-      // Due date class (not applied to archived)
+      // Shared due-date colouring follows household urgency
       let dueCls = '';
-      if (!archived) {
-        if (status === 'Overdue')  dueCls = 'date-overdue';
-        if (status === 'Due Soon') dueCls = 'date-due-soon';
-      }
+      if (urgency === 'Overdue')  dueCls = 'date-overdue';
+      if (urgency === 'Due Soon') dueCls = 'date-due-soon';
 
-      // Badge
-      const badgeCls = {
-        'Overdue':          'badge-overdue',
-        'Due Soon':         'badge-due-soon',
-        'Pending':          'badge-pending',
-        'Complete':         'badge-complete',
-        'Discount Removed': 'badge-removed',
-        'Archived':         'badge-archived'
-      }[status] || 'badge-pending';
+      const count = h.members.length;
+      const membersHtml = h.members.map(memberRowHtml).join('');
 
-      // Thank You / Welcome Call inline toggles
-      const tyDate = c.thankYouDate
-        ? `<span class="toggle-date">${formatDateShort(c.thankYouDate)}</span>` : '';
-      const tyIcon = c.thankYouSent === 'Y'
-        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField('${c.id}','thankYouSent','Y',event)">&#10003;${tyDate}</span>`
-        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField('${c.id}','thankYouSent','N',event)">&#8212;</span>`;
-
-      const wcDate = c.welcomeCallDate
-        ? `<span class="toggle-date">${formatDateShort(c.welcomeCallDate)}</span>` : '';
-      const wcIcon = c.welcomeCallSent === 'Y'
-        ? `<span class="toggle-check icon-click" title="Mark unsent" onclick="toggleField('${c.id}','welcomeCallSent','Y',event)">&#10003;${wcDate}</span>`
-        : `<span class="toggle-dash icon-click"  title="Mark sent"   onclick="toggleField('${c.id}','welcomeCallSent','N',event)">&#8212;</span>`;
-
-      // Actions: archived rows show Unarchive instead of Edit pencil
-      const actionsHtml = archived
-        ? `<button class="btn-action unarchive" title="Unarchive" onclick="openUnarchiveModal('${c.id}')">&#8635;</button>
-           <button class="btn-action delete"    title="Delete"    onclick="openDeleteModal('${c.id}')">&#128465;</button>`
-        : `<button class="btn-action"           title="Edit"      onclick="openEditModal('${c.id}')">&#9998;</button>
-           <button class="btn-action"           title="Notes"     onclick="openNotesModal('${c.id}')">&#128172;</button>
-           <button class="btn-action delete"    title="Delete"    onclick="openDeleteModal('${c.id}')">&#128465;</button>`;
-
-      const tr = document.createElement('tr');
-      if (!archived && status === 'Overdue')  tr.classList.add('row-overdue');
-      if (!archived && status === 'Due Soon') tr.classList.add('row-due-soon');
-      if (archived)                           tr.classList.add('row-archived');
-
-      tr.innerHTML = `
-        <td><span class="client-name">${esc(c.firstName)} ${esc(c.lastName)}</span></td>
-        <td>${esc(c.producer)}</td>
-        <td>${formatDate(c.policyDate)}</td>
-        <td class="${dueCls}">${formatDate(c.dueDate)}</td>
-        <td>${daysHtml}</td>
-        <td>${discountIcon(c.ddDiscount)}</td>
-        <td>${certIcon(c.ddReceived, c.ddDiscount)}</td>
-        <td>${discountIcon(c.gsDiscount)}</td>
-        <td>${certIcon(c.gsReceived, c.gsDiscount)}</td>
-        <td>${c.discountAmount ? esc(c.discountAmount) : '—'}</td>
-        <td>${tyIcon}</td>
-        <td>${wcIcon}</td>
-        <td><span class="badge ${badgeCls}">${status}</span></td>
-        <td><div class="action-btns" onclick="event.stopPropagation()">${actionsHtml}</div></td>
+      const card = document.createElement('div');
+      card.className = cardCls;
+      card.innerHTML = `
+        <div class="hh-head">
+          <div class="hh-head-main">
+            <div class="hh-name">
+              ${esc(h.householdName)}
+              <span class="hh-count">${count} member${count === 1 ? '' : 's'}</span>
+            </div>
+            <div class="hh-shared">
+              <span>Producer: <b>${h.producer ? esc(h.producer) : '&#8212;'}</b></span>
+              <span>Policy: <b>${formatDate(h.policyDate)}</b></span>
+              <span>Due: <b class="${dueCls}">${formatDate(h.dueDate)}</b></span>
+            </div>
+          </div>
+          <div class="hh-head-actions">
+            <button class="btn btn-outline" onclick="openHouseholdModal('${h.householdId}')">&#9998; Edit</button>
+            <button class="hh-addmem" onclick="openHouseholdModal('${h.householdId}', true)">+ Add member</button>
+          </div>
+        </div>
+        <div class="hh-members">${membersHtml}</div>
       `;
-
-      tr.addEventListener('click', e => {
-        if (!e.target.closest('.action-btns') && !e.target.classList.contains('icon-click')) {
-          openEditModal(c.id);
-        }
-      });
-
-      tbody.appendChild(tr);
+      list.appendChild(card);
     });
   }
 
@@ -1254,12 +1569,61 @@
   }
 
   /* ═══════════════════════════════════════
+     INLINE DD / GS DISCOUNT TOGGLES (one member)
+     Flips ddDiscount / gsDiscount on a single member and sends an
+     'update' with that member's full object. Turning a discount OFF
+     also clears its received flag/date (mirrors the detail editor).
+  ═══════════════════════════════════════ */
+  async function toggleDiscount(clientId, field, event) {
+    if (event) event.stopPropagation();
+
+    const client = allClients.find(c => String(c.id) === String(clientId));
+    if (!client) {
+      showToast('Client not found — please refresh', 'error');
+      return;
+    }
+
+    const updated = Object.assign({}, client);
+    const newVal = updated[field] === 'Y' ? 'N' : 'Y';
+    updated[field] = newVal;
+
+    if (field === 'ddDiscount' && newVal === 'N') { updated.ddReceived = 'N'; updated.ddReceivedDate = ''; }
+    if (field === 'gsDiscount' && newVal === 'N') { updated.gsReceived = 'N'; updated.gsReceivedDate = ''; }
+
+    updated.updatedAt = new Date().toISOString();
+    updated.action = 'update';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(updated)
+      });
+
+      const idx = allClients.findIndex(c => String(c.id) === String(clientId));
+      if (idx !== -1) allClients[idx] = updated;
+
+      const label = field === 'ddDiscount' ? 'Defensive Driving' : 'Good Student';
+      showToast(`${label} discount ${newVal === 'Y' ? 'on' : 'off'}`, 'success');
+      updateStats(allClients);
+      renderTable();
+
+      setTimeout(async () => { await loadData(); }, 2000);
+    } catch(err) {
+      showToast('Error saving — please try again', 'error');
+      console.error('Toggle error:', err);
+    }
+  }
+
+  /* ═══════════════════════════════════════
      ADD / EDIT MODAL
   ═══════════════════════════════════════ */
   function openAddModal() {
     editingId = null;
     resetForm();
     document.getElementById('modalTitle').textContent = 'Add Client';
+    document.getElementById('clientModalDelete').style.display = 'none'; // nothing to delete yet
     openModal('clientModal');
   }
 
@@ -1268,6 +1632,7 @@
     if (!c) return;
     editingId = id;
     document.getElementById('modalTitle').textContent = 'Edit Client';
+    document.getElementById('clientModalDelete').style.display = '';
     populateForm(c);
     openModal('clientModal');
   }
@@ -1280,7 +1645,7 @@
     document.getElementById('f_policyDate').value     = '';
     document.getElementById('f_dueDate').value        = '';
     document.getElementById('f_statusOverride').value = '';
-    formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N' };
+    formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N' };
     applyToggles();
     updateConditionals();
     updateStatusDisplay();
@@ -1299,10 +1664,12 @@
     document.getElementById('f_statusOverride').value =
       manualStatuses.includes(c.status) ? c.status : '';
     formToggles = {
-      ddDiscount: c.ddDiscount || 'N',
-      ddReceived: c.ddReceived || 'N',
-      gsDiscount: c.gsDiscount || 'N',
-      gsReceived: c.gsReceived || 'N'
+      ddDiscount:      c.ddDiscount      || 'N',
+      ddReceived:      c.ddReceived      || 'N',
+      gsDiscount:      c.gsDiscount      || 'N',
+      gsReceived:      c.gsReceived      || 'N',
+      thankYouSent:    c.thankYouSent    || 'N',
+      welcomeCallSent: c.welcomeCallSent || 'N'
     };
     applyToggles();
     updateConditionals();
@@ -1320,10 +1687,12 @@
   }
 
   const TOGGLE_IDS = {
-    ddDiscount: ['tog-ddDiscount-Y', 'tog-ddDiscount-N'],
-    ddReceived: ['tog-ddReceived-Y', 'tog-ddReceived-N'],
-    gsDiscount: ['tog-gsDiscount-Y', 'tog-gsDiscount-N'],
-    gsReceived: ['tog-gsReceived-Y', 'tog-gsReceived-N']
+    ddDiscount:      ['tog-ddDiscount-Y',      'tog-ddDiscount-N'],
+    ddReceived:      ['tog-ddReceived-Y',      'tog-ddReceived-N'],
+    gsDiscount:      ['tog-gsDiscount-Y',      'tog-gsDiscount-N'],
+    gsReceived:      ['tog-gsReceived-Y',      'tog-gsReceived-N'],
+    thankYouSent:    ['tog-thankYouSent-Y',    'tog-thankYouSent-N'],
+    welcomeCallSent: ['tog-welcomeCallSent-Y', 'tog-welcomeCallSent-N']
   };
 
   function applyToggles() {
@@ -1395,22 +1764,31 @@
       const existing = allClients.find(c => c.id === editingId) || {};
       clientObj = Object.assign({}, existing, {
         firstName, lastName, producer, policyDate, dueDate,
-        ddDiscount:     formToggles.ddDiscount,
-        ddReceived:     formToggles.ddReceived,
-        gsDiscount:     formToggles.gsDiscount,
-        gsReceived:     formToggles.gsReceived,
-        discountAmount: document.getElementById('f_discountAmount').value.trim(),
-        contactNote:    document.getElementById('f_contactNote').value.trim(),
-        status:         override || '',
-        updatedAt:      now
+        ddDiscount:      formToggles.ddDiscount,
+        ddReceived:      formToggles.ddReceived,
+        gsDiscount:      formToggles.gsDiscount,
+        gsReceived:      formToggles.gsReceived,
+        thankYouSent:    formToggles.thankYouSent,
+        welcomeCallSent: formToggles.welcomeCallSent,
+        discountAmount:  document.getElementById('f_discountAmount').value.trim(),
+        contactNote:     document.getElementById('f_contactNote').value.trim(),
+        status:          override || '',
+        updatedAt:       now
       });
       if (formToggles.ddReceived === 'Y' && !clientObj.ddReceivedDate) clientObj.ddReceivedDate = todayStr();
       if (formToggles.ddReceived === 'N') clientObj.ddReceivedDate = '';
       if (formToggles.gsReceived === 'Y' && !clientObj.gsReceivedDate) clientObj.gsReceivedDate = todayStr();
       if (formToggles.gsReceived === 'N') clientObj.gsReceivedDate = '';
+      if (formToggles.thankYouSent === 'Y' && !clientObj.thankYouDate) clientObj.thankYouDate = todayStr();
+      if (formToggles.thankYouSent === 'N') clientObj.thankYouDate = '';
+      if (formToggles.welcomeCallSent === 'Y' && !clientObj.welcomeCallDate) clientObj.welcomeCallDate = todayStr();
+      if (formToggles.welcomeCallSent === 'N') clientObj.welcomeCallDate = '';
     } else {
+      // New client also creates its household (Change 4)
       clientObj = {
-        id:              `id_${Date.now()}_${Math.random().toString(36).substr(2,9)}`,
+        id:              genId(),
+        householdId:     genId(),
+        householdName:   `The ${lastName} Household`,
         firstName, lastName, producer, policyDate, dueDate,
         ddDiscount:      formToggles.ddDiscount,
         ddReceived:      formToggles.ddReceived,
@@ -1421,10 +1799,10 @@
         discountAmount:  document.getElementById('f_discountAmount').value.trim(),
         status:          override || '',
         contactNote:     document.getElementById('f_contactNote').value.trim(),
-        thankYouSent:    'N',
-        thankYouDate:    '',
-        welcomeCallSent: 'N',
-        welcomeCallDate: '',
+        thankYouSent:    formToggles.thankYouSent,
+        thankYouDate:    formToggles.thankYouSent === 'Y' ? todayStr() : '',
+        welcomeCallSent: formToggles.welcomeCallSent,
+        welcomeCallDate: formToggles.welcomeCallSent === 'Y' ? todayStr() : '',
         createdAt:       now,
         updatedAt:       now
       };
@@ -1519,6 +1897,183 @@
     if (result.success) {
       showToast('Client restored to active tracking', 'success');
       setStatusFilter('all'); // switch back to main view so restored record is visible
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     HOUSEHOLD EDIT SCREEN
+     One screen edits shared info + the whole member list, saved with a
+     single 'saveHousehold' call.
+  ═══════════════════════════════════════ */
+  function makeBlankMember() {
+    const now = new Date().toISOString();
+    return {
+      id: genId(), _new: true,
+      firstName: '', lastName: '', producer: '', policyDate: '', dueDate: '',
+      ddDiscount: 'N', ddReceived: 'N', ddReceivedDate: '',
+      gsDiscount: 'N', gsReceived: 'N', gsReceivedDate: '',
+      discountAmount: '', status: '', contactNote: '',
+      thankYouSent: 'N', thankYouDate: '', welcomeCallSent: 'N', welcomeCallDate: '',
+      createdAt: now, updatedAt: now
+    };
+  }
+
+  function openHouseholdModal(householdId, addBlank) {
+    householdEditId     = householdId;
+    householdDeletedIds = [];
+
+    const members = allClients
+      .filter(c => householdKey(c) === householdId)
+      .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+
+    // Working copies — never mutate allClients directly
+    householdMembers = members.map(m => Object.assign({}, m));
+
+    const primary = householdMembers[0] || {};
+    document.getElementById('he_householdName').value =
+      (primary.householdName && String(primary.householdName).trim())
+        || `The ${primary.lastName || ''} Household`.trim();
+    document.getElementById('he_producer').value   = primary.producer   || '';
+    document.getElementById('he_policyDate').value = primary.policyDate || '';
+    document.getElementById('he_dueDate').value    = primary.dueDate    || '';
+
+    if (addBlank) householdMembers.push(makeBlankMember());
+
+    renderHouseholdMembers();
+    openModal('householdModal');
+  }
+
+  function renderHouseholdMembers() {
+    const wrap = document.getElementById('he_members');
+    wrap.innerHTML = householdMembers.map((m, i) => {
+      const ddOn = m.ddDiscount === 'Y' ? ' on' : '';
+      const gsOn = m.gsDiscount === 'Y' ? ' on' : '';
+      return `
+        <div class="he-mem" data-idx="${i}">
+          <div class="he-names">
+            <input type="text" placeholder="First name" value="${esc(m.firstName)}" data-idx="${i}" data-field="firstName" oninput="onHouseholdNameInput(this)" />
+            <input type="text" placeholder="Last name"  value="${esc(m.lastName)}"  data-idx="${i}" data-field="lastName"  oninput="onHouseholdNameInput(this)" />
+          </div>
+          <div class="he-mem-toggles">
+            <button class="cert-toggle${ddOn}" title="Defensive Driving discount" onclick="toggleHouseholdMemberDiscount(${i},'ddDiscount')">DD${m.ddDiscount === 'Y' ? ' &#10003;' : ''}</button>
+            <button class="cert-toggle${gsOn}" title="Good Student discount" onclick="toggleHouseholdMemberDiscount(${i},'gsDiscount')">GS${m.gsDiscount === 'Y' ? ' &#10003;' : ''}</button>
+          </div>
+          <button class="he-trash" title="Remove member" onclick="removeHouseholdMember(${i})">&#128465;</button>
+        </div>`;
+    }).join('');
+  }
+
+  // Keep working copies in sync with the text inputs before any re-render.
+  function syncHouseholdInputsFromDom() {
+    document.querySelectorAll('#he_members input[data-field]').forEach(el => {
+      const idx = Number(el.getAttribute('data-idx'));
+      const field = el.getAttribute('data-field');
+      if (householdMembers[idx]) householdMembers[idx][field] = el.value;
+    });
+  }
+
+  function onHouseholdNameInput(el) {
+    const idx = Number(el.getAttribute('data-idx'));
+    const field = el.getAttribute('data-field');
+    if (householdMembers[idx]) householdMembers[idx][field] = el.value;
+  }
+
+  function toggleHouseholdMemberDiscount(idx, field) {
+    syncHouseholdInputsFromDom();
+    const m = householdMembers[idx];
+    if (!m) return;
+    const newVal = m[field] === 'Y' ? 'N' : 'Y';
+    m[field] = newVal;
+    if (field === 'ddDiscount' && newVal === 'N') { m.ddReceived = 'N'; m.ddReceivedDate = ''; }
+    if (field === 'gsDiscount' && newVal === 'N') { m.gsReceived = 'N'; m.gsReceivedDate = ''; }
+    renderHouseholdMembers();
+  }
+
+  function addHouseholdMemberRow() {
+    syncHouseholdInputsFromDom();
+    householdMembers.push(makeBlankMember());
+    renderHouseholdMembers();
+  }
+
+  function removeHouseholdMember(idx) {
+    syncHouseholdInputsFromDom();
+    const m = householdMembers[idx];
+    if (!m) return;
+    if (!m._new) householdDeletedIds.push(m.id); // existing rows get deleted server-side on save
+    householdMembers.splice(idx, 1);
+    renderHouseholdMembers();
+  }
+
+  function heAutoCalcDueDate() {
+    const policy = document.getElementById('he_policyDate').value;
+    if (policy) document.getElementById('he_dueDate').value = addDays(policy, 7);
+  }
+
+  async function saveHousehold() {
+    syncHouseholdInputsFromDom();
+
+    const householdName = document.getElementById('he_householdName').value.trim();
+    const producer      = document.getElementById('he_producer').value;
+    const policyDate    = document.getElementById('he_policyDate').value;
+    const dueDate       = document.getElementById('he_dueDate').value;
+
+    if (!householdName || !producer || !policyDate || !dueDate) {
+      showToast('Fill in household name, producer, policy date and due date', 'error');
+      return;
+    }
+    if (householdMembers.length === 0) {
+      showToast('A household needs at least one member', 'error');
+      return;
+    }
+    const missingName = householdMembers.some(m => !String(m.firstName).trim() || !String(m.lastName).trim());
+    if (missingName) {
+      showToast('Every member needs a first and last name', 'error');
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const shared = { householdName, producer, policyDate, dueDate };
+
+    // Each member is sent as a FULL client object with shared fields written on.
+    const members = householdMembers.map(m => {
+      const full = Object.assign({}, m, shared, {
+        householdId: householdEditId,
+        firstName:   String(m.firstName).trim(),
+        lastName:    String(m.lastName).trim(),
+        updatedAt:   now
+      });
+      delete full._new;
+      return full;
+    });
+
+    const payload = {
+      householdId: householdEditId,
+      shared,
+      members,
+      deletedIds: householdDeletedIds
+    };
+
+    closeModal('householdModal');
+    const result = await DataLayer.saveHousehold(payload);
+    if (result.success) {
+      showToast('Household saved', 'success');
+      await refreshData();
+    } else {
+      showToast('Error saving — please try again', 'error');
+    }
+  }
+
+  async function confirmDeleteHousehold() {
+    const name = document.getElementById('he_householdName').value.trim() || 'this household';
+    if (!window.confirm(`Delete ${name} and ALL of its members? This cannot be undone.`)) return;
+
+    closeModal('householdModal');
+    const result = await DataLayer.deleteHousehold(householdEditId);
+    if (result.success) {
+      showToast('Household deleted', 'success');
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
