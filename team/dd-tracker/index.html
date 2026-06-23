@@ -1212,20 +1212,26 @@
   function calcStatus(c) {
     if (c.status === 'Archived')         return 'Archived';
     if (c.status === 'Discount Removed') return 'Discount Removed';
-    // APPLIES (ddDiscount/gsDiscount) vs IN HAND (ddReceived/gsReceived) are
-    // two separate facts. A discount is only outstanding when it APPLIES and
-    // is NOT yet received.
+    // Four tracked things. DISCOUNTS apply only to some people and are date-driven;
+    // ONBOARDING (thank-you card + welcome call) applies to EVERY client and has no
+    // due date. A discount is outstanding only when it APPLIES and isn't received.
     const ddApplies = c.ddDiscount === 'Y';
     const gsApplies = c.gsDiscount === 'Y';
-    // No applicable discounts → nothing to track. Treat as Complete so the row
-    // never crashes and isn't flagged outstanding (these won't normally exist).
-    if (!ddApplies && !gsApplies) return 'Complete';
     const ddOk = !ddApplies || c.ddReceived === 'Y';
     const gsOk = !gsApplies || c.gsReceived === 'Y';
-    if (ddOk && gsOk) return 'Complete';
-    const days = daysUntil(c.dueDate);
-    if (days !== null && days < 0)   return 'Overdue';
-    if (days !== null && days <= 30) return 'Due Soon';
+    const discountsOk  = ddOk && gsOk;
+    const onboardingOk = c.thankYouSent === 'Y' && c.welcomeCallSent === 'Y';
+    // COMPLETE = every applicable discount received AND both onboarding tasks done.
+    if (discountsOk && onboardingOk) return 'Complete';
+    // A waiting discount is date-driven off the household due date.
+    if (!discountsOk) {
+      const days = daysUntil(c.dueDate);
+      if (days !== null && days < 0)   return 'Overdue';
+      if (days !== null && days <= 30) return 'Due Soon';
+      return 'Pending';
+    }
+    // Discounts fine (or none apply) but a thank-you/call still outstanding.
+    // Onboarding has no due date, so it never reads Overdue.
     return 'Pending';
   }
 
@@ -1308,14 +1314,17 @@
     return bestStatus;
   }
 
-  // Count of OUTSTANDING items across a household = each applicable-but-not-received
-  // discount (DD and GS counted separately), excluding archived members.
+  // Count of OUTSTANDING items across a household = each waiting discount
+  // (applicable-but-not-received) + each missing thank-you + each missing call,
+  // counted separately per member, excluding archived members.
   function householdOutstanding(members) {
     let count = 0;
     members.forEach(m => {
       if (calcStatus(m) === 'Archived') return;
       if (m.ddDiscount === 'Y' && m.ddReceived !== 'Y') count++;
       if (m.gsDiscount === 'Y' && m.gsReceived !== 'Y') count++;
+      if (m.thankYouSent    !== 'Y') count++;
+      if (m.welcomeCallSent !== 'Y') count++;
     });
     return count;
   }
@@ -1377,20 +1386,26 @@
     'Archived':         'badge-archived'
   };
 
-  // An IN-HAND pill for one discount on one member. Only ever rendered when the
-  // discount APPLIES. Green + check = received; amber + clock = still waiting.
-  // Clicking toggles IN HAND (ddReceived / gsReceived) for this member only.
-  function receivedPillHtml(c, kind) {
-    const label    = kind === 'dd' ? 'DD' : 'GS';
-    const fullName  = kind === 'dd' ? 'Defensive Driving' : 'Good Student';
-    const field    = kind === 'dd' ? 'ddReceived' : 'gsReceived';
-    const received = (kind === 'dd' ? c.ddReceived : c.gsReceived) === 'Y';
-    const cls      = received ? 'cert-toggle on' : 'cert-toggle waiting';
-    const inner    = received ? `&#10003; ${label}` : `&#128336; ${label} &middot; waiting`;
-    const title    = received
-      ? `${fullName} certificate in hand — click to mark not received`
-      : `${fullName} — waiting on certificate — click to mark in hand`;
-    return `<button class="${cls}" title="${title}" onclick="toggleReceived('${c.id}','${field}',event)">${inner}</button>`;
+  // Pill metadata for the four tracked items. flag = the done/received boolean field.
+  const PILL_META = {
+    dd:   { label: 'DD',        flag: 'ddReceived',      full: 'Defensive Driving certificate', doneWord: 'in hand' },
+    gs:   { label: 'GS',        flag: 'gsReceived',      full: 'Good Student proof',            doneWord: 'in hand' },
+    ty:   { label: 'Thank-you', flag: 'thankYouSent',    full: 'Thank-you card',                doneWord: 'sent'    },
+    call: { label: 'Call',      flag: 'welcomeCallSent', full: 'Welcome call',                  doneWord: 'made'    }
+  };
+
+  // A status pill for one tracked item on one member. Green + check = done
+  // (received / sent / made); amber + clock = not done ("waiting"). Clicking
+  // toggles that item's done-flag for this member only (see toggleReceived).
+  function pillHtml(c, kind) {
+    const m    = PILL_META[kind];
+    const done = c[m.flag] === 'Y';
+    const cls  = done ? 'cert-toggle on' : 'cert-toggle waiting';
+    const inner = done ? `&#10003; ${m.label}` : `&#128336; ${m.label} &middot; waiting`;
+    const title = done
+      ? `${m.full} ${m.doneWord} — click to undo`
+      : `${m.full} — waiting — click to mark ${m.doneWord}`;
+    return `<button class="${cls}" title="${title}" onclick="toggleReceived('${c.id}','${m.flag}',event)">${inner}</button>`;
   }
 
   // One member row inside a household card.
@@ -1399,10 +1414,13 @@
     const archived = status === 'Archived';
     const badgeCls = BADGE_CLS[status] || 'badge-pending';
 
-    // A pill renders ONLY for discounts that apply to this member.
+    // Discount pills render ONLY when the discount applies; onboarding pills
+    // (thank-you + call) always render — every client is tracked for them.
     const pills = [];
-    if (c.ddDiscount === 'Y') pills.push(receivedPillHtml(c, 'dd'));
-    if (c.gsDiscount === 'Y') pills.push(receivedPillHtml(c, 'gs'));
+    if (c.ddDiscount === 'Y') pills.push(pillHtml(c, 'dd'));
+    if (c.gsDiscount === 'Y') pills.push(pillHtml(c, 'gs'));
+    pills.push(pillHtml(c, 'ty'));
+    pills.push(pillHtml(c, 'call'));
     const pillsHtml = pills.join('');
 
     const archActions = archived
@@ -1631,12 +1649,25 @@
   }
 
   /* ═══════════════════════════════════════
-     INLINE DD / GS "IN HAND" TOGGLES (one member)
-     Flips ddReceived / gsReceived (do we physically have the certificate?)
+     INLINE PILL TOGGLES (one member, one tracked item)
+     Flips a done-flag (ddReceived / gsReceived / thankYouSent / welcomeCallSent)
      on a single member and sends one 'update' with that member's full object.
-     Mark received → stamp its ReceivedDate to today; un-mark → clear the date.
-     This does NOT touch ddDiscount/gsDiscount (whether the discount applies).
+     Turn on → stamp its matching date today; turn off → clear that date.
+     This does NOT touch ddDiscount/gsDiscount (whether a discount applies).
   ═══════════════════════════════════════ */
+  const TOGGLE_DATE_FIELD = {
+    ddReceived:      'ddReceivedDate',
+    gsReceived:      'gsReceivedDate',
+    thankYouSent:    'thankYouDate',
+    welcomeCallSent: 'welcomeCallDate'
+  };
+  const TOGGLE_LABEL = {
+    ddReceived:      'Defensive Driving',
+    gsReceived:      'Good Student',
+    thankYouSent:    'Thank-you card',
+    welcomeCallSent: 'Welcome call'
+  };
+
   async function toggleReceived(clientId, field, event) {
     if (event) event.stopPropagation();
 
@@ -1650,8 +1681,8 @@
     const newVal = updated[field] === 'Y' ? 'N' : 'Y';
     updated[field] = newVal;
 
-    const dateField = field === 'ddReceived' ? 'ddReceivedDate' : 'gsReceivedDate';
-    updated[dateField] = newVal === 'Y' ? todayStr() : '';
+    const dateField = TOGGLE_DATE_FIELD[field];
+    if (dateField) updated[dateField] = newVal === 'Y' ? todayStr() : '';
 
     updated.updatedAt = new Date().toISOString();
     updated.action = 'update';
@@ -1667,8 +1698,8 @@
       const idx = allClients.findIndex(c => String(c.id) === String(clientId));
       if (idx !== -1) allClients[idx] = updated;
 
-      const label = field === 'ddReceived' ? 'Defensive Driving' : 'Good Student';
-      showToast(`${label} ${newVal === 'Y' ? 'marked in hand' : 'marked not received'}`, 'success');
+      const label = TOGGLE_LABEL[field] || field;
+      showToast(`${label} ${newVal === 'Y' ? 'marked done' : 'cleared'}`, 'success');
       updateStats(allClients);
       renderTable();
 
@@ -1806,12 +1837,14 @@
       return;
     }
     const mock = {
-      ddDiscount: formToggles.ddDiscount,
-      ddReceived: formToggles.ddReceived,
-      gsDiscount: formToggles.gsDiscount,
-      gsReceived: formToggles.gsReceived,
-      dueDate:    document.getElementById('f_dueDate').value,
-      status:     ''
+      ddDiscount:      formToggles.ddDiscount,
+      ddReceived:      formToggles.ddReceived,
+      gsDiscount:      formToggles.gsDiscount,
+      gsReceived:      formToggles.gsReceived,
+      thankYouSent:    formToggles.thankYouSent,
+      welcomeCallSent: formToggles.welcomeCallSent,
+      dueDate:         document.getElementById('f_dueDate').value,
+      status:          ''
     };
     document.getElementById('f_statusDisplay').textContent = calcStatus(mock);
   }
