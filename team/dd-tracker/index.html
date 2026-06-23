@@ -850,6 +850,8 @@
             <button class="toggle-opt" id="tog-thankYouSent-Y" onclick="setToggle('thankYouSent','Y')">Yes</button>
             <button class="toggle-opt no"  id="tog-thankYouSent-N" onclick="setToggle('thankYouSent','N')">No</button>
           </div>
+          <label style="margin-top:8px;">Thank You Date</label>
+          <input type="date" id="f_thankYouDate" />
         </div>
         <!-- Welcome call -->
         <div class="form-group">
@@ -858,6 +860,8 @@
             <button class="toggle-opt" id="tog-welcomeCallSent-Y" onclick="setToggle('welcomeCallSent','Y')">Yes</button>
             <button class="toggle-opt no"  id="tog-welcomeCallSent-N" onclick="setToggle('welcomeCallSent','N')">No</button>
           </div>
+          <label style="margin-top:8px;">Welcome Call Date</label>
+          <input type="date" id="f_welcomeCallDate" />
         </div>
 
         <div class="form-group full">
@@ -1697,7 +1701,7 @@
   }
 
   function resetForm() {
-    ['f_firstName','f_lastName','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate'].forEach(id => {
+    ['f_firstName','f_lastName','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate','f_thankYouDate','f_welcomeCallDate'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('f_producer').value       = '';
@@ -1721,6 +1725,8 @@
     document.getElementById('f_contactNote').value    = c.contactNote || '';
     document.getElementById('f_ddReceivedDate').value = c.ddReceivedDate || '';
     document.getElementById('f_gsReceivedDate').value = c.gsReceivedDate || '';
+    document.getElementById('f_thankYouDate').value    = c.thankYouDate || '';
+    document.getElementById('f_welcomeCallDate').value = c.welcomeCallDate || '';
     const manualStatuses = ['Discount Removed', 'Archived'];
     document.getElementById('f_statusOverride').value =
       manualStatuses.includes(c.status) ? c.status : '';
@@ -1750,6 +1756,15 @@
     }
     if (field === 'gsReceived') {
       const el = document.getElementById('f_gsReceivedDate');
+      el.value = val === 'Y' ? (el.value || todayStr()) : '';
+    }
+    // Thank-you / welcome-call dates auto-stamp the same way: Yes with no date → today; No → clear.
+    if (field === 'thankYouSent') {
+      const el = document.getElementById('f_thankYouDate');
+      el.value = val === 'Y' ? (el.value || todayStr()) : '';
+    }
+    if (field === 'welcomeCallSent') {
+      const el = document.getElementById('f_welcomeCallDate');
       el.value = val === 'Y' ? (el.value || todayStr()) : '';
     }
     applyToggles();
@@ -1832,6 +1847,9 @@
     // Editable received dates (user can correct to the real certificate date).
     const ddRcvDate = document.getElementById('f_ddReceivedDate').value;
     const gsRcvDate = document.getElementById('f_gsReceivedDate').value;
+    // Editable thank-you / welcome-call dates (correct to the real date sent/called).
+    const tyDate    = document.getElementById('f_thankYouDate').value;
+    const wcDate    = document.getElementById('f_welcomeCallDate').value;
 
     let clientObj;
     if (editingId) {
@@ -1852,10 +1870,9 @@
       // Received date: use the editable field; default today if marked received with no date; clear if not received.
       clientObj.ddReceivedDate = formToggles.ddReceived === 'Y' ? (ddRcvDate || todayStr()) : '';
       clientObj.gsReceivedDate = formToggles.gsReceived === 'Y' ? (gsRcvDate || todayStr()) : '';
-      if (formToggles.thankYouSent === 'Y' && !clientObj.thankYouDate) clientObj.thankYouDate = todayStr();
-      if (formToggles.thankYouSent === 'N') clientObj.thankYouDate = '';
-      if (formToggles.welcomeCallSent === 'Y' && !clientObj.welcomeCallDate) clientObj.welcomeCallDate = todayStr();
-      if (formToggles.welcomeCallSent === 'N') clientObj.welcomeCallDate = '';
+      // Thank-you / welcome-call date: use the editable field; default today if Yes with no date; clear if No.
+      clientObj.thankYouDate    = formToggles.thankYouSent    === 'Y' ? (tyDate || todayStr()) : '';
+      clientObj.welcomeCallDate = formToggles.welcomeCallSent === 'Y' ? (wcDate || todayStr()) : '';
     } else {
       // New client also creates its household (Change 4)
       clientObj = {
@@ -1873,9 +1890,9 @@
         status:          override || '',
         contactNote:     document.getElementById('f_contactNote').value.trim(),
         thankYouSent:    formToggles.thankYouSent,
-        thankYouDate:    formToggles.thankYouSent === 'Y' ? todayStr() : '',
+        thankYouDate:    formToggles.thankYouSent === 'Y' ? (tyDate || todayStr()) : '',
         welcomeCallSent: formToggles.welcomeCallSent,
-        welcomeCallDate: formToggles.welcomeCallSent === 'Y' ? todayStr() : '',
+        welcomeCallDate: formToggles.welcomeCallSent === 'Y' ? (wcDate || todayStr()) : '',
         createdAt:       now,
         updatedAt:       now
       };
