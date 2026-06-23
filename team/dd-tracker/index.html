@@ -600,7 +600,10 @@
       white-space: nowrap;
     }
     .cert-toggle:hover { border-color: var(--navy); }
-    .cert-toggle.on { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    /* Pills represent IN HAND (received), not "applies":
+       .on = received (green check) · .waiting = applies-but-not-received (amber clock) */
+    .cert-toggle.on      { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .cert-toggle.waiting { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
 
     /* ═══════════════════════════════════════
        HOUSEHOLD EDIT MODAL
@@ -785,38 +788,42 @@
           <input type="date" id="f_dueDate" oninput="updateStatusDisplay()" />
         </div>
 
-        <!-- DD toggle -->
+        <!-- DD — does this discount apply to this person? -->
         <div class="form-group">
-          <label>Defensive Driving Discount</label>
+          <label>Defensive Driving &#8212; Applies?</label>
           <div class="toggle-row">
             <button class="toggle-opt" id="tog-ddDiscount-Y" onclick="setToggle('ddDiscount','Y')">Yes</button>
             <button class="toggle-opt no"  id="tog-ddDiscount-N" onclick="setToggle('ddDiscount','N')">No</button>
           </div>
         </div>
-        <!-- DD Received — shown only when ddDiscount=Y -->
+        <!-- DD — do we physically have the certificate? Shown only when DD applies. -->
         <div class="form-group" id="grp-ddReceived" style="display:none;">
-          <label>DD Certificate Received</label>
+          <label>DD &#8212; Received / in hand?</label>
           <div class="toggle-row">
             <button class="toggle-opt" id="tog-ddReceived-Y" onclick="setToggle('ddReceived','Y')">Yes</button>
             <button class="toggle-opt no"  id="tog-ddReceived-N" onclick="setToggle('ddReceived','N')">No</button>
           </div>
+          <label style="margin-top:8px;">DD Received Date</label>
+          <input type="date" id="f_ddReceivedDate" />
         </div>
 
-        <!-- GS toggle -->
+        <!-- GS — does this discount apply to this person? -->
         <div class="form-group">
-          <label>Good Student Discount</label>
+          <label>Good Student &#8212; Applies?</label>
           <div class="toggle-row">
             <button class="toggle-opt" id="tog-gsDiscount-Y" onclick="setToggle('gsDiscount','Y')">Yes</button>
             <button class="toggle-opt no"  id="tog-gsDiscount-N" onclick="setToggle('gsDiscount','N')">No</button>
           </div>
         </div>
-        <!-- GS Received — shown only when gsDiscount=Y -->
+        <!-- GS — do we physically have the proof? Shown only when GS applies. -->
         <div class="form-group" id="grp-gsReceived" style="display:none;">
-          <label>GS Grades Received</label>
+          <label>GS &#8212; Received / in hand?</label>
           <div class="toggle-row">
             <button class="toggle-opt" id="tog-gsReceived-Y" onclick="setToggle('gsReceived','Y')">Yes</button>
             <button class="toggle-opt no"  id="tog-gsReceived-N" onclick="setToggle('gsReceived','N')">No</button>
           </div>
+          <label style="margin-top:8px;">GS Received Date</label>
+          <input type="date" id="f_gsReceivedDate" />
         </div>
 
         <!-- Status: auto-calc display + manual override -->
@@ -1201,12 +1208,20 @@
   function calcStatus(c) {
     if (c.status === 'Archived')         return 'Archived';
     if (c.status === 'Discount Removed') return 'Discount Removed';
-    const ddOk = c.ddDiscount !== 'Y' || c.ddReceived === 'Y';
-    const gsOk = c.gsDiscount !== 'Y' || c.gsReceived === 'Y';
+    // APPLIES (ddDiscount/gsDiscount) vs IN HAND (ddReceived/gsReceived) are
+    // two separate facts. A discount is only outstanding when it APPLIES and
+    // is NOT yet received.
+    const ddApplies = c.ddDiscount === 'Y';
+    const gsApplies = c.gsDiscount === 'Y';
+    // No applicable discounts → nothing to track. Treat as Complete so the row
+    // never crashes and isn't flagged outstanding (these won't normally exist).
+    if (!ddApplies && !gsApplies) return 'Complete';
+    const ddOk = !ddApplies || c.ddReceived === 'Y';
+    const gsOk = !gsApplies || c.gsReceived === 'Y';
     if (ddOk && gsOk) return 'Complete';
     const days = daysUntil(c.dueDate);
-    if (days !== null && days < 0)  return 'Overdue';
-    if (days !== null && days <= 3) return 'Due Soon';
+    if (days !== null && days < 0)   return 'Overdue';
+    if (days !== null && days <= 30) return 'Due Soon';
     return 'Pending';
   }
 
@@ -1289,6 +1304,18 @@
     return bestStatus;
   }
 
+  // Count of OUTSTANDING items across a household = each applicable-but-not-received
+  // discount (DD and GS counted separately), excluding archived members.
+  function householdOutstanding(members) {
+    let count = 0;
+    members.forEach(m => {
+      if (calcStatus(m) === 'Archived') return;
+      if (m.ddDiscount === 'Y' && m.ddReceived !== 'Y') count++;
+      if (m.gsDiscount === 'Y' && m.gsReceived !== 'Y') count++;
+    });
+    return count;
+  }
+
   /* ═══════════════════════════════════════
      STATS — archived records excluded from all counts
   ═══════════════════════════════════════ */
@@ -1346,17 +1373,33 @@
     'Archived':         'badge-archived'
   };
 
+  // An IN-HAND pill for one discount on one member. Only ever rendered when the
+  // discount APPLIES. Green + check = received; amber + clock = still waiting.
+  // Clicking toggles IN HAND (ddReceived / gsReceived) for this member only.
+  function receivedPillHtml(c, kind) {
+    const label    = kind === 'dd' ? 'DD' : 'GS';
+    const fullName  = kind === 'dd' ? 'Defensive Driving' : 'Good Student';
+    const field    = kind === 'dd' ? 'ddReceived' : 'gsReceived';
+    const received = (kind === 'dd' ? c.ddReceived : c.gsReceived) === 'Y';
+    const cls      = received ? 'cert-toggle on' : 'cert-toggle waiting';
+    const inner    = received ? `&#10003; ${label}` : `&#128336; ${label} &middot; waiting`;
+    const title    = received
+      ? `${fullName} certificate in hand — click to mark not received`
+      : `${fullName} — waiting on certificate — click to mark in hand`;
+    return `<button class="${cls}" title="${title}" onclick="toggleReceived('${c.id}','${field}',event)">${inner}</button>`;
+  }
+
   // One member row inside a household card.
   function memberRowHtml(c) {
     const status   = calcStatus(c);
     const archived = status === 'Archived';
     const badgeCls = BADGE_CLS[status] || 'badge-pending';
 
-    const ddOn = c.ddDiscount === 'Y' ? ' on' : '';
-    const gsOn = c.gsDiscount === 'Y' ? ' on' : '';
-
-    const ddToggle = `<button class="cert-toggle${ddOn}" title="Defensive Driving discount" onclick="toggleDiscount('${c.id}','ddDiscount',event)">DD${c.ddDiscount === 'Y' ? ' &#10003;' : ''}</button>`;
-    const gsToggle = `<button class="cert-toggle${gsOn}" title="Good Student discount" onclick="toggleDiscount('${c.id}','gsDiscount',event)">GS${c.gsDiscount === 'Y' ? ' &#10003;' : ''}</button>`;
+    // A pill renders ONLY for discounts that apply to this member.
+    const pills = [];
+    if (c.ddDiscount === 'Y') pills.push(receivedPillHtml(c, 'dd'));
+    if (c.gsDiscount === 'Y') pills.push(receivedPillHtml(c, 'gs'));
+    const pillsHtml = pills.join('');
 
     const archActions = archived
       ? `<button class="btn-action unarchive" title="Unarchive" onclick="openUnarchiveModal('${c.id}')">&#8635;</button>
@@ -1370,8 +1413,7 @@
           <span class="badge ${badgeCls}">${status}</span>
         </div>
         <div class="mem-controls" onclick="event.stopPropagation()">
-          ${ddToggle}
-          ${gsToggle}
+          ${pillsHtml}
           ${archActions}
         </div>
       </div>`;
@@ -1424,6 +1466,21 @@
       const count = h.members.length;
       const membersHtml = h.members.map(memberRowHtml).join('');
 
+      // Household summary badge: green "All complete" when nothing outstanding,
+      // otherwise a count of outstanding items coloured by the worst member status
+      // (red if any member is Overdue, amber otherwise).
+      const activeMembers = h.members.filter(m => calcStatus(m) !== 'Archived');
+      const outstanding   = householdOutstanding(h.members);
+      let summaryBadge;
+      if (activeMembers.length === 0) {
+        summaryBadge = `<span class="badge badge-archived">Archived</span>`;
+      } else if (outstanding === 0) {
+        summaryBadge = `<span class="badge badge-complete">All complete</span>`;
+      } else {
+        const sumCls = urgency === 'Overdue' ? 'badge-overdue' : 'badge-pending';
+        summaryBadge = `<span class="badge ${sumCls}">${outstanding} item${outstanding === 1 ? '' : 's'} outstanding</span>`;
+      }
+
       const card = document.createElement('div');
       card.className = cardCls;
       card.innerHTML = `
@@ -1432,6 +1489,7 @@
             <div class="hh-name">
               ${esc(h.householdName)}
               <span class="hh-count">${count} member${count === 1 ? '' : 's'}</span>
+              ${summaryBadge}
             </div>
             <div class="hh-shared">
               <span>Producer: <b>${h.producer ? esc(h.producer) : '&#8212;'}</b></span>
@@ -1569,12 +1627,13 @@
   }
 
   /* ═══════════════════════════════════════
-     INLINE DD / GS DISCOUNT TOGGLES (one member)
-     Flips ddDiscount / gsDiscount on a single member and sends an
-     'update' with that member's full object. Turning a discount OFF
-     also clears its received flag/date (mirrors the detail editor).
+     INLINE DD / GS "IN HAND" TOGGLES (one member)
+     Flips ddReceived / gsReceived (do we physically have the certificate?)
+     on a single member and sends one 'update' with that member's full object.
+     Mark received → stamp its ReceivedDate to today; un-mark → clear the date.
+     This does NOT touch ddDiscount/gsDiscount (whether the discount applies).
   ═══════════════════════════════════════ */
-  async function toggleDiscount(clientId, field, event) {
+  async function toggleReceived(clientId, field, event) {
     if (event) event.stopPropagation();
 
     const client = allClients.find(c => String(c.id) === String(clientId));
@@ -1587,8 +1646,8 @@
     const newVal = updated[field] === 'Y' ? 'N' : 'Y';
     updated[field] = newVal;
 
-    if (field === 'ddDiscount' && newVal === 'N') { updated.ddReceived = 'N'; updated.ddReceivedDate = ''; }
-    if (field === 'gsDiscount' && newVal === 'N') { updated.gsReceived = 'N'; updated.gsReceivedDate = ''; }
+    const dateField = field === 'ddReceived' ? 'ddReceivedDate' : 'gsReceivedDate';
+    updated[dateField] = newVal === 'Y' ? todayStr() : '';
 
     updated.updatedAt = new Date().toISOString();
     updated.action = 'update';
@@ -1604,8 +1663,8 @@
       const idx = allClients.findIndex(c => String(c.id) === String(clientId));
       if (idx !== -1) allClients[idx] = updated;
 
-      const label = field === 'ddDiscount' ? 'Defensive Driving' : 'Good Student';
-      showToast(`${label} discount ${newVal === 'Y' ? 'on' : 'off'}`, 'success');
+      const label = field === 'ddReceived' ? 'Defensive Driving' : 'Good Student';
+      showToast(`${label} ${newVal === 'Y' ? 'marked in hand' : 'marked not received'}`, 'success');
       updateStats(allClients);
       renderTable();
 
@@ -1638,7 +1697,7 @@
   }
 
   function resetForm() {
-    ['f_firstName','f_lastName','f_discountAmount','f_contactNote'].forEach(id => {
+    ['f_firstName','f_lastName','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('f_producer').value       = '';
@@ -1660,6 +1719,8 @@
     document.getElementById('f_dueDate').value        = c.dueDate   || '';
     document.getElementById('f_discountAmount').value = c.discountAmount || '';
     document.getElementById('f_contactNote').value    = c.contactNote || '';
+    document.getElementById('f_ddReceivedDate').value = c.ddReceivedDate || '';
+    document.getElementById('f_gsReceivedDate').value = c.gsReceivedDate || '';
     const manualStatuses = ['Discount Removed', 'Archived'];
     document.getElementById('f_statusOverride').value =
       manualStatuses.includes(c.status) ? c.status : '';
@@ -1679,8 +1740,18 @@
 
   function setToggle(field, val) {
     formToggles[field] = val;
-    if (field === 'ddDiscount' && val === 'N') formToggles.ddReceived = 'N';
-    if (field === 'gsDiscount' && val === 'N') formToggles.gsReceived = 'N';
+    // Turning a discount OFF (no longer applies) clears its received flag + date.
+    if (field === 'ddDiscount' && val === 'N') { formToggles.ddReceived = 'N'; document.getElementById('f_ddReceivedDate').value = ''; }
+    if (field === 'gsDiscount' && val === 'N') { formToggles.gsReceived = 'N'; document.getElementById('f_gsReceivedDate').value = ''; }
+    // Received Yes with no date → default today; Received No → clear the date.
+    if (field === 'ddReceived') {
+      const el = document.getElementById('f_ddReceivedDate');
+      el.value = val === 'Y' ? (el.value || todayStr()) : '';
+    }
+    if (field === 'gsReceived') {
+      const el = document.getElementById('f_gsReceivedDate');
+      el.value = val === 'Y' ? (el.value || todayStr()) : '';
+    }
     applyToggles();
     updateConditionals();
     updateStatusDisplay();
@@ -1756,8 +1827,11 @@
     if (!dueDate)    { document.getElementById('f_dueDate').classList.add('err');    valid = false; }
     if (!valid) return;
 
-    const override = document.getElementById('f_statusOverride').value;
-    const now      = new Date().toISOString();
+    const override  = document.getElementById('f_statusOverride').value;
+    const now       = new Date().toISOString();
+    // Editable received dates (user can correct to the real certificate date).
+    const ddRcvDate = document.getElementById('f_ddReceivedDate').value;
+    const gsRcvDate = document.getElementById('f_gsReceivedDate').value;
 
     let clientObj;
     if (editingId) {
@@ -1775,10 +1849,9 @@
         status:          override || '',
         updatedAt:       now
       });
-      if (formToggles.ddReceived === 'Y' && !clientObj.ddReceivedDate) clientObj.ddReceivedDate = todayStr();
-      if (formToggles.ddReceived === 'N') clientObj.ddReceivedDate = '';
-      if (formToggles.gsReceived === 'Y' && !clientObj.gsReceivedDate) clientObj.gsReceivedDate = todayStr();
-      if (formToggles.gsReceived === 'N') clientObj.gsReceivedDate = '';
+      // Received date: use the editable field; default today if marked received with no date; clear if not received.
+      clientObj.ddReceivedDate = formToggles.ddReceived === 'Y' ? (ddRcvDate || todayStr()) : '';
+      clientObj.gsReceivedDate = formToggles.gsReceived === 'Y' ? (gsRcvDate || todayStr()) : '';
       if (formToggles.thankYouSent === 'Y' && !clientObj.thankYouDate) clientObj.thankYouDate = todayStr();
       if (formToggles.thankYouSent === 'N') clientObj.thankYouDate = '';
       if (formToggles.welcomeCallSent === 'Y' && !clientObj.welcomeCallDate) clientObj.welcomeCallDate = todayStr();
@@ -1792,10 +1865,10 @@
         firstName, lastName, producer, policyDate, dueDate,
         ddDiscount:      formToggles.ddDiscount,
         ddReceived:      formToggles.ddReceived,
-        ddReceivedDate:  formToggles.ddReceived === 'Y' ? todayStr() : '',
+        ddReceivedDate:  formToggles.ddReceived === 'Y' ? (ddRcvDate || todayStr()) : '',
         gsDiscount:      formToggles.gsDiscount,
         gsReceived:      formToggles.gsReceived,
-        gsReceivedDate:  formToggles.gsReceived === 'Y' ? todayStr() : '',
+        gsReceivedDate:  formToggles.gsReceived === 'Y' ? (gsRcvDate || todayStr()) : '',
         discountAmount:  document.getElementById('f_discountAmount').value.trim(),
         status:          override || '',
         contactNote:     document.getElementById('f_contactNote').value.trim(),
@@ -1958,8 +2031,8 @@
             <input type="text" placeholder="Last name"  value="${esc(m.lastName)}"  data-idx="${i}" data-field="lastName"  oninput="onHouseholdNameInput(this)" />
           </div>
           <div class="he-mem-toggles">
-            <button class="cert-toggle${ddOn}" title="Defensive Driving discount" onclick="toggleHouseholdMemberDiscount(${i},'ddDiscount')">DD${m.ddDiscount === 'Y' ? ' &#10003;' : ''}</button>
-            <button class="cert-toggle${gsOn}" title="Good Student discount" onclick="toggleHouseholdMemberDiscount(${i},'gsDiscount')">GS${m.gsDiscount === 'Y' ? ' &#10003;' : ''}</button>
+            <button class="cert-toggle${ddOn}" title="Does the Defensive Driving discount apply to this member?" onclick="toggleHouseholdMemberDiscount(${i},'ddDiscount')">DD${m.ddDiscount === 'Y' ? ' applies' : '?'}</button>
+            <button class="cert-toggle${gsOn}" title="Does the Good Student discount apply to this member?" onclick="toggleHouseholdMemberDiscount(${i},'gsDiscount')">GS${m.gsDiscount === 'Y' ? ' applies' : '?'}</button>
           </div>
           <button class="he-trash" title="Remove member" onclick="removeHouseholdMember(${i})">&#128465;</button>
         </div>`;
