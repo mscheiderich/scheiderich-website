@@ -268,7 +268,7 @@
           <p class="form-sub">Fill out the form below and a member of our team will follow up with you promptly — typically the same business day.</p>
 
 
-          <form id="contact-form" action="https://formspree.io/f/mgoqnelq" method="POST" novalidate>
+          <form id="contact-form" action="https://formspree.io/f/mgoqnelq" method="POST">
 
             <div class="form-row">
               <div class="form-group">
@@ -469,13 +469,32 @@
     var originalBtnText = submitBtn.textContent;
     var errorEl = null;
 
+    var NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at 770-268-4418.";
+    var SERVER_MSG  = "We weren't able to send your request. Please call us at 770-268-4418 and we'll take your information directly.";
+
+    function clearError() {
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+    }
+
+    function showError(msg) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      clearError();
+      errorEl = document.createElement('p');
+      errorEl.style.cssText = 'color:#c0392b; font-size:13.5px; margin-top:12px; line-height:1.5;';
+      errorEl.textContent = msg;
+      submitBtn.insertAdjacentElement('afterend', errorEl);
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
+      clearError();
+
+      if (!form.reportValidity()) { return; }
+
       submitBtn.textContent = 'Sending…';
       submitBtn.disabled = true;
-
-      if (errorEl) { errorEl.remove(); errorEl = null; }
 
       fetch('https://formspree.io/f/mgoqnelq', {
         method: 'POST',
@@ -483,21 +502,17 @@
         body: new FormData(form)
       })
       .then(function (res) {
-        if (res.ok) {
-          form.style.display = 'none';
-          confirmation.style.display = 'block';
-          confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          throw new Error('server');
+        if (!res.ok) {
+          var err = new Error('server');
+          err.isServerError = true;
+          throw err;
         }
+        form.style.display = 'none';
+        confirmation.style.display = 'block';
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
       })
-      .catch(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-        errorEl = document.createElement('p');
-        errorEl.style.cssText = 'color:#c0392b; font-size:13.5px; margin-top:12px; line-height:1.5;';
-        errorEl.textContent = 'Something went wrong. Please try again or call us at 770-268-4418.';
-        submitBtn.insertAdjacentElement('afterend', errorEl);
+      .catch(function (err) {
+        showError(err && err.isServerError ? SERVER_MSG : NETWORK_MSG);
       });
     });
 
@@ -507,7 +522,7 @@
       form.reset();
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText;
-      if (errorEl) { errorEl.remove(); errorEl = null; }
+      clearError();
     });
   })();
 </script>
