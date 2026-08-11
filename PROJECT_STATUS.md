@@ -14,6 +14,7 @@
 | Phone | 770-268-4418 |
 | Agency Email | info@gahomeinsuranceexperts.com |
 | Mike Direct | mike@gahomeinsuranceexperts.com |
+| Allstate Email | mscheiderich@allstate.com |
 | Website | thescheiderichagency.com |
 | GitHub | github.com/mscheiderich/scheiderich-website |
 | Local Path | C:\Users\msche\Documents\scheiderich-website |
