@@ -10,9 +10,12 @@ Options +IncludesNOEXEC
 AddType text/html .html
 AddOutputFilter INCLUDES .html
 
-# --- Block direct access to include fragments ---
-<FilesMatch "^(header|footer)\.html$">
-    <If "%{REQUEST_URI} =~ m#^/includes/#">
-        Require all denied
-    </If>
-</FilesMatch>
+# --- Keep include fragments out of search results ---
+# NOTE: do NOT use "Require all denied" here. SSI virtual includes are subject to
+# access control, so denying the fragments also blocks Apache's own subrequest and
+# the include fails with "an error occurred while processing this directive".
+<IfModule mod_headers.c>
+  <FilesMatch "^(header|footer)\.html$">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </FilesMatch>
+</IfModule>
