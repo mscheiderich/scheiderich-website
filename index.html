@@ -43,7 +43,8 @@
       {"@type":"Person","name":"Crissy Shatzel","jobTitle":"Licensed Insurance Agent"},
       {"@type":"Person","name":"Iris Salgado","jobTitle":"Licensed Insurance Agent"},
       {"@type":"Person","name":"Mark Hill","jobTitle":"Licensed Insurance Agent"},
-      {"@type":"Person","name":"Wendy Alaniz","jobTitle":"Licensed Insurance Agent"}
+      {"@type":"Person","name":"Wendy Alaniz","jobTitle":"Licensed Customer Service Rep"},
+      {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Sales Producer"}
     ]
   }
   </script>
@@ -358,6 +359,8 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
+    /* Centre a lone card left over on the final row (3-column layout) */
+    .team-grid > .team-card:last-child:nth-child(3n + 1) { grid-column: 2; }
     /* All 6 team cards — identical sizing, no exceptions */
     .team-card {
       background: var(--bg-w);
@@ -603,6 +606,13 @@
   .cov-link:nth-child(odd) { border-right: 1px solid var(--border); }
   .cov-grid  { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: 1fr 1fr; }
+  /* Re-centre the orphan for the 2-column layout: full-row span, single-column width */
+  .team-grid > .team-card:last-child:nth-child(3n + 1) { grid-column: auto; }
+  .team-grid > .team-card:last-child:nth-child(2n + 1) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 12px);
+  }
   .team-photo { height: 220px; }
   .faq-grid  { grid-template-columns: 1fr; }
   .proc-grid { grid-template-columns: 1fr; }
@@ -823,7 +833,7 @@
       <div class="why-cards">
         <div class="why-card dark"><div class="why-card-num">GA</div><div class="why-card-lbl">Statewide coverage options available</div></div>
         <div class="why-card"><div class="why-card-num">4</div><div class="why-card-lbl">Core coverage types for home, auto, life &amp; business</div></div>
-        <div class="why-card"><div class="why-card-num">7</div><div class="why-card-lbl">Licensed agents ready to help you</div></div>
+        <div class="why-card"><div class="why-card-num">7</div><div class="why-card-lbl">Licensed professionals ready to help you</div></div>
         <div class="why-card dark"><div class="why-card-num">Local</div><div class="why-card-lbl">Buford, GA — Serving Metro Atlanta &amp; beyond</div></div>
       </div>
     </div>
