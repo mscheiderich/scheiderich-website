@@ -1,0 +1,11 @@
+# --- Enable Server Side Includes for .html files ---
+Options +IncludesNOEXEC
+AddType text/html .html
+AddOutputFilter INCLUDES .html
+
+# --- Block direct access to include fragments ---
+<FilesMatch "^(header|footer)\.html$">
+    <If "%{REQUEST_URI} =~ m#^/includes/#">
+        Require all denied
+    </If>
+</FilesMatch>
