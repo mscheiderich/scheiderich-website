@@ -34,6 +34,49 @@
         </a>
         <a href="/contact.html" class="btn btn-primary">Get a Quote</a>
       </div>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a href="/home-insurance.html">Home Insurance</a>
+      <a href="/auto-insurance.html">Auto Insurance</a>
+      <a href="/life-insurance.html">Life Insurance</a>
+      <a href="/insurance-review.html">Insurance Review</a>
+      <a href="/business-insurance.html">Business Insurance</a>
+      <a href="/bundle-and-save.html">Bundle &amp; Save</a>
+      <a href="/additional-coverage.html">Additional Coverage</a>
+      <a href="/umbrella-insurance.html">Umbrella Insurance</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/community.html">Community</a>
+      <a class="mobile-menu-phone" href="tel:7702684418">Call 770-268-4418</a>
+    </div>
   </div>
 </header>
+
+<script>
+(function () {
+  var btn  = document.querySelector('.nav-toggle');
+  var menu = document.getElementById('mobile-menu');
+  if (!btn || !menu) return;
+
+  function setOpen(open) {
+    menu.hidden = !open;
+    btn.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  btn.addEventListener('click', function () { setOpen(menu.hidden); });
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
+  });
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 640 && !menu.hidden) setOpen(false);
+  });
+})();
+</script>
