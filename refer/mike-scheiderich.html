@@ -28,7 +28,27 @@
         radial-gradient(ellipse at 5%  80%, rgba(255,255,255,.03) 0%, transparent 45%);
       pointer-events: none;
     }
-    .rf-hero-inner { position: relative; z-index: 1; max-width: 720px; padding: 72px 0 68px; }
+    /* Hero: two columns above the nav breakpoint — photo LEFT, text RIGHT.
+       Below it, one column with the photo first from source order. Same pattern as
+       /agents/*.html. Exactly one photo element exists in the markup. */
+    .rf-hero-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 52px;
+      align-items: center;
+      padding: 72px 0 68px;
+    }
+    .rf-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%;
+    }
+    .rf-hero-photo img { width: 100%; height: auto; display: block; }
+    .rf-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
     .rf-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 11.5px; font-weight: 600; letter-spacing: .1em;
@@ -170,12 +190,30 @@
     /* Long addresses must not set a min-content floor wider than a phone. */
     .rf-link-box code, .rf-intro-card a, .rf-done-lead a { overflow-wrap: anywhere; }
 
+    /* ── Hero stack below the nav breakpoint ──
+       1100px matches the mobile-nav breakpoint in /includes/site-css.html, so the
+       header and hero switch together. The photo is first in source order, so it
+       leads the stack without any reordering; only the alignment changes. */
+    @media (max-width: 1100px) {
+      .rf-hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+        padding: 52px 0 48px;
+        justify-items: center;
+      }
+      .rf-hero-photo { max-width: 220px; }
+      .rf-hero-text { align-items: center; text-align: center; }
+      .rf-hero-btns { justify-content: center; }
+      /* Running prose stays left-aligned; centring it hurts readability. */
+      .rf-hero-text > .rf-hero-body { text-align: left; }
+    }
     @media (max-width: 760px) {
       .rf-sec { padding: 56px 0; }
       .rf-row { grid-template-columns: minmax(0, 1fr); }
       .rf-form-card { padding: 30px 22px; }
       .rf-intro-card, .rf-link-box { padding: 26px 20px; }
-      .rf-hero-btns { flex-direction: column; align-items: stretch; }
+      /* Stretch so the full-width buttons below fill the centred flex column. */
+      .rf-hero-btns { flex-direction: column; align-items: stretch; align-self: stretch; }
       .rf-hero-btns .btn { width: 100%; }
     }
   </style>
@@ -200,17 +238,27 @@
 <!-- ═══ 1. HERO ═══ -->
 <section class="rf-hero" aria-labelledby="rf-h1">
   <div class="container">
-    <div class="rf-hero-inner">
-      <div class="rf-eyebrow"><span class="rf-dot"></span> For Referral Partners</div>
-      <h1 id="rf-h1">Refer a client to Mike</h1>
-      <p class="rf-promise">Your closing doesn't slip because of insurance.</p>
-      <p class="rf-hero-body">
-        Mike handles homeowners insurance for buyers closing in Buford, Gwinnett County, and across Georgia. Send the referral at contract and the binder gets to the lender with the right details the first time.
-      </p>
-      <div class="rf-hero-btns">
-        <a href="#rf-form-h2" class="btn btn-primary">Refer a client</a>
-        <a href="tel:7702684418" class="btn btn-ghost-w">Call 770-268-4418</a>
+    <div class="rf-hero-grid">
+
+      <!-- The ONLY photo element on this page. Its position at both sizes is
+           handled in CSS — grid column on desktop, source order on mobile. -->
+      <div class="rf-hero-photo">
+        <img src="/mike-scheiderich.png" alt="Mike Scheiderich, agency principal at The Scheiderich Agency in Buford, Georgia" />
       </div>
+
+      <div class="rf-hero-text">
+        <div class="rf-eyebrow"><span class="rf-dot"></span> For Referral Partners</div>
+        <h1 id="rf-h1">Refer a client to Mike</h1>
+        <p class="rf-promise">Your closing doesn't slip because of insurance.</p>
+        <p class="rf-hero-body">
+          Mike handles homeowners insurance for buyers closing in Buford, Gwinnett County, and across Georgia. Send the referral at contract and the binder gets to the lender with the right details the first time.
+        </p>
+        <div class="rf-hero-btns">
+          <a href="#rf-form-h2" class="btn btn-primary">Refer a client</a>
+          <a href="tel:7702684418" class="btn btn-ghost-w">Call 770-268-4418</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>

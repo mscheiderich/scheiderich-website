@@ -48,3 +48,40 @@ AddOutputFilter INCLUDES .html
     </IfModule>
   </IfModule>
 </FilesMatch>
+
+# --- Short URLs for referral partner pages ---
+# /refer/mike  ->  /refer/mike-scheiderich.html
+#
+# These are INTERNAL rewrites, not redirects: the short URL stays in the address
+# bar, which is the point — partners save and re-use these links.
+#
+# Flags:
+#   NC  case-insensitive, so /refer/Mike also resolves
+#   QSA keeps ?p=partner-code attached to the rewritten request. (A substitution
+#       with no query of its own already preserves the query string; QSA is stated
+#       explicitly so the intent survives future edits.)
+#   L   stop rewriting once matched.
+#
+# Cannot affect SSI or /includes/: every pattern is anchored to ^refer/ with a
+# fixed first name, so Apache's SSI subrequests for /includes/header.html,
+# /includes/footer.html and /includes/site-css.html never match and pass through
+# untouched. The rewrite targets are .html files, so AddOutputFilter INCLUDES
+# still applies to them and SSI processing happens exactly as before.
+# No loop is possible: each target (e.g. refer/mike-scheiderich.html) does not
+# match the pattern that produced it.
+#
+# Deliberately NOT a general extensionless-URL rule — that would require updating
+# all 30 canonical tags and is a separate decision.
+#
+# Only mike-scheiderich.html exists today; the other six rewrite to files that are
+# not built yet and will 404 until those pages ship.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^refer/mike/?$      refer/mike-scheiderich.html    [NC,QSA,L]
+  RewriteRule ^refer/crissy/?$    refer/crissy-shatzel.html      [NC,QSA,L]
+  RewriteRule ^refer/iris/?$      refer/iris-salgado.html        [NC,QSA,L]
+  RewriteRule ^refer/mark/?$      refer/mark-hill.html           [NC,QSA,L]
+  RewriteRule ^refer/scott/?$     refer/scott-kesler.html        [NC,QSA,L]
+  RewriteRule ^refer/wendy/?$     refer/wendy-alaniz.html        [NC,QSA,L]
+  RewriteRule ^refer/jennifer/?$  refer/jennifer-lawler.html     [NC,QSA,L]
+</IfModule>
