@@ -135,6 +135,18 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Agent Pages -->
+  <!-- NOTE: this <loc> includes the .html extension because that is the URL that
+       actually resolves on the server and it matches this page's canonical tag.
+       The extensionless <loc> values used by the entries above currently return
+       404 — there are no rewrite rules in .htaccess to strip .html. -->
+  <url>
+    <loc>https://thescheiderichagency.com/agents/mike-scheiderich.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- Legal Pages -->
   <url>
     <loc>https://thescheiderichagency.com/privacy-policy</loc>
