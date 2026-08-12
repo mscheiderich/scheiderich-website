@@ -149,7 +149,14 @@
       transition: box-shadow .25s, transform .25s;
       display: flex; flex-direction: column;
     }
-    .team-card:hover { box-shadow: var(--sh-md); transform: translateY(-4px); }
+    /* Hover belongs to linked cards only — Jennifer's and Natalie's cards are
+       plain <div> and must not suggest they are clickable. */
+    a.team-card:hover { box-shadow: var(--sh-md); transform: translateY(-4px); }
+    /* ── Linked team cards ──
+       The card element itself is the <a>, so `.team-grid > .team-card` still
+       matches and the flex sizing is untouched. No wrapper was added. */
+    a.team-card { text-decoration: none; color: inherit; cursor: pointer; }
+    a.team-card:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
     .team-card.featured { border-color: var(--navy); box-shadow: 0 4px 24px rgba(30,49,72,.14); }
     .team-photo {
       position: relative; overflow: hidden;
@@ -162,7 +169,7 @@
       display: block;
       transition: transform .4s ease;
     }
-    .team-card:hover .team-photo img { transform: scale(1.04); }
+    a.team-card:hover .team-photo img { transform: scale(1.04); }
     .team-badge {
       position: absolute; top: 12px; left: 12px;
       background: var(--navy); color: rgba(255,255,255,.9);
@@ -439,7 +446,7 @@
       <!-- Row 1: Mike, Crissy, Iris -->
 
       <!-- Mike -->
-      <div class="team-card featured">
+      <a class="team-card featured" href="/agents/mike-scheiderich.html">
         <div class="team-photo">
           <span class="team-badge">Agency Principal</span>
           <img src="mike-scheiderich.png"
@@ -454,10 +461,10 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Crissy -->
-      <div class="team-card">
+      <a class="team-card" href="/agents/crissy-shatzel.html">
         <div class="team-photo">
           <img src="crissy-shatzel.png"
                alt="Crissy Shatzel, office manager and licensed insurance agent at The Scheiderich Agency" />
@@ -471,10 +478,10 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Iris -->
-      <div class="team-card">
+      <a class="team-card" href="/agents/iris-salgado.html">
         <div class="team-photo">
           <span class="team-bilingual">EN · ES</span>
           <img src="iris-salgado.png"
@@ -489,12 +496,12 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Row 2: Mark, Wendy, Scott -->
 
       <!-- Mark -->
-      <div class="team-card">
+      <a class="team-card" href="/agents/mark-hill.html">
         <div class="team-photo">
           <img src="mark-hill.png"
                alt="Mark Hill, licensed insurance agent at The Scheiderich Agency" />
@@ -508,10 +515,10 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Wendy -->
-      <div class="team-card">
+      <a class="team-card" href="/agents/wendy-alaniz.html">
         <div class="team-photo">
           <span class="team-bilingual">EN · ES</span>
           <img src="wendy-alaniz.png"
@@ -526,10 +533,10 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Scott -->
-      <div class="team-card">
+      <a class="team-card" href="/agents/scott-kesler.html">
         <div class="team-photo">
           <img src="scott-kesler.png"
                alt="Scott Kesler, licensed insurance agent at The Scheiderich Agency" />
@@ -543,7 +550,7 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Jennifer -->
       <div class="team-card">
