@@ -91,10 +91,16 @@
     .mobile-menu a { display: flex; align-items: center; min-height: 44px; padding: 11px 0; font-size: 15px; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--border); text-decoration: none; }
     .mobile-menu a:last-child { border-bottom: none; }
     .mobile-menu a:hover { color: var(--navy); background: var(--navy-lt); }
-    .mobile-menu-phone { color: var(--orange); font-weight: 700; }
-    .mobile-menu-phone:hover { color: var(--orange); }
-    /* Keep the phone CTA borderless regardless of what follows it in the panel. */
-    .mobile-menu a.mobile-menu-phone { border-bottom: none; }
+    /* Phone CTA. Selector must out-specify `.mobile-menu a` (0,1,1) above, which
+       otherwise wins on colour and weight and renders this muted grey at 500 —
+       the bare `.mobile-menu-phone` class (0,1,0) never took effect.
+       Also borderless regardless of what follows it in the panel. */
+    .mobile-menu a.mobile-menu-phone {
+      color: var(--orange);
+      font-weight: 700;
+      border-bottom: none;
+    }
+    .mobile-menu a.mobile-menu-phone:hover { color: var(--orange); }
     /* Staff link. Hidden by default — it only appears in the panel at the narrow
        widths where it is removed from the header row, so exactly one "Team Login"
        is reachable at any viewport width. Styled as a utility link, deliberately

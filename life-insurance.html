@@ -143,7 +143,7 @@
     .sec-hd-c { text-align: center; }
     .sec-hd-c .sec-sub { margin: 0 auto; }
     /* Affordability truth */
-    .afford-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .afford-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 80px; align-items: center; }
     .afford-content p { font-size: 15.5px; color: var(--muted); line-height: 1.78; margin-bottom: 20px; }
     .afford-content p strong { color: var(--text); font-weight: 600; }
     .afford-content p:last-of-type { margin-bottom: 32px; }
@@ -431,7 +431,7 @@
     @media (max-width: 1020px) {
   .page-hero-inner { grid-template-columns: 1fr; }
   .hero-cta-card { display: none; }
-  .afford-grid { grid-template-columns: 1fr; gap: 44px; }
+  .afford-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
   .savings-grid { grid-template-columns: 1fr; gap: 44px; }
   .moments-grid { grid-template-columns: 1fr 1fr; }
   .type-grid { grid-template-columns: 1fr; }
@@ -445,6 +445,17 @@
   .sec { padding: 60px 0; }
   .moments-grid { grid-template-columns: 1fr; }
   .related-grid { grid-template-columns: 1fr; }
+    }
+
+    /* The shared .btn sets white-space:nowrap, so a long CTA label inside this
+       grid sets a min-content floor wider than a narrow phone. Let it wrap; at
+       widths where it already fits, nothing changes. */
+    .afford-grid .btn {
+      white-space: normal;
+      height: auto;
+      min-height: var(--btn-h);
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
   </style>
 

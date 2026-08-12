@@ -132,7 +132,7 @@
     .process-content-title { font-family: 'Lora', serif; font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
     .process-content-body { font-size: 14px; color: var(--muted); line-height: 1.68; }
     /* Contact */
-    .contact-split { display: grid; grid-template-columns: 1fr 360px; gap: 60px; align-items: start; }
+    .contact-split { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 60px; align-items: start; }
     .form-card { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 40px 36px; box-shadow: var(--sh-md); }
     .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     .form-group label { font-size: 13px; font-weight: 600; color: var(--text); }
@@ -141,7 +141,7 @@
     .form-group textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: var(--bg-w); }
     .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
     .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
     .info-card { background: var(--navy); border-radius: var(--r-lg); padding: 32px 28px; }
     .info-card-title { font-size: 17px; color: #fff; margin-bottom: 24px; }
@@ -175,16 +175,22 @@
     @media (max-width: 960px) {
   .triggers-grid { grid-template-columns: 1fr 1fr; }
   .check-grid { grid-template-columns: 1fr; }
-  .contact-split { grid-template-columns: 1fr; }
+  .contact-split { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 640px) {
   .sec { padding: 60px 0; }
   .triggers-grid { grid-template-columns: 1fr; }
   .faq-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
   .hero-btns { flex-direction: column; align-items: flex-start; }
   .cta-btns { flex-direction: column; align-items: center; }
     }
+
+    /* Long email addresses must not set a min-content floor wider than a phone. */
+    .info-row a { overflow-wrap: anywhere; }
+    /* Form controls carry an intrinsic preferred width; without this they refuse
+       to shrink below it and push the grid track past the viewport. */
+    .form-group input, .form-group select { min-width: 0; }
   </style>
 
   <!-- Google Analytics -->

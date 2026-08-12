@@ -88,7 +88,7 @@
     /* Contact layout */
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns: minmax(0, 1fr) 420px;
       gap: 60px;
       align-items: start;
     }
@@ -102,7 +102,7 @@
     }
     .form-title { font-size: 24px; margin-bottom: 6px; }
     .form-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
     .form-group label { font-size: 13px; font-weight: 600; color: var(--text); }
     .form-group input,
@@ -215,16 +215,22 @@
     .expect-card h3 { font-size: 16px; margin-bottom: 8px; }
     .expect-card p { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
     @media (max-width: 960px) {
-  .contact-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: minmax(0, 1fr); }
   .contact-sidebar { order: -1; }
   .expect-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
   .sec { padding: 56px 0; }
   .contact-form-wrap { padding: 28px 22px; }
-  .form-row { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
   .expect-grid { grid-template-columns: 1fr; }
     }
+
+    /* Long email addresses must not set a min-content floor wider than a phone. */
+    .contact-info-val, .contact-info-val a { overflow-wrap: anywhere; min-width: 0; }
+    /* Form controls carry an intrinsic preferred width; without this they refuse
+       to shrink below it and push the grid track past the viewport. */
+    .form-group input, .form-group select { min-width: 0; }
   </style>
 
   <!-- Google Analytics -->

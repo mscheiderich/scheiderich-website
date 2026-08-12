@@ -86,7 +86,7 @@
     .coverage-section{padding:80px 0;border-bottom:1px solid var(--border);}
     .coverage-section:last-of-type{border-bottom:none;}
     .coverage-section.alt{background:var(--bg-s);}
-    .coverage-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+    .coverage-grid{display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);gap:80px;align-items:center;}
     .coverage-grid.flip{direction:rtl;}
     .coverage-grid.flip > *{direction:ltr;}
     .coverage-content p{font-size:15.5px;color:var(--muted);line-height:1.78;margin-bottom:18px;}
@@ -125,7 +125,7 @@
     @media(max-width:1020px) {
   .page-hero-inner{grid-template-columns:1fr;}
   .hero-cta-card{display:none;}
-  .coverage-grid{grid-template-columns:1fr;gap:44px;}
+  .coverage-grid{grid-template-columns:minmax(0, 1fr);gap:44px;}
   .coverage-grid.flip{direction:ltr;}
   .cta-inner{grid-template-columns:1fr;}
   .cta-actions{align-items:center;}
@@ -133,6 +133,17 @@
     @media(max-width:640px) {
   .sec{padding:60px 0;}
   .coverage-section{padding:60px 0;}
+    }
+
+    /* The shared .btn sets white-space:nowrap, so a long CTA label inside this
+       grid sets a min-content floor wider than a narrow phone. Let it wrap; at
+       widths where it already fits, nothing changes. */
+    .coverage-grid .btn {
+      white-space: normal;
+      height: auto;
+      min-height: var(--btn-h);
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
   </style>
 

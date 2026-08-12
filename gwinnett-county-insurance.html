@@ -280,7 +280,7 @@
     /* Contact form section */
     .contact-split {
       display: grid;
-      grid-template-columns: 1fr 360px;
+      grid-template-columns: minmax(0, 1fr) 360px;
       gap: 60px;
       align-items: start;
     }
@@ -323,7 +323,7 @@
       background-size: 16px;
       padding-right: 36px;
     }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
     .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
     /* Contact info card */
     .info-card {
@@ -422,17 +422,23 @@
   .local-grid { grid-template-columns: 1fr; }
   .stat-cards { grid-template-columns: repeat(4, 1fr); }
   .cov-grid { grid-template-columns: 1fr 1fr; }
-  .contact-split { grid-template-columns: 1fr; }
+  .contact-split { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 640px) {
   .sec { padding: 60px 0; }
   .stat-cards { grid-template-columns: 1fr 1fr; }
   .cov-grid { grid-template-columns: 1fr; }
   .faq-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
   .hero-btns { flex-direction: column; align-items: flex-start; }
   .cta-btns { flex-direction: column; align-items: center; }
     }
+
+    /* Long email addresses must not set a min-content floor wider than a phone. */
+    .info-row a { overflow-wrap: anywhere; }
+    /* Form controls carry an intrinsic preferred width; without this they refuse
+       to shrink below it and push the grid track past the viewport. */
+    .form-group input, .form-group select { min-width: 0; }
   </style>
 
   <!-- Google Analytics -->
