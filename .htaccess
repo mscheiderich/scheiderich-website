@@ -19,3 +19,32 @@ AddOutputFilter INCLUDES .html
     Header set X-Robots-Tag "noindex, nofollow"
   </FilesMatch>
 </IfModule>
+
+# --- Block web access to Markdown docs ---
+# Second layer behind .gitignore. PROJECT_STATUS.md and claude.md were tracked in
+# git and, because the repo IS the docroot, were publicly readable on the live site
+# (staff emails, server IP, Apps Script deployment URLs, sheet IDs). They are now
+# untracked, but this rule means a stray .md can never be served again.
+#
+# Directive choice: this stack is EasyApache 4 with ea-php83, which ships Apache
+# 2.4, so mod_authz_core's "Require all denied" is correct. The Apache 2.2 form
+# ("Order allow,deny" / "Deny from all") is deprecated on 2.4 and only works if
+# mod_access_compat is loaded, so it is kept solely as a guarded fallback.
+# The IfModule guards matter: an unguarded Require on a server without
+# mod_authz_core returns 500 for the whole site, and this file has silently
+# reverted before (see the PHP handler note above).
+#
+# Safe with SSI: this targets .md only. Apache's SSI subrequests fetch
+# /includes/*.html, which this rule never matches — unlike a FilesMatch over the
+# include fragments, which broke includes earlier in this project.
+<FilesMatch "\.md$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    <IfModule mod_access_compat.c>
+      Order allow,deny
+      Deny from all
+    </IfModule>
+  </IfModule>
+</FilesMatch>
