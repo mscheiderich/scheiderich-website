@@ -470,6 +470,58 @@
   }
 
   /* ═══════════════════════════════════════
+     REFERRAL ID
+     Generated client-side because the write uses mode:'no-cors', which makes the
+     doPost response ({success, referralId}) unreadable. Format must match the
+     server's: REF-yyMMdd-XXXX, XXXX = 4 uppercase alphanumerics.
+     The server must USE this id rather than minting its own, otherwise the
+     introSent beacon below will reference a row that does not exist.
+  ═══════════════════════════════════════ */
+  var referralId = '';
+
+  function makeReferralId() {
+    var d  = new Date();
+    var p2 = function (n) { return ('0' + n).slice(-2); };
+    var stamp = p2(d.getFullYear() % 100) + p2(d.getMonth() + 1) + p2(d.getDate());
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var suffix = '';
+    for (var i = 0; i < 4; i++) {
+      suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return 'REF-' + stamp + '-' + suffix;
+  }
+
+  /* ═══════════════════════════════════════
+     INTRO-SENT BEACON
+     Fires when the partner actually uses one of the three intro buttons, so the
+     agent knows whether to expect a warm handoff or make a cold call.
+     keepalive:true so the request survives the navigation that mailto: and sms:
+     immediately trigger — a plain fetch would be cancelled mid-flight.
+     Never awaited, never throws: the button's own behaviour must not be delayed
+     or blocked by this.
+  ═══════════════════════════════════════ */
+  var introSent = { email: false, copy: false, sms: false };
+
+  function sendIntroBeacon(method) {
+    if (!referralId) return;              // nothing to attribute it to
+    if (introSent[method]) return;        // once per method, not per click
+    introSent[method] = true;
+    try {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          action: 'introSent',
+          referralId: referralId,
+          method: method
+        })
+      }).catch(function () { /* fire and forget */ });
+    } catch (e) { /* never let tracking break the button */ }
+  }
+
+  /* ═══════════════════════════════════════
      PREFILL FROM ?p=
      JSONP, because Apps Script blocks cross-origin fetch reads.
      Response shape: { success, found, partner:{ code, name, company, email } }
@@ -590,8 +642,10 @@
 
     var company = el('rf-pcompany').value.trim();
     var code    = partnerCode || makePartnerCode(company);
+    referralId  = makeReferralId();
 
     var payload = {
+      referralId:     referralId,
       agentSlug:      AGENT_SLUG,
       partnerCode:    code,
       partnerName:    el('rf-pname').value.trim(),
@@ -657,10 +711,14 @@
     refresh();
     el('rf-subject').addEventListener('input', refresh);
     el('rf-body').addEventListener('input', refresh);
-    mailto.addEventListener('click', refresh);
-    sms.addEventListener('click', refresh);
+
+    // Rebuild the href first so navigation carries the current text, then fire the
+    // beacon. Neither call preventDefault, so mailto:/sms: open immediately.
+    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); });
+    sms.addEventListener('click',    function () { refresh(); sendIntroBeacon('sms'); });
 
     copy.addEventListener('click', function () {
+      sendIntroBeacon('copy');
       copyText(el('rf-body').value, copy, 'Copy the text');
     });
     el('rf-copylink').addEventListener('click', function () {
