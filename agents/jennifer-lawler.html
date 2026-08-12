@@ -1,0 +1,855 @@
+<!--
+  ═══════════════════════════════════════════════════════════════════════════
+  UNPUBLISHED — DO NOT LINK OR SUBMIT TO SEARCH ENGINES YET
+
+  Jennifer Lawler is LICENSED but her Allstate appointment has NOT cleared.
+  Project compliance rule: an unappointed producer may not be presented as
+  able to quote or bind coverage.
+
+  Containment while that remains true:
+    - NOT in sitemap.xml
+    - NOT linked from index.html or about.html (her team cards stay plain
+      <div>, unlike the six linked producers)
+    - robots set to "noindex, nofollow" (the other six agent pages use
+      "index, follow")
+
+  WHEN THE APPOINTMENT CLEARS, all four of these must change together:
+    1. robots meta -> "index, follow"
+    2. add https://thescheiderichagency.com/agents/jennifer-lawler.html to
+       sitemap.xml (agent pages go to 7)
+    3. link her team card on index.html and about.html (convert the card's
+       <div class="team-card"> to <a class="team-card" href="...">, matching
+       the other six)
+    4. update PROJECT_STATUS.md — producer table and the agent-page counts
+  ═══════════════════════════════════════════════════════════════════════════
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jennifer Lawler — Licensed Sales Producer in Buford, GA | The Scheiderich Agency</title>
+  <meta name="description" content="Jennifer Lawler is a licensed sales producer at The Scheiderich Agency in Buford, GA, working with first-time buyers and anyone who wants coverage explained at their own pace. Call 770-268-4418." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="canonical" href="https://thescheiderichagency.com/agents/jennifer-lawler.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jennifer Lawler",
+      "jobTitle": "Licensed Sales Producer",
+      "url": "https://thescheiderichagency.com/agents/jennifer-lawler.html",
+      "image": "https://thescheiderichagency.com/jennifer-lawler.png",
+      "telephone": "770-268-4418",
+      "worksFor": {
+        "@type": "InsuranceAgency",
+        "name": "The Scheiderich Agency",
+        "url": "https://thescheiderichagency.com/",
+        "telephone": "770-268-4418",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "60 W Park St",
+          "addressLocality": "Buford",
+          "addressRegion": "GA",
+          "postalCode": "30518",
+          "addressCountry": "US"
+        }
+      },
+      "areaServed": ["Buford, GA", "Gwinnett County, GA", "Metro Atlanta, GA", "Georgia"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://thescheiderichagency.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Team", "item": "https://thescheiderichagency.com/about.html" },
+        { "@type": "ListItem", "position": 3, "name": "Jennifer Lawler", "item": "https://thescheiderichagency.com/agents/jennifer-lawler.html" }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "I have never bought insurance before. Where do I even start?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With a conversation, not a form. Jennifer will ask what you are buying or protecting, who lives there, and what your lender requires if there is one. The vocabulary gets introduced as it becomes relevant rather than all at once. Plenty of her clients start by saying they do not know what they do not know, which is an honest and useful place to begin."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I have three quotes that all look the same. What am I supposed to compare?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The parts that are not on the front page — deductibles, dwelling and liability limits, and what each policy excludes. Two quotes can sit within a few dollars of each other monthly and behave very differently after a loss. Jennifer will read them alongside each other and point out where they genuinely diverge, including when the honest answer is that they are close to equivalent."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "My rate went up and I want to switch. Is that the right move?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sometimes, and sometimes the increase reflects something that would follow you to a new carrier anyway — a claim, a change in the property, or a broad rate adjustment. Jennifer looks at why it moved before recommending anything. Switching to a cheaper policy that covers less is not a saving, and she would rather explain that than quietly write it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I ask questions that feel obvious?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, and they usually are not obvious. Insurance uses ordinary words in specific ways, so \"what does replacement cost actually mean\" is a genuinely good question with a genuinely useful answer. Jennifer would rather spend the extra time up front than have you discover the answer during a claim."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <style>
+    <!--#include virtual="/includes/site-css.html" -->
+    /* Hero */
+    .hero { background: var(--navy); position: relative; overflow: hidden; }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 72% 28%, rgba(217,104,42,.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 5%  80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        -52deg, transparent 0, transparent 58px,
+        rgba(255,255,255,.016) 58px, rgba(255,255,255,.016) 59px
+      );
+      pointer-events: none;
+    }
+    /* Hero: two columns above the nav breakpoint — photo LEFT, text RIGHT.
+       Below it, one column with the photo first. Only one photo element exists. */
+    .agent-hero-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 56px;
+      align-items: center;
+      padding: 76px 0 72px;
+    }
+    .agent-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%;
+    }
+    .agent-hero-photo img { width: 100%; height: auto; display: block; }
+    .agent-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.48); margin-bottom: 20px;
+    }
+    .hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+    .hero h1 { font-size: clamp(30px, 3.8vw, 50px); color: #fff; font-weight: 700; margin-bottom: 18px; }
+    .hero-sub { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 34px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-hours { font-size: 12px; color: rgba(255,255,255,.38); margin-top: 16px; }
+    .hero-trust-row { display: flex; gap: 24px; margin-top: 40px; flex-wrap: wrap; }
+    .hero-trust-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12.5px; color: rgba(255,255,255,.42);
+    }
+    .hero-trust-item svg { width: 14px; height: 14px; opacity: .65; flex-shrink: 0; }
+    /* Shared section styles */
+    .sec     { padding: 88px 0; }
+    .sec-alt { background: var(--bg-s); }
+    .sec-w   { background: var(--bg-w); }
+    .label {
+      display: block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+    }
+    .label-lt { color: rgba(255,255,255,.38); }
+    .sec-title { font-size: clamp(24px, 2.8vw, 36px); margin-bottom: 14px; }
+    .sec-sub { font-size: 16.5px; color: var(--muted); max-width: 560px; line-height: 1.65; }
+    .sec-hd   { margin-bottom: 56px; }
+    .sec-hd-c { text-align: center; }
+    .sec-hd-c .sec-sub { margin: 0 auto; }
+    /* Bio intro */
+    .local-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 64px; align-items: start; }
+    .local-body p { font-size: 15.5px; color: var(--muted); line-height: 1.72; margin-bottom: 22px; }
+    .local-body p:last-child { margin-bottom: 0; }
+    /* Coverage cards */
+    .cov-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+    .cov-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 34px 26px; box-shadow: var(--sh-sm);
+      display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s;
+    }
+    .cov-card:hover { box-shadow: var(--sh-md); transform: translateY(-3px); }
+    .cov-card-ico {
+      width: 50px; height: 50px; border-radius: 12px; background: var(--navy-lt);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+    }
+    .cov-card-ico svg { width: 22px; height: 22px; color: var(--navy); }
+    .cov-card h3 { font-size: 18px; margin-bottom: 10px; }
+    .cov-card p  { font-size: 13.5px; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 22px; }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 600; color: var(--navy);
+      transition: gap .2s, color .2s; margin-top: auto;
+    }
+    .card-link:hover { gap: 10px; color: var(--orange); }
+    .card-link svg { width: 13px; height: 13px; }
+    /* Contact form section */
+    .contact-split { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 60px; align-items: start; }
+    .form-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 40px 36px; box-shadow: var(--sh-md);
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .form-group input,
+    .form-group select {
+      height: 46px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+      background: var(--bg); transition: border-color .2s, box-shadow .2s; outline: none; width: 100%;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: var(--bg-w);
+    }
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      background-size: 16px; padding-right: 36px;
+    }
+    .form-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+    .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+    .form-err { font-size: 12px; color: #c0392b; margin-top: 3px; }
+    /* Contact info card */
+    .info-card { background: var(--navy); border-radius: var(--r-lg); padding: 32px 28px; }
+    .info-card-title { font-size: 17px; color: #fff; margin-bottom: 24px; }
+    .info-phone {
+      font-family: 'Lora', serif; font-size: 26px; font-weight: 700;
+      color: #fff; display: block; margin-bottom: 4px;
+    }
+    .info-phone:hover { color: rgba(255,255,255,.8); }
+    .info-phone-lbl {
+      font-size: 11px; color: rgba(255,255,255,.4); text-transform: uppercase;
+      letter-spacing: .07em; margin-bottom: 24px;
+    }
+    .info-row {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;
+      font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.55;
+    }
+    .info-row:last-child { margin-bottom: 0; }
+    .info-row svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; opacity: .55; }
+    .info-row a { color: rgba(255,255,255,.65); transition: color .2s; }
+    .info-row a:hover { color: #fff; }
+    .info-after-hours { font-size: 11.5px; color: rgba(255,255,255,.38); margin-top: 6px; font-style: italic; }
+    .info-full-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 600; color: var(--orange); margin-top: 22px; transition: gap .2s;
+    }
+    .info-full-link:hover { gap: 10px; color: var(--orange); }
+    .hours-list { margin: 0; list-style: none; }
+    .hours-list li {
+      display: flex; justify-content: space-between; font-size: 13px;
+      color: rgba(255,255,255,.6); padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .hours-list li:last-child { border-bottom: none; }
+    .hours-list li span:last-child { font-weight: 600; color: rgba(255,255,255,.85); }
+    /* FAQ */
+    .faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; max-width: 980px; margin: 0 auto; }
+    .faq-item { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 26px; }
+    .faq-q { font-family: 'Lora', serif; font-size: 15.5px; font-weight: 600; color: var(--text); margin-bottom: 9px; }
+    .faq-a { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+    /* Final CTA */
+    .cta-sec { background: var(--navy); padding: 88px 0; position: relative; overflow: hidden; }
+    .cta-sec::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 85% 50%, rgba(217,104,42,.18) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .cta-center { position: relative; z-index: 1; text-align: center; max-width: 600px; margin: 0 auto; }
+    .cta-title { font-size: clamp(24px, 2.8vw, 36px); color: #fff; margin-bottom: 14px; }
+    .cta-sub { font-size: 16px; color: rgba(255,255,255,.6); margin-bottom: 36px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-divider { font-size: 11px; color: rgba(255,255,255,.3); letter-spacing: .05em; margin: 4px 0; }
+
+    /* ═══════════════════════════════════════
+       AGENT PAGE — page-scoped additions
+       New elements only. Nothing here overrides
+       a shared class from /includes/site-css.html.
+    ═══════════════════════════════════════ */
+    .agent-cred {
+      background: var(--bg-w); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 24px 22px; box-shadow: var(--sh-sm);
+    }
+    .agent-cred-title {
+      font-family: 'Lora', serif; font-size: 15px; font-weight: 600;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .agent-cred-list { list-style: none; margin: 0; }
+    .agent-cred-list li {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 13px; color: var(--muted); line-height: 1.55;
+      padding: 7px 0; border-bottom: 1px solid var(--border);
+    }
+    .agent-cred-list li:last-child { border-bottom: none; }
+    .agent-cred-list svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: var(--orange); }
+    /* Who they work with — four-item list */
+    .helps-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; max-width: 980px; margin: 0 auto; }
+    .helps-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 26px 24px; box-shadow: var(--sh-sm); transition: box-shadow .2s, transform .2s;
+    }
+    .helps-item:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+    .helps-ico {
+      width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+      background: var(--navy-lt); display: flex; align-items: center; justify-content: center;
+    }
+    .helps-ico svg { width: 18px; height: 18px; color: var(--navy); }
+    .helps-text { font-size: 14.5px; color: var(--muted); line-height: 1.62; }
+    /* What to expect — numbered steps */
+    .path-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+    .path-step {
+      background: var(--bg-w); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 30px 26px; box-shadow: var(--sh-sm);
+    }
+    .path-num {
+      font-family: 'Lora', serif; font-size: 13px; font-weight: 700;
+      color: var(--orange); letter-spacing: .1em; margin-bottom: 12px;
+    }
+    .path-step h3 { font-size: 16.5px; margin-bottom: 9px; }
+    .path-step p { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+    /* Referral-partner line above the footer */
+    .partner-band { background: var(--bg-s); border-top: 1px solid var(--border); padding: 26px 0; }
+    .partner-inner {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      flex-wrap: wrap; text-align: center; font-size: 13.5px; color: var(--muted); line-height: 1.6;
+    }
+    .partner-inner a { font-weight: 600; color: var(--navy); text-decoration: underline; }
+    .partner-inner a:hover { color: var(--orange); }
+
+    /* ── Hero stack order below the nav breakpoint ──
+       Matches the 1100px mobile-nav breakpoint in /includes/site-css.html so the
+       header and hero switch together. Photo comes first from source order; the
+       text children are reordered so a phone gets face -> name -> role -> actions
+       before the prose. */
+    @media (max-width: 1100px) {
+  .agent-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px; padding: 52px 0 48px; justify-items: center;
+  }
+  .agent-hero-photo { max-width: 240px; }
+  .agent-hero-text { align-items: center; text-align: center; }
+  .agent-hero-text > h1               { order: 1; margin-bottom: 10px; }
+  .agent-hero-text > .hero-eyebrow    { order: 2; margin-bottom: 24px; }
+  .agent-hero-text > .hero-btns       { order: 3; margin-bottom: 28px; justify-content: center; align-items: center; }
+  .agent-hero-text > .hero-sub        { order: 4; margin-bottom: 0; }
+  .agent-hero-text > .hero-hours      { order: 5; }
+  .agent-hero-text > .hero-trust-row  { order: 6; justify-content: center; gap: 12px 20px; }
+  .agent-hero-text > .hero-eyebrow { display: block; }
+  .agent-hero-text > .hero-eyebrow .hero-dot { display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .agent-hero-text > .hero-sub { text-align: left; }
+    }
+    @media (max-width: 960px) {
+  .local-grid { grid-template-columns: minmax(0, 1fr); }
+  .cov-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .contact-split { grid-template-columns: minmax(0, 1fr); }
+  .path-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 640px) {
+  .sec { padding: 60px 0; }
+  .cov-grid { grid-template-columns: minmax(0, 1fr); }
+  .faq-grid { grid-template-columns: minmax(0, 1fr); }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
+  .hero-btns { flex-direction: column; align-items: flex-start; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .helps-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    /* Long email addresses must not set a min-content floor wider than a phone. */
+    .info-row a { overflow-wrap: anywhere; }
+    /* Form controls carry an intrinsic preferred width; without this they refuse
+       to shrink below it and push the grid track past the viewport. */
+    .form-group input, .form-group select { min-width: 0; }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+</head>
+<body>
+
+<!-- NAV -->
+<!--#include virtual="/includes/header.html" -->
+
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="container">
+    <div class="agent-hero-grid">
+
+      <!-- The ONLY photo element on this page. Position at both sizes is handled
+           in CSS (grid column on desktop, source order on mobile). -->
+      <div class="agent-hero-photo">
+        <img src="/jennifer-lawler.png" alt="Jennifer Lawler, licensed sales producer at The Scheiderich Agency" />
+      </div>
+
+      <div class="agent-hero-text">
+      <div class="hero-eyebrow">
+        <span class="hero-dot"></span>
+        Licensed Sales Producer
+      </div>
+      <h1 id="hero-h1">Jennifer Lawler — Insurance Agent in Buford, GA</h1>
+      <p class="hero-sub">
+        Jennifer studied psychology before she studied insurance, and it shows in how she works: she listens first, moves at whatever pace you need, and tends to be the one who notices the detail everybody else read past.
+      </p>
+      <div class="hero-btns">
+        <a href="tel:7702684418" class="btn btn-primary">Call 770-268-4418</a>
+        <a href="#contact-h2" class="btn btn-ghost-w">Request a Quote</a>
+      </div>
+      <p class="hero-hours">Mon–Fri 8AM–5PM &nbsp;·&nbsp; Sat by appointment &nbsp;·&nbsp; After hours calls returned next business day</p>
+      <div class="hero-trust-row">
+        <div class="hero-trust-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          Explains at your pace, not hers
+        </div>
+        <div class="hero-trust-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Licensed Sales Producer
+        </div>
+        <div class="hero-trust-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Downtown Buford, GA
+        </div>
+      </div>
+      </div><!-- /.agent-hero-text -->
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 2. BIO ═══ -->
+<section class="sec sec-w" aria-labelledby="bio-h2">
+  <div class="container">
+    <div class="local-grid">
+
+      <div class="local-body">
+        <span class="label">About Jennifer</span>
+        <h2 class="sec-title" id="bio-h2">The One Who Reads the Whole Page</h2>
+        <p>
+          A background in customer service and psychology turns out to be unusually good preparation for insurance. Both are mostly about noticing what a person has not said yet — the question they are embarrassed to ask, the part of the explanation where they quietly stopped following, the number that worried them but did not seem worth raising.
+        </p>
+        <p>
+          Jennifer works slowly on purpose. Coverage decisions get made once and then live in a drawer for years, so the twenty extra minutes spent making sure someone genuinely understands what they bought is time well spent. Clients who have felt rushed elsewhere tend to notice the difference immediately.
+        </p>
+        <p>
+          She is also the detail person. Declarations pages are long, repetitive, and easy to skim, which is exactly why something important occasionally hides in them. Jennifer reads all of it, and a fair number of her conversations start with a sentence like "did you know your policy does this?"
+        </p>
+      </div>
+
+      <div>
+        <div class="agent-cred">
+          <div class="agent-cred-title">At a glance</div>
+          <ul class="agent-cred-list">
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Licensed Sales Producer</span>
+            </li>
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Background in customer service and psychology</span>
+            </li>
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Home, auto, life, and combined household policies</span>
+            </li>
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Based in Downtown Buford, serving Georgia</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 3. WHO JENNIFER HELPS ═══ -->
+<section class="sec sec-alt" aria-labelledby="helps-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">Who She Works With</span>
+      <h2 class="sec-title" id="helps-h2">Who Jennifer Works With</h2>
+      <p class="sec-sub">Usually someone who wants to understand the decision, not just make it.</p>
+    </div>
+    <div class="helps-grid">
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <p class="helps-text">First-time homebuyers who have never bought a policy before</p>
+      </div>
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
+        <p class="helps-text">Clients who feel overwhelmed by the process and want it explained slowly</p>
+      </div>
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+        <p class="helps-text">Anyone who has been quoted by three carriers and still cannot tell the difference</p>
+      </div>
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        <p class="helps-text">Households switching after a rate increase who want the coverage explained, not just the price</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 4. QUOTE FORM ═══ -->
+<section class="sec sec-alt" aria-labelledby="contact-h2">
+  <div class="container">
+    <div class="contact-split">
+
+      <div>
+        <span class="label">Get in Touch</span>
+        <h2 class="sec-title" id="contact-h2">Ask Jennifer a Question</h2>
+        <p class="sec-sub" style="margin-bottom:32px;">No question is too basic. Send it over and Jennifer will come back to you, usually the same business day.</p>
+
+        <div class="form-card">
+          <form id="agent-form" action="https://formspree.io/f/mgoqnelq" method="POST">
+            <input type="hidden" name="_source" value="agent-jennifer-lawler" />
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full-name">Full Name *</label>
+                <input type="text" id="full-name" name="full_name" placeholder="John Smith" required />
+                <span class="form-err" data-err="full_name"></span>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" placeholder="(770) 555-0100" required />
+                <span class="form-err" data-err="phone"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required />
+              <span class="form-err" data-err="email"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="coverage">Coverage Needed *</label>
+              <select id="coverage" name="coverage" required>
+                <option value="" disabled selected>Select the coverage you need</option>
+                <option value="Home Insurance">Home Insurance</option>
+                <option value="Auto Insurance">Auto Insurance</option>
+                <option value="Life Insurance">Life Insurance</option>
+                <option value="Bundle (Home + Auto)">Bundle (Home + Auto)</option>
+                <option value="First-Time Buyer — Where Do I Start?">First-Time Buyer — Where Do I Start?</option>
+                <option value="Help Me Compare Quotes">Help Me Compare Quotes</option>
+                <option value="Something Else">Something Else</option>
+              </select>
+              <span class="form-err" data-err="coverage"></span>
+            </div>
+
+            <!-- Spam trap — hidden from humans -->
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" />
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">Send My Request</button>
+
+            <p class="form-note">Every message gets a reply within one business day. Submitting this form does not bind coverage.</p>
+          </form>
+
+          <div id="form-confirmation" style="display:none; text-align:center; padding:40px 20px;">
+            <div style="font-size:64px; color:#1e7d4f; line-height:1; margin-bottom:20px;">&#10003;</div>
+            <h2 style="font-family:'Lora',serif; font-size:26px; color:var(--text); margin-bottom:12px;">Request Received</h2>
+            <p style="font-size:15px; color:var(--muted); line-height:1.65; margin-bottom:20px; max-width:380px; margin-left:auto; margin-right:auto;">Thanks for reaching out. Jennifer will read through your note and follow up within one business day.</p>
+            <p style="font-size:14px; color:var(--muted); margin-bottom:28px;">Need a faster response? Call us directly:<br><a href="tel:+17702684418" style="font-size:18px; font-weight:700; color:#1e7d4f; text-decoration:none; display:inline-block; margin-top:6px;">770-268-4418</a></p>
+            <button id="reset-form-btn" class="btn btn-outline" style="display:block; margin:0 auto;">Send Another Request</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="info-card">
+          <h3 class="info-card-title">Reach Jennifer</h3>
+
+          <a href="tel:7702684418" class="info-phone">770-268-4418</a>
+          <div class="info-phone-lbl">Fastest way to reach us</div>
+
+          <div style="border-top:1px solid rgba(255,255,255,.1); padding-top:20px; margin-top:4px;">
+            <ul class="hours-list" aria-label="Office hours">
+              <li><span>Mon–Fri</span><span>8:00 AM – 5:00 PM</span></li>
+              <li><span>Saturday</span><span>By Appointment</span></li>
+              <li><span>Sunday</span><span>Closed</span></li>
+            </ul>
+            <p class="info-after-hours">Calls after 5:00 PM will be returned the next business day.</p>
+          </div>
+
+          <div style="border-top:1px solid rgba(255,255,255,.1); margin-top:20px; padding-top:20px;">
+            <div class="info-row">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>60 W Park St<br />Buford, GA 30518</span>
+            </div>
+            <div class="info-row">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <a href="mailto:info@gahomeinsuranceexperts.com">info@gahomeinsuranceexperts.com</a>
+            </div>
+          </div>
+
+          <a href="/contact.html" class="info-full-link">
+            View full contact page
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 5. COVERAGE LINKS ═══ -->
+<section class="sec sec-w" aria-labelledby="cov-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">What She Covers</span>
+      <h2 class="sec-title" id="cov-h2">Coverage Jennifer Walks Through</h2>
+      <p class="sec-sub">The same lines the rest of the office handles, explained without assuming you already know the vocabulary.</p>
+    </div>
+    <div class="cov-grid">
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h3>Home Insurance</h3>
+        <p>If this is your first policy, the language is the hard part — dwelling, other structures, loss of use, personal liability. Jennifer goes through what each one is actually for before touching a number.</p>
+        <a href="/home-insurance.html" class="card-link">Explore home insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <h3>Auto Insurance</h3>
+        <p>Most people inherit their auto limits from whatever they picked years ago and never revisit them. Jennifer will tell you what yours currently do, in plain terms, and whether that still matches your life.</p>
+        <a href="/auto-insurance.html" class="card-link">Explore auto insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+        <h3>Life Insurance</h3>
+        <p>A subject people avoid, usually because it feels morbid or complicated. She approaches it as a arithmetic question about who depends on your income, which makes it a much shorter conversation than expected.</p>
+        <a href="/life-insurance.html" class="card-link">Explore life insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg></div>
+        <h3>Bundle &amp; Save</h3>
+        <p>Combining home and auto is often less about the discount than about having one renewal date and one person who knows your whole file. Jennifer will lay out both versions and let you pick.</p>
+        <a href="/bundle-and-save.html" class="card-link">Explore bundling options <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+        <h3>Insurance Review</h3>
+        <p>Bring the paperwork you already have, even if you are not sure what it says. Reading it together and finding out your coverage is fine is a perfectly good outcome, and a common one.</p>
+        <a href="/insurance-review.html" class="card-link">Schedule a review <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 6. WHAT TO EXPECT ═══ -->
+<section class="sec sec-alt" aria-labelledby="path-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">How It Works</span>
+      <h2 class="sec-title" id="path-h2">What a Conversation With Jennifer Looks Like</h2>
+      <p class="sec-sub">Unhurried, and you can stop to ask something at any point.</p>
+    </div>
+    <div class="path-grid">
+
+      <div class="path-step">
+        <div class="path-num">STEP 01</div>
+        <h3>You talk, she listens</h3>
+        <p>The first part is mostly questions about your situation — what you own, what changed recently, what worried you enough to call. Nothing gets recommended before she understands the picture.</p>
+      </div>
+
+      <div class="path-step">
+        <div class="path-num">STEP 02</div>
+        <h3>The explanation, at your pace</h3>
+        <p>Each coverage is described by what it would do in a real situation, then checked against whether that situation applies to you. If a term does not land, she will find another way to say it rather than moving on.</p>
+      </div>
+
+      <div class="path-step">
+        <div class="path-num">STEP 03</div>
+        <h3>You decide, with time</h3>
+        <p>Options come in writing so you can reread them or talk them over at home. Coverage is in force only once a policy has been issued and confirmed — never on the basis of a phone call.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 7. FAQ ═══ -->
+<section class="sec sec-w" aria-labelledby="faq-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">Common Questions</span>
+      <h2 class="sec-title" id="faq-h2">Questions People Ask Jennifer</h2>
+    </div>
+    <div class="faq-grid" role="list">
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">I have never bought insurance before. Where do I even start?</div>
+        <div class="faq-a">With a conversation, not a form. Jennifer will ask what you are buying or protecting, who lives there, and what your lender requires if there is one. The vocabulary gets introduced as it becomes relevant rather than all at once. Plenty of her clients start by saying they do not know what they do not know, which is an honest and useful place to begin.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">I have three quotes that all look the same. What am I supposed to compare?</div>
+        <div class="faq-a">The parts that are not on the front page — deductibles, dwelling and liability limits, and what each policy excludes. Two quotes can sit within a few dollars of each other monthly and behave very differently after a loss. Jennifer will read them alongside each other and point out where they genuinely diverge, including when the honest answer is that they are close to equivalent.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">My rate went up and I want to switch. Is that the right move?</div>
+        <div class="faq-a">Sometimes, and sometimes the increase reflects something that would follow you to a new carrier anyway — a claim, a change in the property, or a broad rate adjustment. Jennifer looks at why it moved before recommending anything. Switching to a cheaper policy that covers less is not a saving, and she would rather explain that than quietly write it.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">Can I ask questions that feel obvious?</div>
+        <div class="faq-a">Yes, and they usually are not obvious. Insurance uses ordinary words in specific ways, so "what does replacement cost actually mean" is a genuinely good question with a genuinely useful answer. Jennifer would rather spend the extra time up front than have you discover the answer during a claim.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="cta-sec" aria-labelledby="cta-h2">
+  <div class="container">
+    <div class="cta-center">
+      <span class="label label-lt">Ready when you are</span>
+      <h2 class="cta-title" id="cta-h2">Have Jennifer Walk You Through It</h2>
+      <p class="cta-sub">Call during business hours, or send the form and she will follow up. No pressure either way.</p>
+      <div class="cta-btns">
+        <a href="tel:7702684418" class="btn btn-primary">Call 770-268-4418</a>
+        <div class="cta-divider">or</div>
+        <a href="#contact-h2" class="btn btn-ghost-w">Request a Quote Online</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- REFERRAL PARTNER LINE -->
+<div class="partner-band">
+  <div class="container">
+    <p class="partner-inner">
+      Work with first-time buyers who need coverage explained properly? <a href="/refer/jennifer-lawler.html">Send a referral to Jennifer &rarr;</a>
+    </p>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<!--#include virtual="/includes/footer.html" -->
+
+<script>
+  (function () {
+    var form = document.getElementById('agent-form');
+    if (!form) return;
+    var confirmation = document.getElementById('form-confirmation');
+    var resetBtn = document.getElementById('reset-form-btn');
+    var submitBtn = form.querySelector('[type="submit"]');
+    var originalBtnText = submitBtn.textContent;
+    var errorEl = null;
+
+    var NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at 770-268-4418.";
+    var SERVER_MSG  = "We weren't able to send your request. Please call us at 770-268-4418 and we'll take your information directly.";
+
+    function clearError() {
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      form.querySelectorAll('[data-err]').forEach(function (el) { el.textContent = ''; });
+    }
+
+    function showError(msg) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      errorEl = document.createElement('p');
+      errorEl.style.cssText = 'color:#c0392b; font-size:13.5px; margin-top:12px; line-height:1.5;';
+      errorEl.textContent = msg;
+      submitBtn.insertAdjacentElement('afterend', errorEl);
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError();
+
+      if (!form.reportValidity()) { return; }
+
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+
+      fetch('https://formspree.io/f/mgoqnelq', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      })
+      .then(function (res) {
+        if (!res.ok) {
+          var err = new Error('server');
+          err.isServerError = true;
+          throw err;
+        }
+        form.style.display = 'none';
+        confirmation.style.display = 'block';
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      })
+      .catch(function (err) {
+        showError(err && err.isServerError ? SERVER_MSG : NETWORK_MSG);
+      });
+    });
+
+    resetBtn.addEventListener('click', function () {
+      confirmation.style.display = 'none';
+      form.style.display = 'block';
+      form.reset();
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      clearError();
+    });
+  })();
+</script>
+</body>
+</html>
