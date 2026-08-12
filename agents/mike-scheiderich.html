@@ -146,11 +146,27 @@
       );
       pointer-events: none;
     }
-    .hero-inner {
+    /* Hero: two columns above the nav breakpoint — photo LEFT, text RIGHT.
+       Below it, one column with the photo first. See the reorder band further
+       down; there is only ever one photo element in the markup. */
+    .agent-hero-grid {
       position: relative; z-index: 1;
-      max-width: 720px;
-      padding: 88px 0 80px;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 56px;
+      align-items: center;
+      padding: 76px 0 72px;
     }
+    .agent-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%;
+    }
+    .agent-hero-photo img { width: 100%; height: auto; display: block; }
+    .agent-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
@@ -436,16 +452,6 @@
        New elements only. Nothing here overrides
        a shared class from /includes/site-css.html.
     ═══════════════════════════════════════ */
-    /* Agent portrait beside the bio */
-    .agent-portrait {
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: var(--sh-md);
-      background: var(--navy-lt);
-      margin-bottom: 20px;
-    }
-    .agent-portrait img { width: 100%; height: auto; display: block; }
     .agent-cred {
       background: var(--bg-w);
       border: 1px solid var(--border);
@@ -555,6 +561,39 @@
     .path-step h3 { font-size: 16.5px; margin-bottom: 9px; }
     .path-step p { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
 
+    /* ── Hero stack order below the nav breakpoint ──
+       Matches the 1100px mobile-nav breakpoint in /includes/site-css.html so the
+       header and hero switch together — no in-between state where the nav is
+       collapsed but the hero is still two columns.
+       Photo comes first from source order; the text children are reordered with
+       `order` so a phone gets face -> name -> role -> actions before the prose. */
+    @media (max-width: 1100px) {
+  .agent-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+    padding: 52px 0 48px;
+    justify-items: center;
+  }
+  .agent-hero-photo { max-width: 240px; }
+  .agent-hero-text { align-items: center; text-align: center; }
+  .agent-hero-text > h1               { order: 1; margin-bottom: 10px; }
+  .agent-hero-text > .hero-eyebrow    { order: 2; margin-bottom: 24px; }
+  .agent-hero-text > .hero-btns       { order: 3; margin-bottom: 28px; justify-content: center; align-items: center; }
+  .agent-hero-text > .hero-sub        { order: 4; margin-bottom: 0; }
+  .agent-hero-text > .hero-hours      { order: 5; }
+  .agent-hero-text > .hero-trust-row  { order: 6; justify-content: center; gap: 12px 20px; }
+  /* The eyebrow is an inline-flex row by default, so once its text wraps while
+     centred the orange dot detaches onto its own line. Flow it inline instead. */
+  .agent-hero-text > .hero-eyebrow { display: block; }
+  .agent-hero-text > .hero-eyebrow .hero-dot {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  /* Body prose stays left-aligned — centring 8 lines of running text hurts
+     readability, while the name/title/buttons above it read well centred. */
+  .agent-hero-text > .hero-sub { text-align: left; }
+    }
     @media (max-width: 960px) {
   .local-grid { grid-template-columns: 1fr; }
   .stat-cards { grid-template-columns: repeat(4, 1fr); }
@@ -593,7 +632,16 @@
 <!-- ═══ 1. HERO ═══ -->
 <section class="hero" aria-labelledby="hero-h1">
   <div class="container">
-    <div class="hero-inner">
+    <div class="agent-hero-grid">
+
+      <!-- The ONLY photo element on this page. Its position at both sizes is
+           handled entirely in CSS (grid column on desktop, source order on
+           mobile) — the markup is never duplicated. -->
+      <div class="agent-hero-photo">
+        <img src="/mike-scheiderich.png" alt="Mike Scheiderich, agency principal and licensed insurance agent at The Scheiderich Agency" />
+      </div>
+
+      <div class="agent-hero-text">
       <div class="hero-eyebrow">
         <span class="hero-dot"></span>
         Agency Principal · Licensed Insurance Agent
@@ -621,6 +669,8 @@
           Backed by a full agency team
         </div>
       </div>
+      </div><!-- /.agent-hero-text -->
+
     </div>
   </div>
 </section>
@@ -646,9 +696,7 @@
       </div>
 
       <div>
-        <div class="agent-portrait">
-          <img src="/mike-scheiderich.png" alt="Mike Scheiderich, agency principal and licensed insurance agent at The Scheiderich Agency" />
-        </div>
+        <!-- Portrait moved to the hero — the page carries exactly one photo of Mike. -->
         <div class="agent-cred">
           <div class="agent-cred-title">At a glance</div>
           <ul class="agent-cred-list">
