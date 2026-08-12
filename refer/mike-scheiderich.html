@@ -435,7 +435,7 @@
   /* ═══════════════════════════════════════
      CONFIG
   ═══════════════════════════════════════ */
-  var SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbwy_SagmvKAdiJ2-shUZQmIfGceyWuOU0OayP4lEF3n0grOcgUWrY34eE_-qjpLxzdw6g/exec';
+  var SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbz4xKO0W2QtG_97DWHevo6-lBM6zGNPblEt_rPB-r35KwpcqYVHT_3XzD6e6fQFx2SA6A/exec';
   var AGENT_SLUG   = 'mike-scheiderich';
   var AGENT_NAME   = 'Mike Scheiderich';
   var AGENT_EMAIL  = 'Mscheiderich@Allstate.com';   // CC on the intro email
@@ -472,23 +472,44 @@
   /* ═══════════════════════════════════════
      REFERRAL ID
      Generated client-side because the write uses mode:'no-cors', which makes the
-     doPost response ({success, referralId}) unreadable. Format must match the
-     server's: REF-yyMMdd-XXXX, XXXX = 4 uppercase alphanumerics.
-     The server must USE this id rather than minting its own, otherwise the
-     introSent beacon below will reference a row that does not exist.
+     doPost response ({success, referralId}) unreadable. The server uses this id
+     when present, so page and sheet agree.
+
+     Format: REF-yyMMdd-XXXX, XXXX = 4 uppercase alphanumerics.
+
+     The date MUST be Eastern, not the browser's local date. A partner referring
+     from Pacific time at 10pm is already on the next day in Atlanta, and a local
+     stamp would disagree with the server by one day. Intl handles EST/EDT for us.
   ═══════════════════════════════════════ */
   var referralId = '';
 
-  function makeReferralId() {
-    var d  = new Date();
+  function easternStamp(date) {
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        year: '2-digit', month: '2-digit', day: '2-digit'
+      }).formatToParts(date);
+      var get = function (type) {
+        for (var i = 0; i < parts.length; i++) if (parts[i].type === type) return parts[i].value;
+        return '';
+      };
+      var stamp = get('year') + get('month') + get('day');
+      if (/^\d{6}$/.test(stamp)) return stamp;
+    } catch (e) { /* fall through */ }
+    // Fallback for engines without IANA time zone support: fixed -05:00 offset.
+    // Off by an hour during EDT, which only matters between 11pm and midnight.
     var p2 = function (n) { return ('0' + n).slice(-2); };
-    var stamp = p2(d.getFullYear() % 100) + p2(d.getMonth() + 1) + p2(d.getDate());
+    var e = new Date(date.getTime() + (date.getTimezoneOffset() - 300) * 60000);
+    return p2(e.getFullYear() % 100) + p2(e.getMonth() + 1) + p2(e.getDate());
+  }
+
+  function makeReferralId() {
     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     var suffix = '';
     for (var i = 0; i < 4; i++) {
       suffix += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    return 'REF-' + stamp + '-' + suffix;
+    return 'REF-' + easternStamp(new Date()) + '-' + suffix;
   }
 
   /* ═══════════════════════════════════════
