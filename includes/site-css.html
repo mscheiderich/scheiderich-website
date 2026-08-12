@@ -93,6 +93,24 @@
     .mobile-menu a:hover { color: var(--navy); background: var(--navy-lt); }
     .mobile-menu-phone { color: var(--orange); font-weight: 700; }
     .mobile-menu-phone:hover { color: var(--orange); }
+    /* Keep the phone CTA borderless regardless of what follows it in the panel. */
+    .mobile-menu a.mobile-menu-phone { border-bottom: none; }
+    /* Staff link. Hidden by default — it only appears in the panel at the narrow
+       widths where it is removed from the header row, so exactly one "Team Login"
+       is reachable at any viewport width. Styled as a utility link, deliberately
+       distinct from the coverage links above it. */
+    .mobile-menu a.mobile-menu-team {
+      display: none;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      border-bottom: none;
+      margin-top: 8px;
+      min-height: 40px;
+    }
     /* ── Mobile nav breakpoint ──
        Measured: the desktop nav row (Team Login + logo + 7 links + phone + CTA)
        needs a 1086px viewport to fit; at 1085px and below it overflowed the
@@ -116,6 +134,26 @@
         max-height: calc(100vh - 66px);
         overflow-y: auto;
       }
+    }
+    /* ── Narrow phones ──
+       Measured: the mobile header row needed 446px, so every phone from 320px to
+       416px scrolled sideways (iPhone SE 375, iPhone 12–14 390, Pixel 412).
+       Reclaiming padding and gap alone got it to 406px — still short. Moving the
+       staff "Team Login" link out of the header row and into the menu panel frees
+       ~92px, bringing the requirement to ~314px: every real phone fits with the
+       brand name intact on one line at its full size.
+       Shrinking the logo instead was measured and rejected — it broke the brand
+       name across two lines at 375px and three at 320px. */
+    @media (max-width: 420px) {
+      .container { padding: 0 16px; }
+      .nav-wrap { gap: 12px; }
+      .team-login-link { display: none; }
+      .mobile-menu a.mobile-menu-team { display: flex; }
+      /* Safety net only: below ~314px the logo may compress rather than overflow.
+         No real phone reaches this, so the name does not wrap in practice. */
+      .nav-logo { flex-shrink: 1; min-width: 0; }
+      /* Panel bleeds to the reduced container padding. */
+      .mobile-menu:not([hidden]) { margin: 0 -16px; padding: 0 16px; }
     }
     /* Footer */
     .site-footer { background: #111e2c; color: rgba(255,255,255,.45); padding: 60px 0 36px; }
