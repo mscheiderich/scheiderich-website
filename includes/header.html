@@ -76,7 +76,8 @@
     if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); }
   });
   window.addEventListener('resize', function () {
-    if (window.innerWidth > 640 && !menu.hidden) setOpen(false);
+    // Must match the mobile nav breakpoint in /includes/site-css.html (max-width: 1100px).
+    if (window.innerWidth > 1100 && !menu.hidden) setOpen(false);
   });
 })();
 </script>
