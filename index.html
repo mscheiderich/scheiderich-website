@@ -44,7 +44,8 @@
       {"@type":"Person","name":"Iris Salgado","jobTitle":"Licensed Insurance Agent"},
       {"@type":"Person","name":"Mark Hill","jobTitle":"Licensed Insurance Agent"},
       {"@type":"Person","name":"Wendy Alaniz","jobTitle":"Licensed Customer Service Rep"},
-      {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Sales Producer"}
+      {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Sales Producer"},
+      {"@type":"Person","name":"Natalie Fowler","jobTitle":"Director of Marketing"}
     ]
   }
   </script>
@@ -354,14 +355,20 @@
     /* ═══════════════════════════════════════
        TEAM SECTION  (3-col × 2-row)
     ═══════════════════════════════════════ */
+    /* Flex-wrap + justify-content:center centres whatever number of cards
+       lands on the final row (1, 2, or 3) automatically — no per-count
+       nth-child rules to maintain as the team changes size. Fixed
+       flex-basis keeps short-row cards the same width as full-row cards
+       instead of stretching to fill. */
     .team-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 24px;
     }
-    /* Centre a lone card left over on the final row (3-column layout) */
-    .team-grid > .team-card:last-child:nth-child(3n + 1) { grid-column: 2; }
-    /* All 6 team cards — identical sizing, no exceptions */
+    /* 3-up: two 24px gaps to subtract */
+    .team-grid > .team-card { flex: 0 0 calc((100% - 48px) / 3); }
+    /* All team cards — identical sizing, no exceptions */
     .team-card {
       background: var(--bg-w);
       border: 1px solid var(--border);
@@ -592,7 +599,7 @@
   .why-grid { grid-template-columns: 1fr; gap: 48px; }
   .why-cards { order: -1; }
   .cov-grid  { grid-template-columns: 1fr 1fr; }
-  .team-grid { grid-template-columns: 1fr 1fr 1fr; }
+  /* team grid stays 3-up here; base flex-basis already covers it */
   .proc-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   .proc-grid::before { display: none; }
   .area-grid { grid-template-columns: 1fr; }
@@ -605,14 +612,8 @@
   .cov-link { flex: 0 0 50%; border-right: none; border-bottom: 1px solid var(--border); }
   .cov-link:nth-child(odd) { border-right: 1px solid var(--border); }
   .cov-grid  { grid-template-columns: 1fr; }
-  .team-grid { grid-template-columns: 1fr 1fr; }
-  /* Re-centre the orphan for the 2-column layout: full-row span, single-column width */
-  .team-grid > .team-card:last-child:nth-child(3n + 1) { grid-column: auto; }
-  .team-grid > .team-card:last-child:nth-child(2n + 1) {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: calc(50% - 12px);
-  }
+  /* 2-up: one 24px gap to subtract. Centring is inherited from the base rule. */
+  .team-grid > .team-card { flex-basis: calc((100% - 24px) / 2); }
   .team-photo { height: 220px; }
   .faq-grid  { grid-template-columns: 1fr; }
   .proc-grid { grid-template-columns: 1fr; }
@@ -833,7 +834,7 @@
       <div class="why-cards">
         <div class="why-card dark"><div class="why-card-num">GA</div><div class="why-card-lbl">Statewide coverage options available</div></div>
         <div class="why-card"><div class="why-card-num">4</div><div class="why-card-lbl">Core coverage types for home, auto, life &amp; business</div></div>
-        <div class="why-card"><div class="why-card-num">7</div><div class="why-card-lbl">Licensed professionals ready to help you</div></div>
+        <div class="why-card"><div class="why-card-num">7</div><div class="why-card-lbl">Licensed professionals on our team</div></div>
         <div class="why-card dark"><div class="why-card-num">Local</div><div class="why-card-lbl">Buford, GA — Serving Metro Atlanta &amp; beyond</div></div>
       </div>
     </div>
@@ -1016,6 +1017,22 @@
         <div class="team-info">
           <div class="team-name">Jennifer Lawler</div>
           <div class="team-title">Licensed Sales Producer</div>
+          <div class="team-loc">
+            <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
+            Buford, GA
+          </div>
+        </div>
+      </div>
+
+      <!-- Natalie -->
+      <div class="team-card">
+        <div class="team-photo">
+          <img src="natalie-fowler.png"
+               alt="Natalie Fowler, director of marketing at The Scheiderich Agency" />
+        </div>
+        <div class="team-info">
+          <div class="team-name">Natalie Fowler</div>
+          <div class="team-title">Director of Marketing</div>
           <div class="team-loc">
             <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
             Buford, GA

@@ -37,7 +37,8 @@
         {"@type":"Person","name":"Mark Hill","jobTitle":"Licensed Insurance Agent"},
         {"@type":"Person","name":"Iris Salgado","jobTitle":"Licensed Insurance Agent · Bilingual"},
         {"@type":"Person","name":"Wendy Alaniz","jobTitle":"Licensed Customer Service Rep · Bilingual"},
-        {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Sales Producer"}
+        {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Sales Producer"},
+        {"@type":"Person","name":"Natalie Fowler","jobTitle":"Director of Marketing"}
       ]
     }
   }
@@ -125,12 +126,20 @@
     .value-ico svg { width: 20px; height: 20px; color: var(--navy); }
     .value-title { font-family: 'Lora', serif; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
     .value-body  { font-size: 13px; color: var(--muted); line-height: 1.55; }
-    /* Team grid — 3 col */
+    /* Team grid — 3 col.
+       Flex-wrap + justify-content:center centres whatever number of cards
+       lands on the final row (1, 2, or 3) automatically — no per-count
+       nth-child rules to maintain as the team changes size. Fixed
+       flex-basis keeps short-row cards the same width as full-row cards
+       instead of stretching to fill. */
     .team-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 28px;
     }
+    /* 3-up: two 28px gaps to subtract */
+    .team-grid > .team-card { flex: 0 0 calc((100% - 56px) / 3); }
     .team-card {
       background: var(--bg-w);
       border: 1px solid var(--border);
@@ -255,7 +264,8 @@
     }
     @media (max-width: 1020px) {
   .values-strip { grid-template-columns: 1fr 1fr; }
-  .team-grid { grid-template-columns: 1fr 1fr; }
+  /* 2-up: one 28px gap to subtract. Centring is inherited from the base rule. */
+  .team-grid > .team-card { flex-basis: calc((100% - 28px) / 2); }
   .stats-bar { grid-template-columns: 1fr 1fr; }
   .cta-inner { grid-template-columns: 1fr; }
   .cta-actions { align-items: center; text-align: center; }
@@ -263,7 +273,8 @@
     @media (max-width: 640px) {
   .sec { padding: 60px 0; }
   .values-strip { grid-template-columns: 1fr; }
-  .team-grid { grid-template-columns: 1fr; }
+  /* 1-up: full width, no gap to subtract */
+  .team-grid > .team-card { flex-basis: 100%; }
   .stats-bar { grid-template-columns: 1fr 1fr; }
     }
     /* ── Community teaser band ── */
@@ -544,6 +555,23 @@
           <div class="team-name">Jennifer Lawler</div>
           <div class="team-title">Licensed Sales Producer</div>
           <p class="team-bio">Jennifer brings a strong background in customer service and psychology to the agency. She is committed to the client experience, making sure people feel heard and supported at every step. She is known for her warm, attentive manner and for explaining coverage clearly so clients understand exactly what they are getting.</p>
+          <div class="team-loc">
+            <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
+            Buford, GA
+          </div>
+        </div>
+      </div>
+
+      <!-- Natalie -->
+      <div class="team-card">
+        <div class="team-photo">
+          <img src="natalie-fowler.png"
+               alt="Natalie Fowler, director of marketing at The Scheiderich Agency" />
+        </div>
+        <div class="team-body">
+          <div class="team-name">Natalie Fowler</div>
+          <div class="team-title">Director of Marketing</div>
+          <p class="team-bio">Natalie leads marketing and social media for the agency, joining the team at the start of the year. Outside of work she can be found at Brightside Cafe — a community partner of the agency — or spending time with her family.</p>
           <div class="team-loc">
             <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
             Buford, GA
