@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iris Salgado — Licensed Insurance Agent · Bilingual (EN/ES) in Buford, GA | The Scheiderich Agency</title>
+  <meta name="description" content="Iris Salgado is a licensed bilingual insurance agent at The Scheiderich Agency in Buford, GA. Seguro en español. Personal and commercial coverage for Gwinnett County. Call 770-268-4418." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="canonical" href="https://thescheiderichagency.com/agents/iris-salgado.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Iris Salgado",
+      "jobTitle": "Licensed Insurance Agent · Bilingual (EN/ES)",
+      "url": "https://thescheiderichagency.com/agents/iris-salgado.html",
+      "image": "https://thescheiderichagency.com/iris-salgado.png",
+      "telephone": "770-268-4418",
+      "worksFor": {
+        "@type": "InsuranceAgency",
+        "name": "The Scheiderich Agency",
+        "url": "https://thescheiderichagency.com/",
+        "telephone": "770-268-4418",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "60 W Park St",
+          "addressLocality": "Buford",
+          "addressRegion": "GA",
+          "postalCode": "30518",
+          "addressCountry": "US"
+        }
+      },
+      "areaServed": ["Buford, GA", "Gwinnett County, GA", "Metro Atlanta, GA", "Georgia"],
+      "knowsLanguage": ["en", "es"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://thescheiderichagency.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Team", "item": "https://thescheiderichagency.com/about.html" },
+        { "@type": "ListItem", "position": 3, "name": "Iris Salgado", "item": "https://thescheiderichagency.com/agents/iris-salgado.html" }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puedo hacer todo el proceso en español?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Iris is fully bilingual, so the quote, the paperwork, the questions afterward, and the renewal conversation can all happen in Spanish with the same person. You will not be passed to a translation line or asked to bring someone to interpret. If you would rather switch between English and Spanish, that is fine too."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does my personal auto policy cover me when I drive for work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Often it does not, and this is one of the more common gaps Iris finds. Personal auto policies frequently exclude or limit business use, which means a claim during a work trip may not respond the way an owner assumed. Whether you need commercial auto depends on how the vehicle is used, so it is worth describing your actual routine rather than guessing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I am buying my first house in Georgia. What do I need before closing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your lender will want proof of a homeowners policy with specific details — the correct mortgagee wording, your loan number, and a dwelling limit that satisfies their requirements. Iris handles that paperwork directly with the lender. Starting the conversation when the contract is signed, rather than the week of closing, leaves room to fix anything that comes back wrong."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can she handle both my business and my family's policies?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, and coordinating them is often the point. When personal and commercial coverage sit with two different agents, gaps tend to appear at the seam — a vehicle used both ways, a home office, equipment stored at the house. Having one agent look at both makes those overlaps visible."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <style>
+    <!--#include virtual="/includes/site-css.html" -->
+    /* Hero */
+    .hero { background: var(--navy); position: relative; overflow: hidden; }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 72% 28%, rgba(217,104,42,.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 5%  80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        -52deg, transparent 0, transparent 58px,
+        rgba(255,255,255,.016) 58px, rgba(255,255,255,.016) 59px
+      );
+      pointer-events: none;
+    }
+    /* Hero: two columns above the nav breakpoint — photo LEFT, text RIGHT.
+       Below it, one column with the photo first. Only one photo element exists. */
+    .agent-hero-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 56px;
+      align-items: center;
+      padding: 76px 0 72px;
+    }
+    .agent-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%;
+    }
+    .agent-hero-photo img { width: 100%; height: auto; display: block; }
+    .agent-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.48); margin-bottom: 20px;
+    }
+    .hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+    .hero h1 { font-size: clamp(30px, 3.8vw, 50px); color: #fff; font-weight: 700; margin-bottom: 18px; }
+    .hero-sub { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 34px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-hours { font-size: 12px; color: rgba(255,255,255,.38); margin-top: 16px; }
+    .hero-trust-row { display: flex; gap: 24px; margin-top: 40px; flex-wrap: wrap; }
+    .hero-trust-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12.5px; color: rgba(255,255,255,.42);
+    }
+    .hero-trust-item svg { width: 14px; height: 14px; opacity: .65; flex-shrink: 0; }
+    /* Shared section styles */
+    .sec     { padding: 88px 0; }
+    .sec-alt { background: var(--bg-s); }
+    .sec-w   { background: var(--bg-w); }
+    .label {
+      display: block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+    }
+    .label-lt { color: rgba(255,255,255,.38); }
+    .sec-title { font-size: clamp(24px, 2.8vw, 36px); margin-bottom: 14px; }
+    .sec-sub { font-size: 16.5px; color: var(--muted); max-width: 560px; line-height: 1.65; }
+    .sec-hd   { margin-bottom: 56px; }
+    .sec-hd-c { text-align: center; }
+    .sec-hd-c .sec-sub { margin: 0 auto; }
+    /* Bio intro */
+    .local-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 64px; align-items: start; }
+    .local-body p { font-size: 15.5px; color: var(--muted); line-height: 1.72; margin-bottom: 22px; }
+    .local-body p:last-child { margin-bottom: 0; }
+    /* Coverage cards */
+    .cov-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+    .cov-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 34px 26px; box-shadow: var(--sh-sm);
+      display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s;
+    }
+    .cov-card:hover { box-shadow: var(--sh-md); transform: translateY(-3px); }
+    .cov-card-ico {
+      width: 50px; height: 50px; border-radius: 12px; background: var(--navy-lt);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+    }
+    .cov-card-ico svg { width: 22px; height: 22px; color: var(--navy); }
+    .cov-card h3 { font-size: 18px; margin-bottom: 10px; }
+    .cov-card p  { font-size: 13.5px; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 22px; }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 600; color: var(--navy);
+      transition: gap .2s, color .2s; margin-top: auto;
+    }
+    .card-link:hover { gap: 10px; color: var(--orange); }
+    .card-link svg { width: 13px; height: 13px; }
+    /* Contact form section */
+    .contact-split { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 60px; align-items: start; }
+    .form-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 40px 36px; box-shadow: var(--sh-md);
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .form-group input,
+    .form-group select {
+      height: 46px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+      background: var(--bg); transition: border-color .2s, box-shadow .2s; outline: none; width: 100%;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: var(--bg-w);
+    }
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      background-size: 16px; padding-right: 36px;
+    }
+    .form-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+    .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+    .form-err { font-size: 12px; color: #c0392b; margin-top: 3px; }
+    /* Contact info card */
+    .info-card { background: var(--navy); border-radius: var(--r-lg); padding: 32px 28px; }
+    .info-card-title { font-size: 17px; color: #fff; margin-bottom: 24px; }
+    .info-phone {
+      font-family: 'Lora', serif; font-size: 26px; font-weight: 700;
+      color: #fff; display: block; margin-bottom: 4px;
+    }
+    .info-phone:hover { color: rgba(255,255,255,.8); }
+    .info-phone-lbl {
+      font-size: 11px; color: rgba(255,255,255,.4); text-transform: uppercase;
+      letter-spacing: .07em; margin-bottom: 24px;
+    }
+    .info-row {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;
+      font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.55;
+    }
+    .info-row:last-child { margin-bottom: 0; }
+    .info-row svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; opacity: .55; }
+    .info-row a { color: rgba(255,255,255,.65); transition: color .2s; }
+    .info-row a:hover { color: #fff; }
+    .info-after-hours { font-size: 11.5px; color: rgba(255,255,255,.38); margin-top: 6px; font-style: italic; }
+    .info-full-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 600; color: var(--orange); margin-top: 22px; transition: gap .2s;
+    }
+    .info-full-link:hover { gap: 10px; color: var(--orange); }
+    .hours-list { margin: 0; list-style: none; }
+    .hours-list li {
+      display: flex; justify-content: space-between; font-size: 13px;
+      color: rgba(255,255,255,.6); padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .hours-list li:last-child { border-bottom: none; }
+    .hours-list li span:last-child { font-weight: 600; color: rgba(255,255,255,.85); }
+    /* FAQ */
+    .faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; max-width: 980px; margin: 0 auto; }
+    .faq-item { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 26px; }
+    .faq-q { font-family: 'Lora', serif; font-size: 15.5px; font-weight: 600; color: var(--text); margin-bottom: 9px; }
+    .faq-a { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+    /* Final CTA */
+    .cta-sec { background: var(--navy); padding: 88px 0; position: relative; overflow: hidden; }
+    .cta-sec::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 85% 50%, rgba(217,104,42,.18) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .cta-center { position: relative; z-index: 1; text-align: center; max-width: 600px; margin: 0 auto; }
+    .cta-title { font-size: clamp(24px, 2.8vw, 36px); color: #fff; margin-bottom: 14px; }
+    .cta-sub { font-size: 16px; color: rgba(255,255,255,.6); margin-bottom: 36px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-divider { font-size: 11px; color: rgba(255,255,255,.3); letter-spacing: .05em; margin: 4px 0; }
+
+    /* ═══════════════════════════════════════
+       AGENT PAGE — page-scoped additions
+       New elements only. Nothing here overrides
+       a shared class from /includes/site-css.html.
+    ═══════════════════════════════════════ */
+    .agent-cred {
+      background: var(--bg-w); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 24px 22px; box-shadow: var(--sh-sm);
+    }
+    .agent-cred-title {
+      font-family: 'Lora', serif; font-size: 15px; font-weight: 600;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .agent-cred-list { list-style: none; margin: 0; }
+    .agent-cred-list li {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 13px; color: var(--muted); line-height: 1.55;
+      padding: 7px 0; border-bottom: 1px solid var(--border);
+    }
+    .agent-cred-list li:last-child { border-bottom: none; }
+    .agent-cred-list svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: var(--orange); }
+    /* Who they work with — four-item list */
+    .helps-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; max-width: 980px; margin: 0 auto; }
+    .helps-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 26px 24px; box-shadow: var(--sh-sm); transition: box-shadow .2s, transform .2s;
+    }
+    .helps-item:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+    .helps-ico {
+      width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+      background: var(--navy-lt); display: flex; align-items: center; justify-content: center;
+    }
+    .helps-ico svg { width: 18px; height: 18px; color: var(--navy); }
+    .helps-text { font-size: 14.5px; color: var(--muted); line-height: 1.62; }
+    /* What to expect — numbered steps */
+    .path-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+    .path-step {
+      background: var(--bg-w); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 30px 26px; box-shadow: var(--sh-sm);
+    }
+    .path-num {
+      font-family: 'Lora', serif; font-size: 13px; font-weight: 700;
+      color: var(--orange); letter-spacing: .1em; margin-bottom: 12px;
+    }
+    .path-step h3 { font-size: 16.5px; margin-bottom: 9px; }
+    .path-step p { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+    /* Referral-partner line above the footer */
+    .partner-band { background: var(--bg-s); border-top: 1px solid var(--border); padding: 26px 0; }
+    .partner-inner {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      flex-wrap: wrap; text-align: center; font-size: 13.5px; color: var(--muted); line-height: 1.6;
+    }
+    .partner-inner a { font-weight: 600; color: var(--navy); text-decoration: underline; }
+    .partner-inner a:hover { color: var(--orange); }
+    /* Topic explainer band (photo-free two-column with a sidebar card) */
+    .topic-split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 56px; align-items: start; }
+    .topic-body p { font-size: 15.5px; color: var(--muted); line-height: 1.72; margin-bottom: 22px; }
+    .topic-body p:last-child { margin-bottom: 0; }
+    .topic-card {
+      background: var(--bg-w); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 28px 26px; box-shadow: var(--sh-md);
+    }
+    .topic-card-title {
+      font-family: 'Lora', serif; font-size: 16px; font-weight: 600;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .topic-card-sub { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .topic-card-list { list-style: none; margin: 0 0 20px; }
+    .topic-card-list li {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 13px; color: var(--muted); line-height: 1.55; padding: 6px 0;
+    }
+    .topic-card-list svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: var(--orange); }
+    /* A long CTA label cannot fit one line in the 340px card; the shared .btn is
+       nowrap, so allow wrapping here only. The shared rule is untouched. */
+    .topic-card .btn {
+      white-space: normal; height: auto; min-height: var(--btn-h);
+      padding-top: 11px; padding-bottom: 11px; line-height: 1.35; text-align: center;
+    }
+
+    /* ── Hero stack order below the nav breakpoint ──
+       Matches the 1100px mobile-nav breakpoint in /includes/site-css.html so the
+       header and hero switch together. Photo comes first from source order; the
+       text children are reordered so a phone gets face -> name -> role -> actions
+       before the prose. */
+    @media (max-width: 1100px) {
+  .agent-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px; padding: 52px 0 48px; justify-items: center;
+  }
+  .agent-hero-photo { max-width: 240px; }
+  .agent-hero-text { align-items: center; text-align: center; }
+  .agent-hero-text > h1               { order: 1; margin-bottom: 10px; }
+  .agent-hero-text > .hero-eyebrow    { order: 2; margin-bottom: 24px; }
+  .agent-hero-text > .hero-btns       { order: 3; margin-bottom: 28px; justify-content: center; align-items: center; }
+  .agent-hero-text > .hero-sub        { order: 4; margin-bottom: 0; }
+  .agent-hero-text > .hero-hours      { order: 5; }
+  .agent-hero-text > .hero-trust-row  { order: 6; justify-content: center; gap: 12px 20px; }
+  .agent-hero-text > .hero-eyebrow { display: block; }
+  .agent-hero-text > .hero-eyebrow .hero-dot { display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .agent-hero-text > .hero-sub { text-align: left; }
+    }
+    @media (max-width: 960px) {
+  .local-grid { grid-template-columns: minmax(0, 1fr); }
+  .cov-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .contact-split { grid-template-columns: minmax(0, 1fr); }
+  .topic-split { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .path-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 640px) {
+  .sec { padding: 60px 0; }
+  .cov-grid { grid-template-columns: minmax(0, 1fr); }
+  .faq-grid { grid-template-columns: minmax(0, 1fr); }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
+  .hero-btns { flex-direction: column; align-items: flex-start; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .helps-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    /* Long email addresses must not set a min-content floor wider than a phone. */
+    .info-row a { overflow-wrap: anywhere; }
+    /* Form controls carry an intrinsic preferred width; without this they refuse
+       to shrink below it and push the grid track past the viewport. */
+    .form-group input, .form-group select { min-width: 0; }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+</head>
+<body>
+
+<!-- NAV -->
+<!--#include virtual="/includes/header.html" -->
+
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="container">
+    <div class="agent-hero-grid">
+
+      <!-- The ONLY photo element on this page. Position at both sizes is handled
+           in CSS (grid column on desktop, source order on mobile). -->
+      <div class="agent-hero-photo">
+        <img src="/iris-salgado.png" alt="Iris Salgado, licensed bilingual insurance agent at The Scheiderich Agency" />
+      </div>
+
+      <div class="agent-hero-text">
+      <div class="hero-eyebrow">
+        <span class="hero-dot"></span>
+        Licensed Insurance Agent · Bilingual (EN/ES)
+      </div>
+      <h1 id="hero-h1">Iris Salgado — Insurance Agent in Buford, GA</h1>
+      <p class="hero-sub">
+        Iris handles the whole conversation in English or Spanish — quotes, paperwork, renewals, and the follow-up questions that come later. <em lang="es">Atiendo a mis clientes completamente en español, de principio a fin.</em> She also works with small business owners who need commercial coverage alongside their personal policies.
+      </p>
+      <div class="hero-btns">
+        <a href="tel:7702684418" class="btn btn-primary">Call 770-268-4418</a>
+        <a href="#contact-h2" class="btn btn-ghost-w">Request a Quote</a>
+      </div>
+      <p class="hero-hours">Mon–Fri 8AM–5PM &nbsp;·&nbsp; Sat by appointment &nbsp;·&nbsp; After hours calls returned next business day</p>
+      <div class="hero-trust-row">
+        <div class="hero-trust-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+          Bilingual — English and Spanish
+        </div>
+        <div class="hero-trust-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Licensed Insurance Agent in Georgia
+        </div>
+        <div class="hero-trust-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Personal and commercial lines
+        </div>
+      </div>
+      </div><!-- /.agent-hero-text -->
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 2. BIO ═══ -->
+<section class="sec sec-w" aria-labelledby="bio-h2">
+  <div class="container">
+    <div class="local-grid">
+
+      <div class="local-body">
+        <span class="label">About Iris</span>
+        <h2 class="sec-title" id="bio-h2">Coverage Explained in the Language You Think In</h2>
+        <p>
+          Insurance is difficult enough in a first language. Iris works extensively with Buford and Gwinnett County's Hispanic community, and the difference she hears most often is not about price — it is about finally getting an explanation someone can follow, ask questions about, and repeat to a spouse that evening.
+        </p>
+        <p>
+          Being bilingual is not a handoff for her. The quote, the declarations page, the renewal notice, and the call two years later when a teenager starts driving all happen with the same person, in the same language. Nothing gets summarised through a translator or a service line.
+        </p>
+        <p>
+          Alongside personal home and auto work, Iris handles commercial insurance for small businesses across the area — contractors, shops, and service businesses that need liability and property coverage without a consultant's vocabulary attached. Many of those owners are also personal clients, which makes coordinating the two straightforward.
+        </p>
+      </div>
+
+      <div>
+        <div class="agent-cred">
+          <div class="agent-cred-title">At a glance</div>
+          <ul class="agent-cred-list">
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Licensed Insurance Agent · Bilingual (EN/ES)</span>
+            </li>
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Servicio completo en español</span>
+            </li>
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Personal home and auto, plus commercial lines</span>
+            </li>
+            <li>
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+              <span>Serving Buford, Gwinnett County, and Metro Atlanta</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 3. WHO IRIS HELPS ═══ -->
+<section class="sec sec-alt" aria-labelledby="helps-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">Who She Works With</span>
+      <h2 class="sec-title" id="helps-h2">Who Iris Works With</h2>
+      <p class="sec-sub">A mix of household and business coverage, often for the same family.</p>
+    </div>
+    <div class="helps-grid">
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg></div>
+        <p class="helps-text">Spanish-speaking clients who want the entire process handled in Spanish</p>
+      </div>
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
+        <p class="helps-text">Small business owners needing commercial coverage</p>
+      </div>
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <p class="helps-text">Families buying their first home in Georgia</p>
+      </div>
+
+      <div class="helps-item">
+        <div class="helps-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg></div>
+        <p class="helps-text">Clients with both personal and business coverage to coordinate</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 3b. COMMERCIAL INSURANCE ═══ -->
+<section class="sec sec-w" aria-labelledby="topic-h2">
+  <div class="container">
+    <div class="topic-split">
+
+      <div class="topic-body">
+        <span class="label">For Business Owners</span>
+        <h2 class="sec-title" id="topic-h2">Commercial Insurance</h2>
+        <p>
+          Commercial coverage tends to get bought in a hurry — a lease requires it, a client asks for a certificate, a job will not start without proof. Iris slows that down enough to explain what each piece is actually for, so you are not carrying coverage you do not need or missing something a contract assumes you have.
+        </p>
+        <p>
+          General liability responds when someone outside your business claims your work or your premises caused injury or damage. Commercial property covers the building, equipment, inventory, and fixtures you depend on. Commercial auto matters the moment a vehicle is used for work, because a personal auto policy may not respond to a business use claim — that surprise is one of the more common gaps she finds.
+        </p>
+        <p>
+          What the right combination looks like depends on what you do, where you do it, who comes onto your property, and what your contracts require. Iris works through those specifics rather than starting from a package, and she can review a policy you already carry to see whether it still matches how the business operates today. Our <a href="/business-insurance.html" style="color:var(--navy); font-weight:600; text-decoration:underline;">business insurance page</a> covers the categories in more depth.
+        </p>
+      </div>
+
+      <div>
+        <div class="topic-card">
+          <div class="topic-card-title">Where most conversations start</div>
+          <p class="topic-card-sub">A short call is usually enough to work out which of these apply to you.</p>
+          <ul class="topic-card-list">
+            <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>A lease or contract requires proof of coverage</span></li>
+            <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>Vehicles are used for work, even occasionally</span></li>
+            <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>Equipment or inventory would be costly to replace</span></li>
+            <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>Clients or the public come onto your premises</span></li>
+          </ul>
+          <a href="/business-insurance.html" class="btn btn-primary btn-full">Explore Business Insurance</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 4. QUOTE FORM ═══ -->
+<section class="sec sec-alt" aria-labelledby="contact-h2">
+  <div class="container">
+    <div class="contact-split">
+
+      <div>
+        <span class="label">Get in Touch</span>
+        <h2 class="sec-title" id="contact-h2">Request a Quote From Iris</h2>
+        <p class="sec-sub" style="margin-bottom:32px;">Send your details and Iris will follow up in English or Spanish, usually the same business day.</p>
+
+        <div class="form-card">
+          <form id="agent-form" action="https://formspree.io/f/mgoqnelq" method="POST">
+            <input type="hidden" name="_source" value="agent-iris-salgado" />
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full-name">Full Name *</label>
+                <input type="text" id="full-name" name="full_name" placeholder="John Smith" required />
+                <span class="form-err" data-err="full_name"></span>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" placeholder="(770) 555-0100" required />
+                <span class="form-err" data-err="phone"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required />
+              <span class="form-err" data-err="email"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="coverage">Coverage Needed *</label>
+              <select id="coverage" name="coverage" required>
+                <option value="" disabled selected>Select the coverage you need</option>
+                <option value="Home Insurance">Home Insurance</option>
+                <option value="Auto Insurance">Auto Insurance</option>
+                <option value="Business / Commercial Insurance">Business / Commercial Insurance</option>
+                <option value="Life Insurance">Life Insurance</option>
+                <option value="Policy Review">Policy Review</option>
+                <option value="Seguro en Español">Seguro en Español</option>
+                <option value="Something Else">Something Else</option>
+              </select>
+              <span class="form-err" data-err="coverage"></span>
+            </div>
+
+            <!-- Spam trap — hidden from humans -->
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" />
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">Send My Request</button>
+
+            <p class="form-note">Responderemos dentro de un día hábil. Submitting this form does not bind coverage.</p>
+          </form>
+
+          <div id="form-confirmation" style="display:none; text-align:center; padding:40px 20px;">
+            <div style="font-size:64px; color:#1e7d4f; line-height:1; margin-bottom:20px;">&#10003;</div>
+            <h2 style="font-family:'Lora',serif; font-size:26px; color:var(--text); margin-bottom:12px;">Request Received</h2>
+            <p style="font-size:15px; color:var(--muted); line-height:1.65; margin-bottom:20px; max-width:380px; margin-left:auto; margin-right:auto;">Thank you — gracias. Iris will review your request and follow up within one business day.</p>
+            <p style="font-size:14px; color:var(--muted); margin-bottom:28px;">Need a faster response? Call us directly:<br><a href="tel:+17702684418" style="font-size:18px; font-weight:700; color:#1e7d4f; text-decoration:none; display:inline-block; margin-top:6px;">770-268-4418</a></p>
+            <button id="reset-form-btn" class="btn btn-outline" style="display:block; margin:0 auto;">Send Another Request</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="info-card">
+          <h3 class="info-card-title">Reach Iris</h3>
+
+          <a href="tel:7702684418" class="info-phone">770-268-4418</a>
+          <div class="info-phone-lbl">Fastest way to reach us</div>
+
+          <div style="border-top:1px solid rgba(255,255,255,.1); padding-top:20px; margin-top:4px;">
+            <ul class="hours-list" aria-label="Office hours">
+              <li><span>Mon–Fri</span><span>8:00 AM – 5:00 PM</span></li>
+              <li><span>Saturday</span><span>By Appointment</span></li>
+              <li><span>Sunday</span><span>Closed</span></li>
+            </ul>
+            <p class="info-after-hours">Calls after 5:00 PM will be returned the next business day.</p>
+          </div>
+
+          <div style="border-top:1px solid rgba(255,255,255,.1); margin-top:20px; padding-top:20px;">
+            <div class="info-row">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>60 W Park St<br />Buford, GA 30518</span>
+            </div>
+            <div class="info-row">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <a href="mailto:info@gahomeinsuranceexperts.com">info@gahomeinsuranceexperts.com</a>
+            </div>
+          </div>
+
+          <a href="/contact.html" class="info-full-link">
+            View full contact page
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 5. COVERAGE LINKS ═══ -->
+<section class="sec sec-w" aria-labelledby="cov-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">What She Handles</span>
+      <h2 class="sec-title" id="cov-h2">Coverage Iris Writes</h2>
+      <p class="sec-sub">Personal and business lines, handled in whichever language you prefer.</p>
+    </div>
+    <div class="cov-grid">
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h3>Home Insurance</h3>
+        <p>For first-time buyers especially, the closing paperwork moves fast. Iris explains what the lender is asking for, what replacement cost means, and which parts of the policy you will actually interact with later.</p>
+        <a href="/home-insurance.html" class="card-link">Explore home insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <h3>Auto Insurance</h3>
+        <p>Georgia's required minimums are a legal floor, not a plan. Iris goes through what those limits would and would not cover in a serious accident — in English or Spanish, with time for questions.</p>
+        <a href="/auto-insurance.html" class="card-link">Explore auto insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
+        <h3>Business Insurance</h3>
+        <p>General liability, commercial property, and commercial auto for contractors, shops, and service businesses. Coverage matched to how your business actually runs, not to a generic package.</p>
+        <a href="/business-insurance.html" class="card-link">Explore business insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+        <h3>Life Insurance</h3>
+        <p>A policy sized to what your family would need if your income stopped — not a round number. For clients with a business, that conversation usually includes what happens to the business too.</p>
+        <a href="/life-insurance.html" class="card-link">Explore life insurance <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+      <article class="cov-card">
+        <div class="cov-card-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+        <h3>Insurance Review</h3>
+        <p>Already insured elsewhere? Bring the paperwork. Iris will read through it with you and point out what is covered, what is excluded, and anything a contract or lender might require that is missing.</p>
+        <a href="/insurance-review.html" class="card-link">Schedule a review <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 6. WHAT TO EXPECT ═══ -->
+<section class="sec sec-alt" aria-labelledby="path-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">How It Works</span>
+      <h2 class="sec-title" id="path-h2">What Working With Iris Looks Like</h2>
+      <p class="sec-sub">Sin prisa — no rush, and no obligation at any point.</p>
+    </div>
+    <div class="path-grid">
+
+      <div class="path-step">
+        <div class="path-num">STEP 01</div>
+        <h3>Pick your language</h3>
+        <p>Call or send the form and say whether you would rather talk in English or Spanish. Whichever you choose is the language everything happens in afterward, including renewals and claims questions.</p>
+      </div>
+
+      <div class="path-step">
+        <div class="path-num">STEP 02</div>
+        <h3>Go through the specifics</h3>
+        <p>For a household that means the property, the drivers, and who depends on your income. For a business it means what you do, what you own, and what your contracts require. Iris asks before recommending.</p>
+      </div>
+
+      <div class="path-step">
+        <div class="path-num">STEP 03</div>
+        <h3>Decide with the details written down</h3>
+        <p>You get the options in writing so you can read them again later or discuss them at home. Coverage takes effect only once a policy is issued and you have confirmed it.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 7. FAQ ═══ -->
+<section class="sec sec-w" aria-labelledby="faq-h2">
+  <div class="container">
+    <div class="sec-hd sec-hd-c">
+      <span class="label">Common Questions</span>
+      <h2 class="sec-title" id="faq-h2">Questions Clients Ask Iris</h2>
+    </div>
+    <div class="faq-grid" role="list">
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">¿Puedo hacer todo el proceso en español?</div>
+        <div class="faq-a">Sí. Iris is fully bilingual, so the quote, the paperwork, the questions afterward, and the renewal conversation can all happen in Spanish with the same person. You will not be passed to a translation line or asked to bring someone to interpret. If you would rather switch between English and Spanish, that is fine too.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">Does my personal auto policy cover me when I drive for work?</div>
+        <div class="faq-a">Often it does not, and this is one of the more common gaps Iris finds. Personal auto policies frequently exclude or limit business use, which means a claim during a work trip may not respond the way an owner assumed. Whether you need commercial auto depends on how the vehicle is used, so it is worth describing your actual routine rather than guessing.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">I am buying my first house in Georgia. What do I need before closing?</div>
+        <div class="faq-a">Your lender will want proof of a homeowners policy with specific details — the correct mortgagee wording, your loan number, and a dwelling limit that satisfies their requirements. Iris handles that paperwork directly with the lender. Starting the conversation when the contract is signed, rather than the week of closing, leaves room to fix anything that comes back wrong.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <div class="faq-q">Can she handle both my business and my family's policies?</div>
+        <div class="faq-a">Yes, and coordinating them is often the point. When personal and commercial coverage sit with two different agents, gaps tend to appear at the seam — a vehicle used both ways, a home office, equipment stored at the house. Having one agent look at both makes those overlaps visible.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="cta-sec" aria-labelledby="cta-h2">
+  <div class="container">
+    <div class="cta-center">
+      <span class="label label-lt">Ready to get started?</span>
+      <h2 class="cta-title" id="cta-h2">Hablemos — Let's Talk About Your Coverage</h2>
+      <p class="cta-sub">Call during business hours or send the form. Iris will follow up in the language you prefer.</p>
+      <div class="cta-btns">
+        <a href="tel:7702684418" class="btn btn-primary">Call 770-268-4418</a>
+        <div class="cta-divider">or</div>
+        <a href="#contact-h2" class="btn btn-ghost-w">Request a Quote Online</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- REFERRAL PARTNER LINE -->
+<div class="partner-band">
+  <div class="container">
+    <p class="partner-inner">
+      Refer Spanish-speaking clients or small business owners who need coverage? <a href="/refer/iris-salgado.html">Send a referral to Iris &rarr;</a>
+    </p>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<!--#include virtual="/includes/footer.html" -->
+
+<script>
+  (function () {
+    var form = document.getElementById('agent-form');
+    if (!form) return;
+    var confirmation = document.getElementById('form-confirmation');
+    var resetBtn = document.getElementById('reset-form-btn');
+    var submitBtn = form.querySelector('[type="submit"]');
+    var originalBtnText = submitBtn.textContent;
+    var errorEl = null;
+
+    var NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at 770-268-4418.";
+    var SERVER_MSG  = "We weren't able to send your request. Please call us at 770-268-4418 and we'll take your information directly.";
+
+    function clearError() {
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      form.querySelectorAll('[data-err]').forEach(function (el) { el.textContent = ''; });
+    }
+
+    function showError(msg) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      errorEl = document.createElement('p');
+      errorEl.style.cssText = 'color:#c0392b; font-size:13.5px; margin-top:12px; line-height:1.5;';
+      errorEl.textContent = msg;
+      submitBtn.insertAdjacentElement('afterend', errorEl);
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError();
+
+      if (!form.reportValidity()) { return; }
+
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+
+      fetch('https://formspree.io/f/mgoqnelq', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      })
+      .then(function (res) {
+        if (!res.ok) {
+          var err = new Error('server');
+          err.isServerError = true;
+          throw err;
+        }
+        form.style.display = 'none';
+        confirmation.style.display = 'block';
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      })
+      .catch(function (err) {
+        showError(err && err.isServerError ? SERVER_MSG : NETWORK_MSG);
+      });
+    });
+
+    resetBtn.addEventListener('click', function () {
+      confirmation.style.display = 'none';
+      form.style.display = 'block';
+      form.reset();
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      clearError();
+    });
+  })();
+</script>
+</body>
+</html>
