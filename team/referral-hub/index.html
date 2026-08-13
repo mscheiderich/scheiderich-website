@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Referral Hub | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:     #1e3148;
+      --navy-mid: #264060;
+      --navy-lt:  #e8edf4;
+      --orange:   #d9682a;
+      --orange-h: #bf5821;
+      --bg:       #f6f4f1;
+      --bg-w:     #ffffff;
+      --bg-s:     #eeebe6;
+      --text:     #1c2330;
+      --muted:    #5f6b79;
+      --border:   #dedad4;
+      --r:        8px;
+      --r-lg:     12px;
+      --sh-sm:    0 1px 4px rgba(30,49,72,.07);
+      --sh-md:    0 4px 16px rgba(30,49,72,.11);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .back-to-dashboard {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-to-dashboard:hover {
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ── HEADER ── */
+    .app-header { background: var(--navy); padding: 0 24px; }
+    .app-header-row {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      gap: 16px;
+    }
+    .app-logo {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .app-title {
+      font-size: 13px;
+      color: rgba(255,255,255,.55);
+      font-weight: 500;
+      flex: 1;
+      text-align: center;
+    }
+    .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    /* Page-scoped: current agent chip in the header */
+    .rh-agent-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.07);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .rh-switch {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,.6);
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      padding: 0;
+    }
+    .rh-switch:hover { color: #fff; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .18s, border-color .18s, color .18s;
+      text-decoration: none;
+    }
+    .btn-primary   { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .btn-primary:hover { background: var(--orange-h); border-color: var(--orange-h); }
+    .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-outline-w { background: transparent; color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.35); }
+    .btn-outline-w:hover { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.6); }
+    .btn-outline   { background: transparent; color: var(--navy); border-color: var(--border); }
+    .btn-outline:hover { border-color: var(--navy); background: var(--navy-lt); }
+
+    /* ── ERROR BANNER ── */
+    .error-banner {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 11px 24px;
+      font-size: 13.5px;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .error-banner.visible { display: flex; }
+
+    /* ── FILTER CONTROLS ── */
+    .filter-btn {
+      height: 32px;
+      padding: 0 13px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-lt); }
+    .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .filter-search {
+      height: 32px;
+      padding: 0 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg-w);
+      width: 220px;
+      max-width: 100%;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .filter-search:focus { border-color: var(--navy); }
+    .record-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+    /* ── STATES ── */
+    .loading-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 44px 24px;
+      gap: 14px;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 44px 24px; color: var(--muted); }
+    .empty-icon  { font-size: 32px; margin-bottom: 10px; opacity: .4; }
+
+    /* ── FORM ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      height: 36px;
+      padding: 0 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: var(--text);
+      background: var(--bg-w);
+      outline: none;
+      width: 100%;
+      max-width: 100%;
+      transition: border-color .15s;
+    }
+    input:focus, select:focus { border-color: var(--navy); }
+    input.err, select.err { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,.12); }
+    .field-note {
+      font-size: 12px;
+      color: #92400e;
+      background: #fef3c7;
+      border-radius: 5px;
+      padding: 5px 8px;
+      line-height: 1.45;
+    }
+
+    /* ── TOAST ── */
+    .toast-container {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 9999;
+      display: flex; flex-direction: column; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.18);
+      animation: toastIn .2s ease, toastOut .3s ease 2.7s forwards;
+    }
+    .toast-success { background: #16a34a; }
+    .toast-error   { background: #dc2626; }
+    @keyframes toastIn  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(4px); } }
+
+    /* ═══════════════════════════════════════
+       PAGE-SCOPED — REFERRAL HUB
+    ═══════════════════════════════════════ */
+    .rh-main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 24px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .rh-card {
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-sm);
+      overflow: hidden;
+    }
+    .rh-card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 14px 18px;
+      background: var(--navy-lt);
+      border-bottom: 1px solid var(--border);
+    }
+    .rh-card-title {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .rh-card-spacer { flex: 1; min-width: 0; }
+    .rh-card-body { padding: 18px; }
+    .rh-card-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+
+    .rh-link-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .rh-link {
+      flex: 1;
+      min-width: 240px;
+      background: var(--bg-s);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--navy);
+      word-break: break-all;
+      line-height: 1.45;
+    }
+
+    .rh-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-w);
+    }
+    .rh-scope { display: flex; gap: 6px; }
+
+    /* Tables */
+    .rh-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .rh-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .rh-table thead { background: var(--bg-s); border-bottom: 2px solid var(--border); }
+    .rh-table th {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .rh-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .rh-table tbody tr:nth-child(even) { background: #faf9f7; }
+    .rh-table tbody tr:hover { background: #eef2f8; }
+    .rh-name { font-weight: 600; color: var(--text); }
+    .rh-muted-cell { color: var(--muted); font-style: italic; }
+
+    .rh-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .rh-rowbtn {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: var(--bg-w);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .rh-rowbtn:hover { background: var(--navy-lt); color: var(--navy); border-color: var(--navy); }
+    .rh-rowbtn.primary { border-color: var(--orange); color: var(--orange); }
+    .rh-rowbtn.primary:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1.4;
+    }
+    .badge-stage    { background: #eff6ff; color: #1e3148; }
+    .badge-complete { background: #dcfce7; color: #15803d; }
+    .badge-pending  { background: #fef3c7; color: #92400e; }
+    .badge-neutral  { background: #f1f5f9; color: #64748b; }
+
+    /* Add-partner result panel */
+    .rh-result {
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--orange);
+      border-radius: var(--r);
+      background: var(--bg);
+      display: none;
+    }
+    .rh-result.visible { display: block; }
+    .rh-result-title { font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+
+    /* Agent picker overlay */
+    .rh-picker {
+      position: fixed; inset: 0;
+      background: rgba(15,28,45,.62);
+      z-index: 1000;
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .rh-picker.open { display: flex; }
+    .rh-picker-box {
+      background: var(--bg-w);
+      border-radius: var(--r-lg);
+      box-shadow: 0 20px 60px rgba(15,28,45,.3);
+      width: 100%;
+      max-width: 460px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .rh-picker-title {
+      font-family: 'Lora', serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .rh-picker-sub { font-size: 13px; color: var(--muted); margin: 6px 0 18px; line-height: 1.5; }
+    .rh-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .rh-picker-btn {
+      height: 46px;
+      border-radius: var(--r);
+      border: 1.5px solid var(--border);
+      background: var(--bg-w);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .rh-picker-btn:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    /* Shared-access disclosure */
+    .rh-disclosure {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 24px 36px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    #qrScratch { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .app-title { display: none; }
+      .form-grid { grid-template-columns: 1fr; }
+      .rh-main { padding: 14px 12px 8px; gap: 14px; }
+      .rh-disclosure { padding: 12px 12px 32px; }
+      .app-header { padding: 0 12px; }
+      .rh-card-body, .rh-toolbar, .rh-card-head { padding-left: 14px; padding-right: 14px; }
+      .filter-search { width: 100%; }
+    }
+
+    /* Narrow screens: stack table rows into labeled cards so nothing overflows */
+    @media (max-width: 700px) {
+      .rh-table-wrap { overflow-x: visible; }
+      .rh-table, .rh-table tbody, .rh-table tr, .rh-table td { display: block; width: 100%; }
+      .rh-table thead { display: none; }
+      .rh-table tr {
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        margin: 0 0 10px;
+        padding: 6px 0;
+        background: var(--bg-w);
+      }
+      .rh-table tbody tr:nth-child(even) { background: var(--bg-w); }
+      .rh-table tbody tr:hover { background: var(--bg-w); }
+      .rh-table td {
+        border-bottom: none;
+        padding: 5px 12px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .rh-table td::before {
+        content: attr(data-label);
+        flex: 0 0 88px;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding-top: 3px;
+      }
+      .rh-table td > * { min-width: 0; }
+      .rh-actions { flex: 1; }
+    }
+
+    @media (max-width: 420px) {
+      .rh-picker-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+
+  <!-- QR code generation (print-resolution PNGs) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="app-header-row">
+    <a href="/team/" class="back-to-dashboard">← Dashboard</a>
+    <div class="app-logo">The Scheiderich Agency</div>
+    <div class="app-title">Referral Hub</div>
+    <div class="header-actions">
+      <span class="rh-agent-chip" id="agentChip" style="display:none;">
+        <span id="agentChipName"></span>
+        <button class="rh-switch" onclick="openPicker()">switch</button>
+      </span>
+      <button class="btn btn-outline-w" onclick="refreshAll()">&#8635; Refresh</button>
+    </div>
+  </div>
+</header>
+
+<!-- ERROR BANNER -->
+<div class="error-banner" id="errorBanner">
+  &#9888; <span id="errorBannerText">Unable to load data. Check your connection and refresh.</span>
+</div>
+
+<main class="rh-main">
+
+  <!-- ── SECTION 1: MY LINK ── -->
+  <section class="rh-card">
+    <div class="rh-card-head">
+      <div class="rh-card-title">My Link</div>
+    </div>
+    <div class="rh-card-body">
+      <p class="rh-card-sub">Your personal referral link. Anyone who uses it is credited to you.</p>
+      <div class="rh-link-row">
+        <div class="rh-link" id="myLink">&mdash;</div>
+        <button class="btn btn-primary" onclick="copyMyLink()">Copy Link</button>
+        <button class="btn btn-outline" onclick="downloadMyQr()">Download QR</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: MY PARTNERS ── -->
+  <section class="rh-card">
+    <div class="rh-card-head">
+      <div class="rh-card-title">Partners</div>
+      <div class="rh-card-spacer"></div>
+      <div class="record-count" id="partnerCount">Loading&hellip;</div>
+    </div>
+    <div class="rh-toolbar">
+      <div class="rh-scope">
+        <button class="filter-btn active" id="scope-mine" onclick="setPartnerScope('mine')">My partners</button>
+        <button class="filter-btn"        id="scope-all"  onclick="setPartnerScope('all')">All partners</button>
+      </div>
+      <input class="filter-search" type="text" id="partnerSearch" placeholder="Search name, company, or code&hellip;" oninput="renderPartners()" />
+    </div>
+    <div id="partnerLoading" class="loading-state">
+      <div class="spinner"></div>
+      <span>Loading partners&hellip;</span>
+    </div>
+    <div class="rh-table-wrap" id="partnerTableWrap" style="display:none;">
+      <table class="rh-table">
+        <thead>
+          <tr>
+            <th>Partner Name</th>
+            <th>Company</th>
+            <th>Stage</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="partnerBody"></tbody>
+      </table>
+    </div>
+    <div id="partnerEmpty" class="empty-state" style="display:none;">
+      <div class="empty-icon">&#128269;</div>
+      <p id="partnerEmptyText">No partners match this search.</p>
+    </div>
+  </section>
+
+  <!-- ── SECTION 3: ADD A PARTNER ── -->
+  <section class="rh-card">
+    <div class="rh-card-head">
+      <div class="rh-card-title">Add a Partner</div>
+    </div>
+    <div class="rh-card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Partner Name *</label>
+          <input type="text" id="f_name" placeholder="First and last name" />
+        </div>
+        <div class="form-group">
+          <label>Company *</label>
+          <input type="text" id="f_company" list="companyList" placeholder="Start typing&hellip;" autocomplete="off" oninput="onCompanyInput()" />
+          <datalist id="companyList"></datalist>
+        </div>
+        <div class="form-group" id="grp_industry" style="display:none;">
+          <label>Industry *</label>
+          <select id="f_industry" aria-label="Industry">
+            <option value="">Select industry&hellip;</option>
+          </select>
+          <div class="field-note">New company &mdash; this will be created.</div>
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="f_title" placeholder="Owner, Manager&hellip;" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="f_email" placeholder="name@company.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="f_phone" placeholder="770-555-0100" />
+        </div>
+        <div class="form-group">
+          <label>Record Type</label>
+          <select id="f_recordType" aria-label="Record type">
+            <option value="Person" selected>Person</option>
+            <option value="Organization">Organization</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stage</label>
+          <select id="f_stage" aria-label="Stage"></select>
+        </div>
+        <div class="form-group full">
+          <button class="btn btn-primary" id="addPartnerBtn" onclick="submitPartner()">Add Partner</button>
+        </div>
+      </div>
+
+      <div class="rh-result" id="addResult">
+        <div class="rh-result-title" id="addResultTitle"></div>
+        <div id="addResultBody"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 4: MY REFERRALS ── -->
+  <section class="rh-card">
+    <div class="rh-card-head">
+      <div class="rh-card-title">My Referrals</div>
+      <div class="rh-card-spacer"></div>
+      <div class="record-count" id="referralCount">Loading&hellip;</div>
+    </div>
+    <div id="referralLoading" class="loading-state">
+      <div class="spinner"></div>
+      <span>Loading referrals&hellip;</span>
+    </div>
+    <div class="rh-table-wrap" id="referralTableWrap" style="display:none;">
+      <table class="rh-table">
+        <thead>
+          <tr>
+            <th>Received</th>
+            <th>Client</th>
+            <th>Partner</th>
+            <th>Coverage</th>
+            <th>Status</th>
+            <th>Intro Sent</th>
+          </tr>
+        </thead>
+        <tbody id="referralBody"></tbody>
+      </table>
+    </div>
+    <div id="referralEmpty" class="empty-state" style="display:none;">
+      <div class="empty-icon">&#128233;</div>
+      <p>No referrals yet.</p>
+    </div>
+  </section>
+
+</main>
+
+<p class="rh-disclosure">
+  This portal is protected by one shared team password &mdash; there is no individual login.
+  Anyone with the password can see every agent&rsquo;s partners and referrals, including yours.
+  Nothing here is private to you.
+</p>
+
+<!-- AGENT PICKER -->
+<div class="rh-picker" id="agentPicker">
+  <div class="rh-picker-box">
+    <div class="rh-picker-title">Who are you?</div>
+    <p class="rh-picker-sub">Pick your name so the hub shows your link, partners, and referrals. You can switch at any time from the header.</p>
+    <div class="rh-picker-grid" id="agentPickerGrid"></div>
+  </div>
+</div>
+
+<!-- Off-screen scratch node for QR rendering -->
+<div id="qrScratch"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  /* ═══════════════════════════════════════
+     CONFIGURATION
+  ═══════════════════════════════════════ */
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4xKO0W2QtG_97DWHevo6-lBM6zGNPblEt_rPB-r35KwpcqYVHT_3XzD6e6fQFx2SA6A/exec';
+  const SITE_BASE  = 'https://thescheiderichagency.com/refer/';
+
+  const AGENTS = [
+    { slug: 'mike-scheiderich', first: 'mike',     label: 'Mike'     },
+    { slug: 'crissy-shatzel',   first: 'crissy',   label: 'Crissy'   },
+    { slug: 'iris-salgado',     first: 'iris',     label: 'Iris'     },
+    { slug: 'mark-hill',        first: 'mark',     label: 'Mark'     },
+    { slug: 'scott-kesler',     first: 'scott',    label: 'Scott'    },
+    { slug: 'wendy-alaniz',     first: 'wendy',    label: 'Wendy'    },
+    { slug: 'jennifer-lawler',  first: 'jennifer', label: 'Jennifer' }
+  ];
+
+  const STAGE_MOUSE_PAD  = 'Stage 2 - Mouse Pad Complete';
+  const STAGE_DEFAULT    = 'Stage 1 - Identified & Profiled';
+
+  /* ═══════════════════════════════════════
+     STATE
+  ═══════════════════════════════════════ */
+  let currentAgent  = null;   // AGENTS entry
+  let allPartners   = [];     // normalized partner rows for the active scope
+  let allReferrals  = [];     // normalized referral rows
+  let partnerScope  = 'mine'; // 'mine' | 'all'
+  let companyNames  = [];     // raw company names for the datalist
+  let companyLookup = new Set();
+  let industryList  = [];
+  let stageList     = [];
+
+  /* ═══════════════════════════════════════
+     DATA LAYER — reads are JSONP, writes are no-cors POST.
+     A plain fetch read against Apps Script fails silently, so every
+     read injects a script tag with a callback parameter instead.
+  ═══════════════════════════════════════ */
+  function jsonp(params) {
+    return new Promise((resolve, reject) => {
+      let script = null;
+      let timer  = null;
+      const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
+
+      function cleanup() {
+        if (timer) clearTimeout(timer);
+        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        if (script && script.parentNode) script.remove();
+      }
+
+      try {
+        window[callbackName] = function (data) { cleanup(); resolve(data); };
+
+        const qs = Object.keys(params)
+          .filter(k => params[k] !== undefined && params[k] !== null && params[k] !== '')
+          .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+          .join('&');
+
+        script = document.createElement('script');
+        script.src = SCRIPT_URL + '?' + qs + '&callback=' + callbackName + '&t=' + Date.now();
+        script.onerror = () => { cleanup(); reject(new Error('Script load error')); };
+
+        timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 20000);
+        document.head.appendChild(script);
+      } catch (e) {
+        cleanup();
+        reject(e);
+      }
+    });
+  }
+
+  async function postToScript(payload) {
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      });
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSE NORMALIZATION
+     The Apps Script may hand back a bare array or wrap it in a
+     success envelope — accept either rather than guessing one shape.
+  ═══════════════════════════════════════ */
+  function unwrapList(res, extraKeys) {
+    if (!res) return [];
+    if (Array.isArray(res)) return res;
+    const keys = ['data', 'rows', 'result', 'items'].concat(extraKeys || []);
+    for (const k of keys) {
+      if (Array.isArray(res[k])) return res[k];
+    }
+    return [];
+  }
+
+  // First non-empty value among candidate key names (sheet headers vary in case/spacing)
+  function pick(obj, keys) {
+    if (!obj) return '';
+    for (const k of keys) {
+      if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
+        return String(obj[k]).trim();
+      }
+    }
+    // Fall back to a loose, case/space-insensitive header match
+    const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const wanted = keys.map(norm);
+    for (const actual of Object.keys(obj)) {
+      if (wanted.includes(norm(actual))) {
+        const v = obj[actual];
+        if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();
+      }
+    }
+    return '';
+  }
+
+  function normalizePartner(raw) {
+    return {
+      raw:     raw,
+      name:    pick(raw, ['name', 'partnerName', 'Partner Name', 'Name', 'fullName']),
+      company: pick(raw, ['company', 'Company', 'companyName', 'Company Name']),
+      stage:   pick(raw, ['stage', 'Stage', 'status', 'Status']),
+      code:    pick(raw, ['code', 'Code', 'partnerCode', 'Partner Code', 'referralCode']),
+      agent:   pick(raw, ['agentSlug', 'agent', 'Agent', 'Agent Slug', 'owner', 'Owner', 'producer', 'Producer'])
+    };
+  }
+
+  function normalizeReferral(raw) {
+    return {
+      raw:       raw,
+      received:  pick(raw, ['received', 'Received', 'receivedAt', 'Received At', 'date', 'Date', 'timestamp', 'Timestamp', 'submittedAt', 'Submitted At', 'createdAt']),
+      client:    pick(raw, ['client', 'Client', 'clientName', 'Client Name', 'name', 'Name']),
+      partner:   pick(raw, ['partner', 'Partner', 'partnerName', 'Partner Name', 'referredBy', 'Referred By']),
+      coverage:  pick(raw, ['coverage', 'Coverage', 'lineOfBusiness', 'Line of Business', 'product', 'Product']),
+      status:    pick(raw, ['status', 'Status', 'stage', 'Stage']),
+      introSent: pick(raw, ['introSent', 'Intro Sent', 'intro', 'Intro', 'introSentDate', 'Intro Sent Date'])
+    };
+  }
+
+  /* ═══════════════════════════════════════
+     IDENTITY
+  ═══════════════════════════════════════ */
+  function agentBySlug(slug) {
+    return AGENTS.find(a => a.slug === slug) || null;
+  }
+
+  // A partner row's owner may arrive as a slug, a first name, or a full
+  // name — resolve all three to the first name used in the referral URL.
+  function ownerFirstName(partner) {
+    const val = (partner.agent || '').toLowerCase().trim();
+    if (!val) return currentAgent ? currentAgent.first : '';
+    const bySlug = AGENTS.find(a => a.slug === val);
+    if (bySlug) return bySlug.first;
+    const firstToken = val.split(/[\s\-_.]+/)[0];
+    const byFirst = AGENTS.find(a => a.first === firstToken);
+    if (byFirst) return byFirst.first;
+    return firstToken || (currentAgent ? currentAgent.first : '');
+  }
+
+  function buildPickerGrid() {
+    const grid = document.getElementById('agentPickerGrid');
+    grid.innerHTML = AGENTS.map(a =>
+      `<button class="rh-picker-btn" onclick="chooseAgent('${a.slug}')">${escapeHtml(a.label)}</button>`
+    ).join('');
+  }
+
+  function openPicker()  { document.getElementById('agentPicker').classList.add('open'); }
+  function closePicker() { document.getElementById('agentPicker').classList.remove('open'); }
+
+  function chooseAgent(slug) {
+    const agent = agentBySlug(slug);
+    if (!agent) return;
+    currentAgent = agent;
+    try { localStorage.setItem('hubAgent', slug); } catch (e) { /* private mode — session only */ }
+    closePicker();
+    applyAgent();
+  }
+
+  function applyAgent() {
+    document.getElementById('agentChip').style.display = 'inline-flex';
+    document.getElementById('agentChipName').textContent = currentAgent.label;
+    document.getElementById('myLink').textContent = SITE_BASE + currentAgent.first;
+    hideAddResult();
+    refreshAll();
+  }
+
+  /* ═══════════════════════════════════════
+     LOADERS
+  ═══════════════════════════════════════ */
+  function refreshAll() {
+    if (!currentAgent) { openPicker(); return; }
+    loadPartners();
+    loadReferrals();
+    loadLists();
+    loadCompanies();
+  }
+
+  async function loadPartners() {
+    document.getElementById('partnerLoading').style.display  = 'flex';
+    document.getElementById('partnerTableWrap').style.display = 'none';
+    document.getElementById('partnerEmpty').style.display     = 'none';
+    document.getElementById('partnerCount').textContent       = 'Loading…';
+
+    try {
+      const params = { action: 'partners' };
+      if (partnerScope === 'mine') params.agent = currentAgent.slug;
+      const res = await jsonp(params);
+      allPartners = unwrapList(res, ['partners']).map(normalizePartner);
+      hideError();
+      renderPartners();
+    } catch (e) {
+      allPartners = [];
+      document.getElementById('partnerLoading').style.display = 'none';
+      document.getElementById('partnerCount').textContent     = 'Unavailable';
+      document.getElementById('partnerEmptyText').textContent = 'Could not load partners. Tap Refresh to try again.';
+      document.getElementById('partnerEmpty').style.display   = 'block';
+      showError('Unable to load partners. Check your connection and refresh.');
+    }
+  }
+
+  async function loadReferrals() {
+    document.getElementById('referralLoading').style.display   = 'flex';
+    document.getElementById('referralTableWrap').style.display = 'none';
+    document.getElementById('referralEmpty').style.display      = 'none';
+    document.getElementById('referralCount').textContent        = 'Loading…';
+
+    try {
+      const res = await jsonp({ action: 'referrals', agent: currentAgent.slug });
+      allReferrals = unwrapList(res, ['referrals']).map(normalizeReferral);
+      renderReferrals();
+    } catch (e) {
+      allReferrals = [];
+      document.getElementById('referralLoading').style.display = 'none';
+      document.getElementById('referralCount').textContent     = 'Unavailable';
+      document.getElementById('referralEmpty').style.display   = 'block';
+    }
+  }
+
+  async function loadLists() {
+    try {
+      const res = await jsonp({ action: 'lists' });
+      // Accept either { industries: [], stages: [] } or a nested data envelope
+      const src = (res && (res.data && !Array.isArray(res.data) ? res.data : res)) || {};
+      industryList = toStringList(src.industries || src.Industries || src.industry || []);
+      stageList    = toStringList(src.stages     || src.Stages     || src.stage    || []);
+      fillSelect('f_industry', industryList, '', 'Select industry…');
+      fillSelect('f_stage', stageList.length ? stageList : [STAGE_DEFAULT], STAGE_DEFAULT, null);
+    } catch (e) {
+      // Lists are the one thing we cannot invent — leave Stage with the
+      // documented default only, so an add still works.
+      fillSelect('f_industry', [], '', 'Industry list unavailable');
+      fillSelect('f_stage', [STAGE_DEFAULT], STAGE_DEFAULT, null);
+    }
+  }
+
+  async function loadCompanies() {
+    try {
+      const res = await jsonp({ action: 'companies' });
+      const list = unwrapList(res, ['companies']);
+      companyNames = toStringList(list.map(c =>
+        (c && typeof c === 'object') ? pick(c, ['name', 'company', 'Company', 'Company Name', 'companyName']) : c
+      ));
+      companyLookup = new Set(companyNames.map(c => c.toLowerCase()));
+      document.getElementById('companyList').innerHTML =
+        companyNames.map(c => `<option value="${escapeHtml(c)}"></option>`).join('');
+      onCompanyInput();
+    } catch (e) {
+      companyNames  = [];
+      companyLookup = new Set();
+      onCompanyInput();
+    }
+  }
+
+  function toStringList(v) {
+    if (!Array.isArray(v)) return [];
+    return v.map(x => (x === null || x === undefined) ? '' : String(x).trim())
+            .filter(x => x !== '');
+  }
+
+  function fillSelect(id, values, selected, placeholder) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let html = placeholder ? `<option value="">${escapeHtml(placeholder)}</option>` : '';
+    const vals = values.slice();
+    if (selected && !vals.some(v => v === selected)) vals.unshift(selected);
+    html += vals.map(v =>
+      `<option value="${escapeHtml(v)}"${v === selected ? ' selected' : ''}>${escapeHtml(v)}</option>`
+    ).join('');
+    el.innerHTML = html;
+  }
+
+  /* ═══════════════════════════════════════
+     PARTNERS — RENDER
+  ═══════════════════════════════════════ */
+  function setPartnerScope(scope) {
+    if (partnerScope === scope) return;
+    partnerScope = scope;
+    document.getElementById('scope-mine').classList.toggle('active', scope === 'mine');
+    document.getElementById('scope-all').classList.toggle('active',  scope === 'all');
+    loadPartners();
+  }
+
+  function renderPartners() {
+    const q = (document.getElementById('partnerSearch').value || '').toLowerCase().trim();
+
+    const filtered = q
+      ? allPartners.filter(p =>
+          (p.name + ' ' + p.company + ' ' + p.code).toLowerCase().includes(q))
+      : allPartners;
+
+    document.getElementById('partnerLoading').style.display = 'none';
+
+    const total = allPartners.length;
+    document.getElementById('partnerCount').textContent = q
+      ? `${filtered.length} of ${total} partner${total === 1 ? '' : 's'}`
+      : `${total} partner${total === 1 ? '' : 's'}`;
+
+    if (!filtered.length) {
+      document.getElementById('partnerTableWrap').style.display = 'none';
+      document.getElementById('partnerEmptyText').textContent = total
+        ? 'No partners match this search.'
+        : (partnerScope === 'mine' ? 'No partners yet — add one below.' : 'No partners found.');
+      document.getElementById('partnerEmpty').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('partnerEmpty').style.display     = 'none';
+    document.getElementById('partnerTableWrap').style.display = 'block';
+
+    document.getElementById('partnerBody').innerHTML = filtered.map((p, i) => {
+      const idx      = allPartners.indexOf(p);
+      const done     = p.stage === STAGE_MOUSE_PAD;
+      const link     = partnerLink(p);
+      const hasCode  = !!p.code;
+
+      const stageCell = p.stage
+        ? `<span class="badge ${done ? 'badge-complete' : 'badge-stage'}">${escapeHtml(p.stage)}</span>`
+        : '<span class="rh-muted-cell">no stage</span>';
+
+      const actions = hasCode
+        ? `<button class="rh-rowbtn" onclick="copyText('${jsAttr(link)}', 'Partner link copied')">Copy link</button>
+           <button class="rh-rowbtn" onclick="downloadQr('${jsAttr(link)}', 'qr-${jsAttr(p.code)}.png')">Download QR</button>
+           ${done
+             ? '<span class="badge badge-complete">Mouse pad done</span>'
+             : `<button class="rh-rowbtn primary" onclick="markMousePad(${idx})">Mark Mouse Pad Complete</button>`}`
+        : '<span class="rh-muted-cell">no code yet</span>';
+
+      return `
+        <tr>
+          <td data-label="Partner"><span class="rh-name">${escapeHtml(p.name) || '&mdash;'}</span></td>
+          <td data-label="Company">${escapeHtml(p.company) || '&mdash;'}</td>
+          <td data-label="Stage">${stageCell}</td>
+          <td data-label="Actions"><div class="rh-actions">${actions}</div></td>
+        </tr>`;
+    }).join('');
+  }
+
+  function partnerLink(p) {
+    return SITE_BASE + ownerFirstName(p) + '?p=' + encodeURIComponent(p.code);
+  }
+
+  async function markMousePad(idx) {
+    const p = allPartners[idx];
+    if (!p || !p.code) return;
+
+    // Optimistic — the write is no-cors so we cannot read a confirmation.
+    // Re-fetch shortly after to reconcile with what the sheet actually has.
+    const previous = p.stage;
+    p.stage = STAGE_MOUSE_PAD;
+    renderPartners();
+
+    const res = await postToScript({ action: 'setStage', code: p.code, stage: STAGE_MOUSE_PAD });
+    if (!res.success) {
+      p.stage = previous;
+      renderPartners();
+      showToast('Could not update stage. Try again.', 'error');
+      return;
+    }
+    showToast('Marked mouse pad complete', 'success');
+    setTimeout(loadPartners, 1500);
+  }
+
+  /* ═══════════════════════════════════════
+     REFERRALS — RENDER
+  ═══════════════════════════════════════ */
+  function renderReferrals() {
+    document.getElementById('referralLoading').style.display = 'none';
+
+    const sorted = allReferrals.slice().sort((a, b) => {
+      const da = Date.parse(a.received), db = Date.parse(b.received);
+      if (isNaN(da) && isNaN(db)) return 0;
+      if (isNaN(da)) return 1;
+      if (isNaN(db)) return -1;
+      return db - da;
+    });
+
+    document.getElementById('referralCount').textContent =
+      `${sorted.length} referral${sorted.length === 1 ? '' : 's'}`;
+
+    if (!sorted.length) {
+      document.getElementById('referralTableWrap').style.display = 'none';
+      document.getElementById('referralEmpty').style.display     = 'block';
+      return;
+    }
+
+    document.getElementById('referralEmpty').style.display     = 'none';
+    document.getElementById('referralTableWrap').style.display = 'block';
+
+    document.getElementById('referralBody').innerHTML = sorted.map(r => {
+      // A blank Intro Sent means no warm handoff happened — say so plainly
+      // so the agent expects a cold call.
+      const intro = r.introSent
+        ? escapeHtml(fmtDate(r.introSent))
+        : '<span class="rh-muted-cell">not introduced</span>';
+      const status = r.status
+        ? `<span class="badge badge-neutral">${escapeHtml(r.status)}</span>`
+        : '<span class="rh-muted-cell">&mdash;</span>';
+      return `
+        <tr>
+          <td data-label="Received">${escapeHtml(fmtDate(r.received)) || '&mdash;'}</td>
+          <td data-label="Client"><span class="rh-name">${escapeHtml(r.client) || '&mdash;'}</span></td>
+          <td data-label="Partner">${escapeHtml(r.partner) || '&mdash;'}</td>
+          <td data-label="Coverage">${escapeHtml(r.coverage) || '&mdash;'}</td>
+          <td data-label="Status">${status}</td>
+          <td data-label="Intro Sent">${intro}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  function fmtDate(v) {
+    if (!v) return '';
+    const t = Date.parse(v);
+    if (isNaN(t)) return String(v);
+    return new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  /* ═══════════════════════════════════════
+     ADD A PARTNER
+  ═══════════════════════════════════════ */
+  // New-company detection: the typed value is compared case-insensitively
+  // against the ?action=companies list. No match = a company that does not
+  // exist yet, so Industry becomes required.
+  function isNewCompany() {
+    const val = (document.getElementById('f_company').value || '').trim().toLowerCase();
+    if (!val) return false;
+    return !companyLookup.has(val);
+  }
+
+  function onCompanyInput() {
+    const grp = document.getElementById('grp_industry');
+    if (!grp) return;
+    grp.style.display = isNewCompany() ? 'flex' : 'none';
+    if (!isNewCompany()) document.getElementById('f_industry').classList.remove('err');
+  }
+
+  async function submitPartner() {
+    const name       = document.getElementById('f_name').value.trim();
+    const company    = document.getElementById('f_company').value.trim();
+    const industry   = document.getElementById('f_industry').value;
+    const email      = document.getElementById('f_email').value.trim();
+    const phone      = document.getElementById('f_phone').value.trim();
+    const title      = document.getElementById('f_title').value.trim();
+    const recordType = document.getElementById('f_recordType').value;
+    const stage      = document.getElementById('f_stage').value || STAGE_DEFAULT;
+    const newCompany = isNewCompany();
+
+    ['f_name', 'f_company', 'f_industry'].forEach(id =>
+      document.getElementById(id).classList.remove('err'));
+
+    let valid = true;
+    if (!name)    { document.getElementById('f_name').classList.add('err');    valid = false; }
+    if (!company) { document.getElementById('f_company').classList.add('err'); valid = false; }
+    if (newCompany && !industry) { document.getElementById('f_industry').classList.add('err'); valid = false; }
+    if (!valid) { showToast('Fill in the highlighted fields.', 'error'); return; }
+
+    const btn = document.getElementById('addPartnerBtn');
+    btn.disabled = true;
+    btn.textContent = 'Adding…';
+    hideAddResult();
+
+    const res = await postToScript({
+      action: 'addPartner',
+      name, company, industry, email, phone, title, recordType, stage,
+      agentSlug: currentAgent.slug
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Add Partner';
+
+    if (!res.success) {
+      showToast('Could not add partner. Try again.', 'error');
+      return;
+    }
+
+    showToast('Partner added', 'success');
+    resetAddForm();
+    lookupNewPartner(name);
+  }
+
+  // The write is mode:'no-cors', so the response — and the generated
+  // code — is unreadable. Re-fetch the list and match on name instead.
+  // Two attempts, then hand the agent the row's own copy button.
+  async function lookupNewPartner(name) {
+    showAddResult('Finding your new partner…',
+      '<span class="rh-muted-cell">Waiting for the sheet to catch up.</span>');
+
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await wait(2000);
+      let rows = [];
+      try {
+        const res = await jsonp({ action: 'partners', agent: currentAgent.slug });
+        rows = unwrapList(res, ['partners']).map(normalizePartner);
+      } catch (e) {
+        rows = [];
+      }
+      if (rows.length) {
+        allPartners = partnerScope === 'mine' ? rows : allPartners;
+        if (partnerScope === 'mine') renderPartners();
+      }
+      const match = rows.find(p => p.name.toLowerCase() === name.toLowerCase() && p.code);
+      if (match) { showNewPartnerLink(match); return; }
+    }
+
+    // Still not found — show the list filtered to that name so the agent
+    // can pull the code from the row once it appears.
+    setPartnerScope('mine');
+    document.getElementById('partnerSearch').value = name;
+    renderPartners();
+    showAddResult(
+      'Code not back yet',
+      `<p>${escapeHtml(name)} was saved, but the code has not come back yet. ` +
+      'The partner list above is filtered to that name &mdash; use the row&rsquo;s ' +
+      '<strong>Copy link</strong> button once it appears. Tap Refresh if the row is still missing.</p>'
+    );
+    try { document.getElementById('partnerSearch').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+  }
+
+  function showNewPartnerLink(p) {
+    const link = partnerLink(p);
+    showAddResult(
+      `${p.name} added`,
+      `<div class="rh-link-row">
+         <div class="rh-link">${escapeHtml(link)}</div>
+         <button class="btn btn-primary" onclick="copyText('${jsAttr(link)}', 'Partner link copied')">Copy Link</button>
+         <button class="btn btn-outline" onclick="downloadQr('${jsAttr(link)}', 'qr-${jsAttr(p.code)}.png')">Download QR</button>
+       </div>`
+    );
+  }
+
+  function showAddResult(title, bodyHtml) {
+    document.getElementById('addResultTitle').textContent = title;
+    document.getElementById('addResultBody').innerHTML    = bodyHtml;
+    document.getElementById('addResult').classList.add('visible');
+  }
+  function hideAddResult() {
+    document.getElementById('addResult').classList.remove('visible');
+  }
+
+  function resetAddForm() {
+    ['f_name', 'f_company', 'f_email', 'f_phone', 'f_title'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('err');
+    });
+    document.getElementById('f_industry').value   = '';
+    document.getElementById('f_industry').classList.remove('err');
+    document.getElementById('f_recordType').value = 'Person';
+    const stageEl = document.getElementById('f_stage');
+    if ([].some.call(stageEl.options, o => o.value === STAGE_DEFAULT)) stageEl.value = STAGE_DEFAULT;
+    onCompanyInput();
+  }
+
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  /* ═══════════════════════════════════════
+     LINK + QR HELPERS
+     Every clipboard and QR path is wrapped — a failure here shows a
+     toast and never takes the page down.
+  ═══════════════════════════════════════ */
+  function copyMyLink() {
+    if (!currentAgent) return;
+    copyText(SITE_BASE + currentAgent.first, 'Your link is copied');
+  }
+
+  async function copyText(text, successMsg) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        showToast(successMsg || 'Copied', 'success');
+        return;
+      }
+      throw new Error('clipboard unavailable');
+    } catch (e) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        showToast(ok ? (successMsg || 'Copied') : 'Copy blocked — select the link and copy manually.',
+                  ok ? 'success' : 'error');
+      } catch (e2) {
+        showToast('Copy blocked — select the link and copy manually.', 'error');
+      }
+    }
+  }
+
+  function makeQrDataUrl(text) {
+    return new Promise((resolve, reject) => {
+      try {
+        if (typeof QRCode === 'undefined') { reject(new Error('QR library not loaded')); return; }
+        const holder = document.getElementById('qrScratch');
+        holder.innerHTML = '';
+        // 1000x1000 with high error correction — big enough to print.
+        new QRCode(holder, {
+          text: text,
+          width: 1000,
+          height: 1000,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        setTimeout(() => {
+          try {
+            const canvas = holder.querySelector('canvas');
+            if (canvas) { resolve(canvas.toDataURL('image/png')); return; }
+            const img = holder.querySelector('img');
+            if (img && img.src && img.src.indexOf('data:') === 0) { resolve(img.src); return; }
+            reject(new Error('QR render produced nothing'));
+          } catch (inner) { reject(inner); }
+        }, 80);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  async function downloadQr(text, filename) {
+    try {
+      const dataUrl = await makeQrDataUrl(text);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('QR code downloaded', 'success');
+    } catch (e) {
+      showToast('Could not generate the QR code. Refresh and try again.', 'error');
+    }
+  }
+
+  function downloadMyQr() {
+    if (!currentAgent) return;
+    downloadQr(SITE_BASE + currentAgent.first, `qr-${currentAgent.first}.png`);
+  }
+
+  /* ═══════════════════════════════════════
+     UTILITIES
+  ═══════════════════════════════════════ */
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Safe for a single-quoted inline handler attribute
+  function jsAttr(str) {
+    return String(str === null || str === undefined ? '' : str)
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '\\u003C');
+  }
+
+  function showError(msg) {
+    document.getElementById('errorBannerText').textContent = msg;
+    document.getElementById('errorBanner').classList.add('visible');
+  }
+  function hideError() {
+    document.getElementById('errorBanner').classList.remove('visible');
+  }
+
+  function showToast(msg, type) {
+    const el = document.createElement('div');
+    el.className = `toast toast-${type || 'success'}`;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+
+  /* ═══════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════ */
+  (function init() {
+    buildPickerGrid();
+    fillSelect('f_stage', [STAGE_DEFAULT], STAGE_DEFAULT, null);
+
+    let saved = null;
+    try { saved = localStorage.getItem('hubAgent'); } catch (e) { saved = null; }
+
+    const agent = saved ? agentBySlug(saved) : null;
+    if (agent) {
+      currentAgent = agent;
+      applyAgent();
+    } else {
+      openPicker();
+    }
+  })();
+</script>
+</body>
+</html>
