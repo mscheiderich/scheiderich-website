@@ -370,6 +370,38 @@
     .rh-rowbtn:hover { background: var(--navy-lt); color: var(--navy); border-color: var(--navy); }
     .rh-rowbtn.primary { border-color: var(--orange); color: var(--orange); }
     .rh-rowbtn.primary:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .rh-rowbtn:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* Per-row stage picker — sits in the Stage column in place of the old
+       badge + button pair, which keeps the row to two controls. */
+    .rh-stage-select {
+      height: 28px;
+      max-width: 210px;
+      width: 100%;
+      padding: 0 6px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--bg-w);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+      transition: border-color .15s, opacity .15s;
+    }
+    .rh-stage-select:hover:not(:disabled) { border-color: var(--navy); }
+    .rh-stage-select:focus { border-color: var(--navy); }
+    .rh-stage-select:disabled { opacity: .55; cursor: progress; }
+    .rh-stage-status {
+      display: block;
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 3px;
+      color: var(--muted);
+    }
+    .rh-stage-status.ok   { color: #15803d; font-weight: 600; }
+    .rh-stage-status.bad  { color: #dc2626; font-weight: 600; }
 
     .badge {
       display: inline-block;
@@ -582,6 +614,8 @@
         <button class="filter-btn"        id="scope-all"  onclick="setPartnerScope('all')">All partners</button>
       </div>
       <input class="filter-search" type="text" id="partnerSearch" placeholder="Search name, company, or code&hellip;" oninput="renderPartners()" />
+      <div class="rh-card-spacer"></div>
+      <button class="filter-btn" onclick="jumpToAdd()">+ Add a partner</button>
     </div>
     <div id="partnerLoading" class="loading-state">
       <div class="spinner"></div>
@@ -607,7 +641,7 @@
   </section>
 
   <!-- ── SECTION 3: ADD A PARTNER ── -->
-  <section class="rh-card">
+  <section class="rh-card" id="addSection">
     <div class="rh-card-head">
       <div class="rh-card-title">Add a Partner</div>
     </div>
@@ -734,7 +768,6 @@
     { slug: 'jennifer-lawler',  first: 'jennifer', label: 'Jennifer' }
   ];
 
-  const STAGE_MOUSE_PAD  = 'Stage 2 - Mouse Pad Complete';
   const STAGE_DEFAULT    = 'Stage 1 - Identified & Profiled';
 
   /* ═══════════════════════════════════════
@@ -1053,21 +1086,23 @@
     }
   }
 
-  // Stage options are taken from the stage values the partner sheet is
-  // actually using, not from ?action=lists — that action returns a
-  // different, unused vocabulary ("Prospect", "Contacted", …) that no
-  // partner row carries, and writing one of those values would strand
-  // the record outside the Stage 1–6 pipeline. lists.stages is kept as
-  // a fallback so this self-corrects if the Apps Script is fixed.
-  function refreshStageOptions() {
-    const seen = [];
-    allPartners.forEach(p => {
-      if (/^Stage\s*\d/.test(p.stage) && seen.indexOf(p.stage) === -1) seen.push(p.stage);
-    });
-    seen.sort();
-
-    let opts = seen.length ? seen : stageList.slice();
+  // ?action=lists column B is the authority for stage names — it now
+  // returns the same vocabulary the partner sheet uses. Falling back to
+  // the stages present in the loaded rows keeps the page working if that
+  // read fails; nothing here is hardcoded but the last-resort default.
+  function stageOptions() {
+    let opts = stageList.slice();
+    if (!opts.length) {
+      allPartners.forEach(p => {
+        if (p.stage && opts.indexOf(p.stage) === -1) opts.push(p.stage);
+      });
+    }
     if (!opts.length) opts = [STAGE_DEFAULT];
+    return opts;
+  }
+
+  function refreshStageOptions() {
+    const opts = stageOptions();
     if (opts.indexOf(STAGE_DEFAULT) === -1) opts.unshift(STAGE_DEFAULT);
 
     const el   = document.getElementById('f_stage');
@@ -1160,22 +1195,24 @@
 
     document.getElementById('partnerBody').innerHTML = filtered.map((p, i) => {
       const idx      = allPartners.indexOf(p);
-      const done     = p.stage === STAGE_MOUSE_PAD;
       const link     = partnerLink(p);
       // Needs both a code and a resolvable owner — the owner's first name
       // is the /refer/{name} segment the link is built on.
       const hasCode  = !!p.code && !!ownerFirstName(p);
 
-      const stageCell = p.stage
-        ? `<span class="badge ${done ? 'badge-complete' : 'badge-stage'}">${escapeHtml(p.stage)}</span>`
-        : '<span class="rh-muted-cell">no stage</span>';
+      // Any stage, forward or backward — going cold and landing in
+      // Problems are real transitions, so nothing is filtered out here.
+      const stageCell = p.code
+        ? `<select class="rh-stage-select" id="stage-sel-${idx}" aria-label="Stage for ${escapeHtml(p.name)}"
+                   onchange="onStageChange(${idx}, this)">${stageOptionsHtml(p.stage)}</select>
+           <span class="rh-stage-status" id="stage-status-${idx}"></span>`
+        : (p.stage
+            ? `<span class="badge badge-stage">${escapeHtml(p.stage)}</span>`
+            : '<span class="rh-muted-cell">no stage</span>');
 
       const actions = hasCode
         ? `<button class="rh-rowbtn" onclick="copyText('${jsAttr(link)}', 'Partner link copied')">Copy link</button>
-           <button class="rh-rowbtn" onclick="downloadQr('${jsAttr(link)}', 'qr-${jsAttr(p.code)}.png')">Download QR</button>
-           ${done
-             ? '<span class="badge badge-complete">Mouse pad done</span>'
-             : `<button class="rh-rowbtn primary" onclick="markMousePad(${idx})">Mark Mouse Pad Complete</button>`}`
+           <button class="rh-rowbtn" onclick="downloadQr('${jsAttr(link)}', 'qr-${jsAttr(p.code)}.png')">Download QR</button>`
         : '<span class="rh-muted-cell">no code yet</span>';
 
       return `
@@ -1192,25 +1229,100 @@
     return SITE_BASE + ownerFirstName(p) + '?p=' + encodeURIComponent(p.code);
   }
 
-  async function markMousePad(idx) {
+  // Stage options for a row. The row's own stage is always present even if
+  // it is not in the list, so the select never silently misreports the
+  // sheet by falling back to option zero.
+  function stageOptionsHtml(current) {
+    const opts = stageOptions().slice();
+    if (current && opts.indexOf(current) === -1) opts.unshift(current);
+    if (!current) opts.unshift('');
+    return opts.map(v =>
+      `<option value="${escapeHtml(v)}"${v === current ? ' selected' : ''}>${escapeHtml(v) || '— no stage —'}</option>`
+    ).join('');
+  }
+
+  // Re-reads one partner from the sheet. This is the only trustworthy
+  // confirmation available: no-cors makes every POST response opaque, so
+  // a write is not "done" until a read agrees with it.
+  async function fetchPartnerByCode(code, ownerSlug) {
+    const params = { action: 'partners' };
+    if (ownerSlug && agentBySlug(ownerSlug)) params.agent = ownerSlug;
+    const res  = await jsonp(params);
+    const rows = unwrapList(res, ['partners']).map(normalizePartner).filter(notHeaderEcho);
+    return rows.find(p => p.code === code) || null;
+  }
+
+  async function onStageChange(idx, selectEl) {
     const p = allPartners[idx];
     if (!p || !p.code) return;
 
-    // Optimistic — the write is no-cors so we cannot read a confirmation.
-    // Re-fetch shortly after to reconcile with what the sheet actually has.
-    const previous = p.stage;
-    p.stage = STAGE_MOUSE_PAD;
-    renderPartners();
+    const requested = selectEl.value;
+    const previous  = p.stage;
+    if (requested === previous) return;
 
-    const res = await postToScript({ action: 'setStage', code: p.code, stage: STAGE_MOUSE_PAD });
+    const statusEl = document.getElementById('stage-status-' + idx);
+    const setStatus = (text, cls) => {
+      if (!statusEl) return;
+      statusEl.textContent = text;
+      statusEl.className   = 'rh-stage-status' + (cls ? ' ' + cls : '');
+    };
+
+    // Pending — no success claimed yet.
+    selectEl.disabled = true;
+    setStatus('Saving…', '');
+
+    const res = await postToScript({
+      action: 'setStage',
+      code:   p.code,
+      stage:  requested,
+      source: 'hub'      // a human chose this, not automation
+    });
+
     if (!res.success) {
-      p.stage = previous;
-      renderPartners();
-      showToast('Could not update stage. Try again.', 'error');
+      selectEl.value    = previous;
+      selectEl.disabled = false;
+      setStatus('Not saved — network error.', 'bad');
+      showToast('Could not reach the server. Stage unchanged.', 'error');
       return;
     }
-    showToast('Marked mouse pad complete', 'success');
-    setTimeout(loadPartners, 1500);
+
+    // The POST looked fine, but an opaque response proves nothing.
+    // Ask the sheet what it actually holds.
+    await wait(1500);
+    setStatus('Confirming…', '');
+
+    let actual = null;
+    try {
+      actual = await fetchPartnerByCode(p.code, p.agent);
+    } catch (e) {
+      selectEl.value    = previous;
+      selectEl.disabled = false;
+      setStatus('Could not confirm — tap Refresh.', 'bad');
+      showToast('Could not confirm the change. Tap Refresh to see the current stage.', 'error');
+      return;
+    }
+
+    selectEl.disabled = false;
+
+    if (!actual) {
+      selectEl.value = previous;
+      setStatus('Could not confirm — tap Refresh.', 'bad');
+      showToast('Could not find that partner to confirm the change.', 'error');
+      return;
+    }
+
+    // Trust the sheet over the request, whatever it says.
+    p.stage        = actual.stage;
+    selectEl.value = actual.stage;
+
+    if (actual.stage === requested) {
+      setStatus('Saved.', 'ok');
+      showToast(`Stage set to ${actual.stage}`, 'success');
+    } else {
+      // The server refused — most often the forward-only guard.
+      setStatus(`Unchanged — still ${actual.stage}.`, 'bad');
+      showToast(`Stage unchanged — the server kept ${actual.stage}.`, 'error');
+    }
   }
 
   /* ═══════════════════════════════════════
@@ -1350,18 +1462,23 @@
       agentSlug: assign          // the assignee owns it, not whoever is viewing
     });
 
-    btn.disabled = false;
-    btn.textContent = 'Add Partner';
-
     if (!res.success) {
-      showToast('Could not add partner. Try again.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Add Partner';
+      showToast('Could not reach the server. Nothing was saved.', 'error');
       return;
     }
 
-    const owner = agentBySlug(assign);
-    showToast(`Partner added for ${owner ? owner.label : assign}`, 'success');
-    resetAddForm();
-    lookupNewPartner(name, assign, knownCodes);
+    // The POST is opaque, so nothing is announced yet. lookupNewPartner
+    // confirms against the sheet and owns all the messaging from here.
+    btn.textContent = 'Confirming…';
+    const confirmed = await lookupNewPartner(name, assign, knownCodes);
+    btn.disabled = false;
+    btn.textContent = 'Add Partner';
+
+    // Only clear the form once the sheet has the row. On a refusal the
+    // entries stay put so nothing typed is lost.
+    if (confirmed) resetAddForm();
   }
 
   async function snapshotCodes(agentSlug) {
@@ -1382,9 +1499,11 @@
   // Searches the ASSIGNED agent's list — not the viewer's. Looking in the
   // wrong agent's partners would never find the row when adding on
   // someone else's behalf.
+  // Returns the confirmed partner, or null if the sheet never showed it.
+  // A null return means "not confirmed" — never "saved but slow".
   async function lookupNewPartner(name, assignSlug, knownCodes) {
-    showAddResult('Finding your new partner…',
-      '<span class="rh-muted-cell">Waiting for the sheet to catch up.</span>');
+    showAddResult('Confirming with the sheet…',
+      '<span class="rh-muted-cell">Checking that the partner was actually saved.</span>');
 
     // True only when the table on screen is already showing this agent's
     // own list — otherwise the fetched rows must not overwrite it.
@@ -1409,7 +1528,12 @@
       const match = rows.find(p =>
         p.name.toLowerCase() === target && p.code &&
         !(knownCodes && knownCodes.has(p.code)));
-      if (match) { showNewPartnerLink(match); return; }
+      if (match) {
+        const owner = agentBySlug(assignSlug);
+        showNewPartnerLink(match);
+        showToast(`Partner added for ${owner ? owner.label : assignSlug}`, 'success');
+        return match;
+      }
     }
 
     // Still not found — show the list filtered to that name so the agent
@@ -1420,13 +1544,17 @@
     await showPartnerScope(displaysAssignee ? 'mine' : 'all');
     const owner = agentBySlug(assignSlug);
     showAddResult(
-      'Code not back yet',
-      `<p>${escapeHtml(name)} was saved to ${escapeHtml(owner ? owner.label : assignSlug)}, ` +
-      'but the code has not come back yet. The partner list above is filtered to that name ' +
-      '&mdash; use the row&rsquo;s <strong>Copy link</strong> button once it appears. ' +
-      'Tap Refresh if the row is still missing.</p>'
+      'Not confirmed',
+      `<p>The sheet does not show a new partner named <strong>${escapeHtml(name)}</strong> ` +
+      `under ${escapeHtml(owner ? owner.label : assignSlug)}. Either the server refused the ` +
+      'add, or it is still catching up.</p>' +
+      '<p>Your entries are still in the form. The partner list above is filtered to that name ' +
+      '&mdash; <strong>check it before adding again</strong> so you do not create a duplicate. ' +
+      'Tap Refresh to re-check.</p>'
     );
+    showToast('Add not confirmed — check the list before retrying.', 'error');
     try { document.getElementById('partnerSearch').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    return null;
   }
 
   function showNewPartnerLink(p) {
@@ -1469,6 +1597,20 @@
   }
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function jumpToAdd() {
+    const section = document.getElementById('addSection');
+    try {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+      section.scrollIntoView();
+    }
+    // preventScroll keeps the focus call from snapping past the animation
+    setTimeout(() => {
+      try { document.getElementById('f_assign').focus({ preventScroll: true }); }
+      catch (e) { try { document.getElementById('f_assign').focus(); } catch (e2) {} }
+    }, 420);
+  }
 
   /* ═══════════════════════════════════════
      LINK + QR HELPERS
