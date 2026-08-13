@@ -398,47 +398,50 @@
     .rh-result.visible { display: block; }
     .rh-result-title { font-weight: 700; color: var(--navy); margin-bottom: 8px; }
 
-    /* Agent picker overlay */
-    .rh-picker {
-      position: fixed; inset: 0;
-      background: rgba(15,28,45,.62);
-      z-index: 1000;
+    /* Inline agent bar — shown when no agent is set (direct navigation)
+       or when the header "switch" link is used. Never blocks the page. */
+    .rh-agentbar {
       display: none;
-      align-items: center; justify-content: center;
-      padding: 20px;
-    }
-    .rh-picker.open { display: flex; }
-    .rh-picker-box {
-      background: var(--bg-w);
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      background: var(--navy-lt);
+      border: 1px solid #c7d5e6;
       border-radius: var(--r-lg);
-      box-shadow: 0 20px 60px rgba(15,28,45,.3);
-      width: 100%;
-      max-width: 460px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 24px;
     }
-    .rh-picker-title {
-      font-family: 'Lora', serif;
-      font-size: 19px;
+    .rh-agentbar.open { display: flex; }
+    .rh-agentbar label {
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .06em;
     }
-    .rh-picker-sub { font-size: 13px; color: var(--muted); margin: 6px 0 18px; line-height: 1.5; }
-    .rh-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .rh-picker-btn {
-      height: 46px;
-      border-radius: var(--r);
+    .rh-agentbar select {
+      height: 34px;
+      min-width: 200px;
       border: 1.5px solid var(--border);
-      background: var(--bg-w);
-      color: var(--navy);
+      border-radius: 6px;
+      padding: 0 10px;
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, border-color .15s, color .15s;
+      font-size: 13.5px;
+      color: var(--text);
+      background: var(--bg-w);
+      outline: none;
     }
-    .rh-picker-btn:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .rh-agentbar select:focus { border-color: var(--navy); }
+    .rh-agentbar-note { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+
+    /* Muted variant of .field-note — used for the "belongs to" hint */
+    .field-note.rh-note-muted {
+      background: var(--bg-s);
+      color: var(--muted);
+    }
+
+    .rh-link.rh-link-empty { color: var(--muted); font-weight: 400; font-style: italic; }
+    .btn:disabled, .filter-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .filter-btn:disabled:hover { border-color: var(--border); color: var(--muted); background: transparent; }
 
     /* Shared-access disclosure */
     .rh-disclosure {
@@ -499,7 +502,7 @@
     }
 
     @media (max-width: 420px) {
-      .rh-picker-grid { grid-template-columns: 1fr; }
+      .rh-agentbar select { width: 100%; min-width: 0; }
     }
   </style>
 
@@ -526,7 +529,7 @@
     <div class="header-actions">
       <span class="rh-agent-chip" id="agentChip" style="display:none;">
         <span id="agentChipName"></span>
-        <button class="rh-switch" onclick="openPicker()">switch</button>
+        <button class="rh-switch" onclick="showAgentBar()">switch</button>
       </span>
       <button class="btn btn-outline-w" onclick="refreshAll()">&#8635; Refresh</button>
     </div>
@@ -540,6 +543,17 @@
 
 <main class="rh-main">
 
+  <!-- ── INLINE AGENT SELECTOR (no blocking gate) ── -->
+  <div class="rh-agentbar" id="agentBar">
+    <label for="agentBarSelect">Your name</label>
+    <select id="agentBarSelect" onchange="onAgentBarChange()">
+      <option value="">Select your name&hellip;</option>
+    </select>
+    <span class="rh-agentbar-note" id="agentBarNote">
+      Pick your name to see your link and your referrals. You can browse all partners without selecting.
+    </span>
+  </div>
+
   <!-- ── SECTION 1: MY LINK ── -->
   <section class="rh-card">
     <div class="rh-card-head">
@@ -549,8 +563,8 @@
       <p class="rh-card-sub">Your personal referral link. Anyone who uses it is credited to you.</p>
       <div class="rh-link-row">
         <div class="rh-link" id="myLink">&mdash;</div>
-        <button class="btn btn-primary" onclick="copyMyLink()">Copy Link</button>
-        <button class="btn btn-outline" onclick="downloadMyQr()">Download QR</button>
+        <button class="btn btn-primary" id="copyLinkBtn" onclick="copyMyLink()">Copy Link</button>
+        <button class="btn btn-outline" id="qrLinkBtn" onclick="downloadMyQr()">Download QR</button>
       </div>
     </div>
   </section>
@@ -599,6 +613,13 @@
     </div>
     <div class="rh-card-body">
       <div class="form-grid">
+        <!-- Ownership first, before any typing — a partner with no owner
+             never shows up in anyone's My-partners list. -->
+        <div class="form-group full">
+          <label>Assign To *</label>
+          <select id="f_assign" aria-label="Assign to" onchange="onAssignChange()"></select>
+          <div class="field-note rh-note-muted" id="assignNote" style="display:none;"></div>
+        </div>
         <div class="form-group">
           <label>Partner Name *</label>
           <input type="text" id="f_name" placeholder="First and last name" />
@@ -653,7 +674,7 @@
   <!-- ── SECTION 4: MY REFERRALS ── -->
   <section class="rh-card">
     <div class="rh-card-head">
-      <div class="rh-card-title">My Referrals</div>
+      <div class="rh-card-title" id="referralTitle">My Referrals</div>
       <div class="rh-card-spacer"></div>
       <div class="record-count" id="referralCount">Loading&hellip;</div>
     </div>
@@ -678,7 +699,7 @@
     </div>
     <div id="referralEmpty" class="empty-state" style="display:none;">
       <div class="empty-icon">&#128233;</div>
-      <p>No referrals yet.</p>
+      <p id="referralEmptyText">No referrals yet.</p>
     </div>
   </section>
 
@@ -689,15 +710,6 @@
   Anyone with the password can see every agent&rsquo;s partners and referrals, including yours.
   Nothing here is private to you.
 </p>
-
-<!-- AGENT PICKER -->
-<div class="rh-picker" id="agentPicker">
-  <div class="rh-picker-box">
-    <div class="rh-picker-title">Who are you?</div>
-    <p class="rh-picker-sub">Pick your name so the hub shows your link, partners, and referrals. You can switch at any time from the header.</p>
-    <div class="rh-picker-grid" id="agentPickerGrid"></div>
-  </div>
-</div>
 
 <!-- Off-screen scratch node for QR rendering -->
 <div id="qrScratch"></div>
@@ -835,6 +847,14 @@
     };
   }
 
+  // The unfiltered ?action=partners read echoes the sheet's own header row
+  // back as the first data row ({code:"Code", name:"Partner Name",
+  // owner:"Owner Agent", …}). Without this it renders as a real partner in
+  // "All partners" and inflates the count by one.
+  function notHeaderEcho(p) {
+    return !(p.name === 'Partner Name' || p.code === 'Code' || p.agent === 'Owner Agent');
+  }
+
   function normalizeReferral(raw) {
     return {
       raw:       raw,
@@ -867,38 +887,93 @@
     return firstToken || (currentAgent ? currentAgent.first : '');
   }
 
-  function buildPickerGrid() {
-    const grid = document.getElementById('agentPickerGrid');
-    grid.innerHTML = AGENTS.map(a =>
-      `<button class="rh-picker-btn" onclick="chooseAgent('${a.slug}')">${escapeHtml(a.label)}</button>`
-    ).join('');
+  // The dashboard card hands the agent off in ?agent=<slug>, the same
+  // mechanism Hero Profiler uses. A fresh hand-off always wins over the
+  // stored value; it is then persisted so a reload keeps the identity,
+  // and stripped from the URL so it cannot re-pin an old agent after a
+  // mid-session switch.
+  function adoptAgentFromUrl() {
+    try {
+      const raw = new URLSearchParams(window.location.search).get('agent');
+      if (!raw) return null;
+      const agent = agentBySlug(raw.trim().toLowerCase());
+      try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+      return agent;
+    } catch (e) {
+      return null;
+    }
   }
 
-  function openPicker()  { document.getElementById('agentPicker').classList.add('open'); }
-  function closePicker() { document.getElementById('agentPicker').classList.remove('open'); }
-
-  function chooseAgent(slug) {
-    const agent = agentBySlug(slug);
-    if (!agent) return;
-    currentAgent = agent;
-    try { localStorage.setItem('hubAgent', slug); } catch (e) { /* private mode — session only */ }
-    closePicker();
-    applyAgent();
+  function buildAgentBar() {
+    const sel = document.getElementById('agentBarSelect');
+    sel.innerHTML = '<option value="">Select your name…</option>' +
+      AGENTS.map(a => `<option value="${escapeHtml(a.slug)}">${escapeHtml(a.label)}</option>`).join('');
   }
 
-  function applyAgent() {
-    document.getElementById('agentChip').style.display = 'inline-flex';
-    document.getElementById('agentChipName').textContent = currentAgent.label;
-    document.getElementById('myLink').textContent = SITE_BASE + currentAgent.first;
+  function buildAssignSelect() {
+    const sel = document.getElementById('f_assign');
+    sel.innerHTML = '<option value="">Select agent…</option>' +
+      AGENTS.map(a => `<option value="${escapeHtml(a.slug)}">${escapeHtml(a.label)}</option>`).join('');
+  }
+
+  function onAgentBarChange() {
+    const slug = document.getElementById('agentBarSelect').value;
+    setAgent(slug ? agentBySlug(slug) : null);
+  }
+
+  function showAgentBar() {
+    document.getElementById('agentBar').classList.add('open');
+    document.getElementById('agentBarSelect').focus();
+  }
+
+  function setAgent(agent) {
+    currentAgent = agent || null;
+    try {
+      if (currentAgent) localStorage.setItem('hubAgent', currentAgent.slug);
+      else localStorage.removeItem('hubAgent');
+    } catch (e) { /* private mode — session only */ }
     hideAddResult();
+    applyIdentity();
     refreshAll();
+  }
+
+  // Reflects the current identity everywhere. Works with currentAgent
+  // null — nothing here may leave the page unusable.
+  function applyIdentity() {
+    const has = !!currentAgent;
+
+    document.getElementById('agentChip').style.display = has ? 'inline-flex' : 'none';
+    if (has) document.getElementById('agentChipName').textContent = currentAgent.label;
+
+    document.getElementById('agentBar').classList.toggle('open', !has);
+    document.getElementById('agentBarSelect').value = has ? currentAgent.slug : '';
+
+    const linkEl = document.getElementById('myLink');
+    linkEl.textContent = has ? SITE_BASE + currentAgent.first
+                             : 'Select your name to see your personal referral link.';
+    linkEl.classList.toggle('rh-link-empty', !has);
+    document.getElementById('copyLinkBtn').disabled = !has;
+    document.getElementById('qrLinkBtn').disabled   = !has;
+
+    // "My partners" needs an identity; "All partners" never does.
+    const mineBtn = document.getElementById('scope-mine');
+    mineBtn.disabled = !has;
+    mineBtn.title = has ? '' : 'Select your name to filter to your own partners';
+    if (!has) partnerScope = 'all';
+    mineBtn.classList.toggle('active', partnerScope === 'mine');
+    document.getElementById('scope-all').classList.toggle('active', partnerScope === 'all');
+
+    document.getElementById('referralTitle').textContent = has ? 'My Referrals' : 'Referrals';
+
+    // Default the assignee to whoever is selected — the common case.
+    document.getElementById('f_assign').value = has ? currentAgent.slug : '';
+    onAssignChange();
   }
 
   /* ═══════════════════════════════════════
      LOADERS
   ═══════════════════════════════════════ */
   function refreshAll() {
-    if (!currentAgent) { openPicker(); return; }
     loadPartners();
     loadReferrals();
     loadLists();
@@ -913,10 +988,11 @@
 
     try {
       const params = { action: 'partners' };
-      if (partnerScope === 'mine') params.agent = currentAgent.slug;
+      if (partnerScope === 'mine' && currentAgent) params.agent = currentAgent.slug;
       const res = await jsonp(params);
-      allPartners = unwrapList(res, ['partners']).map(normalizePartner);
+      allPartners = unwrapList(res, ['partners']).map(normalizePartner).filter(notHeaderEcho);
       hideError();
+      refreshStageOptions();   // stage vocabulary comes from the live rows
       renderPartners();
     } catch (e) {
       allPartners = [];
@@ -934,6 +1010,18 @@
     document.getElementById('referralEmpty').style.display      = 'none';
     document.getElementById('referralCount').textContent        = 'Loading…';
 
+    // Referrals are inherently per-agent — with no identity there is
+    // nothing meaningful to fetch, so say so instead of spinning.
+    if (!currentAgent) {
+      allReferrals = [];
+      document.getElementById('referralLoading').style.display = 'none';
+      document.getElementById('referralCount').textContent     = '';
+      document.getElementById('referralEmptyText').textContent =
+        'Select your name above to see referrals sent to you.';
+      document.getElementById('referralEmpty').style.display   = 'block';
+      return;
+    }
+
     try {
       const res = await jsonp({ action: 'referrals', agent: currentAgent.slug });
       allReferrals = unwrapList(res, ['referrals']).map(normalizeReferral);
@@ -942,6 +1030,8 @@
       allReferrals = [];
       document.getElementById('referralLoading').style.display = 'none';
       document.getElementById('referralCount').textContent     = 'Unavailable';
+      document.getElementById('referralEmptyText').textContent =
+        'Could not load referrals. Tap Refresh to try again.';
       document.getElementById('referralEmpty').style.display   = 'block';
     }
   }
@@ -954,13 +1044,35 @@
       industryList = toStringList(src.industries || src.Industries || src.industry || []);
       stageList    = toStringList(src.stages     || src.Stages     || src.stage    || []);
       fillSelect('f_industry', industryList, '', 'Select industry…');
-      fillSelect('f_stage', stageList.length ? stageList : [STAGE_DEFAULT], STAGE_DEFAULT, null);
+      refreshStageOptions();
     } catch (e) {
       // Lists are the one thing we cannot invent — leave Stage with the
       // documented default only, so an add still works.
       fillSelect('f_industry', [], '', 'Industry list unavailable');
-      fillSelect('f_stage', [STAGE_DEFAULT], STAGE_DEFAULT, null);
+      refreshStageOptions();
     }
+  }
+
+  // Stage options are taken from the stage values the partner sheet is
+  // actually using, not from ?action=lists — that action returns a
+  // different, unused vocabulary ("Prospect", "Contacted", …) that no
+  // partner row carries, and writing one of those values would strand
+  // the record outside the Stage 1–6 pipeline. lists.stages is kept as
+  // a fallback so this self-corrects if the Apps Script is fixed.
+  function refreshStageOptions() {
+    const seen = [];
+    allPartners.forEach(p => {
+      if (/^Stage\s*\d/.test(p.stage) && seen.indexOf(p.stage) === -1) seen.push(p.stage);
+    });
+    seen.sort();
+
+    let opts = seen.length ? seen : stageList.slice();
+    if (!opts.length) opts = [STAGE_DEFAULT];
+    if (opts.indexOf(STAGE_DEFAULT) === -1) opts.unshift(STAGE_DEFAULT);
+
+    const el   = document.getElementById('f_stage');
+    const keep = el.value;
+    fillSelect('f_stage', opts, opts.indexOf(keep) !== -1 ? keep : STAGE_DEFAULT, null);
   }
 
   async function loadCompanies() {
@@ -969,7 +1081,7 @@
       const list = unwrapList(res, ['companies']);
       companyNames = toStringList(list.map(c =>
         (c && typeof c === 'object') ? pick(c, ['name', 'company', 'Company', 'Company Name', 'companyName']) : c
-      ));
+      )).filter(n => n !== 'Company Name');   // drop the echoed sheet header
       companyLookup = new Set(companyNames.map(c => c.toLowerCase()));
       document.getElementById('companyList').innerHTML =
         companyNames.map(c => `<option value="${escapeHtml(c)}"></option>`).join('');
@@ -1002,12 +1114,21 @@
   /* ═══════════════════════════════════════
      PARTNERS — RENDER
   ═══════════════════════════════════════ */
+  // Kept exactly as-is by design: Mike needs every agent's partners, and
+  // whoever produces the mouse pads needs to pull any code.
   function setPartnerScope(scope) {
     if (partnerScope === scope) return;
+    if (scope === 'mine' && !currentAgent) return;
+    return showPartnerScope(scope);
+  }
+
+  // Same switch, but unconditional — used by the post-add lookup fallback,
+  // which must be able to re-select the scope it is already on.
+  function showPartnerScope(scope) {
     partnerScope = scope;
     document.getElementById('scope-mine').classList.toggle('active', scope === 'mine');
     document.getElementById('scope-all').classList.toggle('active',  scope === 'all');
-    loadPartners();
+    return loadPartners();
   }
 
   function renderPartners() {
@@ -1041,7 +1162,9 @@
       const idx      = allPartners.indexOf(p);
       const done     = p.stage === STAGE_MOUSE_PAD;
       const link     = partnerLink(p);
-      const hasCode  = !!p.code;
+      // Needs both a code and a resolvable owner — the owner's first name
+      // is the /refer/{name} segment the link is built on.
+      const hasCode  = !!p.code && !!ownerFirstName(p);
 
       const stageCell = p.stage
         ? `<span class="badge ${done ? 'badge-complete' : 'badge-stage'}">${escapeHtml(p.stage)}</span>`
@@ -1109,6 +1232,7 @@
 
     if (!sorted.length) {
       document.getElementById('referralTableWrap').style.display = 'none';
+      document.getElementById('referralEmptyText').textContent   = 'No referrals yet.';
       document.getElementById('referralEmpty').style.display     = 'block';
       return;
     }
@@ -1163,6 +1287,23 @@
     if (!isNewCompany()) document.getElementById('f_industry').classList.remove('err');
   }
 
+  // Surfaces ownership when it is not the obvious default, so adding on
+  // someone else's behalf is a deliberate act rather than an accident.
+  function onAssignChange() {
+    const slug  = document.getElementById('f_assign').value;
+    const note  = document.getElementById('assignNote');
+    const agent = slug ? agentBySlug(slug) : null;
+
+    const differs = agent && (!currentAgent || agent.slug !== currentAgent.slug);
+    if (differs) {
+      note.textContent = `This partner will belong to ${agent.label}.`;
+      note.style.display = 'block';
+    } else {
+      note.style.display = 'none';
+    }
+    if (slug) document.getElementById('f_assign').classList.remove('err');
+  }
+
   async function submitPartner() {
     const name       = document.getElementById('f_name').value.trim();
     const company    = document.getElementById('f_company').value.trim();
@@ -1172,26 +1313,41 @@
     const title      = document.getElementById('f_title').value.trim();
     const recordType = document.getElementById('f_recordType').value;
     const stage      = document.getElementById('f_stage').value || STAGE_DEFAULT;
+    const assign     = document.getElementById('f_assign').value;
     const newCompany = isNewCompany();
 
-    ['f_name', 'f_company', 'f_industry'].forEach(id =>
+    ['f_name', 'f_company', 'f_industry', 'f_assign'].forEach(id =>
       document.getElementById(id).classList.remove('err'));
 
     let valid = true;
+    // An unowned partner appears in nobody's My-partners list and quietly
+    // goes missing, so this is a hard stop rather than a silent default.
+    if (!assign)  { document.getElementById('f_assign').classList.add('err');  valid = false; }
     if (!name)    { document.getElementById('f_name').classList.add('err');    valid = false; }
     if (!company) { document.getElementById('f_company').classList.add('err'); valid = false; }
     if (newCompany && !industry) { document.getElementById('f_industry').classList.add('err'); valid = false; }
-    if (!valid) { showToast('Fill in the highlighted fields.', 'error'); return; }
+    if (!valid) {
+      showToast(assign ? 'Fill in the highlighted fields.' : 'Choose who this partner belongs to.', 'error');
+      return;
+    }
 
     const btn = document.getElementById('addPartnerBtn');
     btn.disabled = true;
     btn.textContent = 'Adding…';
     hideAddResult();
 
+    // Snapshot the assignee's existing codes BEFORE writing. Partner names
+    // are not unique — the live sheet has several agents holding two rows
+    // under one name — so matching the new row on name alone can return an
+    // older record, and that wrong code would end up printed on a mouse
+    // pad. Knowing which codes existed beforehand makes the new row
+    // identifiable. If this read fails we simply fall back to name-only.
+    const knownCodes = await snapshotCodes(assign);
+
     const res = await postToScript({
       action: 'addPartner',
       name, company, industry, email, phone, title, recordType, stage,
-      agentSlug: currentAgent.slug
+      agentSlug: assign          // the assignee owns it, not whoever is viewing
     });
 
     btn.disabled = false;
@@ -1202,45 +1358,73 @@
       return;
     }
 
-    showToast('Partner added', 'success');
+    const owner = agentBySlug(assign);
+    showToast(`Partner added for ${owner ? owner.label : assign}`, 'success');
     resetAddForm();
-    lookupNewPartner(name);
+    lookupNewPartner(name, assign, knownCodes);
+  }
+
+  async function snapshotCodes(agentSlug) {
+    const codes = new Set();
+    try {
+      const res = await jsonp({ action: 'partners', agent: agentSlug });
+      unwrapList(res, ['partners']).map(normalizePartner).filter(notHeaderEcho)
+        .forEach(p => { if (p.code) codes.add(p.code); });
+    } catch (e) {
+      // Empty set — lookup degrades to matching on name only
+    }
+    return codes;
   }
 
   // The write is mode:'no-cors', so the response — and the generated
   // code — is unreadable. Re-fetch the list and match on name instead.
   // Two attempts, then hand the agent the row's own copy button.
-  async function lookupNewPartner(name) {
+  // Searches the ASSIGNED agent's list — not the viewer's. Looking in the
+  // wrong agent's partners would never find the row when adding on
+  // someone else's behalf.
+  async function lookupNewPartner(name, assignSlug, knownCodes) {
     showAddResult('Finding your new partner…',
       '<span class="rh-muted-cell">Waiting for the sheet to catch up.</span>');
+
+    // True only when the table on screen is already showing this agent's
+    // own list — otherwise the fetched rows must not overwrite it.
+    const displaysAssignee = partnerScope === 'mine'
+      && currentAgent && currentAgent.slug === assignSlug;
 
     for (let attempt = 0; attempt < 2; attempt++) {
       await wait(2000);
       let rows = [];
       try {
-        const res = await jsonp({ action: 'partners', agent: currentAgent.slug });
-        rows = unwrapList(res, ['partners']).map(normalizePartner);
+        const res = await jsonp({ action: 'partners', agent: assignSlug });
+        rows = unwrapList(res, ['partners']).map(normalizePartner).filter(notHeaderEcho);
       } catch (e) {
         rows = [];
       }
-      if (rows.length) {
-        allPartners = partnerScope === 'mine' ? rows : allPartners;
-        if (partnerScope === 'mine') renderPartners();
+      if (rows.length && displaysAssignee) {
+        allPartners = rows;
+        renderPartners();
       }
-      const match = rows.find(p => p.name.toLowerCase() === name.toLowerCase() && p.code);
+      // Right name AND a code that did not exist before this add.
+      const target = name.toLowerCase();
+      const match = rows.find(p =>
+        p.name.toLowerCase() === target && p.code &&
+        !(knownCodes && knownCodes.has(p.code)));
       if (match) { showNewPartnerLink(match); return; }
     }
 
     // Still not found — show the list filtered to that name so the agent
-    // can pull the code from the row once it appears.
-    setPartnerScope('mine');
+    // can pull the code from the row once it appears. Fall back to "All
+    // partners" when the assignee is someone else, since "My partners"
+    // would never contain the new row.
     document.getElementById('partnerSearch').value = name;
-    renderPartners();
+    await showPartnerScope(displaysAssignee ? 'mine' : 'all');
+    const owner = agentBySlug(assignSlug);
     showAddResult(
       'Code not back yet',
-      `<p>${escapeHtml(name)} was saved, but the code has not come back yet. ` +
-      'The partner list above is filtered to that name &mdash; use the row&rsquo;s ' +
-      '<strong>Copy link</strong> button once it appears. Tap Refresh if the row is still missing.</p>'
+      `<p>${escapeHtml(name)} was saved to ${escapeHtml(owner ? owner.label : assignSlug)}, ` +
+      'but the code has not come back yet. The partner list above is filtered to that name ' +
+      '&mdash; use the row&rsquo;s <strong>Copy link</strong> button once it appears. ' +
+      'Tap Refresh if the row is still missing.</p>'
     );
     try { document.getElementById('partnerSearch').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
   }
@@ -1277,6 +1461,10 @@
     document.getElementById('f_recordType').value = 'Person';
     const stageEl = document.getElementById('f_stage');
     if ([].some.call(stageEl.options, o => o.value === STAGE_DEFAULT)) stageEl.value = STAGE_DEFAULT;
+    // Ownership falls back to whoever is viewing, not to the last assignee
+    document.getElementById('f_assign').value = currentAgent ? currentAgent.slug : '';
+    document.getElementById('f_assign').classList.remove('err');
+    onAssignChange();
     onCompanyInput();
   }
 
@@ -1411,19 +1599,29 @@
      INIT
   ═══════════════════════════════════════ */
   (function init() {
-    buildPickerGrid();
+    buildAgentBar();
+    buildAssignSelect();
     fillSelect('f_stage', [STAGE_DEFAULT], STAGE_DEFAULT, null);
 
-    let saved = null;
-    try { saved = localStorage.getItem('hubAgent'); } catch (e) { saved = null; }
-
-    const agent = saved ? agentBySlug(saved) : null;
-    if (agent) {
-      currentAgent = agent;
-      applyAgent();
-    } else {
-      openPicker();
+    // A fresh hand-off from the dashboard card beats the stored value.
+    let agent = adoptAgentFromUrl();
+    if (!agent) {
+      let saved = null;
+      try { saved = localStorage.getItem('hubAgent'); } catch (e) { saved = null; }
+      agent = saved ? agentBySlug(saved) : null;
     }
+
+    currentAgent = agent || null;
+    try {
+      if (currentAgent) localStorage.setItem('hubAgent', currentAgent.slug);
+    } catch (e) { /* private mode — session only */ }
+
+    // No agent is a supported state, not an error: the page loads with
+    // All partners so mouse-pad codes are still pullable.
+    if (!currentAgent) partnerScope = 'all';
+
+    applyIdentity();
+    refreshAll();
   })();
 </script>
 </body>

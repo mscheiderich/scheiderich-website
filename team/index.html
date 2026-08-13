@@ -375,7 +375,17 @@
       <span class="tool-card-badge badge-live">Live</span>
       <div class="tool-card-title">Referral Hub</div>
       <div class="tool-card-desc">Grab your referral link and QR code, add referral partners, pull any partner's mouse pad code, and see the referrals that came in to you.</div>
-      <a class="tool-card-btn btn-orange" href="/team/referral-hub/">Open Referral Hub</a>
+      <select class="agent-select" id="hubAgentSelect" aria-label="Select your name for the Referral Hub" onchange="onHubAgentChange()">
+        <option value="" disabled selected>Select your name...</option>
+        <option value="mike-scheiderich">Mike Scheiderich</option>
+        <option value="crissy-shatzel">Crissy Shatzel</option>
+        <option value="iris-salgado">Iris Salgado</option>
+        <option value="mark-hill">Mark Hill</option>
+        <option value="scott-kesler">Scott Kesler</option>
+        <option value="wendy-alaniz">Wendy Alaniz</option>
+        <option value="jennifer-lawler">Jennifer Lawler</option>
+      </select>
+      <button class="tool-card-btn btn-disabled" id="hubLaunchBtn" disabled onclick="launchReferralHub()">Open Referral Hub →</button>
     </div>
 
     <!-- Card 4: Sales & Referral Tracker -->
@@ -425,6 +435,35 @@
 </footer>
 
 <script>
+  /* ── REFERRAL HUB AGENT SELECTOR ──
+     Mirrors the Hero Profiler selector below: same markup, same classes,
+     same ?agent= hand-off. Two differences, both deliberate:
+       1. The slug is also written to localStorage under 'hubAgent' so the
+          Hub survives a reload. Hero Profiler's key is NOT reused — its
+          list carries agents (Natalie, Matt, Tym) who own no referral
+          partners, and an unrecognized slug would break routing.
+       2. Navigation is same-tab, matching every other internal tool card
+          here, rather than Hero Profiler's new-tab window.open (it points
+          at an external subdomain). */
+  function onHubAgentChange() {
+    const sel = document.getElementById('hubAgentSelect');
+    const btn = document.getElementById('hubLaunchBtn');
+    if (sel.value) {
+      btn.disabled = false;
+      btn.className = 'tool-card-btn btn-orange';
+    } else {
+      btn.disabled = true;
+      btn.className = 'tool-card-btn btn-disabled';
+    }
+  }
+
+  function launchReferralHub() {
+    const sel = document.getElementById('hubAgentSelect');
+    if (!sel.value) return;
+    try { localStorage.setItem('hubAgent', sel.value); } catch (e) { /* private mode — URL still carries it */ }
+    window.location.href = '/team/referral-hub/?agent=' + encodeURIComponent(sel.value);
+  }
+
   /* ── HERO PROFILER AGENT SELECTOR ── */
   function onHeroAgentChange() {
     const sel = document.getElementById('heroAgentSelect');
