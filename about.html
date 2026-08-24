@@ -37,7 +37,7 @@
         {"@type":"Person","name":"Mark Hill","jobTitle":"Licensed Insurance Agent"},
         {"@type":"Person","name":"Iris Salgado","jobTitle":"Licensed Insurance Agent"},
         {"@type":"Person","name":"Wendy Alaniz","jobTitle":"Licensed Insurance Agent"},
-        {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Sales Producer"},
+        {"@type":"Person","name":"Jennifer Lawler","jobTitle":"Licensed Insurance Agent"},
         {"@type":"Person","name":"Natalie Fowler","jobTitle":"Director of Marketing"}
       ]
     }
@@ -149,8 +149,8 @@
       transition: box-shadow .25s, transform .25s;
       display: flex; flex-direction: column;
     }
-    /* Hover belongs to linked cards only — Jennifer's and Natalie's cards are
-       plain <div> and must not suggest they are clickable. */
+    /* Hover belongs to linked cards only — Natalie's card is a
+       plain <div> and must not suggest it is clickable. */
     a.team-card:hover { box-shadow: var(--sh-md); transform: translateY(-4px); }
     /* ── Linked team cards ──
        The card element itself is the <a>, so `.team-grid > .team-card` still
@@ -553,21 +553,21 @@
       </a>
 
       <!-- Jennifer -->
-      <div class="team-card">
+      <a class="team-card" href="/agents/jennifer-lawler.html">
         <div class="team-photo">
           <img src="jennifer-lawler.png"
-               alt="Jennifer Lawler, licensed sales producer at The Scheiderich Agency" />
+               alt="Jennifer Lawler, licensed insurance agent at The Scheiderich Agency" />
         </div>
         <div class="team-body">
           <div class="team-name">Jennifer Lawler</div>
-          <div class="team-title">Licensed Sales Producer</div>
+          <div class="team-title">Licensed Insurance Agent</div>
           <p class="team-bio">Jennifer brings a strong background in customer service and psychology to the agency. She is committed to the client experience, making sure people feel heard and supported at every step. She is known for her warm, attentive manner and for explaining coverage clearly so clients understand exactly what they are getting.</p>
           <div class="team-loc">
             <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Natalie -->
       <div class="team-card">

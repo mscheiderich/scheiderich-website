@@ -1,26 +1,3 @@
-<!--
-  Referral partner page — NOT for consumers, NOT indexed, NOT in sitemap.xml.
-  Audience is the ~50 Nimble referral partners. Reached via a coded link
-  (?p=partner-code). Backend is Apps Script -> Referrals sheet, not Formspree.
-
-  ═══════════════════════════════════════════════════════════════════════════
-  HELD — DO NOT DISTRIBUTE THIS LINK YET
-
-  Jennifer Lawler is LICENSED but her Allstate appointment has NOT cleared.
-  Project compliance rule: an unappointed producer may not be presented as able
-  to quote or bind coverage. The same note is on /agents/jennifer-lawler.html.
-
-  This page is therefore worded so referrals ROUTE to Jennifer while quoting and
-  binding are attributed to an appointed agent at the agency. Do not hand
-  /refer/jennifer to partners until the appointment clears.
-
-  WHEN IT CLEARS, revisit together:
-    1. this page's turnaround table and disclaimer, which currently say the
-       agency issues the binder
-    2. the hero line, which says she coordinates rather than binds
-    3. /agents/jennifer-lawler.html — robots, sitemap, and team-card links
-  ═══════════════════════════════════════════════════════════════════════════
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -285,7 +262,7 @@
       <!-- The ONLY photo element on this page. Its position at both sizes is
            handled in CSS — grid column on desktop, source order on mobile. -->
       <div class="rf-hero-photo">
-        <img src="/jennifer-lawler.png" alt="Jennifer Lawler, licensed sales producer at The Scheiderich Agency in Buford, Georgia" />
+        <img src="/jennifer-lawler.png" alt="Jennifer Lawler, licensed insurance agent at The Scheiderich Agency in Buford, Georgia" />
       </div>
 
       <div class="rf-hero-text">
@@ -293,7 +270,7 @@
         <h1 id="rf-h1">Refer a client to Jennifer</h1>
         <p class="rf-promise">The details the lender checks are right the first time.</p>
         <p class="rf-hero-body">
-          Jennifer is precise and detail-focused, which matters most in the places a closing actually stalls — the mortgagee clause, the loan number, the spelling of a name on a binder. She coordinates the file from the moment you send it; coverage is issued by an appointed agent at the agency.
+          Jennifer is precise and detail-focused, which matters most in the places a closing actually stalls — the mortgagee clause, the loan number, the spelling of a name on a binder. She takes the file from the moment you send it — quoting, binding, and following it through to closing.
         </p>
         <div class="rf-hero-btns">
           <a href="#rf-form-h2" class="btn btn-primary">Refer a client</a>
@@ -336,12 +313,12 @@
             <tr><th scope="row">Referral received by 3:00 PM, business day</th><td>Binder same day</td></tr>
             <tr><th scope="row">Received after 3:00 PM</th><td>Binder before noon the next business day</td></tr>
             <tr><th scope="row">Revisions</th><td>Same day</td></tr>
-            <tr><th scope="row">Who issues the binder</th><td>An appointed agent at the agency</td></tr>
+            <tr><th scope="row">If Jennifer is unavailable</th><td>Wendy or Crissy picks it up</td></tr>
           </tbody>
         </table>
       </div>
       <p class="rf-disclaimer">
-        Jennifer coordinates referrals; quoting and binding are carried out by an appointed agent at the agency. Turnaround times depend on receiving complete client information and are not a guarantee of coverage or of a closing timeline.
+        Turnaround times depend on receiving complete client information and are not a guarantee of coverage or of a closing timeline.
       </p>
     </div>
   </div>
@@ -456,7 +433,7 @@
     <div class="rf-wide">
       <span class="rf-label">Referral</span>
       <h2 class="rf-h2" id="rf-form-h2">Send a referral to Jennifer</h2>
-      <p class="rf-sub">About a minute. Jennifer picks it up and coordinates it from there.</p>
+      <p class="rf-sub">About a minute. Jennifer picks it up from there.</p>
 
       <div class="rf-form-card">
         <div class="rf-known" id="rf-known">
@@ -543,7 +520,7 @@
     <div class="rf-narrow">
       <div class="rf-done-badge">&#10003;</div>
       <h2 class="rf-done-h" id="rf-done-h">Referral received</h2>
-      <p class="rf-done-lead">The agency will have a quote back to you <strong id="rf-turnaround"></strong>.</p>
+      <p class="rf-done-lead">Jennifer will have a quote back to you <strong id="rf-turnaround"></strong>.</p>
 
       <div class="rf-intro-card">
         <h3>Introduce your client</h3>
@@ -778,13 +755,13 @@
     var closingSentence = d.closingDate ? " They're closing on " + prettyDate(d.closingDate) + '.' : '';
     return 'Hi ' + first + ',\n\n' +
       'I wanted to introduce you to ' + AGENT_NAME + ' at The Scheiderich Agency in Buford. ' +
-      "Jennifer coordinates homeowners insurance for a number of my clients at The Scheiderich Agency. She is meticulous about the details lenders check, and the agency turns the binder around quickly." + '\n\n' +
+      "Jennifer handles homeowners insurance for a number of my clients at The Scheiderich Agency. She is meticulous about the details lenders check and turns the binder around quickly." + '\n\n' +
       'Jennifer, meet ' + (d.clientName || '').trim() + '.' + closingSentence + '\n\n' +
       "I'll let you two take it from here.\n\n" +
       (d.partnerName || '').trim();
   }
 
-  /* Two sentences from the CURRENT message, plus Mike's number. */
+  /* Two sentences from the CURRENT message, plus the agency number. */
   function smsFromCurrent(bodyText) {
     var flat = (bodyText || '').replace(/\s+/g, ' ').trim();
     var sentences = flat.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 2);
