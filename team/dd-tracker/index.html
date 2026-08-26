@@ -19,6 +19,15 @@
       --text:     #1c2330;
       --muted:    #5f6b79;
       --border:   #dedad4;
+      /* Client-modal contrast set — solid states, no pastels. */
+      --modal-body:   #e8e5df;
+      --card-quiet:   #ddd9d1;
+      --card-bd:      #b9b3a8;
+      --solid-yes:    #1c6b46;
+      --solid-no:     #9e3324;
+      --solid-neutral:#5f5d57;
+      --solid-pending:#9a600d;
+      --on-solid:     #ffffff;
       --r:        8px;
       --r-lg:     12px;
       --sh-sm:    0 1px 4px rgba(30,49,72,.07);
@@ -377,6 +386,8 @@
     }
     .modal-close:hover { background: var(--border); color: var(--text); }
     .modal-body { padding: 20px 24px; }
+    /* Only the card layout gets the recessed body; the other modals keep white. */
+    .modal-wide .modal-body { background: var(--modal-body); }
     .modal-footer {
       display: flex; align-items: center; justify-content: space-between;
       padding: 16px 24px 20px;
@@ -420,7 +431,7 @@
       flex: 1;
       height: 36px;
       border-radius: 6px;
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--card-bd);
       background: var(--bg-w);
       color: var(--muted);
       font-family: 'DM Sans', sans-serif;
@@ -429,8 +440,11 @@
       cursor: pointer;
       transition: background .15s, color .15s, border-color .15s;
     }
-    .toggle-opt.yes { background: #dcfce7; color: #15803d; border-color: #86efac; }
-    .toggle-opt.no  { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+    /* Selected states are solid. Border kept transparent so the box never resizes.
+       .no = genuinely outstanding, .neutral = "No" is simply the answer. */
+    .toggle-opt.yes     { background: var(--solid-yes);     color: var(--on-solid); border-color: transparent; }
+    .toggle-opt.no      { background: var(--solid-no);      color: var(--on-solid); border-color: transparent; }
+    .toggle-opt.neutral { background: var(--solid-neutral); color: var(--on-solid); border-color: transparent; }
 
     .status-display {
       height: 36px;
@@ -613,40 +627,51 @@
        actionable workflows in a 2x2 between them. Collapses to one column
        below 760px, stacking in DOM order.
     ═══════════════════════════════════════ */
-    .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
     .fcard {
       background: var(--bg-w);
-      border: 1px solid var(--border);
+      border: 1px solid var(--card-bd);
       border-radius: 12px;
       padding: 14px 16px;
+      overflow: hidden;          /* clips the header band to the rounded top corners */
     }
-    /* Context, not tasks — a quieter surface so the four workflow cards lead. */
-    .fcard-quiet { background: var(--bg); }
+    /* Context, not tasks — recessed so the four white workflow cards sit forward. */
+    .fcard-quiet { background: var(--card-quiet); }
     .fcard-full  { grid-column: 1 / -1; }
 
+    /* Workflow card header — a solid navy band, full-bleed to the card edges. */
     .fcard-head {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 12px;
+      background: var(--navy);
+      color: var(--on-solid);
+      margin: -14px -16px 14px;
+      padding: 10px 16px;
+    }
+    /* Quiet cards keep a plain header — navy on the card, no band. */
+    .fcard-quiet .fcard-head {
+      background: none;
+      color: var(--navy);
+      margin: 0 0 12px;
+      padding: 0;
     }
     .fcard-icon  { font-size: 14px; line-height: 1; }
     .fcard-title {
       font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
+      font-weight: 600;
+      color: inherit;
       text-transform: uppercase;
       letter-spacing: .06em;
     }
     /* Chips sit hard right on the header row. */
     .fcard-chips { margin-left: auto; display: flex; align-items: center; gap: 6px; }
 
-    /* Owner chip — deliberately not a completion badge, so it reads as a name. */
+    /* Owner chip — deliberately not a completion chip, so it reads as a name. */
     .fcard-owner {
       padding: 2px 9px;
       border-radius: 20px;
-      border: 1px solid var(--border);
       background: var(--navy-lt);
       color: var(--navy);
       font-size: 10.5px;
@@ -654,6 +679,25 @@
       letter-spacing: .04em;
       white-space: nowrap;
     }
+
+    /* Completion chips — modal only. Deliberately NOT .badge, which the table
+       rows and household member pills use and which must stay untouched. */
+    .chip {
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      white-space: nowrap;
+      color: var(--on-solid);
+    }
+    .chip-neutral { background: var(--solid-neutral); }
+    .chip-pending { background: var(--solid-pending); }
+    .chip-done    { background: var(--solid-yes); }
+
+    /* Labels and field borders hold up against the darker card surfaces. */
+    .fcard label { color: var(--navy); }
+    .fcard input, .fcard select, .fcard textarea { border-color: var(--card-bd); }
 
     /* Stacked controls inside a workflow card. */
     .fcard-body { display: flex; flex-direction: column; gap: 12px; }
@@ -874,7 +918,7 @@
             <span class="fcard-icon">&#128663;</span>
             <span class="fcard-title">Defensive driving</span>
             <span class="fcard-chips">
-              <span class="badge badge-removed" id="chip-dd">Doesn&#8217;t apply</span>
+              <span class="chip chip-neutral" id="chip-dd">Doesn&#8217;t apply</span>
             </span>
           </div>
           <div class="fcard-body">
@@ -905,7 +949,7 @@
             <span class="fcard-icon">&#127891;</span>
             <span class="fcard-title">Good student</span>
             <span class="fcard-chips">
-              <span class="badge badge-removed" id="chip-gs">Doesn&#8217;t apply</span>
+              <span class="chip chip-neutral" id="chip-gs">Doesn&#8217;t apply</span>
             </span>
           </div>
           <div class="fcard-body">
@@ -935,7 +979,7 @@
             <span class="fcard-icon">&#128222;</span>
             <span class="fcard-title">Agent follow-up</span>
             <span class="fcard-chips">
-              <span class="badge badge-pending" id="chip-followup">0 of 2 done</span>
+              <span class="chip chip-pending" id="chip-followup">0 of 2 done</span>
             </span>
           </div>
           <div class="fcard-body">
@@ -967,7 +1011,7 @@
             <span class="fcard-title">Life insurance</span>
             <span class="fcard-chips">
               <span class="fcard-owner" id="lifeOwnerName"></span>
-              <span class="badge badge-pending" id="chip-life">0 of 2 done</span>
+              <span class="chip chip-pending" id="chip-life">0 of 2 done</span>
             </span>
           </div>
           <div class="fcard-body">
@@ -1989,13 +2033,27 @@
     lifeNoteSent:    ['tog-lifeNoteSent-Y',    'tog-lifeNoteSent-N']
   };
 
+  /* A selected "No" is red only when it means something is OUTSTANDING.
+     For "does this discount apply?", No is simply the answer — that reads
+     neutral. A received flag only counts as outstanding while its discount
+     actually applies, so ddReceived/gsReceived are gated on their own toggle. */
+  const NO_IS_ALWAYS_NEUTRAL = ['ddDiscount', 'gsDiscount'];
+  const NO_GATED_BY = { ddReceived: 'ddDiscount', gsReceived: 'gsDiscount' };
+
+  function noToneClass(field) {
+    if (NO_IS_ALWAYS_NEUTRAL.includes(field)) return 'neutral';
+    const gate = NO_GATED_BY[field];
+    if (gate && formToggles[gate] !== 'Y') return 'neutral';
+    return 'no';
+  }
+
   function applyToggles() {
     Object.entries(TOGGLE_IDS).forEach(([field, [yId, nId]]) => {
       const val  = formToggles[field];
       const yBtn = document.getElementById(yId);
       const nBtn = document.getElementById(nId);
       if (yBtn) yBtn.className = `toggle-opt${val === 'Y' ? ' yes' : ''}`;
-      if (nBtn) nBtn.className = `toggle-opt${val === 'N' ? ' no'  : ''}`;
+      if (nBtn) nBtn.className = `toggle-opt${val === 'N' ? ' ' + noToneClass(field) : ''}`;
     });
   }
 
@@ -2007,28 +2065,28 @@
   /* ═══════════════════════════════════════
      CARD COMPLETION CHIPS (client modal)
      Read purely from formToggles, so the four workflow cards stay honest as
-     toggles are clicked. States borrow the existing badge palette — grey for
-     not applicable, amber for outstanding, green for done. No new colours.
+     toggles are clicked. Solid fills: neutral for not applicable, amber for
+     outstanding, green for done. Modal-only classes — the table keeps .badge.
   ═══════════════════════════════════════ */
   function setChip(id, text, cls) {
     const el = document.getElementById(id);
     if (!el) return;
     el.textContent = text;
-    el.className   = `badge ${cls}`;
+    el.className   = `chip ${cls}`;
   }
 
   // A discount card: doesn't apply / waiting on the paperwork / complete.
   function discountChipState(applies, received, waitingText) {
-    if (applies  !== 'Y') return ['Doesn’t apply', 'badge-removed'];
-    if (received === 'Y') return ['Complete',      'badge-complete'];
-    return [waitingText, 'badge-pending'];
+    if (applies  !== 'Y') return ['Doesn’t apply', 'chip-neutral'];
+    if (received === 'Y') return ['Complete',      'chip-done'];
+    return [waitingText, 'chip-pending'];
   }
 
   // A two-item card: how many of its two toggles are done.
   function pairChipState(a, b) {
     const done = (a === 'Y' ? 1 : 0) + (b === 'Y' ? 1 : 0);
-    if (done === 2) return ['Complete', 'badge-complete'];
-    return [`${done} of 2 done`, 'badge-pending'];
+    if (done === 2) return ['Complete', 'chip-done'];
+    return [`${done} of 2 done`, 'chip-pending'];
   }
 
   function updateCardChips() {
