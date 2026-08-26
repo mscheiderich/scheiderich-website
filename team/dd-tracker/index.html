@@ -358,6 +358,8 @@
     }
     .modal-overlay.open .modal { transform: translateY(0); }
     .modal-sm { max-width: 420px; }
+    /* Client modal only — the four workflow cards need the extra width. */
+    .modal-wide { max-width: 900px; width: 92vw; }
     .modal-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 20px 24px 16px;
@@ -606,18 +608,60 @@
     .cert-toggle.waiting { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
 
     /* ═══════════════════════════════════════
-       LIFE INSURANCE SECTION (client modal)
+       CLIENT MODAL CARDS
+       Six cards on a 2-up grid: context (quiet) top and bottom, the four
+       actionable workflows in a 2x2 between them. Collapses to one column
+       below 760px, stacking in DOM order.
     ═══════════════════════════════════════ */
-    .form-section-label {
-      grid-column: 1 / -1;
-      font-size: 11.5px;
+    .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .fcard {
+      background: var(--bg-w);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    /* Context, not tasks — a quieter surface so the four workflow cards lead. */
+    .fcard-quiet { background: var(--bg); }
+    .fcard-full  { grid-column: 1 / -1; }
+
+    .fcard-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .fcard-icon  { font-size: 14px; line-height: 1; }
+    .fcard-title {
+      font-size: 12px;
       font-weight: 700;
-      color: var(--muted);
+      color: var(--text);
       text-transform: uppercase;
       letter-spacing: .06em;
-      margin: 4px 0 -6px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
+    }
+    /* Chips sit hard right on the header row. */
+    .fcard-chips { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+
+    /* Owner chip — deliberately not a completion badge, so it reads as a name. */
+    .fcard-owner {
+      padding: 2px 9px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--navy-lt);
+      color: var(--navy);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    /* Stacked controls inside a workflow card. */
+    .fcard-body { display: flex; flex-direction: column; gap: 12px; }
+    /* Compact responsive grid for the client-details fields. */
+    .fcard-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+
+    @media (max-width: 760px) {
+      .card-grid { grid-template-columns: 1fr; }
     }
 
     /* ═══════════════════════════════════════
@@ -765,141 +809,202 @@
 
 <!-- ADD / EDIT MODAL -->
 <div class="modal-overlay" id="clientModal">
-  <div class="modal">
+  <div class="modal modal-wide">
     <div class="modal-header">
       <div class="modal-title" id="modalTitle">Add Client</div>
       <button class="modal-close" onclick="closeModal('clientModal')">&#10005;</button>
     </div>
     <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>First Name *</label>
-          <input type="text" id="f_firstName" placeholder="First name" />
-        </div>
-        <div class="form-group">
-          <label>Last Name *</label>
-          <input type="text" id="f_lastName" placeholder="Last name" />
-        </div>
-        <div class="form-group">
-          <label>Producer *</label>
-          <select id="f_producer">
-            <option value="">Select agent&#8230;</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Discount Amount</label>
-          <input type="text" id="f_discountAmount" placeholder="$0.00" />
-        </div>
-        <div class="form-group">
-          <label>Policy Date *</label>
-          <input type="date" id="f_policyDate" oninput="autoCalcDueDate()" />
-        </div>
-        <div class="form-group">
-          <label>Due Date *</label>
-          <input type="date" id="f_dueDate" oninput="updateStatusDisplay()" />
-        </div>
+      <div class="card-grid">
 
-        <!-- DD — does this discount apply to this person? -->
-        <div class="form-group">
-          <label>Defensive Driving &#8212; Applies?</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-ddDiscount-Y" onclick="setToggle('ddDiscount','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-ddDiscount-N" onclick="setToggle('ddDiscount','N')">No</button>
+        <!-- ── CARD 1 · Client details — context, quiet surface ── -->
+        <section class="fcard fcard-quiet fcard-full">
+          <div class="fcard-head">
+            <span class="fcard-icon">&#128203;</span>
+            <span class="fcard-title">Client details</span>
           </div>
-        </div>
-        <!-- DD — do we physically have the certificate? Shown only when DD applies. -->
-        <div class="form-group" id="grp-ddReceived" style="display:none;">
-          <label>DD &#8212; Received / in hand?</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-ddReceived-Y" onclick="setToggle('ddReceived','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-ddReceived-N" onclick="setToggle('ddReceived','N')">No</button>
+          <div class="fcard-fields">
+            <div class="form-group">
+              <label>First name *</label>
+              <input type="text" id="f_firstName" placeholder="First name" />
+            </div>
+            <div class="form-group">
+              <label>Last name *</label>
+              <input type="text" id="f_lastName" placeholder="Last name" />
+            </div>
+            <div class="form-group">
+              <label>Producer *</label>
+              <select id="f_producer">
+                <option value="">Select agent&#8230;</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Discount amount</label>
+              <input type="text" id="f_discountAmount" placeholder="$0.00" />
+            </div>
+            <div class="form-group">
+              <label>Policy date *</label>
+              <input type="date" id="f_policyDate" oninput="autoCalcDueDate()" />
+            </div>
+            <div class="form-group">
+              <label>Due date *</label>
+              <input type="date" id="f_dueDate" oninput="updateStatusDisplay()" />
+            </div>
+            <div class="form-group">
+              <label>Manual override</label>
+              <select id="f_statusOverride" onchange="updateStatusDisplay()">
+                <option value="">(none) &#8212; auto-calculate</option>
+                <option value="Discount Removed">Discount Removed</option>
+                <option value="Archived">Archived</option>
+              </select>
+              <div class="archive-warning" id="archiveWarning">
+                Archiving hides this record from the main view. Use Unarchive to restore it at any time.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Calculated status</label>
+              <div class="status-display" id="f_statusDisplay">&#8212;</div>
+            </div>
           </div>
-          <label style="margin-top:8px;">DD Received Date</label>
-          <input type="date" id="f_ddReceivedDate" />
-        </div>
+        </section>
 
-        <!-- GS — does this discount apply to this person? -->
-        <div class="form-group">
-          <label>Good Student &#8212; Applies?</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-gsDiscount-Y" onclick="setToggle('gsDiscount','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-gsDiscount-N" onclick="setToggle('gsDiscount','N')">No</button>
+        <!-- ── CARD 2 · Defensive driving ── -->
+        <section class="fcard">
+          <div class="fcard-head">
+            <span class="fcard-icon">&#128663;</span>
+            <span class="fcard-title">Defensive driving</span>
+            <span class="fcard-chips">
+              <span class="badge badge-removed" id="chip-dd">Doesn&#8217;t apply</span>
+            </span>
           </div>
-        </div>
-        <!-- GS — do we physically have the proof? Shown only when GS applies. -->
-        <div class="form-group" id="grp-gsReceived" style="display:none;">
-          <label>GS &#8212; Received / in hand?</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-gsReceived-Y" onclick="setToggle('gsReceived','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-gsReceived-N" onclick="setToggle('gsReceived','N')">No</button>
+          <div class="fcard-body">
+            <!-- Does this discount apply to this person? -->
+            <div class="form-group">
+              <label>Applies to this client?</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-ddDiscount-Y" onclick="setToggle('ddDiscount','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-ddDiscount-N" onclick="setToggle('ddDiscount','N')">No</button>
+              </div>
+            </div>
+            <!-- Do we physically have the certificate? Shown only when DD applies. -->
+            <div class="form-group" id="grp-ddReceived" style="display:none;">
+              <label>Certificate received / in hand?</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-ddReceived-Y" onclick="setToggle('ddReceived','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-ddReceived-N" onclick="setToggle('ddReceived','N')">No</button>
+              </div>
+              <label style="margin-top:8px;">Received date</label>
+              <input type="date" id="f_ddReceivedDate" />
+            </div>
           </div>
-          <label style="margin-top:8px;">GS Received Date</label>
-          <input type="date" id="f_gsReceivedDate" />
-        </div>
+        </section>
 
-        <!-- Status: auto-calc display + manual override -->
-        <div class="form-group">
-          <label>Calculated Status</label>
-          <div class="status-display" id="f_statusDisplay">&#8212;</div>
-        </div>
-        <div class="form-group">
-          <label>Manual Override</label>
-          <select id="f_statusOverride" onchange="updateStatusDisplay()">
-            <option value="">(none) &#8212; auto-calculate</option>
-            <option value="Discount Removed">Discount Removed</option>
-            <option value="Archived">Archived</option>
-          </select>
-          <div class="archive-warning" id="archiveWarning">
-            Archiving hides this record from the main view. Use Unarchive to restore it at any time.
+        <!-- ── CARD 3 · Good student ── -->
+        <section class="fcard">
+          <div class="fcard-head">
+            <span class="fcard-icon">&#127891;</span>
+            <span class="fcard-title">Good student</span>
+            <span class="fcard-chips">
+              <span class="badge badge-removed" id="chip-gs">Doesn&#8217;t apply</span>
+            </span>
           </div>
-        </div>
+          <div class="fcard-body">
+            <div class="form-group">
+              <label>Applies to this client?</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-gsDiscount-Y" onclick="setToggle('gsDiscount','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-gsDiscount-N" onclick="setToggle('gsDiscount','N')">No</button>
+              </div>
+            </div>
+            <!-- Do we physically have the proof? Shown only when GS applies. -->
+            <div class="form-group" id="grp-gsReceived" style="display:none;">
+              <label>Proof received / in hand?</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-gsReceived-Y" onclick="setToggle('gsReceived','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-gsReceived-N" onclick="setToggle('gsReceived','N')">No</button>
+              </div>
+              <label style="margin-top:8px;">Received date</label>
+              <input type="date" id="f_gsReceivedDate" />
+            </div>
+          </div>
+        </section>
 
-        <!-- Thank You note -->
-        <div class="form-group">
-          <label>Thank You Note Sent</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-thankYouSent-Y" onclick="setToggle('thankYouSent','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-thankYouSent-N" onclick="setToggle('thankYouSent','N')">No</button>
+        <!-- ── CARD 4 · Agent follow-up ── -->
+        <section class="fcard">
+          <div class="fcard-head">
+            <span class="fcard-icon">&#128222;</span>
+            <span class="fcard-title">Agent follow-up</span>
+            <span class="fcard-chips">
+              <span class="badge badge-pending" id="chip-followup">0 of 2 done</span>
+            </span>
           </div>
-          <label style="margin-top:8px;">Thank You Date</label>
-          <input type="date" id="f_thankYouDate" />
-        </div>
-        <!-- Welcome call -->
-        <div class="form-group">
-          <label>Welcome Call Made</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-welcomeCallSent-Y" onclick="setToggle('welcomeCallSent','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-welcomeCallSent-N" onclick="setToggle('welcomeCallSent','N')">No</button>
+          <div class="fcard-body">
+            <div class="form-group">
+              <label>Thank-you note sent</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-thankYouSent-Y" onclick="setToggle('thankYouSent','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-thankYouSent-N" onclick="setToggle('thankYouSent','N')">No</button>
+              </div>
+              <label style="margin-top:8px;">Date sent</label>
+              <input type="date" id="f_thankYouDate" />
+            </div>
+            <div class="form-group">
+              <label>Welcome call made</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-welcomeCallSent-Y" onclick="setToggle('welcomeCallSent','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-welcomeCallSent-N" onclick="setToggle('welcomeCallSent','N')">No</button>
+              </div>
+              <label style="margin-top:8px;">Date called</label>
+              <input type="date" id="f_welcomeCallDate" />
+            </div>
           </div>
-          <label style="margin-top:8px;">Welcome Call Date</label>
-          <input type="date" id="f_welcomeCallDate" />
-        </div>
+        </section>
 
-        <!-- Life insurance — a separate workflow from the DD/GS discount items -->
-        <div class="form-section-label">Life Insurance</div>
-        <div class="form-group">
-          <label>Life Insurance Follow-Up Call</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-lifeCallSent-Y" onclick="setToggle('lifeCallSent','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-lifeCallSent-N" onclick="setToggle('lifeCallSent','N')">No</button>
+        <!-- ── CARD 5 · Life insurance — owner chip from LIFE_SPECIALIST_NAME ── -->
+        <section class="fcard">
+          <div class="fcard-head">
+            <span class="fcard-icon">&#128737;&#65039;</span>
+            <span class="fcard-title">Life insurance</span>
+            <span class="fcard-chips">
+              <span class="fcard-owner" id="lifeOwnerName"></span>
+              <span class="badge badge-pending" id="chip-life">0 of 2 done</span>
+            </span>
           </div>
-          <label style="margin-top:8px;">Life Call Date</label>
-          <input type="date" id="f_lifeCallDate" />
-        </div>
-        <div class="form-group">
-          <label>Life Insurance Handwritten Note</label>
-          <div class="toggle-row">
-            <button class="toggle-opt" id="tog-lifeNoteSent-Y" onclick="setToggle('lifeNoteSent','Y')">Yes</button>
-            <button class="toggle-opt no"  id="tog-lifeNoteSent-N" onclick="setToggle('lifeNoteSent','N')">No</button>
+          <div class="fcard-body">
+            <div class="form-group">
+              <label>Follow-up call made</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-lifeCallSent-Y" onclick="setToggle('lifeCallSent','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-lifeCallSent-N" onclick="setToggle('lifeCallSent','N')">No</button>
+              </div>
+              <label style="margin-top:8px;">Date called</label>
+              <input type="date" id="f_lifeCallDate" />
+            </div>
+            <div class="form-group">
+              <label>Handwritten note sent</label>
+              <div class="toggle-row">
+                <button class="toggle-opt" id="tog-lifeNoteSent-Y" onclick="setToggle('lifeNoteSent','Y')">Yes</button>
+                <button class="toggle-opt no"  id="tog-lifeNoteSent-N" onclick="setToggle('lifeNoteSent','N')">No</button>
+              </div>
+              <label style="margin-top:8px;">Date sent</label>
+              <input type="date" id="f_lifeNoteDate" />
+            </div>
           </div>
-          <label style="margin-top:8px;">Life Note Date</label>
-          <input type="date" id="f_lifeNoteDate" />
-        </div>
+        </section>
 
-        <div class="form-group full">
-          <label>Contact Notes</label>
-          <textarea id="f_contactNote" rows="4" placeholder="Running notes on client contact attempts&#8230;"></textarea>
-        </div>
+        <!-- ── CARD 6 · Contact notes — context, quiet surface ── -->
+        <section class="fcard fcard-quiet fcard-full">
+          <div class="fcard-head">
+            <span class="fcard-icon">&#128221;</span>
+            <span class="fcard-title">Contact notes</span>
+          </div>
+          <div class="fcard-body">
+            <div class="form-group">
+              <textarea id="f_contactNote" rows="4" placeholder="Running notes on client contact attempts&#8230;"></textarea>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
     <div class="modal-footer">
@@ -1017,6 +1122,8 @@
   const SHEET_ID   = '1GNDONX_yupxaHs4Amxr_7TwX7bJ-3djouayzIzpR79c';
   const API_KEY    = 'AIzaSyAqfMT5AKrCEuPChn2YD2MbfT10sG660B8';
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxiqwl6WUXwoi0q6bqnYZrvATS6FEr4MDj-m9GjBf8iDGTSFJCezqfMEx78jCHoGLN/exec';
+  // Whose name rides on the life insurance card. One line to change hands.
+  const LIFE_SPECIALIST_NAME = 'Jennifer';
 
   /* ═══════════════════════════════════════
      DATA LAYER
@@ -1794,6 +1901,7 @@
     formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N', lifeCallSent: 'N', lifeNoteSent: 'N' };
     applyToggles();
     updateConditionals();
+    updateCardChips();
     updateStatusDisplay();
     clearFieldErrors();
   }
@@ -1827,6 +1935,7 @@
     };
     applyToggles();
     updateConditionals();
+    updateCardChips();
     updateStatusDisplay();
     clearFieldErrors();
   }
@@ -1865,6 +1974,7 @@
     }
     applyToggles();
     updateConditionals();
+    updateCardChips();
     updateStatusDisplay();
   }
 
@@ -1893,6 +2003,47 @@
     document.getElementById('grp-ddReceived').style.display = formToggles.ddDiscount === 'Y' ? '' : 'none';
     document.getElementById('grp-gsReceived').style.display = formToggles.gsDiscount === 'Y' ? '' : 'none';
   }
+
+  /* ═══════════════════════════════════════
+     CARD COMPLETION CHIPS (client modal)
+     Read purely from formToggles, so the four workflow cards stay honest as
+     toggles are clicked. States borrow the existing badge palette — grey for
+     not applicable, amber for outstanding, green for done. No new colours.
+  ═══════════════════════════════════════ */
+  function setChip(id, text, cls) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.className   = `badge ${cls}`;
+  }
+
+  // A discount card: doesn't apply / waiting on the paperwork / complete.
+  function discountChipState(applies, received, waitingText) {
+    if (applies  !== 'Y') return ['Doesn’t apply', 'badge-removed'];
+    if (received === 'Y') return ['Complete',      'badge-complete'];
+    return [waitingText, 'badge-pending'];
+  }
+
+  // A two-item card: how many of its two toggles are done.
+  function pairChipState(a, b) {
+    const done = (a === 'Y' ? 1 : 0) + (b === 'Y' ? 1 : 0);
+    if (done === 2) return ['Complete', 'badge-complete'];
+    return [`${done} of 2 done`, 'badge-pending'];
+  }
+
+  function updateCardChips() {
+    const dd = discountChipState(formToggles.ddDiscount, formToggles.ddReceived, 'Waiting on cert');
+    const gs = discountChipState(formToggles.gsDiscount, formToggles.gsReceived, 'Waiting on proof');
+    const fu = pairChipState(formToggles.thankYouSent, formToggles.welcomeCallSent);
+    const li = pairChipState(formToggles.lifeCallSent, formToggles.lifeNoteSent);
+    setChip('chip-dd',       dd[0], dd[1]);
+    setChip('chip-gs',       gs[0], gs[1]);
+    setChip('chip-followup', fu[0], fu[1]);
+    setChip('chip-life',     li[0], li[1]);
+  }
+
+  // Owner chip label — stamped once from the constant above.
+  document.getElementById('lifeOwnerName').textContent = LIFE_SPECIALIST_NAME;
 
   function updateStatusDisplay() {
     const override      = document.getElementById('f_statusOverride').value;
