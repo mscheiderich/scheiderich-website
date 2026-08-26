@@ -580,7 +580,7 @@
     .mem-row.mem-archived .mem-name-txt { color: #94a3b8; }
     .mem-name { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; min-width: 0; }
     .mem-name-txt { font-weight: 600; color: var(--text); }
-    .mem-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .mem-controls { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
 
     /* Inline DD / GS discount toggles */
     .cert-toggle {
@@ -604,6 +604,21 @@
        .on = received (green check) · .waiting = applies-but-not-received (amber clock) */
     .cert-toggle.on      { background: #dcfce7; color: #15803d; border-color: #86efac; }
     .cert-toggle.waiting { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+
+    /* ═══════════════════════════════════════
+       LIFE INSURANCE SECTION (client modal)
+    ═══════════════════════════════════════ */
+    .form-section-label {
+      grid-column: 1 / -1;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 4px 0 -6px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
 
     /* ═══════════════════════════════════════
        HOUSEHOLD EDIT MODAL
@@ -728,8 +743,6 @@
   <input  class="filter-search" type="text" id="searchInput" placeholder="Search name, producer&#8230;" oninput="renderTable()" />
   <select class="filter-select" id="producerFilter" onchange="renderTable()">
     <option value="">All Producers</option>
-    <option>Mike</option><option>Crissy</option><option>Iris</option>
-    <option>Mark</option><option>Wendy</option><option>Scott</option>
   </select>
   <div class="filter-spacer"></div>
   <div class="record-count" id="recordCount">Loading&#8230;</div>
@@ -771,8 +784,6 @@
           <label>Producer *</label>
           <select id="f_producer">
             <option value="">Select agent&#8230;</option>
-            <option>Mike</option><option>Crissy</option><option>Iris</option>
-            <option>Mark</option><option>Wendy</option><option>Scott</option>
           </select>
         </div>
         <div class="form-group">
@@ -864,6 +875,27 @@
           <input type="date" id="f_welcomeCallDate" />
         </div>
 
+        <!-- Life insurance — a separate workflow from the DD/GS discount items -->
+        <div class="form-section-label">Life Insurance</div>
+        <div class="form-group">
+          <label>Life Insurance Follow-Up Call</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-lifeCallSent-Y" onclick="setToggle('lifeCallSent','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-lifeCallSent-N" onclick="setToggle('lifeCallSent','N')">No</button>
+          </div>
+          <label style="margin-top:8px;">Life Call Date</label>
+          <input type="date" id="f_lifeCallDate" />
+        </div>
+        <div class="form-group">
+          <label>Life Insurance Handwritten Note</label>
+          <div class="toggle-row">
+            <button class="toggle-opt" id="tog-lifeNoteSent-Y" onclick="setToggle('lifeNoteSent','Y')">Yes</button>
+            <button class="toggle-opt no"  id="tog-lifeNoteSent-N" onclick="setToggle('lifeNoteSent','N')">No</button>
+          </div>
+          <label style="margin-top:8px;">Life Note Date</label>
+          <input type="date" id="f_lifeNoteDate" />
+        </div>
+
         <div class="form-group full">
           <label>Contact Notes</label>
           <textarea id="f_contactNote" rows="4" placeholder="Running notes on client contact attempts&#8230;"></textarea>
@@ -896,8 +928,6 @@
           <label>Producer *</label>
           <select id="he_producer">
             <option value="">Select agent&#8230;</option>
-            <option>Mike</option><option>Crissy</option><option>Iris</option>
-            <option>Mark</option><option>Wendy</option><option>Scott</option>
           </select>
         </div>
         <div class="form-group">
@@ -994,7 +1024,7 @@
   const DataLayer = {
     async getClients() {
       try {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clients!A:Z?key=${API_KEY}`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clients!A:AA?key=${API_KEY}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
@@ -1093,49 +1123,63 @@
   }
 
   /* ═══════════════════════════════════════
-     MIGRATION RECORDS (runs once via localStorage gate)
+     PRODUCER LIST — read live from the Settings tab
+     Column A = name, B = email, C = Active. The notification-config rows in
+     that tab live in columns D/E and leave A and B blank, so a row only counts
+     as a producer when it has BOTH a name and an email.
   ═══════════════════════════════════════ */
-  const MIGRATION_RECORDS = [
-    { id:'id_mig_001', firstName:'Robert',   lastName:'Rice',             producer:'', policyDate:'2026-02-26', dueDate:'2026-03-05', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'left vm and sent email',           thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_002', firstName:'Doretha',  lastName:'Rice',             producer:'', policyDate:'2026-02-26', dueDate:'2026-03-05', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'left vm and sent email',           thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_003', firstName:'Mohammad', lastName:'Dandachy',         producer:'', policyDate:'2026-03-11', dueDate:'2026-03-18', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'Spoke with and emailed link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_004', firstName:'David',    lastName:'Gibson',           producer:'', policyDate:'2026-03-12', dueDate:'2026-03-19', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$70.87', status:'Overdue',   contactNote:'Spoke with David sent link',        thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_005', firstName:'Peggy',    lastName:'Gibson',           producer:'', policyDate:'2026-03-12', dueDate:'2026-03-19', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$70.87', status:'Overdue',   contactNote:'Spoke with David sent link',        thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_006', firstName:'Kari',     lastName:'Lemoine',          producer:'', policyDate:'2026-03-31', dueDate:'2026-04-07', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'called left vm sent link in email', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_007', firstName:'Timothy',  lastName:'Lemoine',          producer:'', policyDate:'2026-03-31', dueDate:'2026-04-07', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Overdue',   contactNote:'called left vm sent link in email', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_008', firstName:'Selah',    lastName:'Gregory',          producer:'', policyDate:'2026-04-07', dueDate:'2026-04-14', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$157.64',status:'Overdue',   contactNote:'Spoke with Selah and emailed link to DD', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_009', firstName:'Katelyn',  lastName:'Smelt',            producer:'', policyDate:'2026-04-14', dueDate:'2026-04-21', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$74.49', status:'Overdue',   contactNote:'sent email left vm',               thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_010', firstName:'Nikki',    lastName:'Matthews',         producer:'', policyDate:'2026-04-15', dueDate:'2026-04-22', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$166.29',status:'Overdue',   contactNote:'Spoke with Nikki sent link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_011', firstName:'Zachary',  lastName:'Mitchell',         producer:'', policyDate:'2026-04-15', dueDate:'2026-04-22', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$166.29',status:'Overdue',   contactNote:'Spoke with Nikki sent link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_012', firstName:'Wayne',    lastName:'Adcock',           producer:'', policyDate:'2026-04-17', dueDate:'2026-04-24', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$53.01', status:'Overdue',   contactNote:'Spoke with Wayne and sent link again', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_013', firstName:'Alvaro',   lastName:'Sanchez',          producer:'', policyDate:'2026-04-28', dueDate:'2026-05-05', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$52.86', status:'Overdue',   contactNote:'Emailed link again and sent reminder', thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_014', firstName:'Stephan',  lastName:'Fiala',            producer:'', policyDate:'2026-05-01', dueDate:'2026-05-08', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$89.19', status:'Overdue',   contactNote:'emailed reminder',                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_015', firstName:'Jonathan', lastName:'Gonzalez',         producer:'', policyDate:'2026-05-01', dueDate:'2026-05-08', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$160.15',status:'Overdue',   contactNote:'emailed reminder',                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_016', firstName:'Andrea',   lastName:'Espinoza',         producer:'', policyDate:'2026-05-01', dueDate:'2026-05-08', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$160.15',status:'Overdue',   contactNote:'emailed reminder',                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_017', firstName:'Jacob',    lastName:'Lattie',           producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$88.56', status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_018', firstName:'Abigail',  lastName:'Lattie',           producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$88.56', status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_019', firstName:'Brian',    lastName:'Perez',            producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$294.71',status:'Overdue',   contactNote:'spoke with Felix emailed link',    thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_020', firstName:'Sherlyn',  lastName:'Perez Trejo',      producer:'', policyDate:'2026-05-05', dueDate:'2026-05-12', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$294.71',status:'Overdue',   contactNote:'spoke with Felix emailed link',    thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_021', firstName:'Tiffany',  lastName:'Sanders Crawford', producer:'', policyDate:'2026-05-09', dueDate:'2026-05-16', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$205.40',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_022', firstName:'Michael',  lastName:'Crawford',         producer:'', policyDate:'2026-05-09', dueDate:'2026-05-16', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$205.40',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_023', firstName:'Regina',   lastName:'Sanders',          producer:'', policyDate:'2026-05-09', dueDate:'2026-05-16', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$205.40',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_024', firstName:'Jason',    lastName:'Davis',            producer:'', policyDate:'2026-05-10', dueDate:'2026-05-17', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$173.63',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_025', firstName:'Destiny',  lastName:'Buendia',          producer:'', policyDate:'2026-05-10', dueDate:'2026-05-17', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$173.63',status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_026', firstName:'Dena',     lastName:'Merrill',          producer:'', policyDate:'2026-05-14', dueDate:'2026-05-21', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$72.92', status:'Overdue',   contactNote:'left vm emailed reminder',         thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_027', firstName:'Erin',     lastName:'Byrd',             producer:'', policyDate:'2026-05-18', dueDate:'2026-05-25', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$76.98', status:'Overdue',   contactNote:'Spoke with Eryn emailed link',     thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_028', firstName:'Carolyn',  lastName:'Kupfer',           producer:'', policyDate:'2026-05-22', dueDate:'2026-05-29', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Due Soon',  contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_029', firstName:'Danny',    lastName:'Kupfer',           producer:'', policyDate:'2026-05-22', dueDate:'2026-05-29', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'',       status:'Due Soon',  contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_030', firstName:'Hokil',    lastName:'Kahng',            producer:'', policyDate:'2026-06-08', dueDate:'2026-06-15', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$153.27',status:'Pending',   contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' },
-    { id:'id_mig_031', firstName:'Moon',     lastName:'Kahng',            producer:'', policyDate:'2026-05-08', dueDate:'2026-05-15', ddDiscount:'Y', ddReceived:'N', ddReceivedDate:'', gsDiscount:'N', gsReceived:'N', gsReceivedDate:'', discountAmount:'$153.27',status:'Overdue',   contactNote:'',                                 thankYouSent:'N', thankYouDate:'', welcomeCallSent:'N', welcomeCallDate:'', createdAt:'2026-05-26T00:00:00.000Z', updatedAt:'2026-05-26T00:00:00.000Z' }
-  ];
+  const PRODUCER_FALLBACK   = ['Mike','Crissy','Iris','Mark','Wendy','Scott','Jennifer'];
+  const PRODUCER_SELECT_IDS = ['producerFilter', 'f_producer', 'he_producer'];
+  const ACTIVE_WORDS        = ['yes', 'y', 'true', '1', 'active'];
 
-  async function runMigration() {
-    if (localStorage.getItem('migrationComplete')) return;
-    for (const record of MIGRATION_RECORDS) {
-      await DataLayer.addClient(record);
-      await new Promise(r => setTimeout(r, 400));
+  // Blank Active cell = active. Anything not in ACTIVE_WORDS = inactive.
+  function isActiveProducer(val) {
+    const v = String(val === undefined || val === null ? '' : val).trim();
+    if (v === '') return true;
+    return ACTIVE_WORDS.includes(v.toLowerCase());
+  }
+
+  async function fetchProducers() {
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Settings!A:C?key=${API_KEY}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const rows = json.values || [];
+      return rows.slice(1)
+        .filter(r => String(r[0] || '').trim() !== '' && String(r[1] || '').includes('@'))
+        .filter(r => isActiveProducer(r[2]))
+        .map(r => String(r[0]));
+    } catch (e) {
+      console.error('Producer load failed:', e);
+      return [];
     }
-    localStorage.setItem('migrationComplete', 'true');
+  }
+
+  // Rebuild each select, keeping its own leading placeholder option and any
+  // selection that is still valid.
+  function fillProducerSelects(names) {
+    PRODUCER_SELECT_IDS.forEach(id => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const current     = sel.value;
+      const placeholder = sel.options[0] || null;
+      sel.innerHTML = '';
+      if (placeholder) sel.appendChild(placeholder);
+      names.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n;
+        opt.textContent = n;
+        sel.appendChild(opt);
+      });
+      sel.value = current;
+    });
+  }
+
+  // Never leave a dropdown empty — an unreadable Settings tab falls back to the roster.
+  async function loadProducers() {
+    const names = await fetchProducers();
+    fillProducerSelects(names.length ? names : PRODUCER_FALLBACK);
   }
 
   /* ═══════════════════════════════════════
@@ -1147,7 +1191,7 @@
   let deletingId    = null;
   let notesId       = null;
   let unarchivingId = null;
-  let formToggles   = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N' };
+  let formToggles   = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N', lifeCallSent: 'N', lifeNoteSent: 'N' };
   let householdEditId      = null;   // householdId currently open in the household edit screen
   let householdMembers     = [];     // working copy of that household's member objects
   let householdDeletedIds  = [];     // member ids removed in the edit screen (sent on save)
@@ -1391,7 +1435,9 @@
     dd:   { label: 'DD',        flag: 'ddReceived',      full: 'Defensive Driving certificate', doneWord: 'in hand' },
     gs:   { label: 'GS',        flag: 'gsReceived',      full: 'Good Student proof',            doneWord: 'in hand' },
     ty:   { label: 'Thank-you', flag: 'thankYouSent',    full: 'Thank-you card',                doneWord: 'sent'    },
-    call: { label: 'Call',      flag: 'welcomeCallSent', full: 'Welcome call',                  doneWord: 'made'    }
+    call: { label: 'Call',      flag: 'welcomeCallSent', full: 'Welcome call',                  doneWord: 'made'    },
+    life: { label: 'Life call', flag: 'lifeCallSent',    full: 'Life insurance follow-up call',   doneWord: 'made'    },
+    note: { label: 'Life note', flag: 'lifeNoteSent',    full: 'Life insurance handwritten note', doneWord: 'sent'    }
   };
 
   // A status pill for one tracked item on one member. Green + check = done
@@ -1421,6 +1467,8 @@
     if (c.gsDiscount === 'Y') pills.push(pillHtml(c, 'gs'));
     pills.push(pillHtml(c, 'ty'));
     pills.push(pillHtml(c, 'call'));
+    pills.push(pillHtml(c, 'life'));
+    pills.push(pillHtml(c, 'note'));
     const pillsHtml = pills.join('');
 
     const archActions = archived
@@ -1659,13 +1707,17 @@
     ddReceived:      'ddReceivedDate',
     gsReceived:      'gsReceivedDate',
     thankYouSent:    'thankYouDate',
-    welcomeCallSent: 'welcomeCallDate'
+    welcomeCallSent: 'welcomeCallDate',
+    lifeCallSent:    'lifeCallDate',
+    lifeNoteSent:    'lifeNoteDate'
   };
   const TOGGLE_LABEL = {
     ddReceived:      'Defensive Driving',
     gsReceived:      'Good Student',
     thankYouSent:    'Thank-you card',
-    welcomeCallSent: 'Welcome call'
+    welcomeCallSent: 'Welcome call',
+    lifeCallSent:    'Life insurance call',
+    lifeNoteSent:    'Life insurance note'
   };
 
   async function toggleReceived(clientId, field, event) {
@@ -1732,14 +1784,14 @@
   }
 
   function resetForm() {
-    ['f_firstName','f_lastName','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate','f_thankYouDate','f_welcomeCallDate'].forEach(id => {
+    ['f_firstName','f_lastName','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate','f_thankYouDate','f_welcomeCallDate','f_lifeCallDate','f_lifeNoteDate'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('f_producer').value       = '';
     document.getElementById('f_policyDate').value     = '';
     document.getElementById('f_dueDate').value        = '';
     document.getElementById('f_statusOverride').value = '';
-    formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N' };
+    formToggles = { ddDiscount: 'N', ddReceived: 'N', gsDiscount: 'N', gsReceived: 'N', thankYouSent: 'N', welcomeCallSent: 'N', lifeCallSent: 'N', lifeNoteSent: 'N' };
     applyToggles();
     updateConditionals();
     updateStatusDisplay();
@@ -1758,6 +1810,8 @@
     document.getElementById('f_gsReceivedDate').value = c.gsReceivedDate || '';
     document.getElementById('f_thankYouDate').value    = c.thankYouDate || '';
     document.getElementById('f_welcomeCallDate').value = c.welcomeCallDate || '';
+    document.getElementById('f_lifeCallDate').value    = c.lifeCallDate || '';
+    document.getElementById('f_lifeNoteDate').value    = c.lifeNoteDate || '';
     const manualStatuses = ['Discount Removed', 'Archived'];
     document.getElementById('f_statusOverride').value =
       manualStatuses.includes(c.status) ? c.status : '';
@@ -1767,7 +1821,9 @@
       gsDiscount:      c.gsDiscount      || 'N',
       gsReceived:      c.gsReceived      || 'N',
       thankYouSent:    c.thankYouSent    || 'N',
-      welcomeCallSent: c.welcomeCallSent || 'N'
+      welcomeCallSent: c.welcomeCallSent || 'N',
+      lifeCallSent:    c.lifeCallSent    || 'N',
+      lifeNoteSent:    c.lifeNoteSent    || 'N'
     };
     applyToggles();
     updateConditionals();
@@ -1798,6 +1854,15 @@
       const el = document.getElementById('f_welcomeCallDate');
       el.value = val === 'Y' ? (el.value || todayStr()) : '';
     }
+    // Life insurance call / note dates stamp the same way.
+    if (field === 'lifeCallSent') {
+      const el = document.getElementById('f_lifeCallDate');
+      el.value = val === 'Y' ? (el.value || todayStr()) : '';
+    }
+    if (field === 'lifeNoteSent') {
+      const el = document.getElementById('f_lifeNoteDate');
+      el.value = val === 'Y' ? (el.value || todayStr()) : '';
+    }
     applyToggles();
     updateConditionals();
     updateStatusDisplay();
@@ -1809,7 +1874,9 @@
     gsDiscount:      ['tog-gsDiscount-Y',      'tog-gsDiscount-N'],
     gsReceived:      ['tog-gsReceived-Y',      'tog-gsReceived-N'],
     thankYouSent:    ['tog-thankYouSent-Y',    'tog-thankYouSent-N'],
-    welcomeCallSent: ['tog-welcomeCallSent-Y', 'tog-welcomeCallSent-N']
+    welcomeCallSent: ['tog-welcomeCallSent-Y', 'tog-welcomeCallSent-N'],
+    lifeCallSent:    ['tog-lifeCallSent-Y',    'tog-lifeCallSent-N'],
+    lifeNoteSent:    ['tog-lifeNoteSent-Y',    'tog-lifeNoteSent-N']
   };
 
   function applyToggles() {
@@ -1883,6 +1950,9 @@
     // Editable thank-you / welcome-call dates (correct to the real date sent/called).
     const tyDate    = document.getElementById('f_thankYouDate').value;
     const wcDate    = document.getElementById('f_welcomeCallDate').value;
+    // Editable life insurance call / note dates.
+    const lcDate    = document.getElementById('f_lifeCallDate').value;
+    const lnDate    = document.getElementById('f_lifeNoteDate').value;
 
     let clientObj;
     if (editingId) {
@@ -1895,6 +1965,8 @@
         gsReceived:      formToggles.gsReceived,
         thankYouSent:    formToggles.thankYouSent,
         welcomeCallSent: formToggles.welcomeCallSent,
+        lifeCallSent:    formToggles.lifeCallSent,
+        lifeNoteSent:    formToggles.lifeNoteSent,
         discountAmount:  document.getElementById('f_discountAmount').value.trim(),
         contactNote:     document.getElementById('f_contactNote').value.trim(),
         status:          override || '',
@@ -1906,6 +1978,9 @@
       // Thank-you / welcome-call date: use the editable field; default today if Yes with no date; clear if No.
       clientObj.thankYouDate    = formToggles.thankYouSent    === 'Y' ? (tyDate || todayStr()) : '';
       clientObj.welcomeCallDate = formToggles.welcomeCallSent === 'Y' ? (wcDate || todayStr()) : '';
+      // Life insurance dates follow the same rule.
+      clientObj.lifeCallDate    = formToggles.lifeCallSent    === 'Y' ? (lcDate || todayStr()) : '';
+      clientObj.lifeNoteDate    = formToggles.lifeNoteSent    === 'Y' ? (lnDate || todayStr()) : '';
     } else {
       // New client also creates its household (Change 4)
       clientObj = {
@@ -1926,6 +2001,10 @@
         thankYouDate:    formToggles.thankYouSent === 'Y' ? (tyDate || todayStr()) : '',
         welcomeCallSent: formToggles.welcomeCallSent,
         welcomeCallDate: formToggles.welcomeCallSent === 'Y' ? (wcDate || todayStr()) : '',
+        lifeCallSent:    formToggles.lifeCallSent,
+        lifeCallDate:    formToggles.lifeCallSent === 'Y' ? (lcDate || todayStr()) : '',
+        lifeNoteSent:    formToggles.lifeNoteSent,
+        lifeNoteDate:    formToggles.lifeNoteSent === 'Y' ? (lnDate || todayStr()) : '',
         createdAt:       now,
         updatedAt:       now
       };
@@ -2040,6 +2119,7 @@
       gsDiscount: 'N', gsReceived: 'N', gsReceivedDate: '',
       discountAmount: '', status: '', contactNote: '',
       thankYouSent: 'N', thankYouDate: '', welcomeCallSent: 'N', welcomeCallDate: '',
+      lifeCallSent: 'N', lifeCallDate: '', lifeNoteSent: 'N', lifeNoteDate: '',
       createdAt: now, updatedAt: now
     };
   }
@@ -2230,12 +2310,8 @@
      INIT
   ═══════════════════════════════════════ */
   (async () => {
+    loadProducers();   // dropdowns fill independently of the client list
     await loadData();
-    await runMigration();
-    if (!localStorage.getItem('migrationComplete')) {
-      // Migration just ran — reload to show the new records
-      await loadData();
-    }
   })();
 </script>
 </body>
