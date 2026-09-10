@@ -379,8 +379,8 @@
       display: flex;
       flex-direction: column;
     }
-    /* Hover belongs to linked cards only — Natalie's card is a
-       plain <div> and must not suggest it is clickable. */
+    /* Hover belongs to linked cards only — any card left as a plain
+       <div> must not suggest it is clickable. */
     a.team-card:hover { box-shadow: var(--sh-md); transform: translateY(-3px); }
     /* ── Linked team cards ──
        The card element itself is the <a>, so `.team-grid > .team-card` still
@@ -1032,7 +1032,7 @@
       </a>
 
       <!-- Natalie -->
-      <div class="team-card">
+      <a class="team-card" href="/about.html#natalie-fowler" aria-label="Read more about Natalie Fowler, Director of Marketing">
         <div class="team-photo">
           <img src="natalie-fowler.png"
                alt="Natalie Fowler, director of marketing at The Scheiderich Agency" />
@@ -1045,7 +1045,7 @@
             Buford, GA
           </div>
         </div>
-      </div>
+      </a>
 
     </div>
 

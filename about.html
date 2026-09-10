@@ -316,6 +316,10 @@
     @media (max-width: 640px) {
   .comm-teaser { flex-direction: column; gap: 24px; padding: 28px 24px; align-items: flex-start; }
     }
+    /* ── Team anchor offset ──
+       Homepage card links to /about.html#natalie-fowler. Offset clears the
+       66px sticky header so the card isn't hidden underneath it. */
+    #natalie-fowler { scroll-margin-top: 100px; }
   </style>
 
   <!-- Google Analytics -->
@@ -570,7 +574,7 @@
       </a>
 
       <!-- Natalie -->
-      <div class="team-card">
+      <div class="team-card" id="natalie-fowler">
         <div class="team-photo">
           <img src="natalie-fowler.png"
                alt="Natalie Fowler, director of marketing at The Scheiderich Agency" />
@@ -578,7 +582,7 @@
         <div class="team-body">
           <div class="team-name">Natalie Fowler</div>
           <div class="team-title">Director of Marketing</div>
-          <p class="team-bio">Natalie leads marketing and social media for the agency, joining the team at the start of the year. Outside of work she can be found at Brightside Cafe — a community partner of the agency — or spending time with her family.</p>
+          <p class="team-bio">Hi, I'm Natalie Fowler, and I recently joined The Scheiderich Agency as Marketing Director. I'm excited to bring a fresh, professional perspective to how we share our story, connect with our community, and showcase what makes The Scheiderich Agency unique.<br><br>When I'm not in the office, you can usually find me with a cup of coffee in one hand and a good book in the other.</p>
           <div class="team-loc">
             <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9z"/></svg>
             Buford, GA
