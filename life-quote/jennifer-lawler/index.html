@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Insurance in Georgia with Jennifer Lawler | The Scheiderich Agency</title>
+  <!-- [AGENT] name in the title above -->
+  <meta name="description" content="Talk through term, whole, and universal life insurance with Jennifer Lawler, a licensed insurance agent at The Scheiderich Agency. Personal guidance for Georgia families." />
+  <!-- [AGENT] name in the description above -->
+  <meta name="robots" content="noindex, follow" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="canonical" href="https://thescheiderichagency.com/life-quote/jennifer-lawler/" />
+  <!-- [AGENT] slug in the canonical above -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <!-- [AGENT] Person schema below: name, url, image. The FAQPage answers also use
+       the agent's first name and must match the visible FAQ text word for word. -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jennifer Lawler",
+      "jobTitle": "Licensed Insurance Agent",
+      "url": "https://thescheiderichagency.com/agents/jennifer-lawler.html",
+      "image": "https://thescheiderichagency.com/jennifer-lawler.png",
+      "telephone": "+1-770-268-4418",
+      "worksFor": {
+        "@type": "InsuranceAgency",
+        "name": "The Scheiderich Agency",
+        "url": "https://thescheiderichagency.com/",
+        "telephone": "+1-770-268-4418",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "60 W Park St",
+          "addressLocality": "Buford",
+          "addressRegion": "GA",
+          "postalCode": "30518",
+          "addressCountry": "US"
+        }
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is term or whole life better?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Neither is better across the board. Term usually costs less upfront for a set period; whole and universal last for life and build cash value. The right choice depends on what you're protecting and for how long."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a medical exam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some policies require one and some don't. It depends on the coverage amount, your age, and the product. Jennifer will tell you what to expect for the options you're considering."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to get covered?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some policies can be approved quickly; others take several weeks for underwriting. Jennifer will give you a realistic timeline for your situation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it cost anything to talk with Jennifer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The conversation and the quote comparison are free, with no obligation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What information do I need to get started?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Just your name, phone number, and email. Jennifer will ask anything else she needs during your call."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <style>
+    <!--#include virtual="/includes/site-css.html" -->
+    /* ═══════════════════════════════════════
+       LIFE QUOTE LANDING PAGE — page-scoped styles
+       Every class here is prefixed lq- and exists only on this page type.
+       Nothing overrides a shared class from /includes/site-css.html.
+       Written mobile-first: the base rules are the phone layout, and the two
+       min-width blocks at the bottom add columns as room appears.
+    ═══════════════════════════════════════ */
+    /* ── Hero ── */
+    .lq-hero { background: var(--navy); position: relative; overflow: hidden; }
+    .lq-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 72% 28%, rgba(217,104,42,.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 5%  80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    /* One column with the photo first from source order; two columns (photo LEFT,
+       text RIGHT) above the nav breakpoint. Same pattern as /agents/ and /refer/.
+       Exactly one photo element exists in the markup. */
+    .lq-hero-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      justify-items: center;
+      padding: 52px 0 48px;
+      max-width: 820px;              /* WIDE — matches the form section */
+      margin-left: auto; margin-right: auto;
+    }
+    .lq-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%; max-width: 220px;
+    }
+    .lq-hero-photo img { width: 100%; height: auto; display: block; }
+    .lq-hero-text { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .lq-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.48); margin-bottom: 18px;
+    }
+    .lq-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+    .lq-hero h1 { font-size: clamp(28px, 3.6vw, 44px); color: #fff; font-weight: 700; margin-bottom: 16px; }
+    /* Running prose stays left-aligned; centring it hurts readability. */
+    .lq-hero-sub { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 30px; text-align: left; }
+    .lq-hero-btns { display: flex; flex-direction: column; align-items: stretch; align-self: stretch; gap: 12px; }
+    .lq-hero-btns .btn { width: 100%; }
+    /* ── Sections ── */
+    .lq-sec { padding: 56px 0; }
+    .lq-sec-w { background: var(--bg-w); }
+    .lq-sec-alt { background: var(--bg-s); }
+    /* The sticky header is 66px tall; keep the form heading clear of it when the
+       hero button scrolls here. */
+    #lq-form { scroll-margin-top: 80px; }
+    /* ── Section widths ──
+       Two values only, both centred, matching the referral pages:
+         WIDE   820px — hero, card grids and the form
+         NARROW 660px — prose, steps and the FAQ */
+    .lq-wide, .lq-narrow { margin-left: auto; margin-right: auto; }
+    .lq-wide   { max-width: 820px; }
+    .lq-narrow { max-width: 660px; }
+    .lq-label {
+      display: block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+    }
+    .lq-h2 { font-size: clamp(23px, 2.6vw, 33px); margin-bottom: 22px; }
+    .lq-sub { font-size: 16px; color: var(--muted); line-height: 1.68; margin-bottom: 26px; }
+    .lq-note { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+    /* ── Why people buy — four cards ── */
+    .lq-reasons { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .lq-reason {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+    .lq-reason-ico {
+      width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+      background: var(--navy-lt); display: flex; align-items: center; justify-content: center;
+    }
+    .lq-reason-ico svg { width: 18px; height: 18px; color: var(--navy); }
+    .lq-reason h3 { font-size: 16.5px; margin-bottom: 5px; }
+    .lq-reason p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    /* ── Term / whole / universal comparison ── */
+    .lq-compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .lq-type {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 24px 20px; box-shadow: var(--sh-sm);
+    }
+    .lq-type h3 { font-size: 17px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid var(--orange); }
+    .lq-type p { font-size: 14px; color: var(--muted); line-height: 1.62; }
+    .lq-compare-note { font-size: 15.5px; color: var(--text); line-height: 1.68; margin-top: 26px; }
+    /* ── Calculator ── */
+    .lq-calc-btns { display: flex; flex-direction: column; gap: 12px; }
+    /* Long button labels must wrap on a phone rather than push past the viewport. */
+    .lq-calc-btns .btn, .lq-done .btn {
+      white-space: normal; height: auto; min-height: var(--btn-h);
+      padding-top: 11px; padding-bottom: 11px; text-align: center;
+    }
+    /* ── How it works — three steps ── */
+    .lq-steps { list-style: none; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .lq-step {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+    .lq-step-num {
+      font-family: 'Lora', serif; font-size: 13px; font-weight: 700;
+      color: var(--orange); letter-spacing: .1em; flex-shrink: 0; padding-top: 3px;
+    }
+    .lq-step h3 { font-size: 16.5px; margin-bottom: 5px; }
+    .lq-step p { font-size: 14px; color: var(--muted); line-height: 1.62; }
+    /* ── Meet the agent ── */
+    .lq-bio { font-size: 16px; color: var(--muted); line-height: 1.72; margin-bottom: 20px; }
+    .lq-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 14px; font-weight: 600; color: var(--navy); transition: gap .2s, color .2s;
+    }
+    .lq-link:hover { gap: 10px; color: var(--orange); }
+    .lq-link svg { width: 13px; height: 13px; }
+    /* ── FAQ ── */
+    .lq-faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .lq-faq-item { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 24px 22px; }
+    .lq-faq-q { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .lq-faq-a { font-size: 14px; color: var(--muted); line-height: 1.66; }
+    /* ── Form ── */
+    .lq-form-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 30px 22px; box-shadow: var(--sh-md);
+    }
+    .lq-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 17px; }
+    .lq-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+    /* 16px on phones stops iOS zooming the page when a field takes focus. */
+    .lq-group input, .lq-group select {
+      height: 46px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--text);
+      background: var(--bg); transition: border-color .2s, box-shadow .2s;
+      outline: none; width: 100%; min-width: 0;
+    }
+    .lq-group input:focus, .lq-group select:focus {
+      border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: var(--bg-w);
+    }
+    .lq-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      background-size: 16px; padding-right: 36px;
+    }
+    .lq-row { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .lq-consent { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+    /* Readable as a link without shouting — the consent line should stay quiet. */
+    .lq-consent a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+    .lq-consent a:hover { color: var(--orange); }
+    .lq-err { color: #c0392b; font-size: 13.5px; margin-top: 12px; line-height: 1.5; }
+    /* ── Confirmation (replaces the form inline) ── */
+    .lq-done { text-align: center; padding: 8px 0; }
+    .lq-done:focus { outline: none; }
+    .lq-done-badge { font-size: 56px; color: #1e7d4f; line-height: 1; margin-bottom: 16px; }
+    .lq-done-h { font-size: clamp(23px, 3vw, 30px); margin-bottom: 12px; overflow-wrap: anywhere; }
+    .lq-done-lead { font-size: 16px; color: var(--muted); line-height: 1.68; margin-bottom: 24px; }
+    .lq-done-lead a { font-weight: 600; white-space: nowrap; }
+
+    /* ── 641px and up — columns appear. Mirrors the site's 640px breakpoint. ── */
+    @media (min-width: 641px) {
+      .lq-sec { padding: 76px 0; }
+      .lq-hero-btns { flex-direction: row; flex-wrap: wrap; justify-content: center; align-self: auto; }
+      .lq-hero-btns .btn { width: auto; }
+      .lq-reasons { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+      .lq-compare { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .lq-type { padding: 24px 18px; }
+      .lq-calc-btns { flex-direction: row; flex-wrap: wrap; }
+      .lq-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+      .lq-form-card { padding: 40px 36px; }
+      .lq-group input, .lq-group select { font-size: 14px; }
+    }
+    /* ── 1101px and up — hero goes two-column. Mirrors the 1100px mobile-nav
+       breakpoint in /includes/site-css.html so header and hero switch together. ── */
+    @media (min-width: 1101px) {
+      .lq-hero-grid {
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 52px; align-items: center; justify-items: stretch;
+        padding: 72px 0 68px;
+      }
+      .lq-hero-photo { max-width: none; }
+      .lq-hero-text { align-items: flex-start; text-align: left; }
+      .lq-hero-btns { justify-content: flex-start; }
+    }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+</head>
+<body>
+<!--
+  LIFE QUOTE LANDING PAGE — TEMPLATE
+  To clone for another life-licensed agent:
+    1. Copy this folder to /life-quote/{agent-slug}/
+    2. Add the agent's page slug and email to CONFIG.NOTIFY in the Life Leads
+       Apps Script, then deploy it as a NEW VERSION of the existing deployment
+       (never New deployment — that changes the URL).
+    3. Replace every value marked [AGENT] in this file:
+       name, first name, photo filename, photo alt, bio paragraph,
+       hidden agent field value, Person schema
+    4. Add a link from /life-insurance.html
+    5. Do NOT add to sitemap.xml (noindex campaign page)
+    6. Log it in PROJECT_STATUS.md
+-->
+
+<!-- NAV -->
+<!--#include virtual="/includes/header.html" -->
+
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="lq-hero" aria-labelledby="lq-h1">
+  <div class="container">
+    <div class="lq-hero-grid">
+
+      <!-- The ONLY photo element on this page. Its position at both sizes is
+           handled in CSS: source order on mobile, grid column on desktop. -->
+      <div class="lq-hero-photo">
+        <img src="/jennifer-lawler.png" alt="Jennifer Lawler, licensed insurance agent at The Scheiderich Agency" /><!-- [AGENT] photo filename + alt -->
+      </div>
+
+      <div class="lq-hero-text">
+        <div class="lq-eyebrow"><span class="lq-dot"></span> Jennifer Lawler · Licensed Insurance Agent</div><!-- [AGENT] name -->
+        <h1 id="lq-h1">Life insurance that fits your life, not a sales script</h1>
+        <p class="lq-hero-sub">
+          Term, whole, or universal life — Jennifer takes the time to understand what you're protecting, walks you through how each option works, and helps you choose what makes sense for you.<!-- [AGENT] first name -->
+        </p>
+        <div class="lq-hero-btns">
+          <a href="#lq-form" class="btn btn-primary">Talk with Jennifer</a><!-- [AGENT] first name -->
+          <a href="tel:+17702684418" class="btn btn-ghost-w">Call 770-268-4418</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 2. WHY PEOPLE BUY ═══ -->
+<section class="lq-sec lq-sec-w" aria-labelledby="lq-why-h2">
+  <div class="container">
+    <div class="lq-wide">
+      <span class="lq-label">Where it starts</span>
+      <h2 class="lq-h2" id="lq-why-h2">Why people buy life insurance</h2>
+      <div class="lq-reasons">
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <div>
+            <h3>Replace your income</h3>
+            <p>So your family can keep up with bills if you're gone.</p>
+          </div>
+        </div>
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div>
+            <h3>Protect the house</h3>
+            <p>Help pay off or keep up with a mortgage.</p>
+          </div>
+        </div>
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+          <div>
+            <h3>Plan for the kids</h3>
+            <p>Childcare, education, and the years in between.</p>
+          </div>
+        </div>
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+          <div>
+            <h3>Cover final costs</h3>
+            <p>So loved ones aren't handling expenses during a hard time.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 3. TERM, WHOLE, OR UNIVERSAL ═══ -->
+<section class="lq-sec lq-sec-alt" aria-labelledby="lq-types-h2">
+  <div class="container">
+    <div class="lq-wide">
+      <span class="lq-label">The options</span>
+      <h2 class="lq-h2" id="lq-types-h2">Term, whole, or universal — what's the difference?</h2>
+      <div class="lq-compare">
+
+        <div class="lq-type">
+          <h3>Term life</h3>
+          <p>Coverage for a set period, such as 10, 20, or 30 years. Typically the lowest starting cost for the most coverage. Good fit when the need has an end date, like a mortgage or raising kids.</p>
+        </div>
+
+        <div class="lq-type">
+          <h3>Whole life</h3>
+          <p>Coverage for your lifetime with level premiums. Builds cash value over time. Costs more than term for the same coverage amount.</p>
+        </div>
+
+        <div class="lq-type">
+          <h3>Universal life</h3>
+          <p>Lifetime coverage with more flexibility in premiums and death benefit. Builds cash value, and how that value grows depends on the policy type and interest rates.</p>
+        </div>
+
+      </div>
+      <p class="lq-compare-note">There's no single right answer. Many people combine types. Jennifer will walk through the tradeoffs with you before you decide anything.<!-- [AGENT] first name --></p>
+      <p class="lq-note">Product availability, features, and costs vary by carrier and by individual. Coverage is subject to underwriting.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 4. HOW MUCH COVERAGE ═══ -->
+<section class="lq-sec lq-sec-w" aria-labelledby="lq-amount-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label">The amount</span>
+      <h2 class="lq-h2" id="lq-amount-h2">How much coverage do I need?</h2>
+      <p class="lq-sub">A common starting point is the DIME method, which adds up four things: your Debt, the Income your family would need to replace, your Mortgage balance, and Education costs for your children.</p>
+      <div class="lq-calc-btns">
+        <a href="/life-insurance-calculator.html" class="btn btn-primary">Try the life insurance calculator</a>
+      </div>
+      <p class="lq-note">The calculator gives an educational estimate, not a quote or an offer of coverage.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 5. HOW IT WORKS ═══ -->
+<section class="lq-sec lq-sec-alt" aria-labelledby="lq-how-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label">The process</span>
+      <h2 class="lq-h2" id="lq-how-h2">How it works</h2>
+      <ol class="lq-steps">
+
+        <li class="lq-step">
+          <div class="lq-step-num" aria-hidden="true">01</div>
+          <div>
+            <h3>Send your contact info</h3>
+            <p>Just your name, phone, and email.</p>
+          </div>
+        </li>
+
+        <li class="lq-step">
+          <div class="lq-step-num" aria-hidden="true">02</div>
+          <div>
+            <h3>Jennifer reaches out</h3><!-- [AGENT] first name -->
+            <p>A real conversation about your goals, your family, and your budget.</p>
+          </div>
+        </li>
+
+        <li class="lq-step">
+          <div class="lq-step-num" aria-hidden="true">03</div>
+          <div>
+            <h3>Compare your options</h3>
+            <p>She explains each one plainly so you can decide what's right, with no pressure.</p><!-- [AGENT] pronoun -->
+          </div>
+        </li>
+
+      </ol>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 6. MEET THE AGENT ═══ -->
+<section class="lq-sec lq-sec-w" aria-labelledby="lq-meet-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label">Your agent</span>
+      <h2 class="lq-h2" id="lq-meet-h2">Meet Jennifer</h2><!-- [AGENT] first name -->
+      <!-- [AGENT] bio paragraph -->
+      <p class="lq-bio">Jennifer Lawler is a licensed insurance agent at The Scheiderich Agency and works directly with the agency's life insurance clients. She is appointed for property and casualty as well as life and health insurance.</p>
+      <a href="/agents/jennifer-lawler.html" class="lq-link"><!-- [AGENT] slug + first name -->
+        Read Jennifer's full profile
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 7. FAQ ═══
+     The same five questions and answers appear in the FAQPage schema in <head>.
+     Change one, change the other. -->
+<section class="lq-sec lq-sec-alt" aria-labelledby="lq-faq-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label">Questions</span>
+      <h2 class="lq-h2" id="lq-faq-h2">Common questions</h2>
+      <div class="lq-faq">
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q">Is term or whole life better?</h3>
+          <p class="lq-faq-a">Neither is better across the board. Term usually costs less upfront for a set period; whole and universal last for life and build cash value. The right choice depends on what you're protecting and for how long.</p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q">Do I need a medical exam?</h3>
+          <p class="lq-faq-a">Some policies require one and some don't. It depends on the coverage amount, your age, and the product. Jennifer will tell you what to expect for the options you're considering.<!-- [AGENT] first name --></p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q">How long does it take to get covered?</h3>
+          <p class="lq-faq-a">Some policies can be approved quickly; others take several weeks for underwriting. Jennifer will give you a realistic timeline for your situation.<!-- [AGENT] first name --></p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q">Does it cost anything to talk with Jennifer?</h3><!-- [AGENT] first name -->
+          <p class="lq-faq-a">No. The conversation and the quote comparison are free, with no obligation.</p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q">What information do I need to get started?</h3>
+          <p class="lq-faq-a">Just your name, phone number, and email. Jennifer will ask anything else she needs during your call.<!-- [AGENT] first name + pronoun --></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 8. THE FORM ═══
+     Contact details only. Do not add health, age, date of birth, income or
+     tobacco questions to this form. -->
+<section class="lq-sec" id="lq-form" aria-labelledby="lq-form-h2">
+  <div class="container">
+    <div class="lq-wide">
+      <span class="lq-label">Get started</span>
+      <h2 class="lq-h2" id="lq-form-h2">Let's talk about your options</h2>
+
+      <div class="lq-form-card">
+        <form id="life-form" action="https://script.google.com/macros/s/AKfycbwnVURz6q5Uuo39rVwSOQGEbJYlq-BRA7dp4BzAK68-QxpcaFCA-fnVw_caQf9RBKE0/exec" method="POST">
+          <!-- [AGENT] backend: the Life Leads Apps Script web app URL. One script
+               serves every agent's page and routes by the hidden agent field
+               below, so a clone normally keeps this URL as it is. The action is
+               also the no-JavaScript fallback; the script accepts plain form posts. -->
+          <input type="hidden" name="agent" value="jennifer-lawler" /><!-- [AGENT] must match a key in the script's CONFIG.NOTIFY -->
+          <!-- Set by the script below from the ?src= URL parameter; stays "direct" without one. -->
+          <input type="hidden" name="src" value="direct" />
+          <!-- Lead ID, set by the script below at submit time. -->
+          <input type="hidden" name="id" value="" />
+          <!-- Spam trap. Real visitors never see or reach this field. Positioned
+               off-screen rather than display:none, because some bots skip fields
+               that are display:none. -->
+          <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+            <label>Leave this blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <div class="lq-row">
+            <div class="lq-group">
+              <label for="lq-name">Full name *</label>
+              <input type="text" id="lq-name" name="name" autocomplete="name" required />
+            </div>
+            <div class="lq-group">
+              <label for="lq-phone">Phone *</label>
+              <input type="tel" id="lq-phone" name="phone" autocomplete="tel" required />
+            </div>
+          </div>
+
+          <div class="lq-group">
+            <label for="lq-email">Email *</label>
+            <input type="email" id="lq-email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="lq-row">
+            <div class="lq-group">
+              <label for="lq-best-time">Best time to reach you</label>
+              <select id="lq-best-time" name="best_time">
+                <option value="" selected>Choose one (optional)</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+                <option value="Anytime">Anytime</option>
+              </select>
+            </div>
+            <div class="lq-group">
+              <label for="lq-interest">I'd like to talk about</label>
+              <select id="lq-interest" name="interest">
+                <option value="" selected>Choose one (optional)</option>
+                <option value="Term life">Term life</option>
+                <option value="Whole life">Whole life</option>
+                <option value="Universal life">Universal life</option>
+                <option value="Not sure yet — help me compare">Not sure yet — help me compare</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">Send to Jennifer</button><!-- [AGENT] first name -->
+          <p class="lq-err" id="lq-err" role="alert" hidden></p>
+
+          <p class="lq-consent">By submitting, you agree to be contacted by The Scheiderich Agency by phone, text, or email about life insurance. See our <a href="/terms-of-use.html">Terms of Use</a> and <a href="/privacy-policy.html">Privacy Policy</a>.</p>
+        </form>
+
+        <!-- ═══ 9. CONFIRMATION — shown in place of the form on success ═══ -->
+        <div class="lq-done" id="lq-done" hidden>
+          <div class="lq-done-badge" aria-hidden="true">&#10003;</div>
+          <h3 class="lq-done-h">Thanks<span id="lq-done-name"></span>.</h3>
+          <p class="lq-done-lead">Jennifer has your information and will reach out personally. If you'd like to talk sooner, call the office at <a href="tel:+17702684418">770-268-4418</a>.<!-- [AGENT] first name --></p>
+          <a href="/life-insurance-calculator.html" class="btn btn-outline">Try the life insurance calculator while you wait</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<!--#include virtual="/includes/footer.html" -->
+
+<script>
+  /* Life quote form — Life Leads Apps Script backend.
+     No agent-specific value lives in this script. The backend URL is read from
+     the form's action attribute and the agent slug from the hidden agent field,
+     so a cloned page only needs its HTML changed. */
+  (function () {
+    var form = document.getElementById('life-form');
+    if (!form) return;
+    var LIFE_SCRIPT_URL = form.getAttribute('action');
+    var done      = document.getElementById('lq-done');
+    var doneName  = document.getElementById('lq-done-name');
+    var errEl     = document.getElementById('lq-err');
+    var submitBtn = form.querySelector('[type="submit"]');
+    var btnText   = submitBtn.textContent;
+    var FAIL_MSG  = "We couldn't confirm your request went through. Please call 770-268-4418 and we'll take care of you.";
+
+    function field(name) { return form.querySelector('[name="' + name + '"]'); }
+
+    /* Campaign tag: ?src=qr, ?src=facebook, ?src=email, ?src=flyer.
+       "direct" when the parameter is absent. Reduced to a short safe token
+       because it is stored with the submission and sent to analytics. */
+    var src = 'direct';
+    try {
+      var raw = new URLSearchParams(window.location.search).get('src');
+      if (raw) {
+        raw = raw.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+        if (raw) src = raw;
+      }
+    } catch (e) { /* keep "direct" */ }
+    field('src').value = src;
+
+    /* Without fetch the plain form action still posts to the script. */
+    if (!window.fetch) return;
+
+    /* ═══════════════════════════════════════
+       LEAD ID
+       Generated here because the write uses mode:'no-cors', which makes the
+       response unreadable. The page must know its own row ID to check that the
+       row landed.
+
+       Format: LIFE-yyMMdd-XXXX. The alphabet leaves out I, O, 0 and 1 so an ID
+       read over the phone cannot be misheard.
+
+       The date MUST be Eastern, not the browser's local date. A visitor in
+       Pacific time at 10pm is already on the next day in Atlanta. Same rule as
+       the referral pages.
+    ═══════════════════════════════════════ */
+    function easternStamp(date) {
+      try {
+        var parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/New_York',
+          year: '2-digit', month: '2-digit', day: '2-digit'
+        }).formatToParts(date);
+        var get = function (type) {
+          for (var i = 0; i < parts.length; i++) if (parts[i].type === type) return parts[i].value;
+          return '';
+        };
+        var stamp = get('year') + get('month') + get('day');
+        if (/^\d{6}$/.test(stamp)) return stamp;
+      } catch (e) { /* fall through */ }
+      // Fallback for engines without IANA time zone support: fixed -05:00 offset.
+      // Off by an hour during EDT, which only matters between 11pm and midnight.
+      var p2 = function (n) { return ('0' + n).slice(-2); };
+      var d = new Date(date.getTime() + (date.getTimezoneOffset() - 300) * 60000);
+      return p2(d.getFullYear() % 100) + p2(d.getMonth() + 1) + p2(d.getDate());
+    }
+
+    function makeLeadId() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var suffix = '';
+      for (var i = 0; i < 4; i++) {
+        suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return 'LIFE-' + easternStamp(new Date()) + '-' + suffix;
+    }
+
+    /* ═══════════════════════════════════════
+       READ-BACK CHECK
+       JSONP, because Apps Script blocks cross-origin fetch reads.
+       Response shape: callbackName({ found: true|false })
+       Calls onResult with true, false, or null. null means no usable answer:
+       the script failed to load, returned something else, or 10 seconds passed.
+       The script tag and the global callback are removed on every path.
+    ═══════════════════════════════════════ */
+    function checkLead(id, onResult) {
+      var cbName  = 'lifeLeadCb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+      var s       = document.createElement('script');
+      var settled = false;
+      var timer;
+
+      function dropCallback() {
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+      }
+      function finish(result, mayStillArrive) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        if (mayStillArrive) {
+          // A response that turns up after the timeout must not throw; it
+          // removes this stub when it lands.
+          window[cbName] = dropCallback;
+        } else {
+          dropCallback();
+        }
+        if (s.parentNode) s.parentNode.removeChild(s);
+        onResult(result);
+      }
+
+      window[cbName] = function (data) { finish(!!(data && data.found === true), false); };
+      s.onerror = function () { finish(null, false); };
+      // Loaded without calling back, e.g. an error page instead of JSONP.
+      s.onload  = function () { finish(null, false); };
+      timer = setTimeout(function () { finish(null, true); }, 10000);
+
+      s.src = LIFE_SCRIPT_URL + '?action=check&id=' + encodeURIComponent(id) +
+              '&callback=' + cbName + '&t=' + Date.now();
+      document.head.appendChild(s);
+    }
+
+    function fail() {
+      /* Re-enable and leave every field as typed so nothing is lost. */
+      submitBtn.disabled = false;
+      submitBtn.textContent = btnText;
+      errEl.textContent = FAIL_MSG;
+      errEl.hidden = false;
+    }
+
+    /* Only ever called after a read-back confirmed the row exists. */
+    function succeed() {
+      var first = (field('name').value || '').trim().split(/\s+/)[0];
+      doneName.textContent = first ? ', ' + first : '';
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', {
+          form: 'life-quote-' + field('agent').value,
+          src: src
+        });
+      }
+
+      form.hidden = true;
+      done.hidden = false;
+      done.setAttribute('tabindex', '-1');
+      done.focus({ preventScroll: true });
+      done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      errEl.hidden = true;
+      if (!form.reportValidity()) { return; }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      var id = makeLeadId();
+      field('id').value = id;
+
+      /* no-cors makes the response opaque: a resolved promise means the request
+         left the browser, not that the script accepted it. Never trust it;
+         confirm by reading the row back. */
+      fetch(LIFE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          id:        id,
+          agent:     field('agent').value,
+          name:      field('name').value.trim(),
+          phone:     field('phone').value.trim(),
+          email:     field('email').value.trim(),
+          best_time: field('best_time').value,
+          interest:  field('interest').value,
+          src:       src,
+          website:   field('website').value
+        })
+      })
+      .then(function () {
+        /* Write, wait 1.5s, read back. Not found gets one more look after
+           2.5s; no usable answer is a failure straight away. */
+        setTimeout(function () {
+          checkLead(id, function (found) {
+            if (found === true) { succeed(); return; }
+            if (found === null) { fail(); return; }
+            setTimeout(function () {
+              checkLead(id, function (foundAgain) {
+                if (foundAgain === true) { succeed(); } else { fail(); }
+              });
+            }, 2500);
+          });
+        }, 1500);
+      })
+      .catch(fail);
+    });
+  })();
+</script>
+</body>
+</html>
