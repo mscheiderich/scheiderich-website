@@ -434,6 +434,8 @@
   <a href="/team/admin/" class="admin-link">Admin Access</a>
 </footer>
 
+<!-- Shared DD Tracker status rules — the tracker page loads this same file. -->
+<script src="/team/dd-status.js"></script>
 <script>
   /* ── REFERRAL HUB AGENT SELECTOR ──
      Mirrors the Hero Profiler selector below: same markup, same classes,
@@ -549,18 +551,6 @@
       });
     }
 
-    function parseDateLocal(str) {
-      if (!str) return null;
-      const parts = str.split('-').map(Number);
-      if (parts.length !== 3 || parts.some(isNaN)) return null;
-      return new Date(parts[0], parts[1] - 1, parts[2]);
-    }
-
-    function todayMidnight() {
-      const d = new Date();
-      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    }
-
     try {
       const res  = await jsonp({ action: 'clients' });
       const data = Array.isArray(res.data) ? res.data : [];
@@ -571,23 +561,18 @@
         return;
       }
 
-      const today = todayMidnight();
+      // Status rules are the tracker's own, shared in /team/dd-status.js, so
+      // these pills always match the tracker's stat cards. Inside the try on
+      // purpose: if that file fails to load, the pills fall back to dashes.
+      const { calcStatus } = window.DDStatus;
       let overdue = 0, dueSoon = 0, pending = 0;
 
       data.forEach(c => {
-        if (c.ddReceived !== 'N') return;
-        if (c.ddDiscount !== 'Y') return;
-        if (c.status === 'Archived') return;
-
-        const due = parseDateLocal(c.dueDate);
-        if (!due) return;
-
-        const diffMs   = due - today;
-        const diffDays = Math.floor(diffMs / 86400000);
-
-        if (diffDays < 0)        overdue++;
-        else if (diffDays <= 3)  dueSoon++;
-        else                     pending++;
+        const s = calcStatus(c);
+        if (s === 'Archived' || s === 'Discount Removed') return;
+        if (s === 'Overdue')  overdue++;
+        if (s === 'Due Soon') dueSoon++;
+        if (s === 'Pending')  pending++;
       });
 
       const now = new Date();
