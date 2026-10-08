@@ -409,6 +409,8 @@
     }
     input[type="text"],
     input[type="date"],
+    input[type="tel"],
+    input[type="email"],
     select,
     textarea {
       height: 36px;
@@ -425,6 +427,9 @@
     textarea { height: auto; padding: 10px; resize: vertical; }
     input:focus, select:focus, textarea:focus { border-color: var(--navy); }
     input.err, select.err { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,.12); }
+    /* Policy number is household-level — read-only when editing one client. */
+    #f_policyNumber:disabled { background: var(--bg-s); color: var(--muted); cursor: not-allowed; }
+    .field-hint { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
 
     .toggle-row { display: flex; gap: 8px; }
     .toggle-opt {
@@ -594,8 +599,13 @@
     .mem-row:hover { background: #eef2f8; }
     .mem-row.mem-archived { background: #f8f8f8; }
     .mem-row.mem-archived .mem-name-txt { color: #94a3b8; }
+    .mem-id { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
     .mem-name { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; min-width: 0; }
     .mem-name-txt { font-weight: 600; color: var(--text); }
+    /* Phone / email under the name — small, muted, only when present. */
+    .mem-contact { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 12px; }
+    .mem-contact a { color: var(--muted); text-decoration: none; overflow-wrap: anywhere; }
+    .mem-contact a:hover { color: var(--navy); text-decoration: underline; }
     .mem-controls { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
 
     /* Inline DD / GS discount toggles */
@@ -732,6 +742,9 @@
     }
     .he-mem .he-names { display: flex; gap: 8px; flex: 1; min-width: 180px; }
     .he-mem .he-names input { flex: 1; min-width: 0; }
+    /* Phone + email sit on their own line under the names. */
+    .he-mem .he-contact { display: flex; gap: 8px; flex-basis: 100%; }
+    .he-mem .he-contact input { flex: 1; min-width: 0; }
     .he-mem-toggles { display: flex; gap: 6px; }
     .he-trash {
       width: 36px; height: 36px;
@@ -767,6 +780,7 @@
       .hh-head, .mem-row { padding-left: 14px; padding-right: 14px; }
       .hh-head-actions { width: 100%; }
       .hh-head-actions .btn, .hh-addmem { flex: 1; }
+      .he-mem .he-contact { flex-direction: column; }
     }
   </style>
 
@@ -875,6 +889,19 @@
             <div class="form-group">
               <label>Last name *</label>
               <input type="text" id="f_lastName" placeholder="Last name" />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" id="f_phone" placeholder="Phone" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="f_email" placeholder="Email" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label>Policy number</label>
+              <input type="text" id="f_policyNumber" placeholder="Policy number" autocomplete="off" />
+              <div class="field-hint" id="f_policyNumberHint" style="display:none;">Shared by the household &#8212; edit with Edit household</div>
             </div>
             <div class="form-group">
               <label>Producer *</label>
@@ -1073,6 +1100,10 @@
           <label>Household Name *</label>
           <input type="text" id="he_householdName" placeholder="The Smith Household" />
         </div>
+        <div class="form-group full">
+          <label>Policy Number</label>
+          <input type="text" id="he_policyNumber" placeholder="Policy number" autocomplete="off" />
+        </div>
         <div class="form-group">
           <label>Producer *</label>
           <select id="he_producer">
@@ -1163,11 +1194,60 @@
   /* ═══════════════════════════════════════
      CONFIGURATION
   ═══════════════════════════════════════ */
-  const SHEET_ID   = '1GNDONX_yupxaHs4Amxr_7TwX7bJ-3djouayzIzpR79c';
-  const API_KEY    = 'AIzaSyAqfMT5AKrCEuPChn2YD2MbfT10sG660B8';
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxiqwl6WUXwoi0q6bqnYZrvATS6FEr4MDj-m9GjBf8iDGTSFJCezqfMEx78jCHoGLN/exec';
   // Whose name rides on the life insurance card. One line to change hands.
   const LIFE_SPECIALIST_NAME = 'Jennifer';
+
+  /* ═══════════════════════════════════════
+     JSONP READS
+     Every read goes through the Apps Script, never the sheet directly, so the
+     sheet can stay Restricted. A browser fetch() of an Apps Script response is
+     blocked by CORS; a <script> tag is not.
+  ═══════════════════════════════════════ */
+  const JSONP_TIMEOUT_MS = 15000;
+  // no-cors writes resolve when the request LEAVES the browser, not when the
+  // sheet has changed. Re-reading immediately can return the pre-write rows,
+  // which looks like a deleted row "coming back".
+  const WRITE_SETTLE_MS  = 1500;
+  let jsonpSeq = 0;
+
+  function jsonp(params) {
+    return new Promise((resolve, reject) => {
+      const cb     = `ddJsonp_${Date.now()}_${jsonpSeq++}`;
+      const script = document.createElement('script');
+      const query  = new URLSearchParams(Object.assign({}, params, { callback: cb, t: Date.now() }));
+
+      const cleanup = () => {
+        clearTimeout(timer);
+        script.remove();
+        delete window[cb];
+      };
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('Request timed out'));
+      }, JSONP_TIMEOUT_MS);
+
+      window[cb] = payload => {
+        cleanup();
+        if (!payload || payload.success === false) {
+          reject(new Error((payload && payload.error) || 'Request failed'));
+          return;
+        }
+        resolve(payload);
+      };
+      script.onerror = () => {
+        cleanup();
+        reject(new Error('Network error'));
+      };
+
+      script.src = `${SCRIPT_URL}?${query}`;
+      document.head.appendChild(script);
+    });
+  }
+
+  function writeSettle() {
+    return new Promise(resolve => setTimeout(resolve, WRITE_SETTLE_MS));
+  }
 
   /* ═══════════════════════════════════════
      DATA LAYER
@@ -1175,19 +1255,8 @@
   const DataLayer = {
     async getClients() {
       try {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clients!A:AA?key=${API_KEY}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        const rows = json.values || [];
-        if (rows.length < 2) return { success: true, data: [] };
-        const headers = rows[0];
-        const data = rows.slice(1).map(row => {
-          const obj = {};
-          headers.forEach((h, i) => { obj[h] = row[i] !== undefined ? row[i] : ''; });
-          return obj;
-        });
-        return { success: true, data };
+        const res = await jsonp({ action: 'clients' });
+        return { success: true, data: Array.isArray(res.data) ? res.data : [] };
       } catch (e) {
         return { success: false, error: e.message };
       }
@@ -1274,33 +1343,19 @@
   }
 
   /* ═══════════════════════════════════════
-     PRODUCER LIST — read live from the Settings tab
-     Column A = name, B = email, C = Active. The notification-config rows in
-     that tab live in columns D/E and leave A and B blank, so a row only counts
-     as a producer when it has BOTH a name and an email.
+     PRODUCER LIST — read live from the Settings tab, via the Apps Script.
+     The script decides who counts as an active producer and returns just the
+     names, e.g. ["Mike","Crissy",...].
   ═══════════════════════════════════════ */
   const PRODUCER_FALLBACK   = ['Mike','Crissy','Iris','Mark','Wendy','Scott','Jennifer'];
   const PRODUCER_SELECT_IDS = ['producerFilter', 'f_producer', 'he_producer'];
-  const ACTIVE_WORDS        = ['yes', 'y', 'true', '1', 'active'];
-
-  // Blank Active cell = active. Anything not in ACTIVE_WORDS = inactive.
-  function isActiveProducer(val) {
-    const v = String(val === undefined || val === null ? '' : val).trim();
-    if (v === '') return true;
-    return ACTIVE_WORDS.includes(v.toLowerCase());
-  }
 
   async function fetchProducers() {
     try {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Settings!A:C?key=${API_KEY}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      const rows = json.values || [];
-      return rows.slice(1)
-        .filter(r => String(r[0] || '').trim() !== '' && String(r[1] || '').includes('@'))
-        .filter(r => isActiveProducer(r[2]))
-        .map(r => String(r[0]));
+      const res = await jsonp({ action: 'producers' });
+      return (Array.isArray(res.data) ? res.data : [])
+        .map(n => String(n).trim())
+        .filter(n => n !== '');
     } catch (e) {
       console.error('Producer load failed:', e);
       return [];
@@ -1489,7 +1544,8 @@
                          || `The ${primary.lastName || ''} Household`.trim(),
         producer:      primary.producer   || '',
         policyDate:    primary.policyDate  || '',
-        dueDate:       primary.dueDate     || ''
+        dueDate:       primary.dueDate     || '',
+        policyNumber:  primary.policyNumber || ''
       });
     });
 
@@ -1605,6 +1661,13 @@
     return `<button class="${cls}" title="${title}" onclick="toggleReceived('${c.id}','${m.flag}',event)">${inner}</button>`;
   }
 
+  // Phone is free text. For the tel: link keep digits and a leading +, and
+  // drop anything from the first letter on ("x12", "ext 4") so an extension
+  // is not dialled as part of the number.
+  function telHref(phone) {
+    return String(phone || '').split(/[a-z]/i)[0].replace(/[^\d+]/g, '');
+  }
+
   // One member row inside a household card.
   function memberRowHtml(c) {
     const status   = calcStatus(c);
@@ -1627,11 +1690,23 @@
          <button class="btn-action delete"    title="Delete"    onclick="openDeleteModal('${c.id}')">&#128465;</button>`
       : '';
 
+    // Phone / email links, only when present. stopPropagation keeps a tap on
+    // a link from also opening the edit modal behind it.
+    const phone = String(c.phone || '').trim();
+    const email = String(c.email || '').trim();
+    const contact = [];
+    if (phone) contact.push(`<a href="tel:${esc(telHref(phone))}" onclick="event.stopPropagation()">${esc(phone)}</a>`);
+    if (email) contact.push(`<a href="mailto:${esc(email)}" onclick="event.stopPropagation()">${esc(email)}</a>`);
+    const contactHtml = contact.length ? `<div class="mem-contact">${contact.join('')}</div>` : '';
+
     return `
       <div class="mem-row${archived ? ' mem-archived' : ''}" onclick="openEditModal('${c.id}')">
-        <div class="mem-name">
-          <span class="mem-name-txt">${esc(c.firstName)} ${esc(c.lastName)}</span>
-          <span class="badge ${badgeCls}">${status}</span>
+        <div class="mem-id">
+          <div class="mem-name">
+            <span class="mem-name-txt">${esc(c.firstName)} ${esc(c.lastName)}</span>
+            <span class="badge ${badgeCls}">${status}</span>
+          </div>
+          ${contactHtml}
         </div>
         <div class="mem-controls" onclick="event.stopPropagation()">
           ${pillsHtml}
@@ -1655,7 +1730,12 @@
       if (statusFilter !== 'all' && s !== statusFilter) return false;
       if (producer && c.producer !== producer) return false;
       if (search) {
-        const hay = `${c.firstName} ${c.lastName} ${c.producer}`.toLowerCase();
+        // Phone goes in twice — as typed and digits-only — so "7705551234"
+        // finds "770-555-1234".
+        const hay = [
+          c.firstName, c.lastName, c.producer,
+          c.phone, String(c.phone || '').replace(/\D/g, ''), c.email, c.policyNumber
+        ].map(v => String(v || '')).join(' ').toLowerCase();
         if (!hay.includes(search)) return false;
       }
       return true;
@@ -1716,6 +1796,7 @@
               <span>Producer: <b>${h.producer ? esc(h.producer) : '&#8212;'}</b></span>
               <span>Policy: <b>${formatDate(h.policyDate)}</b></span>
               <span>Due: <b class="${dueCls}">${formatDate(h.dueDate)}</b></span>
+              <span>Policy #: <b>${h.policyNumber ? esc(h.policyNumber) : '&#8212;'}</b></span>
             </div>
           </div>
           <div class="hh-head-actions">
@@ -1935,9 +2016,12 @@
   }
 
   function resetForm() {
-    ['f_firstName','f_lastName','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate','f_thankYouDate','f_welcomeCallDate','f_lifeCallDate','f_lifeNoteDate'].forEach(id => {
+    ['f_firstName','f_lastName','f_phone','f_email','f_policyNumber','f_discountAmount','f_contactNote','f_ddReceivedDate','f_gsReceivedDate','f_thankYouDate','f_welcomeCallDate','f_lifeCallDate','f_lifeNoteDate'].forEach(id => {
       document.getElementById(id).value = '';
     });
+    // A new client starts its own household, so it sets that household's policy number.
+    document.getElementById('f_policyNumber').disabled = false;
+    document.getElementById('f_policyNumberHint').style.display = 'none';
     document.getElementById('f_producer').value       = '';
     document.getElementById('f_policyDate').value     = '';
     document.getElementById('f_dueDate').value        = '';
@@ -1953,6 +2037,12 @@
   function populateForm(c) {
     document.getElementById('f_firstName').value      = c.firstName || '';
     document.getElementById('f_lastName').value       = c.lastName  || '';
+    document.getElementById('f_phone').value          = c.phone     || '';
+    document.getElementById('f_email').value          = c.email     || '';
+    // Household-level: shown here, changed only from the Edit household screen.
+    document.getElementById('f_policyNumber').value    = c.policyNumber || '';
+    document.getElementById('f_policyNumber').disabled = true;
+    document.getElementById('f_policyNumberHint').style.display = '';
     document.getElementById('f_producer').value       = c.producer  || '';
     document.getElementById('f_policyDate').value     = c.policyDate || '';
     document.getElementById('f_dueDate').value        = c.dueDate   || '';
@@ -2135,6 +2225,10 @@
     document.querySelectorAll('.err').forEach(el => el.classList.remove('err'));
   }
 
+  function looksLikeEmail(s) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
+  }
+
   async function saveClient() {
     clearFieldErrors();
     const firstName  = document.getElementById('f_firstName').value.trim();
@@ -2142,8 +2236,12 @@
     const producer   = document.getElementById('f_producer').value;
     const policyDate = document.getElementById('f_policyDate').value;
     const dueDate    = document.getElementById('f_dueDate').value;
+    const phone      = document.getElementById('f_phone').value.trim();
+    const email      = document.getElementById('f_email').value.trim();
 
     let valid = true;
+    // Soft check only: a blank email is fine, a malformed one is not. Phone is free text.
+    if (email && !looksLikeEmail(email)) { document.getElementById('f_email').classList.add('err'); valid = false; }
     if (!firstName)  { document.getElementById('f_firstName').classList.add('err');  valid = false; }
     if (!lastName)   { document.getElementById('f_lastName').classList.add('err');   valid = false; }
     if (!producer)   { document.getElementById('f_producer').classList.add('err');   valid = false; }
@@ -2166,8 +2264,10 @@
     let clientObj;
     if (editingId) {
       const existing = allClients.find(c => c.id === editingId) || {};
+      // policyNumber rides along unchanged from `existing` — this screen never edits it.
       clientObj = Object.assign({}, existing, {
         firstName, lastName, producer, policyDate, dueDate,
+        phone, email,
         ddDiscount:      formToggles.ddDiscount,
         ddReceived:      formToggles.ddReceived,
         gsDiscount:      formToggles.gsDiscount,
@@ -2197,6 +2297,8 @@
         householdId:     genId(),
         householdName:   `The ${lastName} Household`,
         firstName, lastName, producer, policyDate, dueDate,
+        phone, email,
+        policyNumber:    document.getElementById('f_policyNumber').value.trim(),
         ddDiscount:      formToggles.ddDiscount,
         ddReceived:      formToggles.ddReceived,
         ddReceivedDate:  formToggles.ddReceived === 'Y' ? (ddRcvDate || todayStr()) : '',
@@ -2226,6 +2328,7 @@
 
     if (result.success) {
       showToast('Client saved successfully', 'success');
+      await writeSettle();
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
@@ -2255,6 +2358,7 @@
     const result = await DataLayer.updateClient(updated);
     if (result.success) {
       showToast('Note updated', 'success');
+      await writeSettle();
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
@@ -2278,6 +2382,7 @@
     const result = await DataLayer.deleteClient(deletingId);
     if (result.success) {
       showToast('Client deleted', 'success');
+      await writeSettle();
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
@@ -2308,6 +2413,7 @@
     if (result.success) {
       showToast('Client restored to active tracking', 'success');
       setStatusFilter('all'); // switch back to main view so restored record is visible
+      await writeSettle();
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
@@ -2324,6 +2430,7 @@
     return {
       id: genId(), _new: true,
       firstName: '', lastName: '', producer: '', policyDate: '', dueDate: '',
+      phone: '', email: '', policyNumber: '',
       ddDiscount: 'N', ddReceived: 'N', ddReceivedDate: '',
       gsDiscount: 'N', gsReceived: 'N', gsReceivedDate: '',
       discountAmount: '', status: '', contactNote: '',
@@ -2351,6 +2458,7 @@
     document.getElementById('he_producer').value   = primary.producer   || '';
     document.getElementById('he_policyDate').value = primary.policyDate || '';
     document.getElementById('he_dueDate').value    = primary.dueDate    || '';
+    document.getElementById('he_policyNumber').value = primary.policyNumber || '';
 
     if (addBlank) householdMembers.push(makeBlankMember());
 
@@ -2374,6 +2482,10 @@
             <button class="cert-toggle${gsOn}" title="Does the Good Student discount apply to this member?" onclick="toggleHouseholdMemberDiscount(${i},'gsDiscount')">GS${m.gsDiscount === 'Y' ? ' applies' : '?'}</button>
           </div>
           <button class="he-trash" title="Remove member" onclick="removeHouseholdMember(${i})">&#128465;</button>
+          <div class="he-contact">
+            <input type="tel"   placeholder="Phone" value="${esc(m.phone)}" data-idx="${i}" data-field="phone" autocomplete="off" oninput="onHouseholdNameInput(this)" />
+            <input type="email" placeholder="Email" value="${esc(m.email)}" data-idx="${i}" data-field="email" autocomplete="off" oninput="onHouseholdNameInput(this)" />
+          </div>
         </div>`;
     }).join('');
   }
@@ -2431,6 +2543,7 @@
     const producer      = document.getElementById('he_producer').value;
     const policyDate    = document.getElementById('he_policyDate').value;
     const dueDate       = document.getElementById('he_dueDate').value;
+    const policyNumber  = document.getElementById('he_policyNumber').value.trim();
 
     if (!householdName || !producer || !policyDate || !dueDate) {
       showToast('Fill in household name, producer, policy date and due date', 'error');
@@ -2445,9 +2558,16 @@
       showToast('Every member needs a first and last name', 'error');
       return;
     }
+    // Same soft email check as the client screen: blank is fine, malformed is not.
+    const badEmail = householdMembers.find(m => String(m.email || '').trim() && !looksLikeEmail(m.email));
+    if (badEmail) {
+      showToast(`Check the email address for ${String(badEmail.firstName).trim()}`, 'error');
+      return;
+    }
 
     const now = new Date().toISOString();
-    const shared = { householdName, producer, policyDate, dueDate };
+    // policyNumber is household-level: the script writes it onto every member.
+    const shared = { householdName, producer, policyDate, dueDate, policyNumber };
 
     // Each member is sent as a FULL client object with shared fields written on.
     const members = householdMembers.map(m => {
@@ -2455,6 +2575,8 @@
         householdId: householdEditId,
         firstName:   String(m.firstName).trim(),
         lastName:    String(m.lastName).trim(),
+        phone:       String(m.phone || '').trim(),
+        email:       String(m.email || '').trim(),
         updatedAt:   now
       });
       delete full._new;
@@ -2472,6 +2594,7 @@
     const result = await DataLayer.saveHousehold(payload);
     if (result.success) {
       showToast('Household saved', 'success');
+      await writeSettle();
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
@@ -2486,6 +2609,7 @@
     const result = await DataLayer.deleteHousehold(householdEditId);
     if (result.success) {
       showToast('Household deleted', 'success');
+      await writeSettle();
       await refreshData();
     } else {
       showToast('Error saving — please try again', 'error');
