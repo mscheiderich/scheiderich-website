@@ -751,12 +751,28 @@
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- Hub key. This file exists ONLY on the web server — it is gitignored and
+     must never be committed (the GitHub repo is public). See HUB_KEY below. -->
+<script src="/team/hub-secret.js"></script>
 <script>
   /* ═══════════════════════════════════════
      CONFIGURATION
   ═══════════════════════════════════════ */
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4xKO0W2QtG_97DWHevo6-lBM6zGNPblEt_rPB-r35KwpcqYVHT_3XzD6e6fQFx2SA6A/exec';
   const SITE_BASE  = 'https://thescheiderichagency.com/refer/';
+
+  // Hub key — the Referrals script will not serve the list reads (partners,
+  // companies, referrals, lists) or accept the two Hub writes (addPartner,
+  // setStage) without it. Sent as `k` on every request this page makes.
+  //
+  // The value is deliberately NOT in this file: the GitHub repo is public, so
+  // anything committed here is readable by anyone. It is set by
+  // /team/hub-secret.js, a one-line file placed by hand on the server:
+  //     window.HUB_SECRET = '…';
+  // /team/ is behind Cloudflare Access, so only logged-in staff can load that
+  // file or see the key. The matching value lives in the script's Script
+  // Properties under HUB_SECRET.
+  const HUB_KEY = String(window.HUB_SECRET || '');
 
   const AGENTS = [
     { slug: 'mike-scheiderich', first: 'mike',     label: 'Mike'     },
@@ -800,7 +816,21 @@
       }
 
       try {
-        window[callbackName] = function (data) { cleanup(); resolve(data); };
+        window[callbackName] = function (data) {
+          cleanup();
+          // A refused key must read as a failure, not as an empty list.
+          if (data && data.success === false && data.error === 'unauthorized') {
+            showError(HUB_KEY
+              ? 'The Hub key was not accepted. Hard-refresh (Ctrl + Shift + R). If this stays, tell Mike.'
+              : 'The Hub key file is missing on the server, so partner data cannot load. Tell Mike.');
+            reject(new Error('unauthorized'));
+            return;
+          }
+          resolve(data);
+        };
+
+        // Every read this page makes is a gated one, so the key rides on all of them.
+        params = Object.assign({}, params, { k: HUB_KEY });
 
         const qs = Object.keys(params)
           .filter(k => params[k] !== undefined && params[k] !== null && params[k] !== '')
@@ -826,7 +856,9 @@
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
+        // addPartner and setStage are refused without the key. The response
+        // is opaque either way — the re-read that follows is what confirms it.
+        body: JSON.stringify(Object.assign({}, payload, { k: HUB_KEY }))
       });
       return { success: true };
     } catch (e) {
@@ -1033,7 +1065,10 @@
       document.getElementById('partnerCount').textContent     = 'Unavailable';
       document.getElementById('partnerEmptyText').textContent = 'Could not load partners. Tap Refresh to try again.';
       document.getElementById('partnerEmpty').style.display   = 'block';
-      showError('Unable to load partners. Check your connection and refresh.');
+      // A refused Hub key already put its own, more useful message in the banner.
+      if (!e || e.message !== 'unauthorized') {
+        showError('Unable to load partners. Check your connection and refresh.');
+      }
     }
   }
 

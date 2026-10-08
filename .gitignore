@@ -2,3 +2,6 @@ CLAUDE.md
 claude.md
 PROJECT_STATUS.md
 *.md.bak
+
+# Referral Hub key — lives on the web server only. Never commit it: this repo is public.
+team/hub-secret.js
