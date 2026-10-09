@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Renters Insurance for Your Residents | Jennifer Lawler | The Scheiderich Agency</title>
+  <!-- [AGENT] name in the title above -->
+  <meta name="description" content="Leasing teams and property managers: refer residents to Jennifer Lawler for fast renters insurance quotes, coverage that lists your property the way your lease requires, and proof sent where you need it." />
+  <!-- [AGENT] name in the description above -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+
+  <!-- Link preview. This page is texted and emailed to partners, so these tags
+       are what they see before they tap. [AGENT] name, slug and photo below. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="The Scheiderich Agency" />
+  <meta property="og:title" content="Renters Insurance for Your Residents | Jennifer Lawler | The Scheiderich Agency" />
+  <meta property="og:description" content="Leasing teams and property managers: refer residents to Jennifer Lawler for fast renters insurance quotes, coverage that lists your property the way your lease requires, and proof sent where you need it." />
+  <meta property="og:url" content="https://thescheiderichagency.com/rental-referral/jennifer-lawler/" />
+  <meta property="og:image" content="https://thescheiderichagency.com/jennifer-lawler.png" />
+  <meta property="og:image:alt" content="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency in Buford, GA" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <style>
+    <!--#include virtual="/includes/site-css.html" -->
+    /* ═══════════════════════════════════════
+       RENTAL REFERRAL PAGE — page-scoped styles
+       Every class here is prefixed rr- and exists only on this page type.
+       Nothing overrides a shared class from /includes/site-css.html.
+       Written mobile-first: the base rules are the phone layout, and the
+       min-width blocks at the bottom add columns as room appears.
+       Widths and breakpoints match /refer/: 820px wide, 660px narrow, form rows
+       pair up above 760px, hero goes two-column above 1100px.
+    ═══════════════════════════════════════ */
+    /* ── Hero ── */
+    .rr-hero { background: var(--navy); position: relative; overflow: hidden; }
+    .rr-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 72% 28%, rgba(217,104,42,.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 5%  80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .rr-hero-wrap {
+      position: relative; z-index: 1;
+      max-width: 820px;              /* WIDE — matches the form section */
+      margin-left: auto; margin-right: auto;
+      padding: 52px 0 48px;
+    }
+    /* One column with the text first from source order; two columns (text LEFT,
+       photo RIGHT) above the nav breakpoint. Exactly one photo element exists in
+       the markup. */
+    .rr-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+      justify-items: center;
+    }
+    .rr-hero-text { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    /* Block, not flex: this line wraps on a phone, and the dot should stay with
+       the first word instead of floating beside both lines. */
+    .rr-eyebrow {
+      font-size: 11.5px; font-weight: 600; letter-spacing: .1em; line-height: 1.5;
+      text-transform: uppercase; color: rgba(255,255,255,.48); margin-bottom: 18px;
+    }
+    .rr-dot {
+      display: inline-block; vertical-align: middle; position: relative; top: -1px;
+      width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: var(--orange);
+    }
+    .rr-hero h1 { font-size: clamp(28px, 3.4vw, 40px); color: #fff; font-weight: 700; margin-bottom: 16px; }
+    /* Running prose stays left-aligned; centring it hurts readability. */
+    .rr-hero-body { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 30px; text-align: left; }
+    .rr-hero-btns { display: flex; flex-direction: column; align-items: stretch; align-self: stretch; gap: 12px; }
+    .rr-hero-btns .btn { width: 100%; }
+    .rr-hero-side { width: 100%; max-width: 230px; }
+    .rr-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%;
+    }
+    .rr-hero-photo img { width: 100%; height: auto; display: block; }
+    .rr-namecard {
+      margin-top: 12px; padding: 13px 14px; text-align: center;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--r);
+    }
+    .rr-namecard strong { display: block; font-family: 'Lora', serif; font-size: 16px; font-weight: 600; color: #fff; line-height: 1.3; }
+    .rr-namecard span { display: block; font-size: 12.5px; color: rgba(255,255,255,.6); line-height: 1.5; }
+    .rr-trust {
+      list-style: none; margin: 36px 0 0; padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 13px;
+    }
+    .rr-trust li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13.5px; color: rgba(255,255,255,.74); line-height: 1.45;
+    }
+    .rr-trust svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; color: var(--orange); }
+    /* ── Sections ── */
+    .rr-sec { padding: 56px 0; }
+    .rr-sec-w { background: var(--bg-w); }
+    .rr-sec-alt { background: var(--bg-s); }
+    /* The sticky header is 66px tall; keep the form heading clear of it when a
+       button scrolls here. */
+    #rr-form { scroll-margin-top: 80px; }
+    /* ── Section widths ── two values only, both centred, as on /refer/:
+         WIDE   820px — the hero and the form
+         NARROW 660px — everything else */
+    .rr-wide, .rr-narrow { margin-left: auto; margin-right: auto; }
+    .rr-wide   { max-width: 820px; }
+    .rr-narrow { max-width: 660px; }
+    .rr-label {
+      display: block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+    }
+    .rr-h2 { font-size: clamp(23px, 2.6vw, 33px); margin-bottom: 16px; }
+    .rr-sub { font-size: 16px; color: var(--muted); line-height: 1.68; margin-bottom: 28px; }
+    .rr-fine { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 16px; }
+    .rr-btn-row { margin-top: 26px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+    /* Long button labels must wrap on a phone rather than push past the viewport. */
+    .rr-btn-row .btn, .rr-cta-btns .btn, .rr-intro-btns .btn, .rr-link-row .btn {
+      white-space: normal; height: auto; min-height: var(--btn-h);
+      padding-top: 11px; padding-bottom: 11px; text-align: center;
+    }
+    /* ── Cards (where move-ins get stuck / local partner) ── */
+    .rr-cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .rr-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+    .rr-card h3 { font-size: 16.5px; margin-bottom: 6px; }
+    .rr-card p { font-size: 14px; color: var(--muted); line-height: 1.62; }
+    /* ── How it works — three steps ── */
+    .rr-steps { list-style: none; margin: 0 0 30px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .rr-step {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+    .rr-step-num {
+      font-family: 'Lora', serif; font-size: 13px; font-weight: 700;
+      color: var(--orange); letter-spacing: .1em; flex-shrink: 0; padding-top: 3px;
+    }
+    .rr-step h3 { font-size: 16.5px; margin-bottom: 5px; }
+    .rr-step p { font-size: 14px; color: var(--muted); line-height: 1.62; }
+    /* ── Turnaround table ── */
+    .rr-table-wrap { overflow-x: auto; }
+    .rr-table { width: 100%; border-collapse: collapse; background: var(--bg-w); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--sh-sm); }
+    .rr-table th, .rr-table td { text-align: left; padding: 15px 16px; font-size: 14.5px; line-height: 1.55; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .rr-table tbody tr:last-child th, .rr-table tbody tr:last-child td { border-bottom: none; }
+    .rr-table thead th {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); background: var(--bg); padding-top: 12px; padding-bottom: 12px;
+    }
+    .rr-table tbody th { font-weight: 500; color: var(--muted); width: 48%; }
+    .rr-table td { font-weight: 600; color: var(--text); }
+    /* ── Requirements checklist ── */
+    .rr-req { background: var(--navy); border-radius: var(--r-lg); padding: 28px 22px; margin: 4px 0 24px; }
+    .rr-req-title { font-family: 'Lora', serif; font-size: 17px; color: #fff; margin-bottom: 14px; }
+    .rr-req ul { list-style: none; margin: 0; }
+    .rr-req li {
+      display: flex; align-items: flex-start; gap: 11px;
+      font-size: 14.5px; color: rgba(255,255,255,.76); line-height: 1.6;
+      padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.09);
+    }
+    .rr-req li:last-child { border-bottom: none; }
+    .rr-req svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 4px; color: var(--orange); }
+    .rr-after { font-size: 15.5px; color: var(--text); line-height: 1.68; }
+    /* ── FAQ — plain accordion ── */
+    .rr-faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .rr-faq-item { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); }
+    .rr-faq-item summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 18px 20px; font-size: 15.5px; font-weight: 600; color: var(--text); line-height: 1.45;
+    }
+    .rr-faq-item summary::-webkit-details-marker { display: none; }
+    .rr-faq-item summary::after {
+      content: '+'; font-size: 22px; font-weight: 400; line-height: 1;
+      color: var(--orange); flex-shrink: 0;
+    }
+    .rr-faq-item[open] summary::after { content: '\2212'; }
+    .rr-faq-item summary:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; border-radius: var(--r-lg); }
+    .rr-faq-item p { padding: 0 20px 20px; font-size: 14.5px; color: var(--muted); line-height: 1.66; }
+    /* ── Form ── */
+    .rr-form-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 30px 22px; box-shadow: var(--sh-md);
+    }
+    .rr-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 17px; min-width: 0; }
+    .rr-group.is-hidden { display: none; }
+    .rr-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+    /* 16px on phones stops iOS zooming the page when a field takes focus. */
+    .rr-group input, .rr-group select, .rr-group textarea {
+      padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--text);
+      background: var(--bg); transition: border-color .2s, box-shadow .2s;
+      outline: none; width: 100%; min-width: 0; max-width: 100%;
+    }
+    .rr-group input, .rr-group select { height: 46px; padding-top: 0; padding-bottom: 0; }
+    .rr-group textarea { min-height: 112px; resize: vertical; line-height: 1.55; }
+    .rr-group input:focus, .rr-group select:focus, .rr-group textarea:focus {
+      border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: var(--bg-w);
+    }
+    .rr-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      background-size: 16px; padding-right: 36px;
+    }
+    .rr-row { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .rr-fieldset-title {
+      font-family: 'Lora', serif; font-size: 15px; font-weight: 600; color: var(--text);
+      margin: 4px 0 14px; padding-top: 20px; border-top: 1px solid var(--border);
+    }
+    .rr-fieldset-title:first-of-type { padding-top: 0; border-top: none; }
+    .rr-check {
+      display: flex; align-items: flex-start; gap: 11px; margin: 6px 0 18px;
+      font-size: 14px; color: var(--text); line-height: 1.5; cursor: pointer;
+    }
+    .rr-check input { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; accent-color: var(--navy); cursor: pointer; }
+    .rr-consent { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+    /* Readable as a link without shouting — the consent line should stay quiet. */
+    .rr-consent a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+    .rr-consent a:hover { color: var(--orange); }
+    .rr-err { color: #c0392b; font-size: 13.5px; margin-top: 12px; line-height: 1.5; }
+    /* Recognised-partner banner */
+    .rr-known {
+      display: none; align-items: flex-start; gap: 11px;
+      background: var(--navy-lt); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 14px 16px; margin-bottom: 20px;
+      font-size: 13.5px; color: var(--text); line-height: 1.55;
+    }
+    .rr-known.is-on { display: flex; }
+    .rr-known svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: var(--orange); }
+    .rr-known span { min-width: 0; overflow-wrap: anywhere; }
+    .rr-notyou {
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+      color: var(--navy); text-decoration: underline;
+    }
+    .rr-notyou:hover { color: var(--orange); }
+    /* ── Confirmation ── */
+    #rr-done { display: none; }
+    .rr-done-badge { font-size: 56px; color: #1e7d4f; line-height: 1; margin-bottom: 16px; }
+    .rr-done-h { font-family: 'Lora', serif; font-size: clamp(25px, 3vw, 34px); color: var(--text); margin-bottom: 12px; overflow-wrap: anywhere; }
+    .rr-done-h:focus { outline: none; }
+    .rr-done-lead { font-size: 16.5px; color: var(--muted); line-height: 1.68; margin-bottom: 8px; }
+    .rr-intro-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 26px 20px; box-shadow: var(--sh-sm); margin-top: 36px;
+    }
+    .rr-intro-card h3 { font-size: 19px; margin-bottom: 10px; }
+    .rr-intro-card p { font-size: 14.5px; color: var(--muted); line-height: 1.65; margin-bottom: 22px; }
+    .rr-intro-label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+    #rr-subject { margin-bottom: 18px; }
+    #rr-body { min-height: 330px; line-height: 1.62; }
+    .rr-intro-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .rr-link-box {
+      background: var(--bg-s); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 26px 20px; margin-top: 28px;
+    }
+    .rr-link-box h4 { font-family: 'Lora', serif; font-size: 15.5px; color: var(--text); margin-bottom: 6px; }
+    .rr-link-box p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .rr-link-row { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+    .rr-link-row input {
+      flex: 1 1 260px; min-width: 0; height: 44px; padding: 0 13px;
+      border: 1.5px solid var(--border); border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted);
+      background: var(--bg-w);
+    }
+    .rr-again { margin-top: 28px; }
+    /* ── Final call to action ── */
+    .rr-cta { background: var(--navy); padding: 60px 0; text-align: center; }
+    .rr-cta h2 { color: #fff; font-size: clamp(23px, 2.6vw, 33px); margin-bottom: 10px; }
+    .rr-cta p { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 26px; }
+    .rr-cta-btns { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+
+    /* ── 481px and up — the trust row pairs up. ── */
+    @media (min-width: 481px) {
+      .rr-trust { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 24px; }
+    }
+    /* ── 761px and up — columns appear. Mirrors the 760px breakpoint on /refer/. ── */
+    @media (min-width: 761px) {
+      .rr-sec { padding: 76px 0; }
+      .rr-hero-btns { flex-direction: row; flex-wrap: wrap; justify-content: center; align-self: auto; }
+      .rr-hero-btns .btn { width: auto; }
+      .rr-btn-row, .rr-cta-btns { flex-direction: row; flex-wrap: wrap; }
+      .rr-cta-btns { justify-content: center; }
+      .rr-cta { padding: 76px 0; }
+      .rr-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+      .rr-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 16px; }
+      .rr-form-card { padding: 40px 36px; }
+      .rr-group input, .rr-group select, .rr-group textarea { font-size: 14px; }
+      .rr-table th, .rr-table td { padding: 16px 20px; }
+      .rr-req { padding: 32px 30px; }
+      .rr-intro-card { padding: 32px 30px; }
+      .rr-link-box { padding: 24px 26px; }
+    }
+    /* ── 1101px and up — hero goes two-column. Mirrors the 1100px mobile-nav
+       breakpoint in /includes/site-css.html so header and hero switch together. ── */
+    @media (min-width: 1101px) {
+      .rr-hero-wrap { padding: 72px 0 64px; }
+      .rr-hero-grid {
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 48px; align-items: center; justify-items: stretch;
+      }
+      .rr-hero-text { align-items: flex-start; text-align: left; }
+      .rr-hero-btns { justify-content: flex-start; }
+      .rr-hero-side { max-width: none; }
+      .rr-trust { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+    }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+</head>
+<body>
+<!--
+  RENTAL REFERRAL PAGE — TEMPLATE
+  A partner-facing page for leasing teams, property managers and owners.
+  Renters coverage only. It shares the Referrals Apps Script with /refer/ but
+  none of that page's wording.
+
+  To clone for another agent:
+    1. Copy this folder to /rental-referral/{agent-slug}/
+    2. Replace every value marked [AGENT] in this file:
+         - slug          og:url, and AGENT_SLUG / PAGE_URL / SOURCE in the script
+         - name          title, description, og tags, hero, name card, steps,
+                         FAQ, form sub-line, AGENT_NAME / AGENT_FIRST
+         - photo         og:image, hero <img> src and alt
+         - email         the two mailto: buttons, and AGENT_EMAIL (CC on the intro)
+         - source value  SOURCE in the script: rental-referral-{agent-slug}
+         - intro         the signature block and the "She'll" pronoun in
+                         buildIntro() and buildSms()
+       The agent's title is always "Licensed Insurance Agent".
+    3. The agent slug must already be routed in the Referrals sheet (Settings
+       tab, columns A:B) so the notification reaches the right inbox. No script
+       change is needed for an agent who already has a /refer/ page.
+    4. Do NOT add the page to sitemap.xml. It is noindex, nofollow — the same
+       documented exception as /refer/ and /life-quote/.
+    5. Log it in PROJECT_STATUS.md.
+-->
+
+<!-- NAV -->
+<!--#include virtual="/includes/header.html" -->
+
+
+<div id="rr-flow">
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="rr-hero" aria-labelledby="rr-h1">
+  <div class="container">
+    <div class="rr-hero-wrap">
+      <div class="rr-hero-grid">
+
+        <div class="rr-hero-text">
+          <div class="rr-eyebrow"><span class="rr-dot"></span> For leasing teams, property managers and owners</div>
+          <h1 id="rr-h1">Renters insurance your residents can finish before move-in day</h1>
+          <p class="rr-hero-body">
+            Send a resident to Jennifer and we reach out the same business day, quote the coverage your lease requires, list your property exactly the way you need it, and get proof of insurance back to you.<!-- [AGENT] first name -->
+          </p>
+          <div class="rr-hero-btns">
+            <a href="#rr-form" class="btn btn-primary">Refer a resident</a>
+            <a href="tel:7702684418" class="btn btn-ghost-w">Call 770-268-4418</a>
+          </div>
+        </div>
+
+        <!-- The ONLY photo element on this page. Its position at both sizes is
+             handled in CSS: source order on mobile, right-hand column on desktop. -->
+        <div class="rr-hero-side">
+          <div class="rr-hero-photo">
+            <img src="/jennifer-lawler.png" alt="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency in Buford, GA" /><!-- [AGENT] photo filename + alt -->
+          </div>
+          <div class="rr-namecard">
+            <strong>Jennifer Lawler</strong><!-- [AGENT] name -->
+            <span>Licensed Insurance Agent</span>
+            <span>The Scheiderich Agency</span>
+          </div>
+        </div>
+
+      </div>
+
+      <ul class="rr-trust">
+        <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Local office in downtown Buford</span></li>
+        <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Same-day contact on referrals received by 3 PM</span></li>
+        <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/></svg><span>Your property listed as interested party</span></li>
+        <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10h8M8 14h5"/><path d="M21 12a8 8 0 01-11.8 7L4 20l1.1-4.4A8 8 0 1121 12z"/></svg><span>Spanish-speaking residents welcome</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 2. WHERE MOVE-INS GET STUCK ═══ -->
+<section class="rr-sec rr-sec-w" aria-labelledby="rr-stuck-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <span class="rr-label">The problem</span>
+      <h2 class="rr-h2" id="rr-stuck-h2">We know where move-ins get stuck</h2>
+      <p class="rr-sub">Renters insurance is a small part of a lease, and it still holds up move-ins, renewals and your team's time.</p>
+      <div class="rr-cards">
+
+        <div class="rr-card">
+          <h3>Proof isn't in on move-in day.</h3>
+          <p>The keys are ready, the resident is waiting, and your team is on the phone chasing a document.</p>
+        </div>
+
+        <div class="rr-card">
+          <h3>The property is listed wrong.</h3>
+          <p>Wrong legal name, wrong notice address, or no listing at all, so the proof comes back to your desk to fix.</p>
+        </div>
+
+        <div class="rr-card">
+          <h3>Coverage quietly lapses.</h3>
+          <p>A resident cancels in month two and nobody knows until renewal, or until something happens.</p>
+        </div>
+
+        <div class="rr-card">
+          <h3>Your staff become the help desk.</h3>
+          <p>Leasing teams end up answering liability-limit questions they were never trained to answer.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 3. HOW IT WORKS ═══ -->
+<section class="rr-sec rr-sec-alt" aria-labelledby="rr-how-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <span class="rr-label">The process</span>
+      <h2 class="rr-h2" id="rr-how-h2">How a referral works</h2>
+      <ol class="rr-steps">
+
+        <li class="rr-step">
+          <div class="rr-step-num" aria-hidden="true">01</div>
+          <div>
+            <h3>You send the resident.</h3>
+            <p>Use the form below, text us, or put your property's QR code in the move-in packet.</p>
+          </div>
+        </li>
+
+        <li class="rr-step">
+          <div class="rr-step-num" aria-hidden="true">02</div>
+          <div>
+            <h3>Jennifer reaches out the same business day.</h3><!-- [AGENT] first name -->
+            <p>She quotes the coverage your lease requires, answers the resident's questions, and handles the property listing.</p><!-- [AGENT] pronoun -->
+          </div>
+        </li>
+
+        <li class="rr-step">
+          <div class="rr-step-num" aria-hidden="true">03</div>
+          <div>
+            <h3>Proof of insurance goes out.</h3>
+            <p>Once the resident chooses a policy, proof goes to the resident and, with their permission, to your office.</p>
+          </div>
+        </li>
+
+      </ol>
+
+      <div class="rr-table-wrap">
+        <table class="rr-table">
+          <thead>
+            <tr><th scope="col">Referral received</th><th scope="col">What happens</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">By 3:00 PM on a business day</th><td>We contact the resident the same day</td></tr>
+            <tr><th scope="row">After 3:00 PM</th><td>We contact the resident before noon the next business day</td></tr>
+            <tr><th scope="row">Correction to how your property is listed</th><td>Same day</td></tr>
+            <tr><th scope="row">Jennifer is out of the office</th><td>Wendy or Crissy picks it up</td></tr><!-- [AGENT] first name -->
+          </tbody>
+        </table>
+      </div>
+      <p class="rr-fine">Proof of insurance is issued once the resident chooses and purchases a policy.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 4. LISTED THE WAY YOUR LEASE REQUIRES ═══ -->
+<section class="rr-sec rr-sec-w" aria-labelledby="rr-listed-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <span class="rr-label">Your requirements</span>
+      <h2 class="rr-h2" id="rr-listed-h2">Your property, listed the way your lease requires</h2>
+      <p class="rr-sub">When a resident's lease requires it, we list your property as an interested party on their policy, using the exact legal name and notice address you give us. That way you're notified if the policy cancels, instead of finding out at renewal.</p>
+
+      <div class="rr-req">
+        <div class="rr-req-title">Send us your requirements once:</div>
+        <ul>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>The minimum liability limit your lease requires</span></li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>Your property's legal name</span></li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>The mailing address for interested-party notices</span></li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>Where proof of insurance should be sent</span></li>
+        </ul>
+      </div>
+
+      <p class="rr-after">We keep them on file and use them for each resident you send, so you don't have to repeat yourself.</p>
+
+      <div class="rr-btn-row">
+        <a href="mailto:JLawler@Allstate.com?subject=Renters%20insurance%20requirements%20for%20our%20property" class="btn btn-primary">Send us your requirements</a><!-- [AGENT] email -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 5. PRICING ═══
+     Kept short on purpose. No dollar figures and no comparative or absolute
+     price claims belong in this section. -->
+<section class="rr-sec rr-sec-alt" aria-labelledby="rr-price-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <span class="rr-label">Cost</span>
+      <h2 class="rr-h2" id="rr-price-h2">Priced so the requirement isn't a fight</h2>
+      <p class="rr-sub" style="margin-bottom:0;">Renters insurance is one of the most affordable policies a resident will buy, and it can cost even less when it's bundled with auto. We quote the coverage your lease asks for and explain the options plainly, so residents can meet the requirement without being upsold.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 6. A LOCAL PARTNER ═══ -->
+<section class="rr-sec rr-sec-w" aria-labelledby="rr-local-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <span class="rr-label">Beyond the policy</span>
+      <h2 class="rr-h2" id="rr-local-h2">A local partner, not a call center</h2>
+      <p class="rr-sub">Our office is in downtown Buford, and we're out at Gwinnett and North Metro Atlanta properties regularly. We're glad to help your team beyond the policy itself.</p>
+      <div class="rr-cards">
+
+        <div class="rr-card">
+          <h3>Staff training.</h3>
+          <p>A short lunch-and-learn for your leasing team on reading a proof of insurance and spotting a wrong listing.</p>
+        </div>
+
+        <div class="rr-card">
+          <h3>Resident education.</h3>
+          <p>Plain-language material for move-in packets on what renters insurance covers, and what your building's policy doesn't.</p>
+        </div>
+
+        <div class="rr-card">
+          <h3>Resident events.</h3>
+          <p>We're happy to join move-in days, community events and resident appreciation days.</p>
+        </div>
+
+        <div class="rr-card">
+          <h3>Your other resident programs.</h3>
+          <p>As we get to know your community, we'd like to talk about where else we can help.</p>
+        </div>
+
+      </div>
+
+      <div class="rr-btn-row">
+        <a href="mailto:JLawler@Allstate.com?subject=Visit%20to%20our%20property" class="btn btn-outline">Invite us to your property</a><!-- [AGENT] email -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 7. FAQ FOR PARTNERS ═══
+     Plain accordion. No FAQ schema — the page is noindex. -->
+<section class="rr-sec rr-sec-alt" aria-labelledby="rr-faq-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <span class="rr-label">Questions</span>
+      <h2 class="rr-h2" id="rr-faq-h2">Questions partners ask</h2>
+      <div class="rr-faq">
+
+        <details class="rr-faq-item">
+          <summary>Does it cost our property anything?</summary>
+          <p>No. There's no cost to your property to refer residents.</p>
+        </details>
+
+        <details class="rr-faq-item">
+          <summary>What do you need from us?</summary>
+          <p>Your lease's insurance requirement: the liability limit, your property's legal name, and the address for interested-party notices. Send it once and we'll keep it on file.</p>
+        </details>
+
+        <details class="rr-faq-item">
+          <summary>Will we know if a resident cancels?</summary>
+          <p>As the interested party on the policy, your property is notified by the insurance company if the policy cancels.</p>
+        </details>
+
+        <details class="rr-faq-item">
+          <summary>How fast can a resident be covered?</summary>
+          <p>If we reach them by 3 PM on a business day and they choose a policy, proof of insurance can usually go out the same day.</p>
+        </details>
+
+        <details class="rr-faq-item">
+          <summary>What if a resident already has a policy that doesn't list the property correctly?</summary>
+          <p>We'll tell them exactly what needs to change. If the policy is with another company, we'll tell them what to ask their current agent.</p>
+        </details>
+
+        <details class="rr-faq-item">
+          <summary>Can you help Spanish-speaking residents?</summary>
+          <p>Yes. Bilingual members of our team can help.</p>
+        </details>
+
+        <details class="rr-faq-item">
+          <summary>Do residents have to use you?</summary>
+          <p>No. Residents are always free to buy coverage from any provider. Referring them to us just gives them a fast, local option.</p>
+        </details>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 8. THE REFERRAL FORM ═══ -->
+<section class="rr-sec" id="rr-form" aria-labelledby="rr-form-h2">
+  <div class="container">
+    <div class="rr-wide">
+      <span class="rr-label">Referral</span>
+      <h2 class="rr-h2" id="rr-form-h2">Refer a resident</h2>
+      <p class="rr-sub">Takes about a minute. Jennifer reaches out to your resident directly.</p><!-- [AGENT] first name -->
+
+      <div class="rr-form-card">
+        <div class="rr-known" id="rr-known">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          <span>
+            Referring as <strong id="rr-known-text"></strong>.
+            <button type="button" class="rr-notyou" id="rr-notyou">Not your property?</button>
+          </span>
+        </div>
+
+        <form id="rr-referral-form">
+          <div class="rr-fieldset-title">About you</div>
+          <!-- One grid, four fields. With a recognised ?p= code the property and
+               email fields are hidden and the grid closes up around the two that
+               stay: "Your name" is never hidden or prefilled, because leasing
+               staff change and whoever is at the desk enters their own name. -->
+          <div class="rr-row">
+            <div class="rr-group">
+              <label for="rr-pname">Your name *</label>
+              <input type="text" id="rr-pname" name="partnerName" autocomplete="name" required />
+            </div>
+            <div class="rr-group" id="rr-g-pcompany">
+              <label for="rr-pcompany">Property or company name *</label>
+              <input type="text" id="rr-pcompany" name="partnerCompany" autocomplete="organization" required />
+            </div>
+            <div class="rr-group" id="rr-g-pemail">
+              <label for="rr-pemail">Your email *</label>
+              <input type="email" id="rr-pemail" name="partnerEmail" autocomplete="email" required />
+            </div>
+            <div class="rr-group">
+              <label for="rr-pphone">Your phone</label>
+              <input type="tel" id="rr-pphone" name="partnerPhone" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="rr-fieldset-title">About the resident</div>
+          <div class="rr-row">
+            <div class="rr-group">
+              <label for="rr-cname">Resident name *</label>
+              <input type="text" id="rr-cname" name="clientName" autocomplete="off" required />
+            </div>
+            <div class="rr-group">
+              <label for="rr-cphone">Resident phone *</label>
+              <input type="tel" id="rr-cphone" name="clientPhone" autocomplete="off" required />
+            </div>
+          </div>
+          <div class="rr-group">
+            <label for="rr-cemail">Resident email *</label>
+            <input type="email" id="rr-cemail" name="clientEmail" autocomplete="off" required />
+          </div>
+          <div class="rr-row">
+            <div class="rr-group">
+              <label for="rr-movein">Move-in date</label>
+              <input type="date" id="rr-movein" name="moveInDate" />
+            </div>
+            <div class="rr-group">
+              <label for="rr-language">Preferred language</label>
+              <select id="rr-language" name="language">
+                <option value="English" selected>English</option>
+                <option value="Spanish">Spanish</option>
+              </select>
+            </div>
+          </div>
+          <div class="rr-group">
+            <label for="rr-notes">Lease requirements or notes</label>
+            <textarea id="rr-notes" name="notes" placeholder="Required liability limit, interested-party name and address, anything else we should know"></textarea>
+          </div>
+
+          <label class="rr-check" for="rr-agree">
+            <input type="checkbox" id="rr-agree" name="agree" required />
+            <span>The resident agreed to be contacted by The Scheiderich Agency about renters insurance.</span>
+          </label>
+
+          <button type="submit" class="btn btn-primary btn-full" id="rr-submit">Send referral</button>
+
+          <p class="rr-consent">
+            By submitting, you confirm this person has <a href="/terms-of-use.html" target="_blank" rel="noopener">agreed to be contacted</a> about insurance.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 10. FINAL CALL TO ACTION ═══
+     Inside #rr-flow so it disappears with the form once a referral is sent. -->
+<section class="rr-cta" aria-labelledby="rr-cta-h2">
+  <div class="container">
+    <div class="rr-narrow">
+      <h2 id="rr-cta-h2">Have a resident moving in this week?</h2>
+      <p>Send them over and we'll take it from there.</p>
+      <div class="rr-cta-btns">
+        <a href="#rr-form" class="btn btn-primary">Refer a resident</a>
+        <a href="tel:7702684418" class="btn btn-ghost-w">Call 770-268-4418</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#rr-flow -->
+
+
+<!-- ═══ 9. CONFIRMATION — replaces everything above once a referral is sent ═══ -->
+<section class="rr-sec rr-sec-w" id="rr-done" aria-labelledby="rr-done-h">
+  <div class="container">
+    <div class="rr-narrow">
+      <div class="rr-done-badge" aria-hidden="true">&#10003;</div>
+      <h2 class="rr-done-h" id="rr-done-h" tabindex="-1">Got it. Jennifer will reach out to <span id="rr-done-first">your resident</span>.</h2><!-- [AGENT] first name -->
+      <p class="rr-done-lead">We'll contact them <strong id="rr-turnaround"></strong>.</p>
+
+      <div class="rr-intro-card">
+        <h3>Let your resident know we'll be calling</h3>
+        <p>A note from you does more than an unexpected call from us. It sends from your own email or phone, not ours. Edit it however you like first.</p>
+
+        <label class="rr-intro-label" for="rr-subject">Subject</label>
+        <div class="rr-group" style="margin-bottom:0;">
+          <input type="text" id="rr-subject" />
+        </div>
+
+        <label class="rr-intro-label" for="rr-body">Message</label>
+        <div class="rr-group">
+          <textarea id="rr-body"></textarea>
+        </div>
+
+        <div class="rr-intro-btns">
+          <a href="#" class="btn btn-primary" id="rr-mailto">Open in my email</a>
+          <button type="button" class="btn btn-outline" id="rr-copy">Copy the text</button>
+          <a href="#" class="btn btn-outline" id="rr-sms">Text it instead</a>
+        </div>
+      </div>
+
+      <div class="rr-link-box">
+        <h4>Save this link for next time</h4>
+        <p>Your property's referral link. It fills in your property's details automatically, so next time you only add your name and the resident.</p>
+        <div class="rr-link-row">
+          <input type="text" id="rr-mylink" readonly aria-label="Your property's referral link" />
+          <button type="button" class="btn btn-outline" id="rr-copylink">Copy link</button>
+        </div>
+      </div>
+
+      <div class="rr-btn-row rr-again">
+        <a href="#" class="btn btn-primary" id="rr-another">Refer another resident</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<!--#include virtual="/includes/footer.html" -->
+
+<script>
+(function () {
+  /* ═══════════════════════════════════════
+     CONFIG — every agent-specific value in this script lives here. [AGENT]
+     SCRIPT_URL is the shared Referrals Apps Script, the same one the /refer/
+     pages use. It does not change per agent.
+  ═══════════════════════════════════════ */
+  var SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbz4xKO0W2QtG_97DWHevo6-lBM6zGNPblEt_rPB-r35KwpcqYVHT_3XzD6e6fQFx2SA6A/exec';
+  var AGENT_SLUG   = 'jennifer-lawler';
+  var AGENT_NAME   = 'Jennifer Lawler';
+  var AGENT_FIRST  = 'Jennifer';
+  var AGENT_EMAIL  = 'JLawler@Allstate.com';   // CC on the intro email
+  var AGENT_PHONE  = '770-268-4418';
+  var PAGE_URL     = 'https://thescheiderichagency.com/rental-referral/jennifer-lawler/';
+  var SOURCE       = 'rental-referral-jennifer-lawler';
+  var COVERAGE     = 'Renters';                // line of business, sent with every referral
+
+  var NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at " + AGENT_PHONE + ".";
+  var SERVER_MSG  = "We weren't able to send that referral. Please call us at " + AGENT_PHONE + " and we'll take the details directly.";
+
+  var form      = document.getElementById('rr-referral-form');
+  var submitBtn = document.getElementById('rr-submit');
+  var flow      = document.getElementById('rr-flow');
+  var done      = document.getElementById('rr-done');
+  var errorEl   = null;
+  var originalBtnText = submitBtn.textContent;
+
+  var el = function (id) { return document.getElementById(id); };
+  var firstWord = function (s) { return String(s || '').trim().split(/\s+/)[0] || ''; };
+
+  var params = new URLSearchParams(window.location.search);
+
+  /* ═══════════════════════════════════════
+     CAMPAIGN TAG
+     ?src=qr, ?src=email, ?src=flyer, ?src=facebook. "direct" when the parameter
+     is absent. Reduced to a short safe token because it is stored with the
+     referral and sent to analytics. Same rule as the life quote page.
+  ═══════════════════════════════════════ */
+  var src = 'direct';
+  try {
+    var rawSrc = params.get('src');
+    if (rawSrc) {
+      rawSrc = rawSrc.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+      if (rawSrc) src = rawSrc;
+    }
+  } catch (e) { /* keep "direct" */ }
+
+  /* ═══════════════════════════════════════
+     PARTNER CODE GENERATION
+     Used only when the visitor arrived without a ?p= code. Identical to the
+     formula on the /refer/ pages, so one property gets one code everywhere.
+     "Smith & Co., LLC" -> "smith-co"
+  ═══════════════════════════════════════ */
+  function makePartnerCode(company) {
+    return (company || '')
+      .toLowerCase()
+      .replace(/[&,.'"]/g, '')         // strip & , . ' " entirely (O'Brien -> obrien)
+      .replace(/\s+/g, '-')            // spaces -> hyphens, runs collapsed
+      .replace(/-+/g, '-')             // collapse any doubled hyphens
+      .replace(/-(llc|inc|pc)$/, '')   // strip a trailing LLC / Inc / PC
+      .replace(/^-+|-+$/g, '');        // no leading or trailing hyphen
+  }
+
+  /* ═══════════════════════════════════════
+     REFERRAL ID
+     Generated client-side because the write uses mode:'no-cors', which makes the
+     doPost response ({success, referralId}) unreadable. The server uses this id
+     when present, so page and sheet agree.
+
+     Format: REF-yyMMdd-XXXX, XXXX = 4 uppercase alphanumerics.
+
+     The date MUST be Eastern, not the browser's local date. A partner referring
+     from Pacific time at 10pm is already on the next day in Atlanta, and a local
+     stamp would disagree with the server by one day. Intl handles EST/EDT for us.
+  ═══════════════════════════════════════ */
+  var referralId = '';
+
+  function easternStamp(date) {
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        year: '2-digit', month: '2-digit', day: '2-digit'
+      }).formatToParts(date);
+      var get = function (type) {
+        for (var i = 0; i < parts.length; i++) if (parts[i].type === type) return parts[i].value;
+        return '';
+      };
+      var stamp = get('year') + get('month') + get('day');
+      if (/^\d{6}$/.test(stamp)) return stamp;
+    } catch (e) { /* fall through */ }
+    // Fallback for engines without IANA time zone support: fixed -05:00 offset.
+    // Off by an hour during EDT, which only matters between 11pm and midnight.
+    var p2 = function (n) { return ('0' + n).slice(-2); };
+    var d = new Date(date.getTime() + (date.getTimezoneOffset() - 300) * 60000);
+    return p2(d.getFullYear() % 100) + p2(d.getMonth() + 1) + p2(d.getDate());
+  }
+
+  function makeReferralId() {
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var suffix = '';
+    for (var i = 0; i < 4; i++) {
+      suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return 'REF-' + easternStamp(new Date()) + '-' + suffix;
+  }
+
+  /* ═══════════════════════════════════════
+     INTRO-SENT BEACON
+     Fires when the partner actually uses one of the three intro buttons, so the
+     agent knows whether the resident is expecting the call.
+     keepalive:true so the request survives the navigation that mailto: and sms:
+     immediately trigger — a plain fetch would be cancelled mid-flight.
+     Never awaited, never throws: the button's own behaviour must not be delayed
+     or blocked by this.
+  ═══════════════════════════════════════ */
+  var introSent = { email: false, copy: false, sms: false };
+
+  function sendIntroBeacon(method) {
+    if (!referralId) return;              // nothing to attribute it to
+    if (introSent[method]) return;        // once per method, not per click
+    introSent[method] = true;
+    try {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          action: 'introSent',
+          referralId: referralId,
+          method: method
+        })
+      }).catch(function () { /* fire and forget */ });
+    } catch (e) { /* never let tracking break the button */ }
+  }
+
+  /* ═══════════════════════════════════════
+     PREFILL FROM ?p=
+     JSONP, because Apps Script blocks cross-origin fetch reads.
+     Response shape: { success, found, partner:{ code, name, company, email } }
+
+     Apartment partners are usually office records rather than one person, so
+     this page treats the lookup differently from /refer/: it fills and hides
+     the property name and email, and leaves "Your name" empty and visible.
+  ═══════════════════════════════════════ */
+  var partnerCode = '';
+  var pParam      = params.get('p');
+
+  function lookupPartner(code) {
+    return new Promise(function (resolve, reject) {
+      var cb = 'rrcb_' + Date.now();
+      var s  = document.createElement('script');
+      var timer = setTimeout(function () {
+        delete window[cb]; s.remove(); reject(new Error('timeout'));
+      }, 8000);
+      window[cb] = function (data) {
+        clearTimeout(timer); delete window[cb]; s.remove(); resolve(data);
+      };
+      s.src = SCRIPT_URL + '?action=partner&code=' + encodeURIComponent(code) +
+              '&callback=' + cb + '&t=' + Date.now();
+      s.onerror = function () {
+        clearTimeout(timer); delete window[cb]; s.remove(); reject(new Error('load'));
+      };
+      document.head.appendChild(s);
+    });
+  }
+
+  function applyKnownPartner(p) {
+    var company = String(p.company || '').trim();
+    var email   = String(p.email   || '').trim();
+    partnerCode = p.code || partnerCode;
+    el('rr-pcompany').value = company;
+    el('rr-pemail').value   = email;
+    // Hide a field only when the record actually filled it. A required field
+    // that is both empty and hidden blocks the submit with no visible reason.
+    if (company) el('rr-g-pcompany').classList.add('is-hidden');
+    if (email)   el('rr-g-pemail').classList.add('is-hidden');
+    var label = company || String(p.name || '').trim();
+    if (label) {
+      el('rr-known-text').textContent = label;
+      el('rr-known').classList.add('is-on');
+    }
+  }
+
+  el('rr-notyou').addEventListener('click', function () {
+    // Reveal the fields; the values stay so they can be corrected rather than retyped.
+    el('rr-g-pcompany').classList.remove('is-hidden');
+    el('rr-g-pemail').classList.remove('is-hidden');
+    el('rr-known').classList.remove('is-on');
+    partnerCode = '';
+    el('rr-pcompany').focus();
+  });
+
+  if (pParam) {
+    partnerCode = pParam;
+    lookupPartner(pParam).then(function (res) {
+      if (res && res.success && res.found && res.partner) applyKnownPartner(res.partner);
+      // not found -> leave every field visible, code still travels with the submit
+    }).catch(function () {
+      // lookup failed -> fall back to the full form, never block the referral
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     CONTACT TIME, CALCULATED CLIENT-SIDE
+     Same 3 PM cutoff the agency works to. Read on the Eastern clock, because
+     that is where the office is; a partner's own time zone must not move it.
+     After the cutoff the next BUSINESS day is named, so a Friday-afternoon or
+     weekend referral says Monday.
+  ═══════════════════════════════════════ */
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  function easternNow() {
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', hour12: false
+      }).formatToParts(new Date());
+      var wd = '', hr = '';
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].type === 'weekday') wd = parts[i].value;
+        if (parts[i].type === 'hour')    hr = parts[i].value;
+      }
+      var day  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(wd);
+      var hour = parseInt(hr, 10) % 24;          // some engines report midnight as 24
+      if (day > -1 && !isNaN(hour)) return { day: day, hour: hour };
+    } catch (e) { /* fall through */ }
+    var now = new Date();
+    return { day: now.getDay(), hour: now.getHours() };
+  }
+
+  function contactTimeText() {
+    var n = easternNow();                         // day: 0 Sun … 6 Sat
+    var weekend = (n.day === 0 || n.day === 6);
+    if (!weekend && n.hour < 15) return 'today';
+    var next = (n.day === 5 || n.day === 6) ? 1 : n.day + 1;   // Fri, Sat, Sun -> Mon
+    return 'before noon ' + DAY_NAMES[next];
+  }
+
+  /* ═══════════════════════════════════════
+     NOTES LINE
+     The Referrals script has no column for move-in date, language, the
+     referrer's phone or the page source, so they travel as one readable line in
+     the existing notes field:
+       Move-in: 2026-10-20 | Language: Spanish | Notes: $100k liability required | Source: rental-referral-jennifer-lawler (qr)
+  ═══════════════════════════════════════ */
+  function buildNotes(moveIn, language, notes, phone) {
+    var parts = ['Move-in: ' + (moveIn || 'not given'), 'Language: ' + language];
+    if (notes) parts.push('Notes: ' + notes.replace(/\s*[\r\n]+\s*/g, ' / '));
+    if (phone) parts.push('Referrer phone: ' + phone);
+    parts.push('Source: ' + SOURCE + ' (' + src + ')');
+    return parts.join(' | ');
+  }
+
+  /* ═══════════════════════════════════════
+     INTRO MESSAGE
+     Sent by the partner from their own email or phone — never by the agency.
+     [AGENT] the wording below names the agent and uses "She'll".
+  ═══════════════════════════════════════ */
+  function buildIntro(d) {
+    var first    = firstWord(d.clientName) || 'there';
+    var property = (d.partnerCompany || '').trim();
+    return 'Hi ' + first + ',\n\n' +
+      'As part of your lease at ' + property + ", you'll need renters insurance on file. " +
+      "I've passed your information to " + AGENT_NAME + ' at The Scheiderich Agency, a local office in downtown Buford. ' +
+      "She'll reach out to help you get a quote and make sure the policy lists " + property +
+      ' as the interested party, the way your lease requires.\n\n' +
+      "You're welcome to use any insurance company. " + AGENT_FIRST + ' is just a quick, local option.\n\n' +
+      AGENT_FIRST + ': ' + AGENT_PHONE + '\n\n' +
+      firstWord(d.partnerName) + '\n' +
+      property;
+  }
+
+  function buildSms(d) {
+    return 'Hi ' + (firstWord(d.clientName) || 'there') + ", it's " + firstWord(d.partnerName) +
+      ' at ' + (d.partnerCompany || '').trim() + '. I passed your info to ' + AGENT_NAME +
+      ' (The Scheiderich Agency, ' + AGENT_PHONE + ') to help with your renters insurance for your lease. ' +
+      "She'll reach out soon. You're welcome to use any provider.";
+  }
+
+  /* Digits only, for the sms: link. Empty when it does not look like a full
+     number, in which case the partner picks the recipient themselves. */
+  function smsNumber(phone) {
+    var digits = String(phone || '').replace(/\D/g, '');
+    return digits.length >= 10 ? digits : '';
+  }
+
+  /* ═══════════════════════════════════════
+     SUBMIT
+  ═══════════════════════════════════════ */
+  function clearError() { if (errorEl) { errorEl.remove(); errorEl = null; } }
+
+  function showError(msg) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+    clearError();
+    errorEl = document.createElement('p');
+    errorEl.className = 'rr-err';
+    errorEl.setAttribute('role', 'alert');
+    errorEl.textContent = msg;
+    submitBtn.insertAdjacentElement('afterend', errorEl);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearError();
+
+    if (!form.reportValidity()) { return; }
+
+    var name    = el('rr-pname').value.trim();
+    var company = el('rr-pcompany').value.trim();
+    var phone   = el('rr-pphone').value.trim();
+    var moveIn  = el('rr-movein').value;
+    var code    = partnerCode || makePartnerCode(company) || makePartnerCode(name);
+    referralId  = makeReferralId();
+
+    // Only fields the Referrals script already reads. Nothing new is sent.
+    var payload = {
+      referralId:     referralId,
+      agentSlug:      AGENT_SLUG,
+      partnerCode:    code,
+      partnerName:    name,
+      partnerCompany: company,
+      partnerEmail:   el('rr-pemail').value.trim(),
+      partnerPhone:   phone,                 // saved only when the script first enrolls the partner
+      clientName:     el('rr-cname').value.trim(),
+      clientPhone:    el('rr-cphone').value.trim(),
+      clientEmail:    el('rr-cemail').value.trim(),
+      coverage:       COVERAGE,
+      closingDate:    moveIn,                // the sheet's needed-by date column
+      notes:          buildNotes(moveIn, el('rr-language').value, el('rr-notes').value.trim(), phone)
+    };
+
+    submitBtn.textContent = 'Sending…';
+    submitBtn.disabled = true;
+
+    // Apps Script writes require no-cors, so the response is opaque: a resolved
+    // promise means the request left the browser, not that the sheet accepted it.
+    // The Referrals script has no public read-back for a referral row, so this
+    // is the strongest success signal the page can get.
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    })
+    .then(function () {
+      trackLead();
+      showConfirmation(payload, code);
+    })
+    .catch(function (err) {
+      var offline = (typeof navigator !== 'undefined' && navigator.onLine === false);
+      showError(offline || (err && err.name === 'TypeError') ? NETWORK_MSG : SERVER_MSG);
+    });
+  });
+
+  /* GA4. Fired once per sent referral, never on a failed send. No names, phone
+     numbers or emails go to analytics — only the page and the campaign tag. */
+  function trackLead() {
+    try {
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', {
+          lead_type: 'rental_referral',
+          form: SOURCE,
+          src: src
+        });
+      }
+    } catch (e) { /* analytics must never block the confirmation */ }
+  }
+
+  /* ═══════════════════════════════════════
+     CONFIRMATION
+  ═══════════════════════════════════════ */
+  function showConfirmation(d, code) {
+    flow.style.display = 'none';
+    done.style.display = 'block';
+
+    var link = PAGE_URL + '?p=' + encodeURIComponent(code);
+
+    el('rr-done-first').textContent = firstWord(d.clientName) || 'your resident';
+    el('rr-turnaround').textContent = contactTimeText();
+    el('rr-subject').value = 'Renters insurance for your lease at ' + d.partnerCompany;
+    el('rr-body').value    = buildIntro(d);
+    el('rr-mylink').value  = link;
+    // A fresh load of the coded link: property details prefill, form is empty.
+    el('rr-another').href  = link + (src !== 'direct' ? '&src=' + encodeURIComponent(src) : '') + '#rr-form';
+
+    wireIntroButtons(d);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try { el('rr-done-h').focus({ preventScroll: true }); } catch (e) { /* older engines */ }
+  }
+
+  function wireIntroButtons(d) {
+    var mailto = el('rr-mailto');
+    var sms    = el('rr-sms');
+    var copy   = el('rr-copy');
+
+    sms.href = 'sms:' + smsNumber(d.clientPhone) + '?&body=' + encodeURIComponent(buildSms(d));
+
+    // Rebuild the mailto from the CURRENT field values every time, so edits are honoured.
+    function refresh() {
+      mailto.href = 'mailto:' + encodeURIComponent(d.clientEmail) +
+                    '?cc='      + encodeURIComponent(AGENT_EMAIL) +
+                    '&subject=' + encodeURIComponent(el('rr-subject').value) +
+                    '&body='    + encodeURIComponent(el('rr-body').value);
+    }
+    refresh();
+    el('rr-subject').addEventListener('input', refresh);
+    el('rr-body').addEventListener('input', refresh);
+
+    // Rebuild the href first so navigation carries the current text, then fire the
+    // beacon. Neither call preventDefault, so mailto:/sms: open immediately.
+    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); });
+    sms.addEventListener('click',    function () { sendIntroBeacon('sms'); });
+
+    copy.addEventListener('click', function () {
+      sendIntroBeacon('copy');
+      copyText(el('rr-body').value, copy, 'Copy the text');
+    });
+    el('rr-copylink').addEventListener('click', function () {
+      copyText(el('rr-mylink').value, el('rr-copylink'), 'Copy link');
+    });
+  }
+
+  function copyText(text, btn, restore) {
+    var finish = function () {
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = restore; }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(finish, function () { legacyCopy(text, finish); });
+    } else {
+      legacyCopy(text, finish);
+    }
+  }
+
+  function legacyCopy(text, cb) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'absolute';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); cb(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+</body>
+</html>
