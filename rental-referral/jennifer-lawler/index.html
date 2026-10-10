@@ -281,10 +281,58 @@
     .rr-cta h2 { color: #fff; font-size: clamp(23px, 2.6vw, 33px); margin-bottom: 10px; }
     .rr-cta p { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 26px; }
     .rr-cta-btns { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+    /* ── Pop-up forms (requirements / property visit) ──
+       Native <dialog>: the browser supplies the focus trap, Escape, and the
+       inert page behind it. margin:auto is restated because the shared reset
+       zeroes every margin, which would pin the dialog to the top-left corner. */
+    .rr-modal {
+      margin: auto; padding: 0; border: none;
+      width: calc(100% - 16px); max-width: 560px;
+      max-height: calc(100vh - 16px); max-height: calc(100dvh - 16px);
+      background: var(--bg-w); color: var(--muted);
+      border-radius: var(--r-lg); box-shadow: var(--sh-lg);
+      overflow: hidden;
+    }
+    .rr-modal[open] { display: flex; flex-direction: column; }
+    .rr-modal::backdrop { background: rgba(17,30,44,.66); }
+    .rr-modal-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 20px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .rr-modal-head h2 { font-size: 20px; }
+    .rr-modal-x {
+      width: 40px; height: 40px; flex-shrink: 0; margin: -8px -8px 0 0;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; border-radius: 8px; cursor: pointer; color: var(--muted);
+    }
+    .rr-modal-x:hover { background: var(--navy-lt); color: var(--navy); }
+    .rr-modal-x:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+    .rr-modal-x svg { width: 20px; height: 20px; }
+    .rr-modal-body {
+      padding: 18px 20px 22px; min-height: 0;
+      overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    }
+    .rr-modal-intro { font-size: 14.5px; line-height: 1.6; margin-bottom: 18px; }
+    .rr-group textarea.rr-ta-sm { min-height: 76px; }
+    .rr-checks { border: none; margin-bottom: 17px; min-width: 0; }
+    .rr-checks legend { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 9px; padding: 0; }
+    .rr-checks-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; }
+    .rr-checks .rr-check { margin: 0; }
+    .rr-modal-alt { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 14px; text-align: center; }
+    .rr-modal-alt a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+    .rr-modal-alt a:hover { color: var(--orange); }
+    .rr-modal-done { display: none; text-align: center; padding: 14px 0 6px; }
+    .rr-modal-done:focus { outline: none; }
+    .rr-modal-done-badge { font-size: 48px; color: #1e7d4f; line-height: 1; margin-bottom: 14px; }
+    .rr-modal-done p { font-size: 16.5px; color: var(--text); line-height: 1.6; margin-bottom: 22px; }
+    /* The page behind an open pop-up must not scroll. On <body>, not <html>, so
+       the sticky header keeps its place. */
+    body.rr-modal-open { overflow: hidden; }
 
     /* ── 481px and up — the trust row pairs up. ── */
     @media (min-width: 481px) {
       .rr-trust { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 24px; }
+      .rr-checks-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 16px; }
     }
     /* ── 761px and up — columns appear. Mirrors the 760px breakpoint on /refer/. ── */
     @media (min-width: 761px) {
@@ -302,6 +350,8 @@
       .rr-req { padding: 32px 30px; }
       .rr-intro-card { padding: 32px 30px; }
       .rr-link-box { padding: 24px 26px; }
+      .rr-modal-head { padding: 24px 28px 16px; }
+      .rr-modal-body { padding: 22px 28px 28px; }
     }
     /* ── 1101px and up — hero goes two-column. Mirrors the 1100px mobile-nav
        breakpoint in /includes/site-css.html so header and hero switch together. ── */
@@ -341,8 +391,11 @@
          - name          title, description, og tags, hero, name card, steps,
                          FAQ, form sub-line, AGENT_NAME / AGENT_FIRST
          - photo         og:image, hero <img> src and alt
-         - email         the two mailto: buttons, and AGENT_EMAIL (CC on the intro)
+         - email         the "Prefer email?" link in each pop-up form, and
+                         AGENT_EMAIL (CC on the intro)
          - source value  SOURCE in the script: rental-referral-{agent-slug}
+                         and the hidden _source in each pop-up form:
+                         rental-requirements-{agent-slug}, rental-visit-{agent-slug}
          - intro         the signature block and the "She'll" pronoun in
                          buildIntro() and buildSms()
        The agent's title is always "Licensed Insurance Agent".
@@ -513,7 +566,7 @@
       <p class="rr-after">We keep them on file and use them for each resident you send, so you don't have to repeat yourself.</p>
 
       <div class="rr-btn-row">
-        <a href="mailto:JLawler@Allstate.com?subject=Renters%20insurance%20requirements%20for%20our%20property" class="btn btn-primary">Send us your requirements</a><!-- [AGENT] email -->
+        <button type="button" class="btn btn-primary" id="rr-open-req" aria-haspopup="dialog">Send us your requirements</button>
       </div>
     </div>
   </div>
@@ -566,7 +619,7 @@
       </div>
 
       <div class="rr-btn-row">
-        <a href="mailto:JLawler@Allstate.com?subject=Visit%20to%20our%20property" class="btn btn-outline">Invite us to your property</a><!-- [AGENT] email -->
+        <button type="button" class="btn btn-outline" id="rr-open-vis" aria-haspopup="dialog">Invite us to your property</button>
       </div>
     </div>
   </div>
@@ -779,6 +832,151 @@
 </section>
 
 
+<!-- ═══ POP-UP FORMS ═══
+     Opened by the "Send us your requirements" and "Invite us to your property"
+     buttons. Both post to the agency Formspree form, the same one the contact
+     page and the agent pages use, so they arrive in the agency inbox. They are
+     NOT referrals and never touch the Referrals sheet.
+     _subject and partner_code are filled in by the script at submit time. -->
+<dialog class="rr-modal" id="rr-modal-req" aria-labelledby="rr-req-title">
+  <div class="rr-modal-head">
+    <h2 id="rr-req-title">Send us your requirements</h2>
+    <button type="button" class="rr-modal-x" data-close aria-label="Close"><svg fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="rr-modal-body">
+    <form id="rr-req-form" action="https://formspree.io/f/mgoqnelq" method="POST">
+      <input type="hidden" name="_source" value="rental-requirements-jennifer-lawler" /><!-- [AGENT] slug -->
+      <input type="hidden" name="_subject" value="" />
+      <input type="hidden" name="partner_code" value="" disabled />
+
+      <p class="rr-modal-intro">Send these once and we'll keep them on file for your property.</p>
+
+      <div class="rr-row">
+        <div class="rr-group">
+          <label for="rr-req-name">Your name *</label>
+          <input type="text" id="rr-req-name" name="name" data-fill="name" autocomplete="name" required />
+        </div>
+        <div class="rr-group">
+          <label for="rr-req-property">Property name *</label>
+          <input type="text" id="rr-req-property" name="property_name" data-fill="company" autocomplete="organization" required />
+        </div>
+        <div class="rr-group">
+          <label for="rr-req-email">Your email *</label>
+          <input type="email" id="rr-req-email" name="email" data-fill="email" autocomplete="email" required />
+        </div>
+        <div class="rr-group">
+          <label for="rr-req-phone">Your phone</label>
+          <input type="tel" id="rr-req-phone" name="phone" data-fill="phone" autocomplete="tel" />
+        </div>
+      </div>
+
+      <div class="rr-group">
+        <label for="rr-req-limit">Required liability limit</label>
+        <input type="text" id="rr-req-limit" name="required_liability_limit" autocomplete="off" />
+      </div>
+      <div class="rr-group">
+        <label for="rr-req-legal">Property legal name for the interested-party listing *</label>
+        <input type="text" id="rr-req-legal" name="interested_party_legal_name" autocomplete="off" required />
+      </div>
+      <div class="rr-group">
+        <label for="rr-req-address">Mailing address for interested-party notices *</label>
+        <textarea class="rr-ta-sm" id="rr-req-address" name="interested_party_notice_address" autocomplete="off" required></textarea>
+      </div>
+      <div class="rr-group">
+        <label for="rr-req-proof">Where proof of insurance should be sent (email)</label>
+        <input type="email" id="rr-req-proof" name="proof_of_insurance_email" autocomplete="off" />
+      </div>
+      <div class="rr-group">
+        <label for="rr-req-notes">Anything else we should know</label>
+        <textarea class="rr-ta-sm" id="rr-req-notes" name="anything_else"></textarea>
+      </div>
+
+      <!-- Spam trap — hidden from humans -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <button type="submit" class="btn btn-primary btn-full">Send requirements</button>
+      <p class="rr-modal-alt">Prefer email? <a href="mailto:jlawler@allstate.com?subject=Renters%20insurance%20requirements%20for%20our%20property" target="_blank" rel="noopener">jlawler@allstate.com</a></p><!-- [AGENT] email -->
+    </form>
+
+    <div class="rr-modal-done" tabindex="-1">
+      <div class="rr-modal-done-badge" aria-hidden="true">&#10003;</div>
+      <p>Thanks — Jennifer will be in touch within one business day.</p><!-- [AGENT] first name -->
+      <button type="button" class="btn btn-outline" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="rr-modal" id="rr-modal-vis" aria-labelledby="rr-vis-title">
+  <div class="rr-modal-head">
+    <h2 id="rr-vis-title">Invite us to your property</h2>
+    <button type="button" class="rr-modal-x" data-close aria-label="Close"><svg fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="rr-modal-body">
+    <form id="rr-vis-form" action="https://formspree.io/f/mgoqnelq" method="POST">
+      <input type="hidden" name="_source" value="rental-visit-jennifer-lawler" /><!-- [AGENT] slug -->
+      <input type="hidden" name="_subject" value="" />
+      <input type="hidden" name="partner_code" value="" disabled />
+
+      <p class="rr-modal-intro">Tell us what would help your team and we'll set up a time.</p>
+
+      <div class="rr-row">
+        <div class="rr-group">
+          <label for="rr-vis-name">Your name *</label>
+          <input type="text" id="rr-vis-name" name="name" data-fill="name" autocomplete="name" required />
+        </div>
+        <div class="rr-group">
+          <label for="rr-vis-property">Property name *</label>
+          <input type="text" id="rr-vis-property" name="property_name" data-fill="company" autocomplete="organization" required />
+        </div>
+        <div class="rr-group">
+          <label for="rr-vis-email">Your email *</label>
+          <input type="email" id="rr-vis-email" name="email" data-fill="email" autocomplete="email" required />
+        </div>
+        <div class="rr-group">
+          <label for="rr-vis-phone">Your phone</label>
+          <input type="tel" id="rr-vis-phone" name="phone" data-fill="phone" autocomplete="tel" />
+        </div>
+      </div>
+
+      <!-- The boxes carry no name of their own. The script joins the ticked
+           labels into the single hidden "interests" field, so the email shows
+           one readable line. -->
+      <fieldset class="rr-checks">
+        <legend>What interests you</legend>
+        <div class="rr-checks-grid">
+          <label class="rr-check"><input type="checkbox" data-interest value="Staff training" /><span>Staff training</span></label>
+          <label class="rr-check"><input type="checkbox" data-interest value="Resident education materials" /><span>Resident education materials</span></label>
+          <label class="rr-check"><input type="checkbox" data-interest value="Resident event" /><span>Resident event</span></label>
+          <label class="rr-check"><input type="checkbox" data-interest value="Other resident programs" /><span>Other resident programs</span></label>
+        </div>
+        <input type="hidden" name="interests" value="" />
+      </fieldset>
+
+      <div class="rr-group">
+        <label for="rr-vis-times">Good days and times</label>
+        <input type="text" id="rr-vis-times" name="good_days_and_times" autocomplete="off" />
+      </div>
+      <div class="rr-group">
+        <label for="rr-vis-notes">Notes</label>
+        <textarea class="rr-ta-sm" id="rr-vis-notes" name="notes"></textarea>
+      </div>
+
+      <!-- Spam trap — hidden from humans -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <button type="submit" class="btn btn-primary btn-full">Send request</button>
+      <p class="rr-modal-alt">Prefer email? <a href="mailto:jlawler@allstate.com?subject=Visit%20to%20our%20property" target="_blank" rel="noopener">jlawler@allstate.com</a></p><!-- [AGENT] email -->
+    </form>
+
+    <div class="rr-modal-done" tabindex="-1">
+      <div class="rr-modal-done-badge" aria-hidden="true">&#10003;</div>
+      <p>Thanks — Jennifer will be in touch within one business day.</p><!-- [AGENT] first name -->
+      <button type="button" class="btn btn-outline" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+
 <!-- FOOTER -->
 <!--#include virtual="/includes/footer.html" -->
 
@@ -964,6 +1162,7 @@
       el('rr-known-text').textContent = label;
       el('rr-known').classList.add('is-on');
     }
+    prefillPopups();      // in case a pop-up form was opened before the lookup answered
   }
 
   el('rr-notyou').addEventListener('click', function () {
@@ -1204,6 +1403,208 @@
       copyText(el('rr-mylink').value, el('rr-copylink'), 'Copy link');
     });
   }
+
+  /* ═══════════════════════════════════════
+     POP-UP FORMS — requirements and property visit
+     These go to the agency Formspree form, not the Referrals script. The
+     submission is the same pattern the agent pages use: FormData posted with
+     an Accept: application/json header, res.ok decides success, and a failed
+     send leaves every field as typed.
+  ═══════════════════════════════════════ */
+  var FORM_URL = 'https://formspree.io/f/mgoqnelq';
+  var POPUP_NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at " + AGENT_PHONE + ".";
+  var POPUP_SERVER_MSG  = "We weren't able to send that. Please call us at " + AGENT_PHONE + " and we'll take the details directly.";
+
+  // Where each shared pop-up field can borrow a value from: the referral form
+  // above, which is also where the ?p= lookup puts the property name and email.
+  var FILL_FROM = { name: 'rr-pname', company: 'rr-pcompany', email: 'rr-pemail', phone: 'rr-pphone' };
+
+  /* Fills EMPTY pop-up fields only, so nothing a person typed is overwritten,
+     and every prefilled value stays editable. */
+  function prefillPopups() {
+    var fields = document.querySelectorAll('.rr-modal [data-fill]');
+    for (var i = 0; i < fields.length; i++) {
+      var field = fields[i];
+      if (field.value.trim()) continue;
+      var key   = field.getAttribute('data-fill');
+      var value = el(FILL_FROM[key]).value.trim();
+      if (!value) {
+        // Nothing in the referral form — reuse what they typed in the other pop-up.
+        var twins = document.querySelectorAll('.rr-modal [data-fill="' + key + '"]');
+        for (var j = 0; j < twins.length; j++) {
+          if (twins[j] !== field && twins[j].value.trim()) { value = twins[j].value.trim(); break; }
+        }
+      }
+      if (value) field.value = value;
+    }
+  }
+
+  function lockScroll() {
+    // Hiding the scrollbar widens the page; pad by the same amount so nothing jumps.
+    var gap = window.innerWidth - document.documentElement.clientWidth;
+    if (gap > 0) document.body.style.paddingRight = gap + 'px';
+    document.body.classList.add('rr-modal-open');
+  }
+
+  function unlockScroll() {
+    document.body.classList.remove('rr-modal-open');
+    document.body.style.paddingRight = '';
+  }
+
+  function setupPopup(cfg) {
+    var dlg    = el(cfg.dialog);
+    var opener = el(cfg.opener);
+    if (!dlg || !opener) return;
+
+    var form      = dlg.querySelector('form');
+    var doneView  = dlg.querySelector('.rr-modal-done');
+    var bodyEl    = dlg.querySelector('.rr-modal-body');
+    var submitBtn = form.querySelector('[type="submit"]');
+    var btnText   = submitBtn.textContent;
+    var popupErr  = null;
+    var sent      = false;
+    var isUp      = false;     // true from open until the page has been handed back
+
+    // A browser too old for <dialog> gets the plain email link instead of a dead button.
+    if (typeof dlg.showModal !== 'function') {
+      opener.addEventListener('click', function () {
+        window.location.href = form.querySelector('.rr-modal-alt a').getAttribute('href');
+      });
+      return;
+    }
+
+    function clearError() { if (popupErr) { popupErr.remove(); popupErr = null; } }
+
+    function showError(msg) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = btnText;
+      clearError();
+      popupErr = document.createElement('p');
+      popupErr.className = 'rr-err';
+      popupErr.setAttribute('role', 'alert');
+      popupErr.textContent = msg;
+      submitBtn.insertAdjacentElement('afterend', popupErr);
+    }
+
+    function showForm() {
+      doneView.style.display = 'none';
+      form.style.display = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = btnText;
+      clearError();
+    }
+
+    opener.addEventListener('click', function () {
+      if (sent) { form.reset(); showForm(); sent = false; }   // a fresh form after a sent one
+      prefillPopups();
+      lockScroll();
+      dlg.showModal();
+      isUp = true;
+      bodyEl.scrollTop = 0;
+      // Focus lands on the first field still waiting for an answer.
+      var inputs = form.querySelectorAll('input:not([type="hidden"]):not([name="_gotcha"]), textarea');
+      var target = inputs[0];
+      for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].type !== 'checkbox' && !inputs[i].value.trim()) { target = inputs[i]; break; }
+      }
+      if (target) target.focus();
+    });
+
+    /* Hands the page back: scrolling on again, focus on the button that opened
+       the pop-up. Runs once per opening, however it was closed. If the other
+       pop-up is open by the time this runs, that one now owns the page. */
+    function release() {
+      if (!isUp) return;
+      isUp = false;
+      if (document.querySelector('.rr-modal[open]')) return;
+      unlockScroll();
+      opener.focus();
+    }
+
+    function shut() { dlg.close(); release(); }
+
+    var closers = dlg.querySelectorAll('[data-close]');
+    for (var c = 0; c < closers.length; c++) {
+      closers[c].addEventListener('click', shut);
+    }
+
+    // A click on the dimmed area closes it — but only when the press also began
+    // there, so dragging a text selection out of a field cannot close the form.
+    var pressedOnBackdrop = false;
+    dlg.addEventListener('mousedown', function (e) { pressedOnBackdrop = (e.target === dlg); });
+    dlg.addEventListener('click', function (e) {
+      if (e.target === dlg && pressedOnBackdrop) shut();
+      pressedOnBackdrop = false;
+    });
+
+    // Escape. Closed through shut() like everything else, so the page is handed
+    // back at once rather than whenever the browser gets round to saying so.
+    dlg.addEventListener('cancel', function (e) { e.preventDefault(); shut(); });
+
+    // Safety net for any close that did not come through shut(). release()
+    // ignores the call when the work is already done.
+    dlg.addEventListener('close', release);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError();
+
+      if (!form.reportValidity()) { return; }
+
+      var property = form.querySelector('[name="property_name"]').value.trim();
+      form.querySelector('[name="_subject"]').value = cfg.subject + ' \u2014 ' + property;
+
+      // Sent only when the visitor arrived on a partner link. A disabled field
+      // is left out of the submission entirely.
+      var codeField = form.querySelector('[name="partner_code"]');
+      codeField.value = partnerCode;
+      codeField.disabled = !partnerCode;
+
+      var interests = form.querySelector('[name="interests"]');
+      if (interests) {
+        var picked = [];
+        var boxes  = form.querySelectorAll('[data-interest]');
+        for (var b = 0; b < boxes.length; b++) if (boxes[b].checked) picked.push(boxes[b].value);
+        interests.value = picked.join(', ');
+      }
+
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+
+      fetch(FORM_URL, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      })
+      .then(function (res) {
+        if (!res.ok) {
+          var err = new Error('server');
+          err.isServerError = true;
+          throw err;
+        }
+        sent = true;
+        try {
+          if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              lead_type: cfg.leadType,
+              form: form.querySelector('[name="_source"]').value,
+              src: src
+            });
+          }
+        } catch (ignore) { /* analytics must never block the confirmation */ }
+        form.style.display = 'none';
+        doneView.style.display = 'block';
+        bodyEl.scrollTop = 0;
+        doneView.focus();
+      })
+      .catch(function (err) {
+        showError(err && err.isServerError ? POPUP_SERVER_MSG : POPUP_NETWORK_MSG);
+      });
+    });
+  }
+
+  setupPopup({ dialog: 'rr-modal-req', opener: 'rr-open-req', leadType: 'rental_requirements', subject: 'Rental requirements' });
+  setupPopup({ dialog: 'rr-modal-vis', opener: 'rr-open-vis', leadType: 'rental_visit',        subject: 'Property visit request' });
 
   function copyText(text, btn, restore) {
     var finish = function () {
