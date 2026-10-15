@@ -228,6 +228,9 @@
     .pts-neg { color: var(--danger); font-weight: 700; }
     .is-voided td:not(.rc-action) { text-decoration: line-through; color: var(--muted); }
     .is-voided .pts-pos, .is-voided .pts-neg { color: var(--muted); }
+    .rc-entered { display: block; font-size: 11.5px; color: var(--muted); }
+    .ip-lb-link { font-weight: 700; color: var(--navy); text-decoration: none; }
+    .ip-lb-link:hover { text-decoration: underline; }
     .void-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--bg-s); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; }
     .btn-void { background: var(--bg-w); border: 1.5px solid var(--border); color: var(--danger); border-radius: 6px; font-family: inherit; font-size: 12.5px; font-weight: 700; padding: 6px 14px; cursor: pointer; }
     .btn-void:hover { border-color: var(--danger); }
@@ -321,6 +324,7 @@
         <option value="Mike">Mike</option>
       </select>
       <span class="spacer"></span>
+      <a class="ip-lb-link" href="/team/scorecard/">View leaderboard →</a>
       <button type="button" class="link-btn" id="forgetBtn">Forget key on this computer</button>
     </div>
     <nav class="ip-jump" aria-label="Page sections">
@@ -564,6 +568,21 @@
     return d ? d.toLocaleDateString('en-US', Object.assign({ month: 'short', day: 'numeric', timeZone: 'UTC' }, opts || {})) : String(s || '');
   }
   function niceDow(s) { return nice(s, { weekday: 'short' }); }
+  // "2026-10-15T17:42:00" (already Eastern) → "Oct 15, 5:42 PM". A value with Z or an offset is converted to Eastern.
+  function fmtStamp(s) {
+    s = String(s || '').trim();
+    if (!s) return '';
+    if (/[zZ]$|[+-]\d\d:?\d\d$/.test(s)) {
+      const d = new Date(s);
+      if (isNaN(d)) return '';
+      try { return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); }
+      catch (e) { return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); }
+    }
+    const m = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/.exec(s);
+    if (!m) return '';
+    const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]));
+    return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'UTC' });
+  }
   function easternToday() {
     try {
       return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
@@ -1301,13 +1320,19 @@
     const rows = (res.entries || []).map(function (e) {
       const q = num(e.qty) || 1;
       return { type: 'entry', id: e.id, date: normD(e.date) || String(e.date || ''), person: e.person,
-        what: actLabel(entryKey(e), e.name) + (q > 1 ? ' ×' + q : ''), points: num(e.points), by: e.by, note: e.note, voided: isVoided(e.status) };
+        what: actLabel(entryKey(e), e.name) + (q > 1 ? ' ×' + q : ''), points: num(e.points), by: e.by, note: e.note, voided: isVoided(e.status),
+        enteredAt: String(e.enteredAt || '').trim() };
     }).concat((res.redemptions || []).map(function (r) {
       return { type: 'redemption', id: r.id, date: normD(r.date) || String(r.date || ''), person: r.person,
-        what: 'Gift cards cashed in: ' + num(r.cards) + ' (' + money(r.dollars) + ')', points: -Math.abs(num(r.points)), by: r.by, note: r.note, voided: isVoided(r.status) };
+        what: 'Gift cards cashed in: ' + num(r.cards) + ' (' + money(r.dollars) + ')', points: -Math.abs(num(r.points)), by: r.by, note: r.note, voided: isVoided(r.status),
+        enteredAt: String(r.enteredAt || '').trim() };
     }));
-    // Newest first. The sort is stable, so same-day rows keep the server's order.
-    rows.sort(function (a, b) { return a.date === b.date ? 0 : (a.date < b.date ? 1 : -1); });
+    // Newest entered first ("YYYY-MM-DDTHH:mm:ss", Eastern); rows without enteredAt fall back to the
+    // activity date. The sort is stable, so ties keep the server's order.
+    rows.sort(function (a, b) {
+      const ka = a.enteredAt || a.date, kb = b.enteredAt || b.date;
+      return ka === kb ? 0 : (ka < kb ? 1 : -1);
+    });
     state.recentRows = rows;
   }
 
@@ -1318,7 +1343,8 @@
     $('recentBody').innerHTML = rows.map(function (r, i) {
       const p = r.points;
       return '<tr class="' + (r.voided ? 'is-voided' : '') + '" data-i="' + i + '">' +
-        '<td data-label="Date">' + esc(niceDow(r.date)) + '</td>' +
+        '<td data-label="Date">' + esc(niceDow(r.date)) +
+          (fmtStamp(r.enteredAt) ? '<span class="rc-entered">entered ' + esc(fmtStamp(r.enteredAt)) + (r.by ? ' by ' + esc(r.by) : '') + '</span>' : '') + '</td>' +
         '<td data-label="Person">' + esc(r.person) + '</td>' +
         '<td data-label="Activity">' + esc(r.what) + '</td>' +
         '<td data-label="Points" class="num"><span class="' + (p < 0 ? 'pts-neg' : 'pts-pos') + '">' + (p < 0 ? '−' + fmtNum(-p) : '+' + fmtNum(p)) + '</span></td>' +
