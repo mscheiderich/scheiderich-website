@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Agent Incentive Points | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:    #1e3148;
+      --navy-mid:#264060;
+      --navy-lt: #e8edf4;
+      --orange:  #d9682a;
+      --orange-h:#bf5821;
+      --bg:      #f6f4f1;
+      --bg-w:    #ffffff;
+      --bg-s:    #eeebe6;
+      --text:    #1c2330;
+      --muted:   #5f6b79;
+      --border:  #dedad4;
+      --r:       10px;
+      --r-lg:    14px;
+      --sh-sm:   0 1px 4px rgba(30,49,72,.07);
+      --sh-md:   0 4px 20px rgba(30,49,72,.12);
+      /* Page-only: darker orange so white button text passes 4.5:1 (same value as the rental referral page) */
+      --btn-orange:   #b9531c;
+      --btn-orange-h: #a04716;
+      --danger:  #b42318;
+      --ok:      #15803d;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* ── Portal header (same as the other admin pages) ── */
+    .app-header { background: var(--navy); padding: 0 16px; }
+    .app-header-row { display: flex; align-items: center; height: 56px; gap: 12px; }
+    .app-logo { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: #fff; white-space: nowrap; flex-shrink: 0; }
+    .app-title { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 500; flex: 1; text-align: center; }
+    .back-btn { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; transition: all .2s; white-space: nowrap; }
+    .back-btn:hover { color: #fff; border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
+    .admin-badge { background: var(--orange); color: #fff; font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: .05em; text-transform: uppercase; }
+    .portal-footer { background: var(--bg-w); border-top: 1px solid var(--border); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .footer-text { font-size: 12px; color: var(--muted); }
+    .spinner { width: 22px; height: 22px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin .8s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Agent Incentive Points (page-scoped) ── */
+    .ip-main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 28px 16px 48px; }
+    .ip-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .ip-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 8px; }
+    .ip-sub { font-size: 14.5px; color: var(--muted); max-width: 620px; line-height: 1.6; }
+
+    .ip-section { margin-top: 44px; scroll-margin-top: 16px; }
+    .ip-section h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1.25; }
+    .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .sec-sub { color: var(--muted); font-size: 13.5px; margin-top: 4px; }
+
+    .ip-panel { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px 18px; box-shadow: var(--sh-sm); }
+    .ip-panel h3 { font-family: 'Lora', serif; font-size: 18px; color: var(--navy); margin-bottom: 6px; }
+
+    .ip-loading { display: flex; align-items: center; gap: 10px; color: var(--muted); padding: 14px 0; font-size: 14px; }
+
+    .ip-msg { border-radius: var(--r); padding: 12px 14px; font-size: 14px; margin: 12px 0; border: 1px solid; line-height: 1.5; }
+    .ip-msg-error   { background: #fef3f2; border-color: #fecdca; color: #912018; }
+    .ip-msg-success { background: #ecfdf3; border-color: #abefc6; color: #05603a; }
+    .ip-msg-info    { background: var(--navy-lt); border-color: #c9d4e3; color: var(--navy); }
+    .ip-msg-warn    { background: #fffaeb; border-color: #fedf89; color: #7a2e0e; }
+    .msg-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 20px; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid transparent; cursor: pointer; transition: background .15s, border-color .15s, color .15s; text-decoration: none; white-space: nowrap; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-orange { background: var(--btn-orange); color: #fff; }
+    .btn-orange:hover:not(:disabled) { background: var(--btn-orange-h); }
+    .btn-navy { background: var(--navy); color: #fff; }
+    .btn-navy:hover:not(:disabled) { background: var(--navy-mid); }
+    .btn-ghost { background: var(--bg-w); color: var(--navy); border-color: var(--border); }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--navy); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover:not(:disabled) { background: #912018; }
+    .btn-sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
+    .btn:focus-visible, .arrow-btn:focus-visible, .link-btn:focus-visible, .btn-void:focus-visible, .ev-remove:focus-visible { outline: 3px solid rgba(30,49,72,.35); outline-offset: 2px; }
+    .link-btn { background: none; border: none; color: var(--muted); text-decoration: underline; font-family: inherit; font-size: 13px; cursor: pointer; padding: 4px 2px; }
+    .link-btn:hover { color: var(--navy); }
+
+    .ip-label { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+    .ip-input { width: 100%; height: 44px; padding: 0 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 16px; color: var(--text); background: #fff; outline: none; transition: border-color .15s; }
+    .ip-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.12); }
+    .opt { font-weight: 400; }
+
+    /* Key gate */
+    .ip-gate { max-width: 460px; margin: 28px auto 0; }
+    .ip-gate p { color: var(--muted); margin-bottom: 16px; }
+    .gate-field { margin-bottom: 16px; }
+    .gate-who { border: none; margin-bottom: 16px; }
+    .gate-who legend { font-size: 12.5px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .who-options { display: flex; gap: 10px; }
+    .who-opt { flex: 1; display: flex; align-items: center; gap: 8px; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; font-weight: 600; }
+    .who-opt input { width: 18px; height: 18px; accent-color: var(--navy); }
+    .who-opt:has(input:checked) { border-color: var(--navy); background: var(--navy-lt); }
+
+    /* User bar + jump links */
+    .ip-userbar { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin-top: 18px; background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 14px; font-size: 13.5px; }
+    .ip-userbar label { font-weight: 600; color: var(--muted); }
+    .ip-userbar select { height: 36px; padding: 0 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 15px; color: var(--text); background: #fff; }
+    .ip-userbar .spacer { flex: 1; }
+    .ip-jump { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .ip-jump a { font-size: 13px; font-weight: 600; color: var(--navy); background: var(--navy-lt); border-radius: 20px; padding: 6px 14px; text-decoration: none; }
+    .ip-jump a:hover { background: #d6dfeb; }
+
+    /* Activity guide */
+    .ip-howto { margin-top: 14px; background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r); }
+    .ip-howto summary { cursor: pointer; padding: 12px 14px; font-weight: 600; color: var(--navy); font-size: 13.5px; }
+    .howto-body { padding: 0 14px 14px; display: grid; gap: 14px; }
+    .howto-group h4 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .howto-group li { list-style: none; padding: 4px 0; border-bottom: 1px solid var(--bg-s); font-size: 13.5px; }
+    .howto-group li:last-child { border-bottom: none; }
+    .howto-desc { display: block; color: var(--muted); font-size: 12.5px; }
+
+    /* Week selector */
+    .week-nav { display: flex; align-items: center; gap: 10px; margin: 16px 0 6px; }
+    .arrow-btn { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg-w); color: var(--navy); font-size: 14px; cursor: pointer; transition: border-color .15s; }
+    .arrow-btn:hover:not(:disabled) { border-color: var(--navy); }
+    .arrow-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .week-mid { flex: 1; text-align: center; }
+    .week-label { font-family: 'Lora', serif; font-weight: 700; font-size: 17px; color: var(--navy); line-height: 1.3; }
+
+    /* Person cards */
+    .person-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 14px; }
+    .person-grid[inert] { opacity: .6; }
+    .person-card { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 14px 18px; box-shadow: var(--sh-sm); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+    .pc-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .pc-head h3 { font-family: 'Lora', serif; font-size: 19px; color: var(--navy); }
+    .pc-total { font-weight: 700; color: var(--navy); background: var(--navy-lt); border-radius: 20px; padding: 3px 12px; font-size: 13px; white-space: nowrap; }
+    .pc-total.has-points { background: var(--navy); color: #fff; }
+    .pc-block h4 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .pc-hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .act-name { font-weight: 600; }
+    .act-pts { display: inline-block; font-size: 11.5px; font-weight: 700; color: var(--navy); background: var(--navy-lt); border-radius: 10px; padding: 0 7px; white-space: nowrap; }
+
+    .day-grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .day-grid th, .day-grid td { padding: 2px 0; text-align: center; vertical-align: middle; }
+    .day-grid thead th { font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.15; padding-bottom: 4px; }
+    .day-grid thead th:first-child { width: 36%; }
+    .day-grid .dnum { display: block; font-size: 13px; color: var(--text); font-weight: 700; }
+    .day-grid thead th.is-today { color: var(--navy); }
+    .day-grid thead th.is-today .dnum { color: #fff; background: var(--navy); border-radius: 10px; width: fit-content; min-width: 24px; margin: 0 auto; padding: 0 4px; }
+    .day-grid tbody th { text-align: left; font-size: 13.5px; font-weight: 400; padding-right: 6px; line-height: 1.3; }
+    .day-grid tbody tr + tr th, .day-grid tbody tr + tr td { border-top: 1px solid var(--bg-s); }
+
+    /* Custom checkbox: the real input stays focusable and clickable, just invisible */
+    .tick { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; cursor: pointer; }
+    .tick-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+    .tick-box { width: 26px; height: 26px; border: 2px solid #aaa49b; border-radius: 7px; background: #fff; display: inline-flex; align-items: center; justify-content: center; pointer-events: none; transition: background .12s, border-color .12s; }
+    .tick-input:checked + .tick-box { background: var(--navy); border-color: var(--navy); }
+    .tick-input:checked + .tick-box::after { content: '✓'; color: #fff; font-weight: 700; font-size: 15px; line-height: 1; }
+    .tick-input:focus-visible + .tick-box { outline: 3px solid rgba(30,49,72,.35); outline-offset: 2px; }
+    .tick.is-locked { cursor: not-allowed; }
+    .tick.is-locked .tick-input:checked + .tick-box { background: #e4e1dc; border-color: #cfcac2; }
+    .tick.is-locked .tick-input:checked + .tick-box::after { color: #6b6f76; }
+    .tick.is-future { cursor: not-allowed; }
+    .tick.is-future .tick-box { border-style: dashed; background: transparent; opacity: .4; }
+
+    .wk-list { list-style: none; display: flex; flex-direction: column; }
+    .wk-row { display: flex; align-items: center; gap: 6px; cursor: pointer; min-height: 44px; }
+    .wk-row.is-locked { color: var(--muted); cursor: not-allowed; }
+    .wk-text { flex: 1; min-width: 0; }
+    .lock-note { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+
+    .ev-logged { list-style: none; margin-bottom: 10px; }
+    .ev-logged li { font-size: 13px; color: var(--muted); padding: 6px 10px; background: var(--bg-s); border-radius: 6px; margin-bottom: 6px; }
+    .ev-check { font-weight: 700; margin-right: 4px; }
+    .ev-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--bg); margin-bottom: 10px; }
+    .ev-row.has-error { border-color: var(--danger); }
+    .ev-act, .ev-note, .ev-err { grid-column: 1 / -1; }
+    .ev-err { color: var(--danger); font-size: 12.5px; font-weight: 600; }
+    .ev-remove { grid-column: 1 / -1; justify-self: start; background: none; border: none; color: var(--danger); font-family: inherit; font-weight: 600; font-size: 13px; cursor: pointer; padding: 4px 0; text-decoration: underline; }
+
+    /* Sticky save bar */
+    .save-bar { position: sticky; bottom: 8px; z-index: 5; margin-top: 20px; background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: 0 -2px 16px rgba(30,49,72,.12); padding: 10px 12px 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .save-bar-text { font-size: 13.5px; color: var(--muted); }
+    .save-bar-text strong { color: var(--navy); }
+
+    /* Review + results */
+    .rv-panel { margin-top: 20px; }
+    .rv-intro { color: var(--muted); margin-bottom: 14px; }
+    .rv-person { border-top: 1px solid var(--border); padding: 12px 0; }
+    .rv-person h4 { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+    .rv-list { list-style: none; }
+    .rv-list li { display: flex; gap: 10px; padding: 3px 0; font-size: 13.5px; }
+    .rv-date { color: var(--muted); min-width: 92px; }
+    .rv-what { flex: 1; min-width: 0; }
+    .rv-note { color: var(--muted); }
+    .rv-pts { font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .rv-total { border-top: 2px solid var(--navy); padding-top: 12px; font-weight: 700; font-size: 15px; color: var(--navy); }
+    .rv-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .rs-skipped { list-style: none; margin-top: 8px; }
+    .rs-skipped li { padding: 8px 10px; background: #fffaeb; border: 1px solid #fedf89; border-radius: 6px; margin-bottom: 6px; font-size: 13.5px; }
+    .rs-reason { display: block; color: #7a2e0e; font-weight: 600; }
+
+    /* Cash in */
+    .ci-panel { max-width: 680px; margin-top: 14px; }
+    .ci-pick { max-width: 320px; }
+    .stat-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 18px 0 6px; }
+    .stat { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 8px; text-align: center; }
+    .stat-num { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; color: var(--navy); line-height: 1.1; }
+    .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; margin-top: 4px; }
+    .ci-lifetime { font-size: 12.5px; color: var(--muted); }
+    .field-row { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 18px 0 14px; }
+    .inline-confirm { background: var(--bg); border: 1.5px solid var(--navy); border-radius: var(--r); padding: 14px; margin-bottom: 4px; }
+    .inline-confirm p { margin-bottom: 10px; }
+    .confirm-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* Recent activity: stacked rows on phones, a table on desktop */
+    .table-wrap { margin-top: 14px; background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-sm); overflow: hidden; }
+    .recent-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .recent-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .recent-table tr { display: block; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .recent-table tbody tr:last-child { border-bottom: none; }
+    .recent-table td { display: flex; gap: 10px; padding: 2px 0; }
+    .recent-table td::before { content: attr(data-label); flex: 0 0 84px; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+    .recent-table td.rc-action { padding-top: 8px; }
+    .recent-table td.rc-action::before { content: none; }
+    .pts-pos { color: var(--ok); font-weight: 700; }
+    .pts-neg { color: var(--danger); font-weight: 700; }
+    .is-voided td:not(.rc-action) { text-decoration: line-through; color: var(--muted); }
+    .is-voided .pts-pos, .is-voided .pts-neg { color: var(--muted); }
+    .void-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--bg-s); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; }
+    .btn-void { background: var(--bg-w); border: 1.5px solid var(--border); color: var(--danger); border-radius: 6px; font-family: inherit; font-size: 12.5px; font-weight: 700; padding: 6px 14px; cursor: pointer; }
+    .btn-void:hover { border-color: var(--danger); }
+    .void-confirm { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 600; }
+    .void-confirm .btn { min-height: 34px; padding: 0 12px; font-size: 12.5px; }
+    .recent-empty { padding: 24px 16px; color: var(--muted); text-align: center; }
+
+    @media (min-width: 600px) {
+      .stat-row { grid-template-columns: repeat(4, 1fr); }
+      .field-row { grid-template-columns: 170px 1fr; }
+    }
+    @media (min-width: 720px) {
+      .app-header { padding: 0 24px; }
+      .portal-footer { padding: 14px 24px; }
+      .ip-main { padding: 40px 24px 56px; }
+      .ip-title { font-size: 30px; }
+      .howto-body { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 780px) {
+      .person-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .recent-table thead { position: static; width: auto; height: auto; overflow: visible; clip: auto; display: table-header-group; background: var(--bg-s); }
+      .recent-table tr { display: table-row; padding: 0; border-bottom: none; }
+      .recent-table th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; border-bottom: 2px solid var(--border); }
+      .recent-table td { display: table-cell; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+      .recent-table tbody tr:last-child td { border-bottom: none; }
+      .recent-table td::before { content: none; }
+      .recent-table td.rc-action { padding-top: 7px; white-space: nowrap; }
+      .recent-table .num { text-align: right; white-space: nowrap; }
+    }
+    @media (min-width: 1140px) {
+      .person-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) { .app-title { display: none; } }
+    @media (max-width: 420px) { .app-logo { font-size: 14px; } .admin-badge { display: none; } }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-row">
+    <a href="/team/admin/" class="back-btn">← Admin Hub</a>
+    <div class="app-logo">The Scheiderich Agency</div>
+    <div class="app-title">Agent Incentive Points</div>
+    <span class="admin-badge">Admin Only</span>
+  </div>
+</header>
+
+<main class="ip-main">
+  <div class="ip-eyebrow">Admin Tool</div>
+  <h1 class="ip-title">Agent Incentive Points</h1>
+  <p class="ip-sub">Log each week's activity, cash in gift cards, and void mistakes. Everything saves to the Agent Incentive Points sheet.</p>
+
+  <div id="bootLoading" class="ip-loading"><div class="spinner"></div><span>Loading the points sheet…</span></div>
+  <div id="bootMsg" class="ip-msg" role="alert" hidden></div>
+
+  <!-- Admin key gate -->
+  <section id="gate" class="ip-panel ip-gate" hidden aria-labelledby="gateTitle">
+    <h3 id="gateTitle">Enter admin key</h3>
+    <p>The key is checked with the points sheet, then remembered in this browser only.</p>
+    <form id="gateForm" novalidate>
+      <div class="gate-field">
+        <label class="ip-label" for="gateKey">Admin key</label>
+        <input class="ip-input" id="gateKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" />
+      </div>
+      <fieldset class="gate-who">
+        <legend>Who's entering?</legend>
+        <div class="who-options">
+          <label class="who-opt"><input type="radio" name="gateBy" value="Crissy" /> Crissy</label>
+          <label class="who-opt"><input type="radio" name="gateBy" value="Mike" /> Mike</label>
+        </div>
+      </fieldset>
+      <div id="gateMsg" class="ip-msg" role="alert" hidden></div>
+      <button type="submit" class="btn btn-navy" id="gateBtn">Unlock</button>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <div class="ip-userbar">
+      <label for="bySel">Entering as</label>
+      <select id="bySel">
+        <option value="Crissy">Crissy</option>
+        <option value="Mike">Mike</option>
+      </select>
+      <span class="spacer"></span>
+      <button type="button" class="link-btn" id="forgetBtn">Forget key on this computer</button>
+    </div>
+    <nav class="ip-jump" aria-label="Page sections">
+      <a href="#entry">Weekly entry</a>
+      <a href="#cashin">Cash in gift cards</a>
+      <a href="#recent">Recent activity</a>
+    </nav>
+    <details class="ip-howto">
+      <summary>What each activity is worth</summary>
+      <div class="howto-body" id="howtoBody"></div>
+    </details>
+
+    <!-- 1. Weekly entry grid -->
+    <section id="entry" class="ip-section" aria-labelledby="entryTitle">
+      <h2 id="entryTitle">Weekly entry</h2>
+      <div class="week-nav">
+        <button type="button" class="arrow-btn" id="prevWeek" aria-label="Previous week">◀</button>
+        <div class="week-mid">
+          <div class="week-label" id="weekLabel" aria-live="polite"></div>
+          <button type="button" class="link-btn" id="thisWeek" hidden>Back to this week</button>
+        </div>
+        <button type="button" class="arrow-btn" id="nextWeek" aria-label="Next week">▶</button>
+      </div>
+      <div id="weekMsg" class="ip-msg" role="alert" hidden></div>
+      <div id="weekLoading" class="ip-loading" hidden><div class="spinner"></div><span>Loading this week's entries…</span></div>
+      <div id="cards" class="person-grid"></div>
+
+      <div id="reviewPanel" class="ip-panel rv-panel" hidden tabindex="-1"></div>
+      <div id="resultPanel" class="ip-panel rv-panel" hidden tabindex="-1" aria-live="polite"></div>
+
+      <div class="save-bar">
+        <div class="save-bar-text" id="saveBarText" aria-live="polite"></div>
+        <button type="button" class="btn btn-navy" id="reviewBtn" disabled>Review &amp; Save</button>
+      </div>
+    </section>
+
+    <!-- 2. Cash in gift cards -->
+    <section id="cashin" class="ip-section" aria-labelledby="cashinTitle">
+      <h2 id="cashinTitle">Cash in gift cards</h2>
+      <p class="sec-sub" id="cardRate"></p>
+      <div class="ip-panel ci-panel">
+        <div class="ci-pick">
+          <label class="ip-label" for="ciPerson">Person</label>
+          <select class="ip-input" id="ciPerson"><option value="">Choose a person…</option></select>
+        </div>
+        <div id="ciLoading" class="ip-loading" hidden><div class="spinner"></div><span>Loading balance…</span></div>
+        <div id="ciMsg" class="ip-msg" role="status" hidden></div>
+        <div id="ciBody" hidden>
+          <div class="stat-row">
+            <div class="stat"><div class="stat-num" id="ciBalance">—</div><div class="stat-lbl">Point balance</div></div>
+            <div class="stat"><div class="stat-num" id="ciCardsAvail">—</div><div class="stat-lbl">Cards available</div></div>
+            <div class="stat"><div class="stat-num" id="ciDollars">—</div><div class="stat-lbl">Dollar value</div></div>
+            <div class="stat"><div class="stat-num" id="ciToNext">—</div><div class="stat-lbl">Points to next card</div></div>
+          </div>
+          <p class="ci-lifetime" id="ciLifetime"></p>
+          <div id="ciForm">
+            <div class="field-row">
+              <div>
+                <label class="ip-label" for="ciCards">Number of cards</label>
+                <input class="ip-input" id="ciCards" type="number" min="1" step="1" value="1" inputmode="numeric" />
+              </div>
+              <div>
+                <label class="ip-label" for="ciNote">Note <span class="opt">(optional)</span></label>
+                <input class="ip-input" id="ciNote" type="text" maxlength="100" placeholder="e.g. Amazon" />
+              </div>
+            </div>
+            <div id="ciConfirm" class="inline-confirm" hidden></div>
+            <button type="button" class="btn btn-orange" id="ciBtn">Cash In</button>
+          </div>
+          <p class="ip-msg ip-msg-info" id="ciNone" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Recent activity -->
+    <section id="recent" class="ip-section" aria-labelledby="recentTitle">
+      <div class="sec-head">
+        <h2 id="recentTitle">Recent activity</h2>
+        <button type="button" class="btn btn-ghost btn-sm" id="recentRefresh">↻ Refresh</button>
+      </div>
+      <p class="sec-sub">The last 50 entries and gift card cash-ins, newest first.</p>
+      <div id="recentMsg" class="ip-msg" role="alert" hidden></div>
+      <div id="recentLoading" class="ip-loading" hidden><div class="spinner"></div><span>Loading recent activity…</span></div>
+      <div class="table-wrap" id="recentWrap" hidden>
+        <table class="recent-table">
+          <thead>
+            <tr><th scope="col">Date</th><th scope="col">Person</th><th scope="col">Activity</th><th scope="col" class="num">Points</th><th scope="col">Entered by</th><th scope="col">Note</th><th scope="col"><span class="sr-only">Actions</span></th></tr>
+          </thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+        <p class="recent-empty" id="recentEmpty" hidden>No activity yet.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="portal-footer">
+  <div class="footer-text">© 2026 The Scheiderich Agency · Admin Access Only</div>
+  <div class="footer-text">Internal tool — do not share this URL</div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Config ──────────────────────────────────────────────────────────────
+  // The write key is NEVER stored in this file. It lives in Apps Script Script
+  // Properties and in each admin's browser (localStorage 'incentiveKey').
+  const API_URL = 'https://script.google.com/a/macros/gahomeinsuranceexperts.com/s/AKfycbyfEmq_9Of9n8aw21hEltGjITdY_IaeX3MHUQdADaMjGBkEEhSZCzNSIneVeJYFTN7O/exec';
+  const KEY_STORE = 'incentiveKey';
+  const BY_STORE  = 'incentiveBy';
+  const ENTERERS  = ['Crissy', 'Mike'];
+  const TIMEOUT_MS = 20000;
+  const MAX_URL    = 1800;   // keep every save request URL under this length
+  const CB_RESERVE = 40;     // room for "&callback=ipcb_…" when sizing save batches
+  const NET_MSG = "Couldn't reach the points sheet. Check your connection and try again. Nothing was saved.";
+  const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+  const $ = function (id) { return document.getElementById(id); };
+
+  // ── localStorage, always wrapped ────────────────────────────────────────
+  function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  function lsDel(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } }
+
+  // ── JSONP ───────────────────────────────────────────────────────────────
+  // Browser fetch() to Apps Script fails silently, so every call injects a
+  // <script> tag with a unique callback name.
+  let jsonpSeq = 0;
+  function qs(params) {
+    return Object.keys(params)
+      .filter(function (k) { return params[k] !== undefined && params[k] !== null; })
+      .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(String(params[k])); })
+      .join('&');
+  }
+  function jsonp(params) {
+    return new Promise(function (resolve, reject) {
+      const cb = 'ipcb_' + Date.now().toString(36) + '_' + (++jsonpSeq);
+      const script = document.createElement('script');
+      let settled = false;
+      function finish(ok, value) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        script.onload = script.onerror = null;
+        if (script.parentNode) script.parentNode.removeChild(script);
+        if (ok) {
+          delete window[cb];
+          resolve(value);
+        } else {
+          // A reply that arrives after a timeout must not throw, so park a no-op briefly.
+          window[cb] = function () {};
+          setTimeout(function () { delete window[cb]; }, 60000);
+          reject(value);
+        }
+      }
+      const timer = setTimeout(function () { finish(false, new Error('timeout')); }, TIMEOUT_MS);
+      window[cb] = function (data) { finish(true, data); };
+      script.onerror = function () { finish(false, new Error('load error')); };
+      // The reply calls the callback while it loads. If it loaded without calling back,
+      // Google sent something else (such as a sign-in page): fail now, not after 20s.
+      script.onload = function () { setTimeout(function () { finish(false, new Error('no callback')); }, 0); };
+      script.src = API_URL + '?' + qs(params) + '&callback=' + cb;
+      document.head.appendChild(script);
+    });
+  }
+
+  function apiError(kind, message) { const e = new Error(message); e.kind = kind; return e; }
+  // kind: 'network' (timeout / unreachable), 'auth' (Not authorized), 'server' (any other error)
+  async function api(params) {
+    let res;
+    try { res = await jsonp(params); }
+    catch (e) { throw apiError('network', NET_MSG); }
+    if (!res || typeof res !== 'object') throw apiError('server', 'The points sheet sent back an unexpected reply.');
+    if (res.ok !== true) {
+      const msg = res.error ? String(res.error) : 'The points sheet reported an error.';
+      if (/not\s*authori[sz]ed/i.test(msg)) throw apiError('auth', msg);
+      throw apiError('server', msg);
+    }
+    return res;
+  }
+  function withKey(params) { return Object.assign({ action: params.action, key: state.key }, params); }
+
+  // ── Messages ────────────────────────────────────────────────────────────
+  function showMsg(el, type, text, actions) {
+    el.className = 'ip-msg ip-msg-' + type;
+    el.textContent = text;
+    if (actions && actions.length) {
+      const row = document.createElement('div');
+      row.className = 'msg-actions';
+      actions.forEach(function (a) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn btn-sm ' + (a.cls || 'btn-ghost');
+        b.textContent = a.label;
+        b.addEventListener('click', a.fn);
+        row.appendChild(b);
+      });
+      el.appendChild(row);
+    }
+    el.hidden = false;
+  }
+  function hideMsg(el) { el.hidden = true; el.textContent = ''; }
+  function errText(err) {
+    if (err && err.kind === 'server') return 'The points sheet said: ' + err.message;
+    return NET_MSG;
+  }
+  // Shows the right message for an error. "Not authorized" sends the user back to the key box.
+  function handleError(err, el) {
+    if (err && err.kind === 'auth') {
+      lockOut("Your admin key wasn't accepted. Please enter it again.");
+      return;
+    }
+    showMsg(el, 'error', errText(err));
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function num(v) { const n = Number(v); return isFinite(n) ? n : 0; }
+  function fmtNum(v) { return num(v).toLocaleString('en-US'); }
+  function money(v) {
+    const n = num(v);
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  }
+  // plural(2, 'item') → "2 items"; plural(1, 'item was', 'items were') → "1 item was"
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+  function isVoided(status) { return /void/i.test(String(status || '')); }
+
+  // Dates are plain 'YYYY-MM-DD' strings; arithmetic happens in UTC so DST never shifts a day.
+  function normD(s) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? m[0] : ''; }
+  function parseD(s) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])) : null; }
+  function fmtD(d) { return d.toISOString().slice(0, 10); }
+  function addDays(s, n) { const d = parseD(s); d.setUTCDate(d.getUTCDate() + n); return fmtD(d); }
+  function mondayOf(s) { const d = parseD(s); return addDays(s, -((d.getUTCDay() + 6) % 7)); }
+  function nice(s, opts) {
+    const d = parseD(s);
+    return d ? d.toLocaleDateString('en-US', Object.assign({ month: 'short', day: 'numeric', timeZone: 'UTC' }, opts || {})) : String(s || '');
+  }
+  function niceDow(s) { return nice(s, { weekday: 'short' }); }
+  function easternToday() {
+    try {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    } catch (e) {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+  }
+  function weekLabel(ws) {
+    const we = addDays(ws, 6);
+    const y1 = ws.slice(0, 4), y2 = we.slice(0, 4);
+    return 'Week of ' + nice(ws) + (y1 !== y2 ? ', ' + y1 : '') + ' – ' + nice(we) + ', ' + y2;
+  }
+
+  // ── State ───────────────────────────────────────────────────────────────
+  const state = {
+    key: null, by: null,
+    people: [], acts: [], actByKey: {}, nameToKey: {},
+    daily: [], weekly: [], events: [],
+    ppc: 0, dpc: 0, today: null,
+    weekStart: null, weekLoaded: false, weekReq: 0,
+    loggedDaily: new Set(), loggedWeekly: new Set(), loggedEvents: {},
+    selDaily: new Map(), selWeekly: new Map(), eventRows: [], rowSeq: 0,
+    saving: false,
+    ciRow: null,
+    recentRows: [],
+  };
+
+  function actType(a) {
+    const f = String(a.frequency || '').toLowerCase();
+    if (f.indexOf('daily') === 0) return 'daily';
+    if (f.indexOf('weekly') === 0) return 'weekly';
+    return 'event';
+  }
+  function pts(a) { return num(a && a.points); }
+  function entryKey(e) {
+    if (state.actByKey[e.activity]) return e.activity;
+    const k = state.nameToKey[String(e.name || e.activity || '').toLowerCase()];
+    return k || String(e.activity || '');
+  }
+  function actLabel(key, fallback) { const a = state.actByKey[key]; return a ? a.name : (fallback || key); }
+
+  function applyConfig(cfg) {
+    state.people = (cfg.people || []).map(function (p) { return typeof p === 'string' ? p : (p && p.name) || ''; }).filter(Boolean);
+    state.acts = (cfg.activities || []).filter(function (a) { return a && a.key; });
+    state.acts.forEach(function (a) {
+      state.actByKey[a.key] = a;
+      if (a.name) state.nameToKey[String(a.name).toLowerCase()] = a.key;
+    });
+    state.daily  = state.acts.filter(function (a) { return actType(a) === 'daily'; });
+    state.weekly = state.acts.filter(function (a) { return actType(a) === 'weekly'; });
+    state.events = state.acts.filter(function (a) { return actType(a) === 'event'; });
+    state.ppc = num(cfg.pointsPerCard);
+    state.dpc = num(cfg.dollarsPerCard);
+    // "Today" comes from the server so a wrong PC clock or time zone can't allow future dates.
+    state.today = normD(cfg.today) || easternToday();
+    state.weekStart = mondayOf(state.today);
+  }
+
+  // ── Boot ────────────────────────────────────────────────────────────────
+  async function boot() {
+    $('bootLoading').hidden = false;
+    hideMsg($('bootMsg'));
+    try {
+      const cfg = await api({ action: 'config' });
+      applyConfig(cfg);
+    } catch (err) {
+      $('bootLoading').hidden = true;
+      showMsg($('bootMsg'), 'error', errText(err), [{ label: 'Try again', fn: boot }]);
+      return;
+    }
+    $('bootLoading').hidden = true;
+    state.key = lsGet(KEY_STORE);
+    const by = lsGet(BY_STORE);
+    state.by = ENTERERS.indexOf(by) > -1 ? by : null;
+    if (!state.key || !state.by) showGate();
+    else startApp();
+  }
+
+  // ── Key gate ────────────────────────────────────────────────────────────
+  function showGate(message, type) {
+    $('app').hidden = true;
+    $('gate').hidden = false;
+    $('gateKey').value = '';
+    document.querySelectorAll('input[name="gateBy"]').forEach(function (r) { r.checked = r.value === state.by; });
+    if (message) showMsg($('gateMsg'), type || 'error', message); else hideMsg($('gateMsg'));
+    $('gateKey').focus();
+  }
+  function lockOut(message) {
+    lsDel(KEY_STORE);
+    state.key = null;
+    showGate(message);
+  }
+
+  $('gateForm').addEventListener('submit', async function (ev) {
+    ev.preventDefault();
+    const key = $('gateKey').value.trim();
+    const picked = document.querySelector('input[name="gateBy"]:checked');
+    const by = picked ? picked.value : '';
+    if (!key) { showMsg($('gateMsg'), 'error', 'Enter the admin key.'); $('gateKey').focus(); return; }
+    if (!by) { showMsg($('gateMsg'), 'error', "Choose who's entering."); return; }
+    const btn = $('gateBtn');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    hideMsg($('gateMsg'));
+    try {
+      await api({ action: 'recent', key: key, limit: 1 });
+    } catch (err) {
+      if (err.kind === 'auth') showMsg($('gateMsg'), 'error', "That key wasn't accepted. Check it and try again.");
+      else showMsg($('gateMsg'), 'error', errText(err));
+      return;
+    } finally {
+      btn.disabled = false; btn.textContent = 'Unlock';
+    }
+    state.key = key;
+    state.by = by;
+    const stored = lsSet(KEY_STORE, key);
+    lsSet(BY_STORE, by);
+    startApp(stored ? '' : "This browser can't remember the key, so you'll need to enter it again next time.");
+  });
+
+  $('bySel').addEventListener('change', function () {
+    state.by = this.value;
+    lsSet(BY_STORE, state.by);
+  });
+  $('forgetBtn').addEventListener('click', function () {
+    lsDel(KEY_STORE);
+    state.key = null;
+    showGate('The admin key was removed from this computer.', 'info');
+  });
+
+  let started = false;
+  function startApp(note) {
+    $('gate').hidden = true;
+    $('app').hidden = false;
+    $('bySel').value = state.by;
+    if (!started) {
+      started = true;
+      renderHowto();
+      const sel = $('ciPerson');
+      state.people.forEach(function (p) {
+        const o = document.createElement('option');
+        o.value = p; o.textContent = p;
+        sel.appendChild(o);
+      });
+      $('cardRate').textContent = state.ppc
+        ? 'Each gift card is ' + fmtNum(state.ppc) + ' points = ' + money(state.dpc) + '. Leftover points roll over.'
+        : '';
+    }
+    renderWeekHeader();
+    if (note) showMsg($('weekMsg'), 'info', note);
+    loadWeek();
+    loadRecent();
+    if ($('ciPerson').value) loadSummary();
+  }
+
+  function renderHowto() {
+    const groups = [['Daily', state.daily, 'One per person per day'], ['Weekly', state.weekly, 'One per person per Mon–Sun week'], ['Events', state.events, 'As many as happen']];
+    $('howtoBody').innerHTML = groups.filter(function (g) { return g[1].length; }).map(function (g) {
+      return '<div class="howto-group"><h4>' + g[0] + ' · ' + g[2] + '</h4><ul>' + g[1].map(function (a) {
+        return '<li><span class="act-name">' + esc(a.name) + '</span> <span class="act-pts">+' + pts(a) + '</span>' +
+          (a.description ? '<span class="howto-desc">' + esc(a.description) + '</span>' : '') + '</li>';
+      }).join('') + '</ul></div>';
+    }).join('');
+  }
+
+  // ── 1. Weekly entry grid ────────────────────────────────────────────────
+  function currentMonday() { return mondayOf(state.today); }
+  function weekEnd() { return addDays(state.weekStart, 6); }
+  function maxEventDate() { const we = weekEnd(); return we < state.today ? we : state.today; }
+  // Weekly items are dated that week's Friday, or today if that Friday is still ahead.
+  function weeklyDate() { const fri = addDays(state.weekStart, 4); return fri <= state.today ? fri : state.today; }
+  function defaultEventDate() { const fri = addDays(state.weekStart, 4); return fri < state.today ? fri : state.today; }
+
+  function renderWeekHeader() {
+    $('weekLabel').textContent = weekLabel(state.weekStart);
+    $('nextWeek').disabled = state.saving || state.weekStart >= currentMonday();
+    $('prevWeek').disabled = state.saving;
+    $('thisWeek').hidden = state.weekStart === currentMonday();
+  }
+
+  function dirtyCount() { return state.selDaily.size + state.selWeekly.size + state.eventRows.length; }
+  function clearSession() { state.selDaily.clear(); state.selWeekly.clear(); state.eventRows = []; }
+
+  function changeWeek(target) {
+    if (state.saving || target > currentMonday() || target === state.weekStart) return;
+    const n = dirtyCount();
+    if (n) {
+      showMsg($('weekMsg'), 'warn', 'You have ' + plural(n, 'unsaved item') + ' for this week. Save them first, or discard them to switch weeks.', [
+        { label: 'Discard and switch weeks', fn: function () { clearSession(); goToWeek(target); } },
+        { label: 'Stay on this week', fn: function () { hideMsg($('weekMsg')); } },
+      ]);
+      return;
+    }
+    goToWeek(target);
+  }
+  function goToWeek(ws) {
+    state.weekStart = ws;
+    $('reviewPanel').hidden = true;
+    $('resultPanel').hidden = true;
+    hideMsg($('weekMsg'));
+    renderWeekHeader();
+    loadWeek();
+  }
+  // Ticks live only in this page, so warn before a reload or close throws them away.
+  window.addEventListener('beforeunload', function (ev) {
+    if (dirtyCount() || state.saving) { ev.preventDefault(); ev.returnValue = ''; }
+  });
+  $('prevWeek').addEventListener('click', function () { changeWeek(addDays(state.weekStart, -7)); });
+  $('nextWeek').addEventListener('click', function () { changeWeek(addDays(state.weekStart, 7)); });
+  $('thisWeek').addEventListener('click', function () { changeWeek(currentMonday()); });
+
+  async function loadWeek() {
+    const ws = state.weekStart;
+    const req = ++state.weekReq;
+    state.weekLoaded = false;
+    updateTotals();
+    $('weekLoading').hidden = false;
+    $('cards').inert = true;
+    try {
+      const res = await api(withKey({ action: 'entries', start: ws, end: addDays(ws, 6) }));
+      if (req !== state.weekReq) return;
+      indexLogged((res.entries || []).filter(function (e) { return !isVoided(e.status); }));
+      // Drop any session ticks the sheet now shows as already logged.
+      state.selDaily.forEach(function (v, k) { if (state.loggedDaily.has(k)) state.selDaily.delete(k); });
+      state.selWeekly.forEach(function (v, k) { if (state.loggedWeekly.has(k)) state.selWeekly.delete(k); });
+      state.weekLoaded = true;
+      renderCards();
+    } catch (err) {
+      if (req !== state.weekReq) return;
+      // Without this week's entries the grid can't show what's already logged, so keep it hidden.
+      $('cards').innerHTML = '';
+      if (err.kind === 'auth') { handleError(err); return; }
+      showMsg($('weekMsg'), 'error', errText(err), [{ label: 'Try again', fn: function () { hideMsg($('weekMsg')); loadWeek(); } }]);
+    } finally {
+      if (req === state.weekReq) {
+        $('weekLoading').hidden = true;
+        $('cards').inert = state.saving;
+        updateTotals();
+      }
+    }
+  }
+
+  function indexLogged(entries) {
+    state.loggedDaily = new Set();
+    state.loggedWeekly = new Set();
+    state.loggedEvents = {};
+    entries.forEach(function (e) {
+      const k = entryKey(e);
+      const a = state.actByKey[k];
+      const t = a ? actType(a) : 'event';
+      if (t === 'daily') state.loggedDaily.add(e.person + '|' + k + '|' + normD(e.date));
+      else if (t === 'weekly') state.loggedWeekly.add(e.person + '|' + k);
+      else (state.loggedEvents[e.person] = state.loggedEvents[e.person] || []).push(e);
+    });
+  }
+
+  function tick(o) {
+    const tag = o.tag || 'label';
+    return '<' + tag + ' class="tick' + (o.cls ? ' ' + o.cls : '') + '">' +
+      '<input type="checkbox" class="tick-input" ' + o.data + (o.checked ? ' checked' : '') + (o.disabled ? ' disabled' : '') +
+      ' aria-label="' + esc(o.label) + '" />' +
+      '<span class="tick-box" aria-hidden="true"></span></' + tag + '>';
+  }
+
+  function renderCards() {
+    $('cards').innerHTML = state.people.map(buildCard).join('');
+    updateTotals();
+  }
+
+  function buildCard(person) {
+    const ws = state.weekStart, today = state.today;
+    const P = esc(person);
+    let h = '<article class="person-card"><header class="pc-head"><h3>' + P + '</h3>' +
+      '<div class="pc-total" data-total-for="' + P + '">+0 pts</div></header>';
+
+    if (state.daily.length) {
+      const days = [0, 1, 2, 3, 4].map(function (i) { return addDays(ws, i); });
+      h += '<div class="pc-block"><h4>Daily</h4><table class="day-grid"><caption class="sr-only">Daily activities for ' + P + ', ' + esc(weekLabel(ws)) + '</caption>' +
+        '<thead><tr><th scope="col"><span class="sr-only">Activity</span></th>';
+      days.forEach(function (d, i) {
+        h += '<th scope="col"' + (d === today ? ' class="is-today"' : '') + '><span>' + DAY_NAMES[i] + '</span><span class="dnum">' + parseD(d).getUTCDate() + '</span></th>';
+      });
+      h += '</tr></thead><tbody>';
+      state.daily.forEach(function (a) {
+        h += '<tr><th scope="row"><span class="act-name">' + esc(a.name) + '</span> <span class="act-pts">+' + pts(a) + '</span></th>';
+        days.forEach(function (d) {
+          const k = person + '|' + a.key + '|' + d;
+          const locked = state.loggedDaily.has(k), future = d > today;
+          h += '<td>' + tick({
+            cls: locked ? 'is-locked' : (future ? 'is-future' : ''),
+            checked: locked || state.selDaily.has(k),
+            disabled: locked || future,
+            label: person + ', ' + a.name + ', ' + niceDow(d) + (locked ? ', already logged' : (future ? ', future date' : '')),
+            data: 'data-kind="daily" data-k="' + esc(k) + '" data-p="' + P + '" data-a="' + esc(a.key) + '" data-d="' + d + '"',
+          }) + '</td>';
+        });
+        h += '</tr>';
+      });
+      h += '</tbody></table></div>';
+    }
+
+    if (state.weekly.length) {
+      const wd = weeklyDate();
+      h += '<div class="pc-block"><h4>Weekly</h4><ul class="wk-list">';
+      state.weekly.forEach(function (a) {
+        const k = person + '|' + a.key;
+        const locked = state.loggedWeekly.has(k);
+        h += '<li><label class="wk-row' + (locked ? ' is-locked' : '') + '">' + tick({
+          tag: 'span',
+          cls: locked ? 'is-locked' : '',
+          checked: locked || state.selWeekly.has(k),
+          disabled: locked,
+          label: person + ', ' + a.name + ', this week' + (locked ? ', already logged' : ''),
+          data: 'data-kind="weekly" data-k="' + esc(k) + '" data-p="' + P + '" data-a="' + esc(a.key) + '"',
+        }) + '<span class="wk-text"><span class="act-name">' + esc(a.name) + '</span> <span class="act-pts">+' + pts(a) + '</span></span>' +
+          (locked ? '<span class="lock-note">✓ Logged</span>' : '') + '</label></li>';
+      });
+      h += '</ul><p class="pc-hint">Weekly items save dated ' + esc(niceDow(wd)) + (wd === today && wd !== addDays(ws, 4) ? ' (today)' : '') + '.</p></div>';
+    }
+
+    if (state.events.length) {
+      const logged = (state.loggedEvents[person] || []).slice().sort(function (x, y) { return normD(x.date) < normD(y.date) ? -1 : 1; });
+      h += '<div class="pc-block"><h4>Events</h4>';
+      if (logged.length) {
+        h += '<ul class="ev-logged">' + logged.map(function (e) {
+          const q = num(e.qty) || 1;
+          return '<li><span class="ev-check" aria-hidden="true">✓</span>' + esc(actLabel(entryKey(e), e.name)) + (q > 1 ? ' ×' + q : '') +
+            ' · ' + esc(niceDow(e.date)) + ' · +' + fmtNum(e.points) + (e.note ? ' · ' + esc(e.note) : '') +
+            '<span class="sr-only"> (already logged)</span></li>';
+        }).join('') + '</ul>';
+      }
+      h += '<div class="ev-rows">' + state.eventRows.filter(function (r) { return r.p === person; }).map(eventRowHTML).join('') + '</div>' +
+        '<button type="button" class="btn btn-ghost btn-sm" data-add-event="' + P + '">+ Add<span class="sr-only"> event for ' + P + '</span></button></div>';
+    }
+
+    return h + '</article>';
+  }
+
+  function eventRowHTML(r) {
+    const id = r.id, P = esc(r.p);
+    const opts = state.events.map(function (a) {
+      return '<option value="' + esc(a.key) + '"' + (a.key === r.a ? ' selected' : '') + '>' + esc(a.name) + ' (+' + pts(a) + ')</option>';
+    }).join('');
+    return '<div class="ev-row" data-row="' + id + '">' +
+      '<div class="ev-act"><label class="ip-label" for="ev-a-' + id + '">Activity<span class="sr-only"> for ' + P + '</span></label>' +
+      '<select class="ip-input" id="ev-a-' + id + '" data-f="a">' + opts + '</select></div>' +
+      '<div><label class="ip-label" for="ev-d-' + id + '">Date</label>' +
+      '<input class="ip-input" type="date" id="ev-d-' + id + '" data-f="d" min="' + state.weekStart + '" max="' + maxEventDate() + '" value="' + esc(r.d) + '" /></div>' +
+      '<div><label class="ip-label" for="ev-q-' + id + '">Quantity</label>' +
+      '<input class="ip-input" type="number" id="ev-q-' + id + '" data-f="q" min="1" max="99" step="1" inputmode="numeric" value="' + esc(r.q) + '" /></div>' +
+      '<div class="ev-note"><label class="ip-label" for="ev-n-' + id + '">Note <span class="opt">(optional)</span></label>' +
+      '<input class="ip-input" type="text" id="ev-n-' + id + '" data-f="n" maxlength="100" value="' + esc(r.n) + '" /></div>' +
+      '<div class="ev-err" hidden></div>' +
+      '<button type="button" class="ev-remove" data-remove-event="' + id + '">Remove<span class="sr-only"> this event</span></button>' +
+      '</div>';
+  }
+
+  // Any edit makes an open review stale, so close it.
+  function editsChanged() {
+    $('reviewPanel').hidden = true;
+    updateTotals();
+  }
+
+  $('cards').addEventListener('change', function (ev) {
+    const t = ev.target;
+    if (t.classList.contains('tick-input')) {
+      const kind = t.getAttribute('data-kind'), k = t.getAttribute('data-k');
+      const map = kind === 'daily' ? state.selDaily : state.selWeekly;
+      if (t.checked) map.set(k, { p: t.getAttribute('data-p'), a: t.getAttribute('data-a'), d: t.getAttribute('data-d') });
+      else map.delete(k);
+      editsChanged();
+      return;
+    }
+    updateEventField(t);
+  });
+  $('cards').addEventListener('input', function (ev) { updateEventField(ev.target); });
+  $('cards').addEventListener('click', function (ev) {
+    const add = ev.target.closest('[data-add-event]');
+    if (add) {
+      const r = { id: ++state.rowSeq, p: add.getAttribute('data-add-event'), a: state.events[0].key, d: defaultEventDate(), q: '1', n: '' };
+      state.eventRows.push(r);
+      add.parentNode.querySelector('.ev-rows').insertAdjacentHTML('beforeend', eventRowHTML(r));
+      $('ev-a-' + r.id).focus();
+      editsChanged();
+      return;
+    }
+    const rm = ev.target.closest('[data-remove-event]');
+    if (rm) {
+      const id = Number(rm.getAttribute('data-remove-event'));
+      state.eventRows = state.eventRows.filter(function (r) { return r.id !== id; });
+      const rowEl = rm.closest('.ev-row');
+      const addBtn = rowEl.closest('.pc-block').querySelector('[data-add-event]');
+      rowEl.remove();
+      addBtn.focus();
+      editsChanged();
+    }
+  });
+  function updateEventField(t) {
+    const f = t.getAttribute && t.getAttribute('data-f');
+    if (!f) return;
+    const rowEl = t.closest('.ev-row');
+    const id = Number(rowEl.getAttribute('data-row'));
+    const r = state.eventRows.find(function (x) { return x.id === id; });
+    if (!r) return;
+    r[f] = t.value;
+    rowEl.classList.remove('has-error');
+    rowEl.querySelector('.ev-err').hidden = true;
+    editsChanged();
+  }
+
+  function validateEvents() {
+    let ok = true;
+    const max = maxEventDate();
+    state.eventRows.forEach(function (r) {
+      let err = '';
+      const q = Number(r.q);
+      if (!state.actByKey[r.a]) err = 'Choose an activity.';
+      else if (!normD(r.d) || normD(r.d) !== r.d) err = 'Pick a date.';
+      else if (r.d < state.weekStart || r.d > max) err = 'The date must be between ' + niceDow(state.weekStart) + ' and ' + niceDow(max) + '.';
+      else if (!Number.isInteger(q) || q < 1 || q > 99) err = 'Quantity must be a whole number from 1 to 99.';
+      const rowEl = document.querySelector('.ev-row[data-row="' + r.id + '"]');
+      if (rowEl) {
+        rowEl.classList.toggle('has-error', !!err);
+        const e = rowEl.querySelector('.ev-err');
+        e.textContent = err;
+        e.hidden = !err;
+      }
+      if (err) ok = false;
+    });
+    return ok;
+  }
+
+  // Everything entered this session, as save items plus where each came from.
+  function sessionItems() {
+    const out = [];
+    state.selDaily.forEach(function (v, k) { out.push({ item: { d: v.d, p: v.p, a: v.a, q: 1, n: '' }, src: { kind: 'daily', k: k } }); });
+    const wd = weeklyDate();
+    state.selWeekly.forEach(function (v, k) { out.push({ item: { d: wd, p: v.p, a: v.a, q: 1, n: '' }, src: { kind: 'weekly', k: k } }); });
+    state.eventRows.forEach(function (r) {
+      out.push({ item: { d: r.d, p: r.p, a: r.a, q: parseInt(r.q, 10) || 0, n: String(r.n || '').trim() }, src: { kind: 'event', id: r.id } });
+    });
+    return out;
+  }
+  function pointsOf(item) { return pts(state.actByKey[item.a]) * (num(item.q) || 0); }
+
+  function updateTotals() {
+    const items = sessionItems();
+    const per = {};
+    let total = 0;
+    items.forEach(function (x) { const p = pointsOf(x.item); per[x.item.p] = (per[x.item.p] || 0) + p; total += p; });
+    document.querySelectorAll('[data-total-for]').forEach(function (el) {
+      const v = per[el.getAttribute('data-total-for')] || 0;
+      el.textContent = '+' + fmtNum(v) + ' pts';
+      el.classList.toggle('has-points', v > 0);
+    });
+    const n = items.length;
+    $('saveBarText').innerHTML = n
+      ? '<strong>' + plural(n, 'new item') + '</strong> · <strong>+' + fmtNum(total) + '</strong> pts this session'
+      : 'Tick boxes or add events, then review and save.';
+    $('reviewBtn').disabled = !n || state.saving || !state.weekLoaded;
+  }
+
+  function sortItems(list) {
+    const order = {};
+    state.acts.forEach(function (a, i) { order[a.key] = i; });
+    return list.slice().sort(function (x, y) {
+      if (x.item.d !== y.item.d) return x.item.d < y.item.d ? -1 : 1;
+      return (order[x.item.a] || 0) - (order[y.item.a] || 0);
+    });
+  }
+  function describeItem(it) {
+    return esc(actLabel(it.a)) + (num(it.q) > 1 ? ' ×' + num(it.q) : '');
+  }
+
+  $('reviewBtn').addEventListener('click', openReview);
+  function openReview() {
+    $('resultPanel').hidden = true;
+    hideMsg($('weekMsg'));
+    if (!validateEvents()) {
+      showMsg($('weekMsg'), 'error', 'Fix the highlighted event rows first.');
+      const bad = document.querySelector('.ev-row.has-error');
+      if (bad) bad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    const items = sessionItems();
+    if (!items.length) return;
+    let total = 0;
+    let h = '<h3>Review before saving</h3><p class="rv-intro">These will be added to the points sheet as entered by <strong>' + esc(state.by) + '</strong>.</p>';
+    state.people.forEach(function (person) {
+      const mine = sortItems(items.filter(function (x) { return x.item.p === person; }));
+      if (!mine.length) return;
+      const sub = mine.reduce(function (s, x) { return s + pointsOf(x.item); }, 0);
+      total += sub;
+      h += '<div class="rv-person"><h4><span>' + esc(person) + '</span><span>+' + fmtNum(sub) + ' pts</span></h4><ul class="rv-list">' +
+        mine.map(function (x) {
+          return '<li><span class="rv-date">' + esc(niceDow(x.item.d)) + '</span><span class="rv-what">' + describeItem(x.item) +
+            (x.item.n ? ' <span class="rv-note">— ' + esc(x.item.n) + '</span>' : '') + '</span><span class="rv-pts">+' + fmtNum(pointsOf(x.item)) + '</span></li>';
+        }).join('') + '</ul></div>';
+    });
+    h += '<div class="rv-total">Total: ' + plural(items.length, 'item') + ' · +' + fmtNum(total) + ' points</div>' +
+      '<div class="rv-actions"><button type="button" class="btn btn-orange" id="confirmSave">Confirm Save</button>' +
+      '<button type="button" class="btn btn-ghost" id="cancelReview">Back to editing</button></div>';
+    const panel = $('reviewPanel');
+    panel.innerHTML = h;
+    panel.hidden = false;
+    $('confirmSave').addEventListener('click', confirmSave);
+    $('cancelReview').addEventListener('click', function () { panel.hidden = true; $('reviewBtn').focus(); });
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    panel.focus({ preventScroll: true });
+  }
+
+  function saveParams(items) {
+    return { action: 'save', key: state.key, by: state.by, payload: JSON.stringify(items) };
+  }
+  // Split items so every request URL stays under MAX_URL characters.
+  function makeBatches(list) {
+    const out = [];
+    let cur = [];
+    list.forEach(function (x) {
+      const trial = cur.concat([x]);
+      const len = API_URL.length + 1 + qs(saveParams(trial.map(function (t) { return t.item; }))).length + CB_RESERVE;
+      if (cur.length && len > MAX_URL) { out.push(cur); cur = [x]; }
+      else cur = trial;
+    });
+    if (cur.length) out.push(cur);
+    return out;
+  }
+  function removeFromSession(batch) {
+    batch.forEach(function (x) {
+      if (x.src.kind === 'daily') state.selDaily.delete(x.src.k);
+      else if (x.src.kind === 'weekly') state.selWeekly.delete(x.src.k);
+      else state.eventRows = state.eventRows.filter(function (r) { return r.id !== x.src.id; });
+    });
+  }
+  function setSaving(on) {
+    state.saving = on;
+    $('cards').inert = on;
+    renderWeekHeader();
+    updateTotals();
+  }
+
+  async function confirmSave() {
+    if (state.saving) return;
+    const btn = $('confirmSave');
+    const items = sortItems(sessionItems());
+    const batches = makeBatches(items);
+    setSaving(true);
+    btn.disabled = true;
+    $('cancelReview').disabled = true;
+    let saved = [], skipped = [], sentItems = 0, failure = null;
+    for (let i = 0; i < batches.length; i++) {
+      btn.textContent = batches.length > 1 ? 'Saving ' + (i + 1) + ' of ' + batches.length + '…' : 'Saving…';
+      try {
+        const res = await api(saveParams(batches[i].map(function (x) { return x.item; })));
+        saved = saved.concat(res.saved || []);
+        skipped = skipped.concat(res.skipped || []);
+        sentItems += batches[i].length;
+        removeFromSession(batches[i]);
+      } catch (err) {
+        failure = err;
+        break;
+      }
+    }
+    setSaving(false);
+    $('reviewPanel').hidden = true;
+
+    if (failure && failure.kind === 'auth' && sentItems === 0) {
+      // Nothing went through; what was entered stays on the page for after the key is re-entered.
+      lockOut("Your admin key wasn't accepted, so nothing was saved. Enter the key again, then save.");
+      return;
+    }
+    renderResult(saved, skipped, items.length - sentItems, failure, sentItems);
+    if (failure && failure.kind === 'auth') { lockOut("Your admin key wasn't accepted partway through the save. Enter it again to save the rest."); return; }
+    loadWeek();
+    loadRecent();
+    if ($('ciPerson').value) refreshSummary();
+  }
+
+  function renderResult(saved, skipped, unsent, failure, sentItems) {
+    let h = '<h3>Save results</h3>';
+    if (sentItems > 0) {
+      h += '<div class="ip-msg ip-msg-success">✓ Saved ' + plural(saved.length, 'item') + '.' +
+        (skipped.length ? ' ' + plural(skipped.length, 'item was', 'items were') + ' skipped.' : ' Nothing was skipped.') + '</div>';
+    }
+    if (skipped.length) {
+      h += '<p><strong>Skipped by the points sheet:</strong></p><ul class="rs-skipped">' + skipped.map(function (s) {
+        const it = (s && s.item) || {};
+        const what = (typeof it === 'object' && it.p)
+          ? '<strong>' + esc(it.p) + '</strong> · ' + describeItem(it) + ' · ' + esc(niceDow(it.d))
+          : esc(typeof it === 'object' ? JSON.stringify(it) : it);
+        return '<li>' + what + '<span class="rs-reason">' + esc((s && s.reason) || 'No reason given') + '</span></li>';
+      }).join('') + '</ul>';
+    }
+    if (failure) {
+      let msg;
+      if (sentItems === 0) msg = errText(failure);
+      else if (failure.kind === 'network') msg = "Couldn't reach the points sheet partway through. The results above were saved; the other " + plural(unsent, 'item') + ' were not and are still ticked. Check your connection and save again.';
+      else if (failure.kind === 'auth') msg = 'The admin key was refused partway through. The results above were saved; ' + plural(unsent, 'item') + ' still need saving.';
+      else msg = 'The points sheet said: ' + failure.message + ' The results above were saved; ' + plural(unsent, 'item') + ' were not and are still ticked.';
+      h += '<div class="ip-msg ip-msg-error">' + esc(msg) + '</div>';
+    }
+    h += '<div class="rv-actions"><button type="button" class="btn btn-ghost btn-sm" id="closeResult">Close</button></div>';
+    const panel = $('resultPanel');
+    panel.innerHTML = h;
+    panel.hidden = false;
+    $('closeResult').addEventListener('click', function () { panel.hidden = true; });
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    panel.focus({ preventScroll: true });
+  }
+  // ── 2. Cash in gift cards ───────────────────────────────────────────────
+  $('ciPerson').addEventListener('change', function () { hideMsg($('ciMsg')); loadSummary(); });
+
+  async function loadSummary(keepMsg) {
+    const person = $('ciPerson').value;
+    closeCashConfirm();
+    state.ciRow = null;
+    $('ciBody').hidden = true;
+    if (!keepMsg) hideMsg($('ciMsg'));
+    if (!person) return;
+    $('ciLoading').hidden = false;
+    $('ciPerson').disabled = true;
+    try {
+      // Balance fields are all-time; start/end only shape the period fields, so today/today is fine.
+      const res = await api({ action: 'summary', start: state.today, end: state.today });
+      if ($('ciPerson').value !== person) return;
+      const row = (res.people || []).find(function (p) { return p && p.name === person; });
+      if (!row) { showMsg($('ciMsg'), 'error', 'No points record was found for ' + person + '.'); return; }
+      state.ciRow = row;
+      renderSummary(row);
+    } catch (err) {
+      handleError(err, $('ciMsg'));
+    } finally {
+      $('ciLoading').hidden = true;
+      $('ciPerson').disabled = false;
+    }
+  }
+  function refreshSummary() { return loadSummary(true); }
+
+  function cardsMax() { return state.ciRow ? Math.max(0, Math.floor(num(state.ciRow.cardsAvailable))) : 0; }
+  function renderSummary(row) {
+    $('ciBalance').textContent = fmtNum(row.balance);
+    $('ciCardsAvail').textContent = fmtNum(row.cardsAvailable);
+    $('ciDollars').textContent = money(row.dollarsAvailable);
+    $('ciToNext').textContent = fmtNum(row.pointsToNextCard);
+    $('ciLifetime').textContent = 'Lifetime earned: ' + fmtNum(row.lifetimeEarned) + ' pts · Redeemed so far: ' + fmtNum(row.redeemedPoints) + ' pts';
+    const max = cardsMax();
+    $('ciForm').hidden = max < 1;
+    $('ciNone').hidden = max >= 1;
+    if (max < 1) {
+      $('ciNone').textContent = 'Not enough points for a gift card yet — ' + fmtNum(row.pointsToNextCard) + ' more points to the next card.';
+    } else {
+      const c = $('ciCards');
+      c.max = String(max);
+      if (!(Number(c.value) >= 1 && Number(c.value) <= max)) c.value = '1';
+    }
+    $('ciBody').hidden = false;
+  }
+
+  function closeCashConfirm() {
+    $('ciConfirm').hidden = true;
+    $('ciConfirm').innerHTML = '';
+    $('ciBtn').hidden = false;
+  }
+  $('ciCards').addEventListener('input', closeCashConfirm);
+  $('ciNote').addEventListener('input', closeCashConfirm);
+
+  $('ciBtn').addEventListener('click', function () {
+    hideMsg($('ciMsg'));
+    const person = $('ciPerson').value, max = cardsMax();
+    const n = Number($('ciCards').value);
+    if (!person || !state.ciRow) return;
+    if (!Number.isInteger(n) || n < 1 || n > max) {
+      showMsg($('ciMsg'), 'error', 'Enter a whole number of cards from 1 to ' + max + '.');
+      $('ciCards').focus();
+      return;
+    }
+    const box = $('ciConfirm');
+    box.innerHTML = '<p>Cash in <strong>' + plural(n, 'gift card') + '</strong> for <strong>' + esc(person) + '</strong>' +
+      (state.ppc ? ' — ' + money(n * state.dpc) + ', using ' + fmtNum(n * state.ppc) + ' points' : '') +
+      '? Leftover points roll over.</p><div class="confirm-actions">' +
+      '<button type="button" class="btn btn-orange" id="ciYes">Confirm Cash In</button>' +
+      '<button type="button" class="btn btn-ghost" id="ciNo">Cancel</button></div>';
+    box.hidden = false;
+    $('ciBtn').hidden = true;
+    $('ciNo').addEventListener('click', function () { closeCashConfirm(); $('ciBtn').focus(); });
+    $('ciYes').addEventListener('click', function () { redeem(person, n, $('ciNote').value.trim()); });
+    $('ciYes').focus();
+  });
+
+  async function redeem(person, cards, note) {
+    const yes = $('ciYes'), no = $('ciNo');
+    yes.disabled = no.disabled = true;
+    yes.textContent = 'Cashing in…';
+    $('ciPerson').disabled = $('ciCards').disabled = $('ciNote').disabled = true;
+    let res;
+    try {
+      res = await api(withKey({ action: 'redeem', by: state.by, person: person, cards: cards, note: note }));
+    } catch (err) {
+      $('ciPerson').disabled = $('ciCards').disabled = $('ciNote').disabled = false;
+      closeCashConfirm();
+      handleError(err, $('ciMsg'));
+      return;
+    }
+    $('ciPerson').disabled = $('ciCards').disabled = $('ciNote').disabled = false;
+    $('ciNote').value = '';
+    $('ciCards').value = '1';
+    closeCashConfirm();
+    await refreshSummary();
+    showMsg($('ciMsg'), 'success', '✓ Done. ' + person + ' cashed in ' + plural(cards, 'gift card') + ': ' + fmtNum(res.pointsRedeemed) +
+      ' points, ' + money(res.dollars) + '. New balance: ' + fmtNum(res.newBalance) + ' points.');
+    loadRecent();
+  }
+
+  // ── 3. Recent activity ──────────────────────────────────────────────────
+  $('recentRefresh').addEventListener('click', function () { loadRecent(); });
+
+  async function loadRecent() {
+    const btn = $('recentRefresh');
+    btn.disabled = true;
+    $('recentLoading').hidden = false;
+    hideMsg($('recentMsg'));
+    try {
+      const res = await api(withKey({ action: 'recent', limit: 50 }));
+      buildRecentRows(res);
+      renderRecent();
+    } catch (err) {
+      handleError(err, $('recentMsg'));
+    } finally {
+      btn.disabled = false;
+      $('recentLoading').hidden = true;
+    }
+  }
+
+  function buildRecentRows(res) {
+    const rows = (res.entries || []).map(function (e) {
+      const q = num(e.qty) || 1;
+      return { type: 'entry', id: e.id, date: normD(e.date) || String(e.date || ''), person: e.person,
+        what: actLabel(entryKey(e), e.name) + (q > 1 ? ' ×' + q : ''), points: num(e.points), by: e.by, note: e.note, voided: isVoided(e.status) };
+    }).concat((res.redemptions || []).map(function (r) {
+      return { type: 'redemption', id: r.id, date: normD(r.date) || String(r.date || ''), person: r.person,
+        what: 'Gift cards cashed in: ' + num(r.cards) + ' (' + money(r.dollars) + ')', points: -Math.abs(num(r.points)), by: r.by, note: r.note, voided: isVoided(r.status) };
+    }));
+    // Newest first. The sort is stable, so same-day rows keep the server's order.
+    rows.sort(function (a, b) { return a.date === b.date ? 0 : (a.date < b.date ? 1 : -1); });
+    state.recentRows = rows;
+  }
+
+  function renderRecent() {
+    const rows = state.recentRows;
+    $('recentWrap').hidden = false;
+    $('recentEmpty').hidden = rows.length > 0;
+    $('recentBody').innerHTML = rows.map(function (r, i) {
+      const p = r.points;
+      return '<tr class="' + (r.voided ? 'is-voided' : '') + '" data-i="' + i + '">' +
+        '<td data-label="Date">' + esc(niceDow(r.date)) + '</td>' +
+        '<td data-label="Person">' + esc(r.person) + '</td>' +
+        '<td data-label="Activity">' + esc(r.what) + '</td>' +
+        '<td data-label="Points" class="num"><span class="' + (p < 0 ? 'pts-neg' : 'pts-pos') + '">' + (p < 0 ? '−' + fmtNum(-p) : '+' + fmtNum(p)) + '</span></td>' +
+        '<td data-label="Entered by">' + esc(r.by) + '</td>' +
+        '<td data-label="Note">' + esc(r.note) + '</td>' +
+        '<td class="rc-action">' + (r.voided
+          ? '<span class="void-tag">Voided</span>'
+          : '<button type="button" class="btn-void" data-void="' + i + '">Void<span class="sr-only"> ' + esc(r.person + ', ' + r.what + ', ' + niceDow(r.date)) + '</span></button>') +
+        '</td></tr>';
+    }).join('');
+  }
+
+  $('recentBody').addEventListener('click', function (ev) {
+    const v = ev.target.closest('[data-void]');
+    if (v) {
+      const cell = v.parentNode;
+      const i = v.getAttribute('data-void');
+      cell.innerHTML = '<div class="void-confirm"><span>Void this?</span>' +
+        '<button type="button" class="btn btn-danger" data-void-yes="' + i + '">Yes, void</button>' +
+        '<button type="button" class="btn btn-ghost" data-void-no="' + i + '">Cancel</button></div>';
+      cell.querySelector('[data-void-yes]').focus();
+      return;
+    }
+    const no = ev.target.closest('[data-void-no]');
+    if (no) { renderRecent(); return; }
+    const yes = ev.target.closest('[data-void-yes]');
+    if (yes) voidRow(Number(yes.getAttribute('data-void-yes')), yes);
+  });
+
+  async function voidRow(i, btn) {
+    const r = state.recentRows[i];
+    if (!r) return;
+    const cell = btn.closest('.rc-action');
+    cell.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    btn.textContent = 'Voiding…';
+    hideMsg($('recentMsg'));
+    try {
+      await api(withKey({ action: 'void', by: state.by, type: r.type, id: r.id }));
+    } catch (err) {
+      renderRecent();
+      handleError(err, $('recentMsg'));
+      return;
+    }
+    r.voided = true;
+    renderRecent();
+    showMsg($('recentMsg'), 'success', '✓ Voided: ' + r.person + ', ' + r.what + ', ' + niceDow(r.date) + '.');
+    // A voided entry frees its slot in the grid; a voided cash-in restores points.
+    if (r.type === 'entry' && r.date >= state.weekStart && r.date <= weekEnd() && !state.saving) loadWeek();
+    if ($('ciPerson').value) refreshSummary();
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
