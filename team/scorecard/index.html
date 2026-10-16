@@ -182,12 +182,18 @@
 
     /* Champion screen (dark navy so photos pop on the TV) */
     .champ { position: relative; overflow: hidden; margin-top: 16px; background: radial-gradient(ellipse at 50% 0%, #2c4768 0%, #1e3148 62%); color: #fff; border-radius: var(--r-lg); padding: 26px 16px 16px; text-align: center; box-shadow: var(--sh-md); }
-    .confetti { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+    /* Full-viewport confetti layer, outside the scaled TV stage */
+    .confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 70; }
     .champ-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #cfb69a; }
     .champ-head { font-family: 'Lora', serif; font-size: 27px; font-weight: 700; color: #fff; margin-top: 6px; line-height: 1.2; }
     .champ-row { display: flex; justify-content: center; align-items: flex-start; gap: 22px 34px; flex-wrap: wrap; margin-top: 24px; }
     .champ-card { display: flex; flex-direction: column; align-items: center; }
-    .champ-ring { position: relative; width: 168px; height: 168px; border-radius: 50%; padding: 6px; background: var(--orange); box-shadow: 0 0 0 6px rgba(207,182,154,.22), 0 0 44px 12px rgba(207,182,154,.32); animation: champPop .7s cubic-bezier(.2,.9,.3,1.3) both, champGlow 3.2s ease-in-out 0.8s infinite; }
+    .champ-halo { position: relative; }
+    /* Tan glow behind the ring: a static gradient that only pulses opacity/transform (cheap on a TV) */
+    .champ-halo::before { content: ''; position: absolute; inset: -34%; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle closest-side, rgba(207,182,154,.5) 52%, rgba(207,182,154,.28) 66%, rgba(207,182,154,0) 100%);
+      animation: champHalo 3.2s ease-in-out .8s infinite; will-change: opacity, transform; }
+    .champ-ring { position: relative; z-index: 1; width: 168px; height: 168px; border-radius: 50%; padding: 6px; background: var(--orange); box-shadow: 0 0 0 6px rgba(207,182,154,.22); animation: champPop .7s cubic-bezier(.2,.9,.3,1.3) both; }
     .champ-photo { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: top center; display: block; border: 4px solid #1e3148; background: #264060; }
     .avatar-initials { display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-weight: 700; color: #fff; background: #264060; }
     .champ-photo.avatar-initials { font-size: 60px; }
@@ -212,9 +218,9 @@
     .chase-text span { font-size: 13.5px; color: rgba(255,255,255,.75); }
     .champ-foot { display: flex; justify-content: space-between; gap: 6px 16px; flex-wrap: wrap; margin-top: 24px; font-size: 12px; color: rgba(255,255,255,.55); }
     @keyframes champPop { from { transform: scale(.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    @keyframes champGlow {
-      0%, 100% { box-shadow: 0 0 0 6px rgba(207,182,154,.22), 0 0 44px 12px rgba(207,182,154,.30); }
-      50%      { box-shadow: 0 0 0 8px rgba(207,182,154,.30), 0 0 60px 18px rgba(207,182,154,.48); }
+    @keyframes champHalo {
+      0%, 100% { opacity: .72; transform: scale(.97); }
+      50%      { opacity: 1;   transform: scale(1.05); }
     }
 
     /* By category: one small vertical bar chart per activity */
@@ -346,7 +352,7 @@
     @media (max-width: 420px) { .app-logo { font-size: 14px; } }
     @media (prefers-reduced-motion: reduce) {
       .lb-bar, .cat-bar, .champ-line { transition: none; }
-      .champ-ring { animation: none; }
+      .champ-ring, .champ-halo::before { animation: none; }
       .spinner { animation-duration: 2s; }
     }
   </style>
@@ -400,7 +406,6 @@
 
     <!-- Champion screen (its own view, and the first TV slide) -->
     <section class="champ" id="champView" aria-labelledby="champHead">
-      <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
       <p class="champ-eyebrow" id="champRange"></p>
       <h2 class="champ-head" id="champHead">Winning this week so far</h2>
       <div id="champLoading" class="ip-loading" hidden style="justify-content:center;color:rgba(255,255,255,.75)"><div class="spinner"></div><span>Loading…</span></div>
@@ -490,6 +495,7 @@
 </footer>
 
 <div class="lb-tip" id="tip" role="tooltip" hidden></div>
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
 <script>
 (function () {
@@ -1211,7 +1217,7 @@
     return { champs: champs, chase: chase, top: top };
   }
 
-  function renderChampion() {
+  function renderChampion(opts) {
     const c = state.champ;
     if (!c) return;
     const d = championData(c.summary);
@@ -1222,8 +1228,8 @@
     const row = $('champRow');
     row.classList.toggle('is-tie', tie);
     row.innerHTML = d.champs.map(function (p) {
-      return '<div class="champ-card"><div class="champ-ring">' + avatarHTML(p.name, 'champ-photo') +
-        '<span class="champ-badge" aria-hidden="true">🏆</span></div>' +
+      return '<div class="champ-card"><div class="champ-halo"><div class="champ-ring">' + avatarHTML(p.name, 'champ-photo') +
+        '<span class="champ-badge" aria-hidden="true">🏆</span></div></div>' +
         '<div class="champ-name">' + esc(p.name) + '</div>' +
         '<div class="champ-pts"><strong>' + fmtNum(p.pts) + '</strong>' + (p.pts === 1 ? 'pt ' : 'pts ') + (last ? 'last week' : 'this week') + '</div></div>';
     }).join('');
@@ -1238,10 +1244,11 @@
     $('champUpdated').textContent = 'Points last entered ' + (fmtStamp(c.summary.lastUpdated) || '—');
     $('champRule').textContent = state.ppc ? 'Every ' + plural(state.ppc, 'point') + ' = ' + money(state.dpc) : '';
     if (!$('champLine').textContent) $('champLine').textContent = CHAMPION_LINES[state.lineIdx % CHAMPION_LINES.length];
-    // Confetti the first time a champion is shown, and again whenever the champion changes.
+    // Confetti: in TV mode every time the Champion slide comes in (opts.celebrate); otherwise
+    // the first time a champion is shown and again whenever the champion changes.
     const key = c.mode + ':' + d.champs.map(function (p) { return p.name; }).join('|');
     if (state.tv) fitStage();
-    if (d.champs.length && key !== state.celebrated) { state.celebrated = key; burstConfetti(); }
+    if (d.champs.length && ((opts && opts.celebrate) || key !== state.celebrated)) { state.celebrated = key; scheduleConfetti(); }
   }
 
   // Rotate the motivational line (only while the Champion screen is showing).
@@ -1254,46 +1261,125 @@
     setTimeout(function () { el.textContent = CHAMPION_LINES[state.lineIdx]; el.style.opacity = '1'; }, 400);
   }, CHAMPION_LINE_MS);
 
-  // Light confetti burst on a canvas over the panel. No library; skipped for reduced motion.
-  let confettiRun = 0;
-  function burstConfetti() {
+  // ── Confetti ──
+  // A full-viewport canvas OUTSIDE the scaled TV stage, at one canvas pixel per CSS pixel
+  // (confetti doesn't need retina), so a 960×540 Fire TV draws ~0.5 MP a frame, not ~7 MP.
+  // Motion uses real elapsed time, so dropped frames on a slow TV cost smoothness, never
+  // speed or lifetime. Two waves: a burst from behind the photo and a gentle rain from the
+  // top. Skipped entirely for reduced motion.
+  const CONFETTI_LIFE_MS = 4500, CONFETTI_FADE_MS = 1000, CONFETTI_DELAY_MS = 700;
+  const CONFETTI_COLORS = ['#d9682a', '#cfb69a', '#ffffff', '#4f6f94', '#f2c9a5'];
+  let confettiRun = 0, confettiTimer = null, confettiActive = false;
+  function sizeConfettiCanvas() {
+    const canvas = $('confetti');
+    if (canvas.width !== window.innerWidth) canvas.width = window.innerWidth;
+    if (canvas.height !== window.innerHeight) canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', function () { if (confettiActive) sizeConfettiCanvas(); });
+  function stopConfetti() {
+    confettiRun++;
+    clearTimeout(confettiTimer);
+    confettiActive = false;
+    const canvas = $('confetti'), ctx = canvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);   // the last piece's transform is still applied
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  // Start ~700 ms after the Champion screen is showing AND its photo(s) have loaded or
+  // failed, so the burst doesn't compete with the photo pop-in.
+  function scheduleConfetti() {
+    stopConfetti();
     if (reduceMotion()) return;
-    const canvas = $('confetti'), panel = $('champView');
-    // Layout size, not on-screen size: in TV mode the panel sits inside a scaled stage.
-    const rect = { width: panel.offsetWidth, height: panel.offsetHeight };
-    if (!rect.width || !rect.height) return;
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    const run = confettiRun;
+    const imgs = Array.prototype.slice.call($('champRow').querySelectorAll('img'));
+    Promise.all(imgs.map(function (img) {
+      return new Promise(function (done) {
+        if (img.complete) { done(); return; }
+        img.addEventListener('load', done, { once: true });
+        img.addEventListener('error', done, { once: true });
+        setTimeout(done, 4000);   // never wait forever on a slow photo
+      });
+    })).then(function () {
+      if (run !== confettiRun) return;
+      confettiTimer = setTimeout(function () {
+        if (run === confettiRun && champVisible()) burstConfetti(run);
+      }, CONFETTI_DELAY_MS);
+    });
+  }
+  function burstConfetti(run) {
+    const canvas = $('confetti');
+    sizeConfettiCanvas();
+    const W = canvas.width, H = canvas.height;
     const ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const colors = ['#d9682a', '#cfb69a', '#ffffff', '#4f6f94', '#f2c9a5'];
+    // Piece size and speed follow the TV stage scale, so it looks the same on any screen.
+    const k = state.tv ? (state.stageScale || 1) : 1;
+    const rings = Array.prototype.slice.call(document.querySelectorAll('#champRow .champ-ring')).map(function (r) {
+      const b = r.getBoundingClientRect();
+      return { x: b.left + b.width / 2, y: b.top + b.height / 2, r: b.width / 2 };
+    });
+    if (!rings.length) return;
+    const panel = $('champView').getBoundingClientRect();
+    const top = Math.max(0, panel.top), left = Math.max(0, panel.left), right = Math.min(W, panel.right);
+    const total = state.tv ? 90 : 130;
+    const burstCount = Math.round(total * 0.55);
     const pieces = [];
-    for (let i = 0; i < 130; i++) {
+    for (let i = 0; i < total; i++) {
+      const burst = i < burstCount;
+      const ring = rings[i % rings.length];
+      const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3;   // mostly upward fan
+      const speed = (380 + Math.random() * 520) * k;                       // px per second
       pieces.push({
-        x: rect.width * (0.15 + Math.random() * 0.7), y: rect.height * 0.25 + Math.random() * 40,
-        vx: (Math.random() - 0.5) * 9, vy: -(4 + Math.random() * 7),
-        w: 6 + Math.random() * 6, h: 4 + Math.random() * 5,
-        rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
-        color: colors[i % colors.length],
+        x: burst ? ring.x + (Math.random() - 0.5) * ring.r * 0.6 : left + Math.random() * (right - left),
+        y: burst ? ring.y : top - (10 + Math.random() * 60) * k,
+        vx: burst ? Math.cos(ang) * speed : (Math.random() - 0.5) * 60 * k,
+        vy: burst ? Math.sin(ang) * speed : (40 + Math.random() * 80) * k,
+        g: (burst ? 900 : 260) * k,          // gravity, px/s²
+        drag: burst ? 1.6 : 1.2,             // air resistance, per second
+        delay: burst ? 0 : Math.random() * 1500,   // the rain drifts in over 1.5 s
+        w: (6 + Math.random() * 6) * k, h: (4 + Math.random() * 5) * k,
+        circle: Math.random() < 0.3,
+        rot: Math.random() * 6.2832, vr: (Math.random() - 0.5) * 8,   // radians per second
+        flip: Math.random() * 6.2832, vf: 4 + Math.random() * 6,
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
       });
     }
-    const run = ++confettiRun, start = performance.now(), life = 2600;
+    confettiActive = true;
+    let first = 0, last = 0, frames = 0, early = 0;
     function frame(now) {
       if (run !== confettiRun) return;
-      const t = now - start;
-      ctx.clearRect(0, 0, rect.width, rect.height);
-      if (t > life) return;
-      ctx.globalAlpha = t > life - 600 ? Math.max(0, (life - t) / 600) : 1;
-      pieces.forEach(function (p) {
-        p.vy += 0.18; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
+      if (!first) { first = now; last = now; }
+      const raw = now - last;
+      const dt = Math.min(50, raw) / 1000;   // seconds since the last frame, capped at 50 ms
+      last = now;
+      frames++;
+      // Safety: if the first 20 frames average under 20 fps, halve the pieces for this burst.
+      if (frames > 1 && frames <= 21) early += raw;
+      if (frames === 21 && early / 20 > 50) pieces.length = Math.ceil(pieces.length / 2);
+      const t = now - first;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (t > CONFETTI_LIFE_MS) { confettiActive = false; return; }
+      ctx.globalAlpha = t > CONFETTI_LIFE_MS - CONFETTI_FADE_MS ? (CONFETTI_LIFE_MS - t) / CONFETTI_FADE_MS : 1;
+      for (let i = 0; i < pieces.length; i++) {
+        const p = pieces[i];
+        if (t < p.delay) continue;
+        const damp = Math.max(0, 1 - p.drag * dt);
+        p.vx *= damp;
+        p.vy = p.vy * damp + p.g * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        p.rot += p.vr * dt; p.flip += p.vf * dt;
+        if (p.y > H + 30 || p.x < -30 || p.x > W + 30) continue;
         ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
-      });
+        if (p.circle) {
+          ctx.setTransform(1, 0, 0, 1, p.x, p.y);
+          ctx.beginPath();
+          ctx.arc(0, 0, p.h * 0.6, 0, 6.2832);
+          ctx.fill();
+        } else {
+          const c = Math.cos(p.rot), sn = Math.sin(p.rot), fy = Math.cos(p.flip);
+          ctx.setTransform(c, sn, -sn * fy, c * fy, p.x, p.y);
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        }
+      }
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
@@ -1312,8 +1398,10 @@
       if (state.champ) renderChampion();
       loadChampion({ background: !!state.champ });
     } else if (!state.shown) {
+      stopConfetti();
       loadPeriod(state.period);
     } else {
+      stopConfetti();
       show(state.shown);
     }
   }
@@ -1370,12 +1458,13 @@
   }
   function fitStage() {
     const stage = document.querySelector('.ip-main');
-    if (!state.tv) { stage.style.transform = ''; stage.style.height = ''; return; }
+    if (!state.tv) { stage.style.transform = ''; stage.style.height = ''; state.stageScale = 1; return; }
     stage.style.height = 'auto';
     const h = Math.max(STAGE_H, Math.ceil(stage.scrollHeight));
     stage.style.height = h + 'px';
     const w = window.innerWidth, vh = window.innerHeight;
     const scale = forcedScale() || Math.min(w / STAGE_W, vh / h);
+    state.stageScale = scale;
     const x = Math.max(0, (w - STAGE_W * scale) / 2), y = Math.max(0, (vh - h * scale) / 2);
     stage.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px) scale(' + scale.toFixed(5) + ')';
   }
@@ -1401,7 +1490,9 @@
     const slides = tvSlides();
     $('tvDots').innerHTML = state.tv ? slides.map(function (sl, i) { return '<span' + (i === state.tvIdx % slides.length ? ' class="on"' : '') + '></span>'; }).join('') : '';
   }
-  function showTvPeriod() {
+  // redraw = true when fresh data arrives for the slide already on screen (not a slide change),
+  // so the Champion confetti doesn't restart on every background refresh.
+  function showTvPeriod(redraw) {
     const slides = tvSlides();
     const sl = slides[state.tvIdx % slides.length];
     state.tvSlide = sl;
@@ -1411,9 +1502,10 @@
     scheduleFit();
     if (sl === 'champ') {
       renderTvDots();
-      if (state.champ) renderChampion(); else loadChampion();
+      if (state.champ) renderChampion(redraw ? undefined : { celebrate: true }); else loadChampion();
       return;
     }
+    stopConfetti();
     const p = slidePeriod(sl);
     state.period = p;
     const c = state.cache[p];
@@ -1443,7 +1535,7 @@
     if (!state.tv) return;
     $('refreshNote').hidden = true;
     hideMsg($('boardMsg'));
-    showTvPeriod();
+    showTvPeriod(true);
   }
   function enterTV(fromClick) {
     if (state.tv) return;
@@ -1473,6 +1565,7 @@
     clearInterval(state.timers.rotate);
     clearInterval(state.timers.tvRefresh);
     cancelAutoRetry('tv');
+    stopConfetti();
     document.body.classList.remove('tv', 'tv-cat', 'tv-champ', 'tv-wall');
     document.documentElement.classList.remove('tv-html');
     state.tvSlide = null;
