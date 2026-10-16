@@ -59,10 +59,7 @@
     }
     .nav-wrap { display: flex; align-items: center; height: 66px; gap: 20px; }
     .nav-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; text-decoration: none; }
-    .nav-logo-img { width: 42px; height: 42px; object-fit: contain; border-radius: 50%; background: #fff; padding: 2px; }
-    .nav-logo-text { line-height: 1.15; }
-    .nav-logo-name { font-family: 'Lora', serif; font-weight: 700; font-size: 15px; color: var(--navy); display: block; }
-    .nav-logo-sub { font-size: 10.5px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; font-weight: 500; }
+    .nav-logo-img { display: block; height: 48px; width: auto; max-width: 100%; }
     .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0 auto; }
     .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--muted); padding: 6px 12px; border-radius: 6px; transition: color .2s, background .2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--navy); background: var(--navy-lt); }
@@ -130,7 +127,6 @@
       .nav-links { display: none; }
       .nav-toggle { display: flex; }
       .nav-right { display: none; }
-      .nav-logo-sub { display: none; }
       .mobile-menu:not([hidden]) {
         display: block;
         margin: 0 -28px;
@@ -164,10 +160,9 @@
     /* Footer */
     .site-footer { background: #111e2c; color: rgba(255,255,255,.45); padding: 60px 0 36px; }
     .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 44px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 32px; }
-    .footer-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .footer-logo-img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; background: #fff; padding: 2px; }
-    .footer-brand-name { font-family: 'Lora', serif; font-size: 15px; font-weight: 700; color: rgba(255,255,255,.85); display: block; }
-    .footer-brand-sub  { font-size: 10.5px; color: rgba(255,255,255,.3); letter-spacing: .05em; text-transform: uppercase; }
+    .footer-brand { margin-bottom: 18px; }
+    .footer-logo-img { display: block; width: 240px; max-width: 100%; height: auto; }
+    .footer-tagline { display: block; margin-top: 10px; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #d0b89c; }
     .footer-desc { font-size: 13px; line-height: 1.68; max-width: 260px; margin-bottom: 20px; }
     .footer-cr { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: rgba(255,255,255,.45); margin-bottom: 7px; }
     .footer-cr a { color: rgba(255,255,255,.5); transition: color .2s; }
