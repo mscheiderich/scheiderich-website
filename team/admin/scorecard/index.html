@@ -225,6 +225,7 @@
     .po-result li { padding: 2px 0; }
     .ev-desc { font-size: 12.5px; color: var(--muted); margin-top: 5px; line-height: 1.4; }
     .howto-rules { grid-column: 1 / -1; border-top: 1px solid var(--bg-s); padding-top: 10px; }
+    .howto-rule-main { font-weight: 700; color: var(--navy); font-size: 14px; margin-bottom: 6px; }
     .howto-rules li { margin: 0 0 4px 18px; font-size: 13.5px; }
     .inline-confirm { background: var(--bg); border: 1.5px solid var(--navy); border-radius: var(--r); padding: 14px; margin-bottom: 4px; }
     .inline-confirm p { margin-bottom: 10px; }
@@ -728,9 +729,7 @@
       started = true;
       renderHowto();
       fillMonths();
-      $('payoutRate').textContent = state.ppc
-        ? 'Every ' + plural(state.ppc, 'point') + ' = ' + money(state.dpc) + ', paid monthly. Under ' + plural(state.ppc, 'point') + ' carries over to the next month.'
-        : '';
+      $('payoutRate').textContent = ruleText();
     }
     renderWeekHeader();
     if (note) showMsg($('weekMsg'), 'info', note);
@@ -746,15 +745,16 @@
         return '<li><span class="act-name">' + esc(a.name) + '</span> <span class="act-pts">+' + pts(a) + '</span>' +
           (a.description ? '<span class="howto-desc">' + esc(a.description) + '</span>' : '') + '</li>';
       }).join('') + '</ul></div>';
-    }).join('') + '<div class="howto-rules"><h4>Payouts</h4><ul>' +
+    }).join('') + '<div class="howto-rules"><h4>Payouts</h4><p class="howto-rule-main">' + esc(ruleText()) + '</p><ul>' +
       payoutRules().map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul></div>';
   }
   // Program rules in plain language (same wording as the leaderboard).
+  function ruleText() {
+    const per = plural(state.ppc || 3, 'point');
+    return 'Every ' + per + ' = ' + money(state.dpc || 10) + '. You need at least ' + per + ' to cash out; extra points carry to next month. Paid monthly.';
+  }
   function payoutRules() {
-    const per = plural(state.ppc || 3, 'point'), dollars = money(state.dpc || 10);
     return [
-      'Every ' + per + ' = ' + dollars + '. Payouts are monthly, as one digital card for the dollar amount.',
-      per + ' is the minimum payout. Anything under ' + per + ' carries over to the next month.',
       "A month's payout covers points dated through the last day of that month. Points earned after month-end go to the next month's payout.",
       'Weekly goals are dated the Friday of their week, so they count in the month that Friday falls in.',
       'Anyone who leaves the agency forfeits their unpaid balance.',

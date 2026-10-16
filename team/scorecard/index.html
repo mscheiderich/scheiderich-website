@@ -166,7 +166,56 @@
     .howto-pts { font-weight: 700; color: var(--navy); white-space: nowrap; }
     .howto-rules { margin-top: 14px; }
     .howto-rules h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .howto-rule-main { font-weight: 700; color: var(--navy); font-size: 14px; margin-bottom: 6px; }
     .howto-rules li { margin: 0 0 5px 18px; font-size: 13.5px; }
+
+    /* View switch: Leaderboard | Champion */
+    .view-tabs { display: inline-flex; gap: 4px; background: var(--bg-w); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-top: 22px; }
+    .view-btn { min-height: 40px; padding: 0 18px; border: none; border-radius: 7px; background: transparent; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--muted); cursor: pointer; }
+    .view-btn:hover { color: var(--navy); background: var(--bg-s); }
+    .view-btn[aria-pressed="true"] { background: var(--navy); color: #fff; }
+    .view-btn:focus-visible { outline: 3px solid rgba(30,49,72,.35); outline-offset: 2px; }
+    body.view-champ:not(.tv) .team-strip, body.view-champ:not(.tv) .period-bar, body.view-champ:not(.tv) .custom-form,
+    body.view-champ:not(.tv) .range-text, body.view-champ:not(.tv) .lb-panel, body.view-champ:not(.tv) #catSection,
+    body.view-champ:not(.tv) #bankSection, body.view-champ:not(.tv) .howto,
+    body:not(.view-champ):not(.tv) #champView, body.tv:not(.tv-champ) #champView { display: none !important; }
+
+    /* Champion screen (dark navy so photos pop on the TV) */
+    .champ { position: relative; overflow: hidden; margin-top: 16px; background: radial-gradient(ellipse at 50% 0%, #2c4768 0%, #1e3148 62%); color: #fff; border-radius: var(--r-lg); padding: 26px 16px 16px; text-align: center; box-shadow: var(--sh-md); }
+    .confetti { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+    .champ-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #cfb69a; }
+    .champ-head { font-family: 'Lora', serif; font-size: 27px; font-weight: 700; color: #fff; margin-top: 6px; line-height: 1.2; }
+    .champ-row { display: flex; justify-content: center; align-items: flex-start; gap: 22px 34px; flex-wrap: wrap; margin-top: 24px; }
+    .champ-card { display: flex; flex-direction: column; align-items: center; }
+    .champ-ring { position: relative; width: 168px; height: 168px; border-radius: 50%; padding: 6px; background: var(--orange); box-shadow: 0 0 0 6px rgba(207,182,154,.22), 0 0 44px 12px rgba(207,182,154,.32); animation: champPop .7s cubic-bezier(.2,.9,.3,1.3) both, champGlow 3.2s ease-in-out 0.8s infinite; }
+    .champ-photo { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: top center; display: block; border: 4px solid #1e3148; background: #264060; }
+    .avatar-initials { display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-weight: 700; color: #fff; background: #264060; }
+    .champ-photo.avatar-initials { font-size: 60px; }
+    .champ-badge { position: absolute; right: -2px; top: -2px; width: 50px; height: 50px; border-radius: 50%; background: #cfb69a; border: 3px solid #1e3148; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    .champ-name { font-family: 'Lora', serif; font-size: 32px; font-weight: 700; margin-top: 14px; line-height: 1.1; }
+    .champ-pts { font-size: 14px; color: rgba(255,255,255,.75); margin-top: 6px; }
+    .champ-pts strong { display: block; font-family: 'Lora', serif; font-size: 60px; line-height: 1; color: #fff; }
+    .champ-row.is-tie { gap: 18px 16px; }
+    .champ-row.is-tie .champ-ring { width: 128px; height: 128px; }
+    .champ-row.is-tie .champ-photo.avatar-initials { font-size: 46px; }
+    .champ-row.is-tie .champ-name { font-size: 26px; }
+    .champ-row.is-tie .champ-pts strong { font-size: 48px; }
+    .champ-line { margin: 22px auto 0; max-width: 600px; font-size: 18px; font-style: italic; color: #f3e6d8; min-height: 1.5em; transition: opacity .4s; }
+    .champ-empty { margin-top: 18px; font-size: 16px; color: rgba(255,255,255,.8); }
+    .chase { margin-top: 24px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; }
+    .chase h3 { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+    .chase-row { display: flex; justify-content: center; gap: 14px 30px; flex-wrap: wrap; margin-top: 12px; }
+    .chase-item { display: flex; align-items: center; gap: 12px; text-align: left; }
+    .chase-photo { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; object-position: top center; border: 2px solid rgba(255,255,255,.5); flex-shrink: 0; }
+    .chase-photo.avatar-initials { font-size: 20px; }
+    .chase-text strong { display: block; font-size: 16px; }
+    .chase-text span { font-size: 13.5px; color: rgba(255,255,255,.75); }
+    .champ-foot { display: flex; justify-content: space-between; gap: 6px 16px; flex-wrap: wrap; margin-top: 24px; font-size: 12px; color: rgba(255,255,255,.55); }
+    @keyframes champPop { from { transform: scale(.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes champGlow {
+      0%, 100% { box-shadow: 0 0 0 6px rgba(207,182,154,.22), 0 0 44px 12px rgba(207,182,154,.30); }
+      50%      { box-shadow: 0 0 0 8px rgba(207,182,154,.30), 0 0 60px 18px rgba(207,182,154,.48); }
+    }
 
     /* By category: one small vertical bar chart per activity */
     .cat-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
@@ -198,6 +247,7 @@
     body.tv { font-size: 16px; }
     body.tv .app-header, body.tv .lb-intro, body.tv .period-bar, body.tv .custom-form, body.tv .range-text,
     body.tv:not(.tv-cat) #catSection, body.tv.tv-cat .lb-panel, body.tv #catSection > h2, body.tv #catSection > .sec-sub,
+    body.tv .view-tabs, body.tv.tv-champ .team-strip, body.tv.tv-champ .lb-panel, body.tv.tv-champ #tvTitle, body.tv.tv-champ .tv-range,
     body.tv #bankSection, body.tv .howto, body.tv .portal-footer, body.tv .lb-numbers, body.tv .lb-head { display: none !important; }
     body.tv .tv-bar { display: flex; }
     body.tv .ip-main { max-width: none; padding: 28px 48px; }
@@ -229,6 +279,28 @@
     body.tv .cat-val { font-size: 18px; }
     body.tv .cat-name { font-size: 15px; }
     body.tv .cat-bar { max-width: 56px; }
+    body.tv.tv-champ { background: #1e3148; }
+    body.tv.tv-champ .tv-exit { color: rgba(255,255,255,.6); }
+    body.tv.tv-champ .tv-dots span { background: rgba(255,255,255,.25); }
+    body.tv.tv-champ .tv-dots span.on { background: #cfb69a; }
+    body.tv.tv-champ .tv-bar { margin-bottom: 0; }
+    body.tv .champ { margin-top: 0; box-shadow: none; min-height: calc(100vh - 110px); padding: 20px 40px 22px; display: flex; flex-direction: column; justify-content: center; }
+    body.tv .champ-eyebrow { font-size: 18px; }
+    body.tv .champ-head { font-size: 54px; }
+    body.tv .champ-ring { width: 300px; height: 300px; padding: 9px; }
+    body.tv .champ-row.is-tie .champ-ring { width: 240px; height: 240px; }
+    body.tv .champ-photo.avatar-initials { font-size: 110px; }
+    body.tv .champ-badge { width: 84px; height: 84px; font-size: 44px; }
+    body.tv .champ-name { font-size: 62px; }
+    body.tv .champ-pts { font-size: 22px; }
+    body.tv .champ-pts strong { font-size: 120px; }
+    body.tv .champ-row.is-tie .champ-pts strong { font-size: 96px; }
+    body.tv .champ-line { font-size: 30px; max-width: 1100px; }
+    body.tv .chase h3 { font-size: 16px; }
+    body.tv .chase-photo { width: 84px; height: 84px; }
+    body.tv .chase-text strong { font-size: 26px; }
+    body.tv .chase-text span { font-size: 20px; }
+    body.tv .champ-foot { font-size: 16px; }
 
     @media (min-width: 600px) {
       .team-strip { grid-template-columns: repeat(3, 1fr); }
@@ -248,6 +320,16 @@
       .lb-row { grid-template-columns: 34px 150px minmax(0, 1fr) 96px; grid-template-areas: "rank name bar total"; column-gap: 14px; }
       .lb-track { height: 30px; }
       .lb-total { font-size: 30px; }
+      .champ { padding: 34px 28px 18px; }
+      .champ-head { font-size: 36px; }
+      .champ-ring { width: 220px; height: 220px; }
+      .champ-row.is-tie { gap: 22px 34px; }
+      .champ-row.is-tie .champ-ring { width: 180px; height: 180px; }
+      .champ-photo.avatar-initials { font-size: 80px; }
+      .champ-name { font-size: 40px; }
+      .champ-pts strong { font-size: 80px; }
+      .champ-row.is-tie .champ-pts strong { font-size: 64px; }
+      .champ-line { font-size: 21px; }
     }
     @media (min-width: 1000px) {
       .bank-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -256,7 +338,8 @@
     @media (max-width: 720px) { .app-title { display: none; } }
     @media (max-width: 420px) { .app-logo { font-size: 14px; } }
     @media (prefers-reduced-motion: reduce) {
-      .lb-bar, .cat-bar { transition: none; }
+      .lb-bar, .cat-bar, .champ-line { transition: none; }
+      .champ-ring { animation: none; }
       .spinner { animation-duration: 2s; }
     }
   </style>
@@ -301,6 +384,28 @@
       </div>
       <div class="tv-exit"><span>Esc to exit</span><button type="button" class="btn btn-ghost btn-sm" id="tvExit">Exit TV mode</button></div>
     </div>
+
+    <!-- View switch -->
+    <div class="view-tabs" role="group" aria-label="View">
+      <button type="button" class="view-btn" data-view="board" aria-pressed="true">Leaderboard</button>
+      <button type="button" class="view-btn" data-view="champion" aria-pressed="false">🏆 Champion</button>
+    </div>
+
+    <!-- Champion screen (its own view, and the first TV slide) -->
+    <section class="champ" id="champView" aria-labelledby="champHead">
+      <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+      <p class="champ-eyebrow" id="champRange"></p>
+      <h2 class="champ-head" id="champHead">Winning this week so far</h2>
+      <div id="champLoading" class="ip-loading" hidden style="justify-content:center;color:rgba(255,255,255,.75)"><div class="spinner"></div><span>Loading…</span></div>
+      <div class="champ-row" id="champRow"></div>
+      <p class="champ-empty" id="champEmpty" hidden>No points on the board yet this week or last week.</p>
+      <p class="champ-line" id="champLine" aria-live="polite"></p>
+      <div class="chase" id="chase" hidden>
+        <h3>The chase</h3>
+        <div class="chase-row" id="chaseRow"></div>
+      </div>
+      <footer class="champ-foot"><span id="champUpdated"></span><span id="champRule"></span></footer>
+    </section>
 
     <!-- Team strip -->
     <section class="team-strip" aria-label="Team totals">
@@ -356,7 +461,7 @@
 
     <!-- Unpaid balance (all-time) -->
     <section class="ip-section" id="bankSection" aria-labelledby="bankTitle">
-      <h2 id="bankTitle">Unpaid balance</h2>
+      <h2 id="bankTitle">Unpaid balances</h2>
       <p class="sec-sub">Points earned but not paid out yet, all-time. The period buttons above don't change these.</p>
       <div class="bank-grid" id="bankGrid"></div>
     </section>
@@ -366,7 +471,7 @@
       <summary>How points work</summary>
       <div class="howto-body">
         <ul class="howto-list" id="howtoList"></ul>
-        <div class="howto-rules"><h3>Payouts</h3><ul id="howtoRules"></ul></div>
+        <div class="howto-rules"><h3>Payouts</h3><p class="howto-rule-main" id="howtoRuleMain"></p><ul id="howtoRules"></ul></div>
       </div>
     </details>
   </div>
@@ -387,6 +492,28 @@
   // Read-only page: public actions only, no write key. Same web app as the
   // entry form. Always the /macros/s/ form, never /a/macros/<domain>/.
   const API_URL = 'https://script.google.com/macros/s/AKfycbyfEmq_9Of9n8aw21hEltGjITdY_IaeX3MHUQdADaMjGBkEEhSZCzNSIneVeJYFTN7O/exec';
+  // ── Champion screen: photo for each agent, by first name (existing site headshots).
+  // Add a line here when a new agent joins. Anyone missing gets an initials circle.
+  const CHAMPION_PHOTOS = {
+    Crissy:   '/crissy-shatzel.png',
+    Mark:     '/mark-hill.png',
+    Iris:     '/iris-salgado.png',
+    Wendy:    '/wendy-alaniz.png',
+    Jennifer: '/jennifer-lawler.png',
+    Scott:    '/scott-kesler.png',
+  };
+  // ── Champion screen: motivational lines, rotated every 15 seconds.
+  const CHAMPION_LINES = [
+    'Do you have what it takes to be #1?',
+    'Every call counts — the week isn\'t over.',
+    'The leaderboard resets Monday. Make this week yours.',
+    'Champions are built one quote at a time.',
+    'A 5★ review moves you up fast. Ask for it.',
+    'Somebody\'s on top by Friday. Why not you?',
+  ];
+  const CHAMPION_LINE_MS = 15 * 1000;
+  const VIEW_STORE = 'lbView';
+
   const PERIOD_STORE = 'lbPeriod';
   const CUSTOM_STORE = 'lbCustom';
   const TIMEOUT_MS = 20000;
@@ -556,6 +683,7 @@
     cache: {},            // period → same shape, used by TV rotation
     req: 0, lastFetch: 0,
     tv: false, tvFull: false, tvIdx: 0, tvSlide: null, preTvPeriod: null,
+    view: 'board', champ: null, champReq: 0, celebrated: null, lineIdx: 0,
     timers: {},
   };
 
@@ -706,9 +834,9 @@
       if (req === state.req) setBusy(false);
     }
   }
-  function refreshFailed() {
+  function refreshFailed(at) {
     const note = $('refreshNote');
-    note.textContent = "Couldn't refresh — showing data from " + easternTime(state.shown.at) + '. ';
+    note.textContent = "Couldn't refresh — showing data from " + easternTime(at || (state.shown && state.shown.at) || new Date()) + '. ';
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'link-btn';
@@ -720,8 +848,9 @@
   // Re-read config too, so "today" moves forward on a screen left open past midnight.
   async function refresh() {
     try { await loadConfig(); }
-    catch (err) { if (state.shown) refreshFailed(); else showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: refresh }]); return; }
+    catch (err) { if (state.shown || state.champ) refreshFailed(state.champ && state.view === 'champion' ? state.champ.at : null); else showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: refresh }]); return; }
     if (state.tv) { await tvRefreshAll(); return; }
+    if (state.view === 'champion') { await loadChampion({ background: true }); return; }
     if (state.period === 'custom' && !validCustom(state.custom)) return;
     await loadPeriod(state.period, { background: true });
   }
@@ -733,7 +862,7 @@
     }, REFRESH_MS);
   }
   document.addEventListener('visibilitychange', function () {
-    if (!state.tv && document.visibilityState === 'visible' && state.shown && Date.now() - state.lastFetch > REFRESH_MS) refresh();
+    if (!state.tv && document.visibilityState === 'visible' && (state.shown || state.champ) && Date.now() - state.lastFetch > REFRESH_MS) refresh();
   });
 
   // ── Rendering ───────────────────────────────────────────────────────────
@@ -869,17 +998,18 @@
     $('bankGrid').innerHTML = names.map(function (n) {
       const p = byName[n] || {};
       const bal = Math.max(0, num(p.balance));
-      const blocks = Math.max(0, Math.floor(num(p.cardsAvailable)));
-      const carry = state.ppc > 0 ? Math.max(0, bal - blocks * state.ppc) : 0;
       const toNext = Math.max(0, num(p.pointsToNextCard));
-      const pct = state.ppc > 0 ? Math.min(100, Math.max(0, (state.ppc - toNext) / state.ppc * 100)) : 0;
+      const first = state.ppc > 0 && bal < state.ppc;   // hasn't reached the first $10 yet
+      const need = first ? state.ppc - bal : toNext;
+      const pct = state.ppc > 0 ? Math.min(100, Math.max(0, (state.ppc - need) / state.ppc * 100)) : 0;
+      const label = plural(need, 'more point') + ' to your ' + (first ? 'first ' : 'next ') + money(state.dpc);
       return '<div class="bank-card">' +
-        '<div class="bank-top"><div class="bank-name">' + esc(n) + '</div><div class="bank-bal"><strong>' + fmtNum(bal) + '</strong> ' + (bal === 1 ? 'pt' : 'pts') + ' unpaid</div></div>' +
-        '<div class="bank-pay' + (num(p.dollarsAvailable) > 0 ? ' has-payout' : '') + '">' + money(p.dollarsAvailable) + ' at next payout' +
-        (state.ppc > 0 ? ' · ' + plural(carry, 'pt carries', 'pts carry') + ' over' : '') + '</div>' +
+        '<div class="bank-top"><div class="bank-name">' + esc(n) + '</div><div class="bank-bal"><strong>' + fmtNum(bal) + '</strong> ' + (bal === 1 ? 'pt' : 'pts') + '</div></div>' +
+        '<div class="bank-pay' + (num(p.dollarsAvailable) > 0 ? ' has-payout' : '') + '">' +
+        (first ? money(0) + ' earned · ' + label : money(p.dollarsAvailable) + ' earned · paid at month-end') + '</div>' +
         (state.ppc > 0
-          ? '<div class="bank-progress" role="progressbar" aria-label="' + esc(n) + ' progress to the next ' + money(state.dpc) + '" aria-valuemin="0" aria-valuemax="' + state.ppc + '" aria-valuenow="' + Math.round(state.ppc - toNext) + '"><span style="width:' + pct.toFixed(1) + '%"></span></div>' +
-            '<div class="bank-next">' + plural(toNext, 'more pt', 'more pts') + ' to the next ' + money(state.dpc) + '</div>'
+          ? '<div class="bank-progress" role="progressbar" aria-label="' + esc(n) + ': ' + esc(label) + '" aria-valuemin="0" aria-valuemax="' + state.ppc + '" aria-valuenow="' + Math.round(state.ppc - need) + '"><span style="width:' + pct.toFixed(1) + '%"></span></div>' +
+            (first ? '' : '<div class="bank-next">' + label + '</div>')
           : '') +
         '</div>';
     }).join('');
@@ -931,15 +1061,196 @@
       return '<li><span><strong>' + esc(a.name) + '</strong> <span class="howto-desc">' + esc(a.frequency || '') + (a.description ? ' · ' + esc(a.description) : '') + '</span></span>' +
         '<span class="howto-pts">+' + num(a.points) + ' pt' + (num(a.points) === 1 ? '' : 's') + '</span></li>';
     }).join('');
-    const per = plural(state.ppc || 3, 'point'), dollars = money(state.dpc || 10);
+    $('howtoRuleMain').textContent = ruleText();
     $('howtoRules').innerHTML = [
-      'Every ' + per + ' = ' + dollars + '. Payouts are monthly, as one digital card for the dollar amount.',
-      per + ' is the minimum payout. Anything under ' + per + ' carries over to the next month.',
       "A month's payout covers points dated through the last day of that month. Points earned after month-end go to the next month's payout.",
       'Weekly goals are dated the Friday of their week, so they count in the month that Friday falls in.',
       'Anyone who leaves the agency forfeits their unpaid balance.',
     ].map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('');
   }
+
+  function ruleText() {
+    const per = plural(state.ppc || 3, 'point');
+    return 'Every ' + per + ' = ' + money(state.dpc || 10) + '. You need at least ' + per + ' to cash out; extra points carry to next month. Paid monthly.';
+  }
+
+  // ── Champion screen ─────────────────────────────────────────────────────
+  function reduceMotion() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+  function initials(name) {
+    return String(name || '?').trim().split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase() || '?';
+  }
+  // Photo by first name; anything unknown (or an image that fails) becomes an initials circle.
+  function avatarHTML(name, cls) {
+    const src = CHAMPION_PHOTOS[String(name || '').trim().split(/\s+/)[0]];
+    if (!src) return '<span class="' + cls + ' avatar-initials" aria-hidden="true">' + esc(initials(name)) + '</span>';
+    return '<img class="' + cls + '" src="' + esc(src) + '" alt="" data-initials="' + esc(initials(name)) + '" />';
+  }
+  function wireAvatarFallbacks(root) {
+    root.querySelectorAll('img[data-initials]').forEach(function (img) {
+      function swap() {
+        const span = document.createElement('span');
+        span.className = img.className + ' avatar-initials';
+        span.setAttribute('aria-hidden', 'true');
+        span.textContent = img.getAttribute('data-initials');
+        if (img.parentNode) img.parentNode.replaceChild(span, img);
+      }
+      img.addEventListener('error', swap);
+      if (img.complete && img.naturalWidth === 0) swap();
+    });
+  }
+  function champVisible() { return state.tv ? state.tvSlide === 'champ' : state.view === 'champion'; }
+
+  // This week's leader; if nobody has points yet this week, last week's.
+  async function loadChampion(opts) {
+    opts = opts || {};
+    const req = ++state.champReq;
+    if (!state.champ) $('champLoading').hidden = false;
+    try {
+      const thisRange = rangeFor('thisweek');
+      let summary = await api({ action: 'summary', start: thisRange.s, end: thisRange.e });
+      let mode = 'this', range = thisRange;
+      const anyPoints = function (s) { return (s.people || []).some(function (p) { return num(p.points) > 0; }); };
+      if (!anyPoints(summary)) {
+        range = rangeFor('lastweek');
+        summary = await api({ action: 'summary', start: range.s, end: range.e });
+        mode = 'last';
+      }
+      if (req !== state.champReq) return;
+      state.champ = { summary: summary, mode: mode, range: range, at: new Date() };
+      state.lastFetch = Date.now();
+      if (!opts.quiet) { $('refreshNote').hidden = true; hideMsg($('boardMsg')); }
+      if (champVisible()) renderChampion();
+    } catch (err) {
+      if (req !== state.champReq) return;
+      if (state.champ) refreshFailed(state.champ.at);
+      else if (champVisible()) showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); loadChampion(); } }]);
+    } finally {
+      if (req === state.champReq) $('champLoading').hidden = true;
+    }
+  }
+
+  function championData(summary) {
+    const ranked = rankPeople(summary.people || []);
+    const top = ranked.length ? ranked[0].pts : 0;
+    if (top <= 0) return { champs: [], chase: [], top: 0 };
+    const champs = ranked.filter(function (p) { return p.pts === top; });
+    // The chase: the next two distinct scores below the top. Never anyone with 0,
+    // never anyone tied for last place overall.
+    const low = ranked[ranked.length - 1].pts;
+    const below = [];
+    ranked.forEach(function (p) { if (p.pts < top && below.indexOf(p.pts) < 0) below.push(p.pts); });
+    const scores = below.slice(0, 2);
+    const chase = ranked.filter(function (p) { return scores.indexOf(p.pts) > -1 && p.pts > 0 && p.pts > low; });
+    return { champs: champs, chase: chase, top: top };
+  }
+
+  function renderChampion() {
+    const c = state.champ;
+    if (!c) return;
+    const d = championData(c.summary);
+    const last = c.mode === 'last';
+    const tie = d.champs.length > 1;
+    $('champRange').textContent = (last ? 'Last week · ' : 'This week · ') + rangeText(c.range);
+    $('champHead').textContent = tie ? "It's a tie at the top!" : (last ? "Last week's champion" : 'Winning this week so far');
+    const row = $('champRow');
+    row.classList.toggle('is-tie', tie);
+    row.innerHTML = d.champs.map(function (p) {
+      return '<div class="champ-card"><div class="champ-ring">' + avatarHTML(p.name, 'champ-photo') +
+        '<span class="champ-badge" aria-hidden="true">🏆</span></div>' +
+        '<div class="champ-name">' + esc(p.name) + '</div>' +
+        '<div class="champ-pts"><strong>' + fmtNum(p.pts) + '</strong>' + (p.pts === 1 ? 'pt ' : 'pts ') + (last ? 'last week' : 'this week') + '</div></div>';
+    }).join('');
+    wireAvatarFallbacks(row);
+    $('champEmpty').hidden = d.champs.length > 0;
+    $('chase').hidden = d.chase.length === 0;
+    $('chaseRow').innerHTML = d.chase.map(function (p) {
+      return '<div class="chase-item">' + avatarHTML(p.name, 'chase-photo') +
+        '<div class="chase-text"><strong>' + esc(p.name) + '</strong><span>' + esc(p.name) + ' is ' + plural(d.top - p.pts, 'pt') + ' behind</span></div></div>';
+    }).join('');
+    wireAvatarFallbacks($('chaseRow'));
+    $('champUpdated').textContent = 'Updated ' + (fmtStamp(c.summary.lastUpdated) || '—');
+    $('champRule').textContent = state.ppc ? 'Every ' + plural(state.ppc, 'point') + ' = ' + money(state.dpc) : '';
+    if (!$('champLine').textContent) $('champLine').textContent = CHAMPION_LINES[state.lineIdx % CHAMPION_LINES.length];
+    // Confetti the first time a champion is shown, and again whenever the champion changes.
+    const key = c.mode + ':' + d.champs.map(function (p) { return p.name; }).join('|');
+    if (d.champs.length && key !== state.celebrated) { state.celebrated = key; burstConfetti(); }
+  }
+
+  // Rotate the motivational line (only while the Champion screen is showing).
+  setInterval(function () {
+    if (!champVisible()) return;
+    state.lineIdx = (state.lineIdx + 1) % CHAMPION_LINES.length;
+    const el = $('champLine');
+    if (reduceMotion()) { el.textContent = CHAMPION_LINES[state.lineIdx]; return; }
+    el.style.opacity = '0';
+    setTimeout(function () { el.textContent = CHAMPION_LINES[state.lineIdx]; el.style.opacity = '1'; }, 400);
+  }, CHAMPION_LINE_MS);
+
+  // Light confetti burst on a canvas over the panel. No library; skipped for reduced motion.
+  let confettiRun = 0;
+  function burstConfetti() {
+    if (reduceMotion()) return;
+    const canvas = $('confetti'), panel = $('champView');
+    const rect = panel.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const colors = ['#d9682a', '#cfb69a', '#ffffff', '#4f6f94', '#f2c9a5'];
+    const pieces = [];
+    for (let i = 0; i < 130; i++) {
+      pieces.push({
+        x: rect.width * (0.15 + Math.random() * 0.7), y: rect.height * 0.25 + Math.random() * 40,
+        vx: (Math.random() - 0.5) * 9, vy: -(4 + Math.random() * 7),
+        w: 6 + Math.random() * 6, h: 4 + Math.random() * 5,
+        rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+        color: colors[i % colors.length],
+      });
+    }
+    const run = ++confettiRun, start = performance.now(), life = 2600;
+    function frame(now) {
+      if (run !== confettiRun) return;
+      const t = now - start;
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      if (t > life) return;
+      ctx.globalAlpha = t > life - 600 ? Math.max(0, (life - t) / 600) : 1;
+      pieces.forEach(function (p) {
+        p.vy += 0.18; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ── View switch: Leaderboard | Champion ─────────────────────────────────
+  function setView(v, save) {
+    state.view = v === 'champion' ? 'champion' : 'board';
+    document.body.classList.toggle('view-champ', state.view === 'champion');
+    document.querySelectorAll('.view-btn').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-view') === state.view ? 'true' : 'false');
+    });
+    if (save) lsSet(VIEW_STORE, state.view);
+    hideTip();
+    if (state.view === 'champion') {
+      if (state.champ) renderChampion();
+      loadChampion({ background: !!state.champ });
+    } else if (!state.shown) {
+      loadPeriod(state.period);
+    } else {
+      show(state.shown);
+    }
+  }
+  document.querySelectorAll('.view-btn').forEach(function (b) {
+    b.addEventListener('click', function () { if (!state.tv) setView(b.getAttribute('data-view'), true); });
+  });
 
   // ── Tooltip (hover, keyboard focus, or tap) ─────────────────────────────
   const tip = $('tip');
@@ -970,12 +1281,12 @@
   window.addEventListener('scroll', function () { if (tipFor) hideTip(); }, { passive: true });
 
   // ── TV mode ─────────────────────────────────────────────────────────────
-  // Slides: This Week (Last Week on Mondays) → Month → By category (This Month) → Year.
-  function tvSlides() { return [isMonday() ? 'lastweek' : 'thisweek', 'month', 'cat', 'year']; }
-  function slidePeriod(sl) { return sl === 'cat' ? 'month' : sl; }
+  // Slides: Champion → This Week (Last Week on Mondays) → Month → By category (This Month) → Year.
+  function tvSlides() { return ['champ', isMonday() ? 'lastweek' : 'thisweek', 'month', 'cat', 'year']; }
+  function slidePeriod(sl) { return sl === 'cat' ? 'month' : (sl === 'champ' ? null : sl); }
   function tvPeriods() {
     const out = [];
-    tvSlides().forEach(function (sl) { const p = slidePeriod(sl); if (out.indexOf(p) < 0) out.push(p); });
+    tvSlides().forEach(function (sl) { const p = slidePeriod(sl); if (p && out.indexOf(p) < 0) out.push(p); });
     return out;
   }
   function wantsTV() { try { return new URL(location.href).searchParams.get('tv') === '1'; } catch (e) { return false; } }
@@ -995,6 +1306,13 @@
     const sl = slides[state.tvIdx % slides.length];
     state.tvSlide = sl;
     document.body.classList.toggle('tv-cat', sl === 'cat');
+    document.body.classList.toggle('tv-champ', sl === 'champ');
+    hideTip();
+    if (sl === 'champ') {
+      renderTvDots();
+      if (state.champ) renderChampion(); else loadChampion();
+      return;
+    }
     const p = slidePeriod(sl);
     state.period = p;
     const c = state.cache[p];
@@ -1003,6 +1321,7 @@
   }
   // Fetch every period the TV slides use, then redraw the one on screen.
   async function tvRefreshAll() {
+    await loadChampion({ background: true, quiet: true });
     const periods = tvPeriods();
     for (let i = 0; i < periods.length; i++) {
       const p = periods[i], range = rangeFor(p);
@@ -1044,7 +1363,7 @@
     state.tv = false;
     clearInterval(state.timers.rotate);
     clearInterval(state.timers.tvRefresh);
-    document.body.classList.remove('tv', 'tv-cat');
+    document.body.classList.remove('tv', 'tv-cat', 'tv-champ');
     state.tvSlide = null;
     setTvParam(false);
     if (state.tvFull && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function () {});
@@ -1055,6 +1374,7 @@
     const c = state.cache[state.period];
     if (c && sameRange(c.range, rangeFor(state.period))) show(c);
     else loadPeriod(state.period, { background: true });
+    setView(state.view, false);
     startAuto();
     $('tvBtn').focus();
   }
@@ -1088,8 +1408,9 @@
     setPressed(state.period);
     syncCustomForm();
     $('customForm').hidden = state.period !== 'custom';
+    state.view = lsGet(VIEW_STORE) === 'champion' ? 'champion' : 'board';
     if (wantsTV()) { enterTV(false); return; }
-    loadPeriod(state.period);
+    setView(state.view, false);
     startAuto();
   }
 
