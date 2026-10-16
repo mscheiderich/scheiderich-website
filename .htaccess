@@ -20,6 +20,25 @@ AddOutputFilter INCLUDES .html
   </FilesMatch>
 </IfModule>
 
+# --- Always revalidate HTML (and the web manifest) ---
+# Pages kept showing stale copies after a deploy. "no-cache" does not mean
+# "don't store": it makes the browser check with the server before reusing its
+# copy. Images, CSS and JS are not matched and keep their current caching.
+#
+# SSI output carries no Last-Modified or ETag (mod_include drops them), so each
+# check is a full download rather than a 304. That is deliberate: a page's header
+# and footer come from /includes/, so the page file's own date cannot tell whether
+# the assembled page changed. The HTML pages here are small.
+#
+# Safe with SSI: this only sets a response header. Headers on Apache's include
+# subrequests never reach the browser, and no access rule is involved, so the
+# /includes/ fragments and the .md block below are unaffected.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|webmanifest)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
 # --- Block web access to Markdown docs ---
 # Second layer behind .gitignore. PROJECT_STATUS.md and claude.md were tracked in
 # git and, because the repo IS the docroot, were publicly readable on the live site
