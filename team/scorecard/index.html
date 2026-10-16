@@ -251,6 +251,13 @@
     body.tv #bankSection, body.tv .howto, body.tv .portal-footer, body.tv .lb-numbers, body.tv .lb-head { display: none !important; }
     body.tv .tv-bar { display: flex; }
     body.tv .ip-main { max-width: none; padding: 28px 48px; }
+    /* TV "stage": the TV layout is designed at 1920×1080 CSS px and scaled to fit the real
+       screen (see fitStage). Letterbox bars use the slide's background color. */
+    html.tv-html, html.tv-html body { height: 100%; overflow: hidden; }
+    body.tv { min-height: 0; }
+    body.tv .ip-main { position: fixed; top: 0; left: 0; width: 1920px; height: 1080px; margin: 0; overflow: hidden; transform-origin: 0 0; background: var(--bg); }
+    body.tv.tv-champ .ip-main { background: #1e3148; }
+    body.tv.tv-wall .tv-exit { display: none; }
     body.tv .team-strip { margin-top: 0; grid-template-columns: repeat(3, 1fr); }
     body.tv .ts-item.ts-wide { grid-column: auto; }
     body.tv .ts-num { font-size: 44px; }
@@ -284,7 +291,7 @@
     body.tv.tv-champ .tv-dots span { background: rgba(255,255,255,.25); }
     body.tv.tv-champ .tv-dots span.on { background: #cfb69a; }
     body.tv.tv-champ .tv-bar { margin-bottom: 0; }
-    body.tv .champ { margin-top: 0; box-shadow: none; min-height: calc(100vh - 110px); padding: 20px 40px 22px; display: flex; flex-direction: column; justify-content: center; }
+    body.tv .champ { margin-top: 0; box-shadow: none; min-height: calc(1080px - 110px); padding: 20px 40px 22px; display: flex; flex-direction: column; justify-content: center; }
     body.tv .champ-eyebrow { font-size: 18px; }
     body.tv .champ-head { font-size: 54px; }
     body.tv .champ-ring { width: 300px; height: 300px; padding: 9px; }
@@ -411,7 +418,7 @@
     <section class="team-strip" aria-label="Team totals">
       <div class="ts-item"><div class="ts-num" id="tsPoints">—</div><div class="ts-lbl">Team points · <span id="tsPeriod"></span></div></div>
       <div class="ts-item"><div class="ts-num" id="tsCards">—</div><div class="ts-lbl">Paid out</div></div>
-      <div class="ts-item ts-wide"><div class="ts-num ts-small" id="tsUpdated">—</div><div class="ts-lbl">Last updated</div></div>
+      <div class="ts-item ts-wide"><div class="ts-num ts-small" id="tsUpdated">—</div><div class="ts-lbl">Points last entered</div></div>
       <div class="ts-est" id="tsEst" hidden>Team payout so far this month: <strong id="tsEstVal">—</strong> <span>(estimate — doesn't include carryover from last month)</span></div>
     </section>
 
@@ -893,6 +900,7 @@
     renderCategories(entry);
     renderBank(s.people || []);
     renderHowto();
+    if (state.tv) scheduleFit();
   }
 
   // Everyone in config appears, even with no row in the summary. Ties share a rank.
@@ -1168,11 +1176,12 @@
         '<div class="chase-text"><strong>' + esc(p.name) + '</strong><span>' + esc(p.name) + ' is ' + plural(d.top - p.pts, 'pt') + ' behind</span></div></div>';
     }).join('');
     wireAvatarFallbacks($('chaseRow'));
-    $('champUpdated').textContent = 'Updated ' + (fmtStamp(c.summary.lastUpdated) || '—');
+    $('champUpdated').textContent = 'Points last entered ' + (fmtStamp(c.summary.lastUpdated) || '—');
     $('champRule').textContent = state.ppc ? 'Every ' + plural(state.ppc, 'point') + ' = ' + money(state.dpc) : '';
     if (!$('champLine').textContent) $('champLine').textContent = CHAMPION_LINES[state.lineIdx % CHAMPION_LINES.length];
     // Confetti the first time a champion is shown, and again whenever the champion changes.
     const key = c.mode + ':' + d.champs.map(function (p) { return p.name; }).join('|');
+    if (state.tv) fitStage();
     if (d.champs.length && key !== state.celebrated) { state.celebrated = key; burstConfetti(); }
   }
 
@@ -1191,7 +1200,8 @@
   function burstConfetti() {
     if (reduceMotion()) return;
     const canvas = $('confetti'), panel = $('champView');
-    const rect = panel.getBoundingClientRect();
+    // Layout size, not on-screen size: in TV mode the panel sits inside a scaled stage.
+    const rect = { width: panel.offsetWidth, height: panel.offsetHeight };
     if (!rect.width || !rect.height) return;
     const dpr = window.devicePixelRatio || 1;
     canvas.width = rect.width * dpr;
@@ -1289,6 +1299,37 @@
     tvSlides().forEach(function (sl) { const p = slidePeriod(sl); if (p && out.indexOf(p) < 0) out.push(p); });
     return out;
   }
+  // ── TV "stage" ──
+  // TV mode is laid out for a 1920×1080 CSS-px screen. Many TV browsers (e.g. Fire TV) report
+  // 960×540 on a 1080p set, and 4K sets can report 3840×2160, so the whole layout is scaled
+  // to fit the real viewport and centred. If a slide ever grows taller than 1080 (more agents),
+  // it shrinks a little more instead of being cut off. ?tvscale=0.5 forces a scale for testing.
+  const STAGE_W = 1920, STAGE_H = 1080;
+  function forcedScale() {
+    try { const v = parseFloat(new URL(location.href).searchParams.get('tvscale')); return v > 0 && v <= 4 ? v : 0; }
+    catch (e) { return 0; }
+  }
+  function fitStage() {
+    const stage = document.querySelector('.ip-main');
+    if (!state.tv) { stage.style.transform = ''; stage.style.height = ''; return; }
+    stage.style.height = 'auto';
+    const h = Math.max(STAGE_H, Math.ceil(stage.scrollHeight));
+    stage.style.height = h + 'px';
+    const w = window.innerWidth, vh = window.innerHeight;
+    const scale = forcedScale() || Math.min(w / STAGE_W, vh / h);
+    const x = Math.max(0, (w - STAGE_W * scale) / 2), y = Math.max(0, (vh - h * scale) / 2);
+    stage.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px) scale(' + scale.toFixed(5) + ')';
+  }
+  let fitQueued = false;
+  function scheduleFit() {
+    if (fitQueued) return;
+    fitQueued = true;
+    requestAnimationFrame(function () { fitQueued = false; fitStage(); });
+  }
+  window.addEventListener('resize', function () { if (state.tv) scheduleFit(); });
+  window.addEventListener('orientationchange', function () { if (state.tv) scheduleFit(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (state.tv) scheduleFit(); });
+
   function wantsTV() { try { return new URL(location.href).searchParams.get('tv') === '1'; } catch (e) { return false; } }
   function setTvParam(on) {
     try {
@@ -1308,6 +1349,7 @@
     document.body.classList.toggle('tv-cat', sl === 'cat');
     document.body.classList.toggle('tv-champ', sl === 'champ');
     hideTip();
+    scheduleFit();
     if (sl === 'champ') {
       renderTvDots();
       if (state.champ) renderChampion(); else loadChampion();
@@ -1347,7 +1389,11 @@
     state.tvIdx = 0;
     hideTip();
     document.body.classList.add('tv');
+    document.documentElement.classList.add('tv-html');
+    // Opened with ?tv=1 = a wall display: hide the exit controls (Esc still works).
+    document.body.classList.toggle('tv-wall', !fromClick);
     setTvParam(true);
+    fitStage();
     if (fromClick && document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().then(function () { state.tvFull = true; }).catch(function () { /* layout-only TV mode */ });
     }
@@ -1356,15 +1402,17 @@
     tvRefreshAll();
     state.timers.rotate = setInterval(function () { state.tvIdx = (state.tvIdx + 1) % tvSlides().length; showTvPeriod(); }, TV_ROTATE_MS);
     state.timers.tvRefresh = setInterval(refresh, REFRESH_MS);
-    $('tvExit').focus();
+    if (fromClick) $('tvExit').focus();
   }
   function exitTV() {
     if (!state.tv) return;
     state.tv = false;
     clearInterval(state.timers.rotate);
     clearInterval(state.timers.tvRefresh);
-    document.body.classList.remove('tv', 'tv-cat', 'tv-champ');
+    document.body.classList.remove('tv', 'tv-cat', 'tv-champ', 'tv-wall');
+    document.documentElement.classList.remove('tv-html');
     state.tvSlide = null;
+    fitStage();
     setTvParam(false);
     if (state.tvFull && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function () {});
     state.tvFull = false;
