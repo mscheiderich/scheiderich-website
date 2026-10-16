@@ -444,7 +444,7 @@
   const KEY_STORE = 'incentiveKey';
   const BY_STORE  = 'incentiveBy';
   const ENTERERS  = ['Crissy', 'Mike'];
-  const TIMEOUT_MS = 20000;
+  const TIMEOUT_MS = 15000;   // per attempt; automatic retries cover slow cold starts
   const MAX_URL    = 1800;   // keep every save request URL under this length
   const CB_RESERVE = 40;     // room for "&callback=ipcb_…" when sizing save batches
   const NET_MSG = "Couldn't reach the points sheet. Check your connection and try again. Nothing was saved.";
@@ -467,7 +467,7 @@
       .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(String(params[k])); })
       .join('&');
   }
-  function jsonp(params) {
+  function jsonpOnce(params) {
     return new Promise(function (resolve, reject) {
       const cb = 'ipcb_' + Date.now().toString(36) + '_' + (++jsonpSeq);
       const script = document.createElement('script');
@@ -492,12 +492,52 @@
       window[cb] = function (data) { finish(true, data); };
       script.onerror = function () { finish(false, new Error('load error')); };
       // The reply calls the callback while it loads. If it loaded without calling back,
-      // Google sent something else (such as a sign-in page): fail now, not after 20s.
+      // Google sent something else (such as a sign-in page): fail now, not after the timeout.
       script.onload = function () { setTimeout(function () { finish(false, new Error('no callback')); }, 0); };
       script.src = API_URL + '?' + qs(params) + '&callback=' + cb;
       document.head.appendChild(script);
     });
   }
+
+  // ── Apps Script cold starts ──
+  // After the web app has been idle, the first few calls can be slow or fail outright.
+  // Reads are retried automatically (after 2 s, 5 s, then 10 s). Writes are never retried,
+  // so a slow save can't be recorded twice. At most MAX_CONCURRENT requests run at once.
+  const WRITE_ACTIONS = { save: true, payout: true, redeem: true, void: true };
+  const RETRY_DELAYS = [2000, 5000, 10000];
+  const MAX_CONCURRENT = 2;
+  let inFlight = 0;
+  const waiting = [];
+  function pumpQueue() {
+    while (inFlight < MAX_CONCURRENT && waiting.length) {
+      const job = waiting.shift();
+      inFlight++;
+      jsonpOnce(job.params).then(job.resolve, job.reject).then(function () { inFlight--; pumpQueue(); });
+    }
+  }
+  function queued(params) {
+    return new Promise(function (resolve, reject) { waiting.push({ params: params, resolve: resolve, reject: reject }); pumpQueue(); });
+  }
+  async function jsonp(params) {
+    const retries = WRITE_ACTIONS[params.action] ? 0 : RETRY_DELAYS.length;
+    for (let attempt = 0; ; attempt++) {
+      try { return await queued(params); }
+      catch (err) {
+        if (attempt >= retries) throw err;
+        await new Promise(function (r) { setTimeout(r, RETRY_DELAYS[attempt]); });
+      }
+    }
+  }
+  // A first load that still fails after those retries keeps trying every 30 seconds on its
+  // own, so a wall TV with nobody to click "Try again" recovers by itself.
+  const AUTO_RETRY_MS = 30000;
+  const AUTO_RETRY_NOTE = ' Trying again automatically every 30 seconds.';
+  const autoRetryTimers = {};
+  function autoRetry(key, fn) {
+    clearTimeout(autoRetryTimers[key]);
+    autoRetryTimers[key] = setTimeout(function () { delete autoRetryTimers[key]; fn(); }, AUTO_RETRY_MS);
+  }
+  function cancelAutoRetry(key) { clearTimeout(autoRetryTimers[key]); delete autoRetryTimers[key]; }
 
   function apiError(kind, message) { const e = new Error(message); e.kind = kind; return e; }
   // kind: 'network' (timeout / unreachable), 'auth' (Not authorized), 'server' (any other error)
@@ -658,9 +698,11 @@
       applyConfig(cfg);
     } catch (err) {
       $('bootLoading').hidden = true;
-      showMsg($('bootMsg'), 'error', errText(err), [{ label: 'Try again', fn: boot }]);
+      showMsg($('bootMsg'), 'error', errText(err) + AUTO_RETRY_NOTE, [{ label: 'Try again', fn: function () { cancelAutoRetry('boot'); boot(); } }]);
+      autoRetry('boot', boot);
       return;
     }
+    cancelAutoRetry('boot');
     $('bootLoading').hidden = true;
     state.key = lsGet(KEY_STORE);
     const by = lsGet(BY_STORE);
@@ -822,13 +864,16 @@
       state.selDaily.forEach(function (v, k) { if (state.loggedDaily.has(k)) state.selDaily.delete(k); });
       state.selWeekly.forEach(function (v, k) { if (state.loggedWeekly.has(k)) state.selWeekly.delete(k); });
       state.weekLoaded = true;
+      cancelAutoRetry('week');
       renderCards();
     } catch (err) {
       if (req !== state.weekReq) return;
       // Without this week's entries the grid can't show what's already logged, so keep it hidden.
       $('cards').innerHTML = '';
       if (err.kind === 'auth') { handleError(err); return; }
-      showMsg($('weekMsg'), 'error', errText(err), [{ label: 'Try again', fn: function () { hideMsg($('weekMsg')); loadWeek(); } }]);
+      const again = err.kind === 'network';
+      showMsg($('weekMsg'), 'error', errText(err) + (again ? AUTO_RETRY_NOTE : ''), [{ label: 'Try again', fn: function () { hideMsg($('weekMsg')); loadWeek(); } }]);
+      if (again) autoRetry('week', function () { hideMsg($('weekMsg')); loadWeek(); });
     } finally {
       if (req === state.weekReq) {
         $('weekLoading').hidden = true;
@@ -1256,11 +1301,15 @@
       const res = await api(withKey({ action: 'payoutPreview', month: month }));
       if ($('poMonth').value !== month) return;
       state.preview = res;
+      cancelAutoRetry('preview');
       renderPreview(res, month);
     } catch (err) {
       if ($('poMonth').value !== month) return;
       $('poBody').hidden = true;
-      handleError(err, $('poMsg'));
+      if (err.kind === 'network') {
+        showMsg($('poMsg'), 'error', errText(err) + AUTO_RETRY_NOTE);
+        autoRetry('preview', function () { loadPreview(true); });
+      } else handleError(err, $('poMsg'));
     } finally {
       $('poLoading').hidden = true;
       setPayoutBusy(false);
@@ -1372,10 +1421,14 @@
     hideMsg($('recentMsg'));
     try {
       const res = await api(withKey({ action: 'recent', limit: 50 }));
+      cancelAutoRetry('recent');
       buildRecentRows(res);
       renderRecent();
     } catch (err) {
-      handleError(err, $('recentMsg'));
+      if (err.kind === 'network') {
+        showMsg($('recentMsg'), 'error', errText(err) + AUTO_RETRY_NOTE);
+        autoRetry('recent', loadRecent);
+      } else handleError(err, $('recentMsg'));
     } finally {
       btn.disabled = false;
       $('recentLoading').hidden = true;

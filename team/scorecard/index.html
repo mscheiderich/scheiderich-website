@@ -523,7 +523,7 @@
 
   const PERIOD_STORE = 'lbPeriod';
   const CUSTOM_STORE = 'lbCustom';
-  const TIMEOUT_MS = 20000;
+  const TIMEOUT_MS = 15000;   // per attempt; automatic retries cover slow cold starts
   const REFRESH_MS = 5 * 60 * 1000;
   const TV_ROTATE_MS = 20 * 1000;
   const NET_MSG = "Couldn't reach the points sheet. Check your connection and try again.";
@@ -560,7 +560,7 @@
       .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(String(params[k])); })
       .join('&');
   }
-  function jsonp(params) {
+  function jsonpOnce(params) {
     return new Promise(function (resolve, reject) {
       const cb = 'lbcb_' + Date.now().toString(36) + '_' + (++jsonpSeq);
       const script = document.createElement('script');
@@ -585,12 +585,52 @@
       window[cb] = function (data) { finish(true, data); };
       script.onerror = function () { finish(false, new Error('load error')); };
       // The reply calls the callback while it loads. If it loaded without calling back,
-      // Google sent something else (such as a sign-in page): fail now, not after 20s.
+      // Google sent something else (such as a sign-in page): fail now, not after the timeout.
       script.onload = function () { setTimeout(function () { finish(false, new Error('no callback')); }, 0); };
       script.src = API_URL + '?' + qs(params) + '&callback=' + cb;
       document.head.appendChild(script);
     });
   }
+  // ── Apps Script cold starts ──
+  // After the web app has been idle, the first few calls can be slow or fail outright.
+  // Reads are retried automatically (after 2 s, 5 s, then 10 s). Writes are never retried,
+  // so a slow save can't be recorded twice. At most MAX_CONCURRENT requests run at once.
+  const WRITE_ACTIONS = { save: true, payout: true, redeem: true, void: true };
+  const RETRY_DELAYS = [2000, 5000, 10000];
+  const MAX_CONCURRENT = 2;
+  let inFlight = 0;
+  const waiting = [];
+  function pumpQueue() {
+    while (inFlight < MAX_CONCURRENT && waiting.length) {
+      const job = waiting.shift();
+      inFlight++;
+      jsonpOnce(job.params).then(job.resolve, job.reject).then(function () { inFlight--; pumpQueue(); });
+    }
+  }
+  function queued(params) {
+    return new Promise(function (resolve, reject) { waiting.push({ params: params, resolve: resolve, reject: reject }); pumpQueue(); });
+  }
+  async function jsonp(params) {
+    const retries = WRITE_ACTIONS[params.action] ? 0 : RETRY_DELAYS.length;
+    for (let attempt = 0; ; attempt++) {
+      try { return await queued(params); }
+      catch (err) {
+        if (attempt >= retries) throw err;
+        await new Promise(function (r) { setTimeout(r, RETRY_DELAYS[attempt]); });
+      }
+    }
+  }
+  // A first load that still fails after those retries keeps trying every 30 seconds on its
+  // own, so a wall TV with nobody to click "Try again" recovers by itself.
+  const AUTO_RETRY_MS = 30000;
+  const AUTO_RETRY_NOTE = ' Trying again automatically every 30 seconds.';
+  const autoRetryTimers = {};
+  function autoRetry(key, fn) {
+    clearTimeout(autoRetryTimers[key]);
+    autoRetryTimers[key] = setTimeout(function () { delete autoRetryTimers[key]; fn(); }, AUTO_RETRY_MS);
+  }
+  function cancelAutoRetry(key) { clearTimeout(autoRetryTimers[key]); delete autoRetryTimers[key]; }
+
   function apiError(kind, message) { const e = new Error(message); e.kind = kind; return e; }
   async function api(params) {
     let res;
@@ -824,6 +864,7 @@
       const entry = { period: period, range: range, summary: summary, at: new Date() };
       state.cache[period] = entry;
       state.lastFetch = Date.now();
+      cancelAutoRetry('period');
       hideMsg($('boardMsg'));
       $('refreshNote').hidden = true;
       show(entry);
@@ -835,7 +876,9 @@
         refreshFailed();
       } else {
         if (state.shown && !state.tv) { state.period = state.shown.period; setPressed(state.period); }
-        showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); state.period = period; setPressed(period); loadPeriod(period); } }]);
+        const firstLoad = !state.shown;
+        showMsg($('boardMsg'), errText(err) + (firstLoad ? AUTO_RETRY_NOTE : ''), [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); state.period = period; setPressed(period); loadPeriod(period); } }]);
+        if (firstLoad) autoRetry('period', function () { hideMsg($('boardMsg')); loadPeriod(state.period); });
       }
     } finally {
       if (req === state.req) setBusy(false);
@@ -855,7 +898,12 @@
   // Re-read config too, so "today" moves forward on a screen left open past midnight.
   async function refresh() {
     try { await loadConfig(); }
-    catch (err) { if (state.shown || state.champ) refreshFailed(state.champ && state.view === 'champion' ? state.champ.at : null); else showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: refresh }]); return; }
+    catch (err) {
+      if (state.shown || state.champ) refreshFailed(state.champ && state.view === 'champion' ? state.champ.at : null);
+      else { showMsg($('boardMsg'), errText(err) + AUTO_RETRY_NOTE, [{ label: 'Try again', fn: refresh }]); autoRetry('refresh', refresh); }
+      return;
+    }
+    cancelAutoRetry('refresh');
     if (state.tv) { await tvRefreshAll(); return; }
     if (state.view === 'champion') { await loadChampion({ background: true }); return; }
     if (state.period === 'custom' && !validCustom(state.custom)) return;
@@ -1109,7 +1157,14 @@
   function champVisible() { return state.tv ? state.tvSlide === 'champ' : state.view === 'champion'; }
 
   // This week's leader; if nobody has points yet this week, last week's.
-  async function loadChampion(opts) {
+  // Only one Champion load at a time: a second caller shares the one in flight.
+  let champInFlight = null;
+  function loadChampion(opts) {
+    if (champInFlight) return champInFlight;
+    champInFlight = loadChampionNow(opts).then(function () { champInFlight = null; }, function () { champInFlight = null; });
+    return champInFlight;
+  }
+  async function loadChampionNow(opts) {
     opts = opts || {};
     const req = ++state.champReq;
     if (!state.champ) $('champLoading').hidden = false;
@@ -1126,12 +1181,16 @@
       if (req !== state.champReq) return;
       state.champ = { summary: summary, mode: mode, range: range, at: new Date() };
       state.lastFetch = Date.now();
+      cancelAutoRetry('champ');
       if (!opts.quiet) { $('refreshNote').hidden = true; hideMsg($('boardMsg')); }
       if (champVisible()) renderChampion();
     } catch (err) {
       if (req !== state.champReq) return;
       if (state.champ) refreshFailed(state.champ.at);
-      else if (champVisible()) showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); loadChampion(); } }]);
+      else if (champVisible()) {
+        showMsg($('boardMsg'), errText(err) + AUTO_RETRY_NOTE, [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); loadChampion(); } }]);
+        autoRetry('champ', function () { hideMsg($('boardMsg')); loadChampion(); });
+      }
     } finally {
       if (req === state.champReq) $('champLoading').hidden = true;
     }
@@ -1373,10 +1432,14 @@
         state.lastFetch = Date.now();
       } catch (err) {
         if (state.shown) refreshFailed();
-        else showMsg($('boardMsg'), errText(err), [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); tvRefreshAll(); } }]);
+        else {
+          showMsg($('boardMsg'), errText(err) + AUTO_RETRY_NOTE, [{ label: 'Try again', fn: function () { hideMsg($('boardMsg')); tvRefreshAll(); } }]);
+          autoRetry('tv', function () { hideMsg($('boardMsg')); tvRefreshAll(); });
+        }
         return;
       }
     }
+    cancelAutoRetry('tv');
     if (!state.tv) return;
     $('refreshNote').hidden = true;
     hideMsg($('boardMsg'));
@@ -1409,6 +1472,7 @@
     state.tv = false;
     clearInterval(state.timers.rotate);
     clearInterval(state.timers.tvRefresh);
+    cancelAutoRetry('tv');
     document.body.classList.remove('tv', 'tv-cat', 'tv-champ', 'tv-wall');
     document.documentElement.classList.remove('tv-html');
     state.tvSlide = null;
@@ -1446,9 +1510,11 @@
       await loadConfig();
     } catch (err) {
       $('bootLoading').hidden = true;
-      showMsg($('bootMsg'), errText(err), [{ label: 'Try again', fn: boot }]);
+      showMsg($('bootMsg'), errText(err) + AUTO_RETRY_NOTE, [{ label: 'Try again', fn: function () { cancelAutoRetry('boot'); boot(); } }]);
+      autoRetry('boot', boot);
       return;
     }
+    cancelAutoRetry('boot');
     $('bootLoading').hidden = true;
     $('board').hidden = false;
     state.custom = loadCustom();
