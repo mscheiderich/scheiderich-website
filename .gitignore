@@ -5,3 +5,6 @@ PROJECT_STATUS.md
 
 # Referral Hub key — lives on the web server only. Never commit it: this repo is public.
 team/hub-secret.js
+
+# Social Media Dashboard key + script URL — lives on the web server only. Never commit it: this repo is public.
+team/social-secret.js

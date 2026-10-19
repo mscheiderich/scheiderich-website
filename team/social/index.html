@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#1e3148">
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Social Media Dashboard | The Scheiderich Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #1e3148; --orange: #d9682a;
+      --bg: #f6f4f1; --bg-w: #ffffff; --bg-s: #eeebe6;
+      --text: #1c2330; --muted: #5f6b79; --border: #dedad4;
+      --brand: #1e3148; --website: #d9682a; --presence: #0f766e; --growth: #6d28d9;
+      --ok: #15803d; --ok-bg: #dcfce7; --warn: #b45309; --warn-bg: #fef3c7;
+      --bad: #b91c1c; --bad-bg: #fee2e2; --info: #1d4ed8; --info-bg: #dbeafe;
+      --grey-bg: #f1f2f4; --shadow: 0 1px 4px rgba(30,49,72,.07);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #12171f; --bg-w: #1b222c; --bg-s: #232b36; --text: #e8ebef; --muted: #9aa5b3; --border: #334050;
+        --brand: #8fb3e0; --presence: #2dd4bf; --growth: #a78bfa;
+        --ok: #4ade80; --ok-bg: #12301f; --warn: #fbbf24; --warn-bg: #3a2a0c; --bad: #f87171; --bad-bg: #3b1515;
+        --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #12171f; --bg-w: #1b222c; --bg-s: #232b36; --text: #e8ebef; --muted: #9aa5b3; --border: #334050;
+      --brand: #8fb3e0; --presence: #2dd4bf; --growth: #a78bfa;
+      --ok: #4ade80; --ok-bg: #12301f; --warn: #fbbf24; --warn-bg: #3a2a0c; --bad: #f87171; --bad-bg: #3b1515;
+      --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    a { color: inherit; }
+
+    /* Header (matches the Agent Portal) */
+    .portal-header { background: #1e3148; height: 64px; padding: 0 32px; display: flex; align-items: center; gap: 16px; }
+    .portal-header-logo { font-family: 'Lora', serif; font-size: 18px; font-weight: 700; color: #fff; white-space: nowrap; text-decoration: none; }
+    .portal-header-label { flex: 1; text-align: center; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.6); letter-spacing: .08em; text-transform: uppercase; }
+    .portal-header-date { font-size: 13px; color: #fff; white-space: nowrap; }
+
+    .bar { background: var(--bg-w); border-bottom: 1px solid var(--border); padding: 10px 32px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .bar .greet { font-size: 15px; flex: 1; min-width: 180px; }
+    .bar label { font-size: 12px; color: var(--muted); }
+    .who { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-w); }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-w); cursor: pointer; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; }
+    .btn:hover { border-color: var(--muted); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-primary { background: #d9682a; border-color: #d9682a; color: #fff; }
+    .btn-primary:hover { background: #c45a1f; border-color: #c45a1f; }
+    .btn-navy { background: #1e3148; border-color: #1e3148; color: #fff; }
+    .btn-ok { background: #15803d; border-color: #15803d; color: #fff; }
+    .btn-danger { color: var(--bad); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    .tabs { display: flex; gap: 4px; padding: 0 32px; background: var(--bg-w); border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab { padding: 12px 14px; border: 0; background: none; cursor: pointer; font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; }
+    .tab[aria-selected="true"] { color: var(--text); border-bottom-color: #d9682a; }
+    .count { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 4px; border-radius: 10px; background: #d9682a; color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 28px 32px 80px; }
+    h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    h3 { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 26px 0 10px; }
+    .sub { color: var(--muted); margin-bottom: 18px; }
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 6px; }
+    .pill { padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; border: 1px solid transparent; }
+    .p-bad { background: var(--bad-bg); color: var(--bad); }
+    .p-warn { background: var(--warn-bg); color: var(--warn); }
+    .p-info { background: var(--info-bg); color: var(--info); }
+    .p-ok { background: var(--ok-bg); color: var(--ok); }
+    .p-grey { background: var(--grey-bg); color: var(--muted); }
+
+    .list { display: flex; flex-direction: column; gap: 8px; }
+    .item { display: grid; grid-template-columns: 96px 1fr auto; gap: 14px; align-items: center; width: 100%; text-align: left; background: var(--bg-w); border: 1px solid var(--border); border-left: 5px solid var(--cp, var(--border)); border-radius: 10px; padding: 12px 14px; cursor: pointer; box-shadow: var(--shadow); }
+    .item:hover { border-color: var(--muted); border-left-color: var(--cp, var(--muted)); }
+    .item .when { font-weight: 700; font-size: 13px; }
+    .item .when small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+    .item .what { min-width: 0; }
+    .item .title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .item .meta { color: var(--muted); font-size: 12px; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; align-items: center; }
+    .item .act { text-align: right; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .late { color: var(--bad); }
+    .tag { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; background: var(--grey-bg); color: var(--muted); }
+    .tag-li { background: #e7eef8; color: #1e3148; }
+    .tag-as { background: #fdeee4; color: #a8461a; }
+    :root[data-theme="dark"] .tag-li { background: #1d2b40; color: #8fb3e0; }
+    :root[data-theme="dark"] .tag-as { background: #3a2316; color: #f0a070; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag-li { background: #1d2b40; color: #8fb3e0; } :root:not([data-theme="light"]) .tag-as { background: #3a2316; color: #f0a070; } }
+    .cp { font-weight: 700; color: var(--cp); }
+    .status { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .s-not-started { background: var(--grey-bg); color: var(--muted); }
+    .s-drafting { background: var(--info-bg); color: var(--info); }
+    .s-ready-for-approval { background: var(--warn-bg); color: var(--warn); }
+    .s-changes-requested { background: var(--bad-bg); color: var(--bad); }
+    .s-approved { background: var(--ok-bg); color: var(--ok); }
+    .s-scheduled { background: var(--ok); color: var(--bg-w); }
+    .s-skipped { background: var(--grey-bg); color: var(--muted); text-decoration: line-through; }
+    .empty { padding: 18px; border: 1px dashed var(--border); border-radius: 10px; color: var(--muted); text-align: center; background: var(--bg-w); }
+
+    .task { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-w); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+    .task input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; accent-color: #15803d; flex-shrink: 0; cursor: pointer; }
+    .task .t-title { font-weight: 600; }
+    .task.done .t-title { text-decoration: line-through; color: var(--muted); }
+    .task .t-meta { font-size: 12px; color: var(--muted); }
+    .task .t-meta.late { color: var(--bad); font-weight: 600; }
+    .task details { margin-top: 4px; font-size: 13px; color: var(--muted); }
+    .task summary { cursor: pointer; font-size: 12px; }
+    .task .t-body { flex: 1; min-width: 0; }
+
+    .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .toolbar .spacer { flex: 1; }
+    .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .seg button { padding: 6px 12px; border: 0; background: var(--bg-w); cursor: pointer; font-weight: 600; font-size: 12px; color: var(--muted); }
+    .seg button[aria-pressed="true"] { background: #1e3148; color: #fff; }
+    .month-nav { display: flex; align-items: center; gap: 8px; }
+    .month-nav strong { font-family: 'Lora', serif; font-size: 20px; min-width: 170px; text-align: center; }
+
+    .card { background: var(--bg-w); border: 1px solid var(--border); border-left: 5px solid var(--cp, var(--border)); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); }
+    .card + .card { margin-top: 12px; }
+    .caption { white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 10px 0; font-size: 14px; }
+    .kv { display: grid; grid-template-columns: 120px 1fr; gap: 4px 12px; font-size: 13px; margin-top: 8px; }
+    .kv dt { color: var(--muted); }
+    .notes { white-space: pre-wrap; background: var(--bad-bg); color: var(--bad); border-radius: 8px; padding: 10px 12px; font-size: 13px; margin: 10px 0; }
+
+    .hol { display: grid; grid-template-columns: 130px 1fr 110px auto; gap: 12px; align-items: center; background: var(--bg-w); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+    .hol .h-name { font-weight: 600; }
+    .hol .h-idea { font-size: 12px; color: var(--muted); }
+    .yn button[aria-pressed="true"][data-v="Yes"] { background: #15803d; color: #fff; }
+    .yn button[aria-pressed="true"][data-v="No"] { background: #6b7280; color: #fff; }
+
+    /* Post drawer */
+    .scrim { position: fixed; inset: 0; background: rgba(15,23,33,.45); z-index: 40; }
+    .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--bg-w); z-index: 50; display: flex; flex-direction: column; box-shadow: -8px 0 30px rgba(0,0,0,.18); }
+    .d-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
+    .d-head .grow { flex: 1; min-width: 0; }
+    .d-head h2 { font-size: 19px; }
+    .x { border: 0; background: none; font-size: 26px; line-height: 1; cursor: pointer; color: var(--muted); padding: 0 4px; }
+    .d-body { flex: 1; overflow-y: auto; padding: 18px 20px 30px; }
+    .d-foot { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: var(--bg-w); }
+    .d-foot .spacer { flex: 1; }
+    .next { background: var(--bg-s); border-radius: 8px; padding: 10px 12px; font-size: 13px; margin-bottom: 14px; }
+    .warnbox { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 10px 12px; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .field { margin-bottom: 14px; }
+    .field > label, .field > .lbl { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; letter-spacing: .02em; }
+    .field input[type=text], .field input[type=url], .field input[type=date], .field select, .field textarea { width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-w); }
+    .field textarea { resize: vertical; min-height: 70px; }
+    .field textarea.caption-in { min-height: 170px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 18px; cursor: pointer; font-size: 13px; background: var(--bg-w); user-select: none; }
+    .chip input { accent-color: #d9682a; }
+    .chip:has(input:checked) { border-color: #d9682a; background: var(--warn-bg); }
+    .counter { font-size: 12px; color: var(--muted); text-align: right; margin-top: 2px; }
+    .counter.over { color: var(--bad); font-weight: 700; }
+    .inline-row { display: flex; gap: 8px; align-items: center; }
+    .inline-row input { flex: 1; }
+    .reqbox { margin-top: 10px; display: none; }
+    .reqbox.open { display: block; }
+    .reqbox textarea { width: 100%; min-height: 70px; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-w); margin-bottom: 8px; }
+
+    .overlay { position: fixed; inset: 0; background: rgba(15,23,33,.55); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .modal { background: var(--bg-w); border-radius: 14px; padding: 24px; width: min(420px, 100%); }
+    .modal h2 { margin-bottom: 8px; }
+    .modal .field { margin-top: 14px; }
+    .modal .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+
+    .banner { margin: 16px 32px 0; padding: 12px 16px; border-radius: 10px; background: var(--bad-bg); color: var(--bad); font-weight: 600; }
+    .loading { padding: 40px; text-align: center; color: var(--muted); }
+    .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center; width: calc(100% - 32px); max-width: 520px; }
+    .toast { padding: 10px 16px; border-radius: 8px; color: #fff; font-weight: 600; font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+    .toast-ok { background: #15803d; } .toast-err { background: #b91c1c; } .toast-info { background: #1e3148; }
+
+    @media (max-width: 760px) {
+      .portal-header { padding: 0 16px; }
+      .portal-header-label { display: none; }
+      .portal-header-logo { flex: 1; font-size: 16px; }
+      .bar, .tabs { padding-left: 16px; padding-right: 16px; }
+      main { padding: 20px 16px 80px; }
+      .item { grid-template-columns: 1fr; gap: 6px; }
+      .item .act { text-align: left; }
+      .hol { grid-template-columns: 1fr; gap: 6px; }
+      .row2 { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 1fr; }
+      .month-nav strong { min-width: 0; font-size: 17px; }
+      .banner { margin: 12px 16px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="portal-header">
+  <a class="portal-header-logo" href="/team/" title="Back to the Agent Portal">The Scheiderich Agency</a>
+  <div class="portal-header-label">Social Media Dashboard</div>
+  <div class="portal-header-date" id="hdrDate"></div>
+</header>
+
+<div class="bar">
+  <div class="greet" id="greet">Loading&hellip;</div>
+  <label for="whoSel">Working as</label>
+  <select id="whoSel" class="who" aria-label="Who is working"></select>
+  <button class="btn btn-sm" id="refreshBtn" type="button" title="Reload from the sheet">&#8635; Refresh</button>
+</div>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button class="tab" role="tab" data-view="today">Today</button>
+  <button class="tab" role="tab" data-view="month">Month</button>
+  <button class="tab" role="tab" data-view="approvals">Approvals<span class="count" id="apprCount" hidden></span></button>
+  <button class="tab" role="tab" data-view="checklist">Checklist</button>
+  <button class="tab" role="tab" data-view="holidays">Holidays</button>
+</nav>
+
+<div id="banner"></div>
+<main id="view"><div class="loading">Loading the plan&hellip;</div></main>
+
+<div id="drawerWrap" hidden>
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle"></aside>
+</div>
+<div id="overlayWrap"></div>
+<div class="toast-container" id="toasts" aria-live="polite"></div>
+
+<!-- Dashboard key. This file exists ONLY on the web server: it is gitignored and must never be
+     committed, because the GitHub repo is public. It sets window.SOCIAL_SCRIPT_URL and window.SOCIAL_SECRET.
+     /team/ is behind Cloudflare Access, so only logged-in staff can load it. -->
+<script src="/team/social-secret.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════ CONFIGURATION ═══════════ */
+  // Both values come from /team/social-secret.js, a two-line file that lives only on the server:
+  //   window.SOCIAL_SCRIPT_URL = 'https://script.google.com/macros/s/…/exec';
+  //   window.SOCIAL_SECRET = '…';
+  // The key must match DASH_KEY in the Google script's Script Properties.
+  const SCRIPT_URL = String(window.SOCIAL_SCRIPT_URL || '');
+  const KEY = String(window.SOCIAL_SECRET || '');
+  const PREVIEW = !!window.SOCIAL_PREVIEW;
+
+  const CP_COLOR = { Brand: 'var(--brand)', Website: 'var(--website)', Presence: 'var(--presence)', Growth: 'var(--growth)' };
+  const LIMITS = { LinkedIn: 3000, Instagram: 2200, 'Google Business Profile': 1500 };
+
+  /* ═══════════ STATE ═══════════ */
+  let D = null;                 // last response from "all"
+  let view = 'today';
+  let monthShown = null;        // 'YYYY-MM'
+  let groupFilter = 'All';
+  let openId = null;
+  let checklistMonth = null;
+  let who = '';
+  try { who = localStorage.getItem('socialWho') || ''; } catch (e) { who = ''; }
+  try { view = localStorage.getItem('socialView') || 'today'; } catch (e) {}
+
+  /* ═══════════ DATA LAYER ═══════════
+     Reads and short writes use JSONP (a plain fetch against Apps Script fails on this site).
+     Saving a whole post can be too long for a URL, so it goes as a POST; that answer is
+     unreadable from the browser, so the page re-reads the sheet and checks the save landed. */
+  function jsonp(params) {
+    return new Promise(function (resolve, reject) {
+      const cb = 'socialcb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+      const s = document.createElement('script');
+      let timer = null;
+      function cleanup() { clearTimeout(timer); try { delete window[cb]; } catch (e) { window[cb] = undefined; } s.remove(); }
+      window[cb] = function (data) { cleanup(); resolve(data); };
+      const q = Object.assign({}, params, { k: KEY, callback: cb, t: Date.now() });
+      s.src = SCRIPT_URL + '?' + Object.keys(q).filter(function (k) { return q[k] !== undefined && q[k] !== null; })
+        .map(function (k) { const v = typeof q[k] === 'object' ? JSON.stringify(q[k]) : q[k]; return encodeURIComponent(k) + '=' + encodeURIComponent(v); }).join('&');
+      s.onerror = function () { cleanup(); reject(new Error('Could not reach the Google sheet')); };
+      timer = setTimeout(function () { cleanup(); reject(new Error('The Google sheet took too long to answer')); }, 25000);
+      document.head.appendChild(s);
+    });
+  }
+  function local(params) {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve(JSON.parse(JSON.stringify(window.handleRequest(Object.assign({}, params, { k: window.PREVIEW_KEY })))));
+      }, 120);
+    });
+  }
+  function call(params) {
+    const p = PREVIEW ? local(params) : jsonp(params);
+    return p.then(function (r) {
+      if (r && r.success === false) {
+        if (r.error === 'unauthorized') throw new Error('The dashboard key was not accepted. Hard-refresh (Ctrl + Shift + R). If it keeps happening, tell Mike.');
+        throw new Error(r.error || 'Something went wrong');
+      }
+      return r;
+    });
+  }
+  function postLong(params) {
+    if (PREVIEW) return call(params);
+    return fetch(SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({}, params, { k: KEY }))
+    }).then(function () { return { success: true, unconfirmed: true }; });
+  }
+
+  function load(quiet) {
+    if (!quiet) setMain('<div class="loading">Loading the plan&hellip;</div>');
+    return call({ action: 'all' }).then(function (r) {
+      D = r;
+      if (!monthShown) monthShown = defaultMonth();
+      render();
+      return r;
+    }).catch(function (e) { showBanner(e.message); throw e; });
+  }
+
+  /* ═══════════ HELPERS ═══════════ */
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function setMain(html) { $('#view').innerHTML = html; }
+  function showBanner(msg) { $('#banner').innerHTML = msg ? '<div class="banner">' + esc(msg) + '</div>' : ''; }
+  function toast(msg, kind) {
+    const t = document.createElement('div');
+    t.className = 'toast toast-' + (kind || 'ok'); t.textContent = msg;
+    $('#toasts').appendChild(t);
+    setTimeout(function () { t.remove(); }, kind === 'err' ? 7000 : 3200);
+  }
+  function isoToDate(iso) { const a = iso.split('-').map(Number); return new Date(Date.UTC(a[0], a[1] - 1, a[2] || 1)); }
+  const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function fmt(iso) { if (!iso) return 'No date'; const d = isoToDate(iso); return DOW[d.getUTCDay()] + ', ' + MON[d.getUTCMonth()] + ' ' + d.getUTCDate(); }
+  function monthName(ym) { return MONTHS[Number(ym.slice(5, 7)) - 1] + ' ' + ym.slice(0, 4); }
+  function addDays(iso, n) { const d = isoToDate(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function addMonths(ym, n) { const d = isoToDate(ym + '-01'); d.setUTCMonth(d.getUTCMonth() + n); return d.toISOString().slice(0, 7); }
+  function daysBetween(a, b) { return Math.round((isoToDate(b) - isoToDate(a)) / 86400000); }
+  function rel(due) {
+    if (!due) return '';
+    const n = daysBetween(D.today, due);
+    if (n === 0) return 'today';
+    if (n === 1) return 'tomorrow';
+    if (n === -1) return '1 day late';
+    if (n < 0) return (-n) + ' days late';
+    return 'in ' + n + ' days';
+  }
+  function split(s) { return String(s || '').split(/\s*[,;]\s*/).filter(Boolean); }
+  function short(name) { return String(name).split(' — ')[0]; }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z]+/g, '-'); }
+  function isApprover() { return D && D.lists.approvers.indexOf(who) >= 0; }
+  function personaType(name) { const p = D.lists.personas.filter(function (x) { return x.name === name; })[0]; return p ? p.type : ''; }
+  function defaultMonth() {
+    // Show the month being worked on: next month once this month's posts are all scheduled, else this month.
+    const thisM = D.today.slice(0, 7);
+    if (D.builtMonths.indexOf(thisM) >= 0) return thisM;
+    const next = D.builtMonths.filter(function (m) { return m >= thisM; })[0];
+    return next || thisM;
+  }
+  function postById(id) { return D.posts.filter(function (p) { return p.id === id; })[0]; }
+  function hasGbp(p) { return split(p.channels).indexOf('Google Business Profile') >= 0; }
+  function onlyGbp(p) { const c = split(p.channels); return c.length === 1 && c[0] === 'Google Business Profile'; }
+
+  // The one next step for a post, with when it's due.
+  function nextStep(p) {
+    switch (p.status) {
+      case 'Skipped': return null;
+      case 'Not started':
+      case 'Drafting': return { type: 'draft', label: 'Finish the copy and design', due: p.draftDue };
+      case 'Changes requested': return { type: 'changes', label: 'Make the requested changes', due: p.draftDue && p.draftDue < D.today ? p.draftDue : D.today };
+      case 'Ready for approval': return { type: 'waiting', label: 'Waiting for approval', due: p.approvalDue };
+      case 'Approved':
+        if (onlyGbp(p)) return p.gbpPosted ? null : { type: 'gbp', label: 'Post on Google Business Profile', due: p.date };
+        return { type: 'schedule', label: 'Schedule in Canva', due: p.scheduleDue };
+      case 'Scheduled':
+        if (hasGbp(p) && !p.gbpPosted) return { type: 'gbp', label: 'Post on Google Business Profile', due: p.date };
+        return null;
+    }
+    return null;
+  }
+
+  /* ═══════════ RENDER ═══════════ */
+  function render() {
+    $('#hdrDate').textContent = D ? fmt(D.today) : '';
+    renderWho();
+    const waiting = D.posts.filter(function (p) { return p.status === 'Ready for approval'; }).length;
+    const c = $('#apprCount'); c.hidden = !waiting; c.textContent = waiting;
+    $$('.tab').forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.view === view)); });
+    showBanner('');
+    if (view === 'today') renderToday();
+    else if (view === 'month') renderMonth();
+    else if (view === 'approvals') renderApprovals();
+    else if (view === 'checklist') renderChecklist();
+    else renderHolidays();
+    if (openId) renderDrawer();
+  }
+
+  function renderWho() {
+    const sel = $('#whoSel');
+    const opts = ['<option value="">Choose your name…</option>'].concat(D.lists.team.map(function (n) {
+      return '<option' + (n === who ? ' selected' : '') + '>' + esc(n) + '</option>';
+    }));
+    sel.innerHTML = opts.join('');
+    const h = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/New_York' }).format(new Date()));
+    const part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    $('#greet').textContent = who ? part + ', ' + who.split(' ')[0] + '.' : 'Choose your name to start.';
+  }
+
+  function itemRow(p, step) {
+    const late = step && step.due && step.due < D.today;
+    const title = p.topic || (p.kind === 'Regular' ? 'Untitled ' + (p.checkpoint || '') + ' post' : p.kind + ' post');
+    return '<button class="item" data-open="' + esc(p.id) + '" style="--cp:' + (CP_COLOR[p.checkpoint] || 'var(--border)') + '">' +
+      '<div class="when">' + esc(p.date ? fmt(p.date) : 'No date') + '<small>Post date</small></div>' +
+      '<div class="what"><div class="title">' + esc(title) + '</div><div class="meta">' +
+        '<span class="tag ' + (p.group === 'LinkedIn' ? 'tag-li' : 'tag-as') + '">' + esc(p.group) + '</span>' +
+        (p.kind !== 'Regular' ? '<span class="tag">' + esc(p.kind) + '</span>' : '') +
+        (p.checkpoint ? '<span class="cp" style="--cp:' + CP_COLOR[p.checkpoint] + '">' + esc(p.checkpoint) + '</span>' : '') +
+        (p.personas ? '<span>' + esc(split(p.personas).map(short).join(', ')) + '</span>' : '') +
+        '<span class="status s-' + slug(p.status) + '">' + esc(p.status) + '</span>' +
+      '</div></div>' +
+      '<div class="act' + (late ? ' late' : '') + '">' + (step ? esc(step.label) + '<br><span>' + esc(step.due ? fmt(step.due) + ' · ' + rel(step.due) : '') + '</span>' : '') + '</div>' +
+    '</button>';
+  }
+
+  function taskRow(t) {
+    const late = !t.done && t.due < D.today;
+    return '<div class="task' + (t.done ? ' done' : '') + '">' +
+      '<input type="checkbox" data-task="' + esc(t.id) + '"' + (t.done ? ' checked' : '') + ' aria-label="Done: ' + esc(t.title) + '">' +
+      '<div class="t-body"><div class="t-title">' + esc(t.title) + '</div>' +
+      '<div class="t-meta' + (late ? ' late' : '') + '">Due ' + esc(fmt(t.due)) + (t.done ? ' · done by ' + esc(t.doneBy) : ' · ' + rel(t.due)) + ' · for ' + esc(monthName(t.month)) + '</div>' +
+      (t.detail ? '<details><summary>Details</summary>' + esc(t.detail) + '</details>' : '') +
+      '</div>' +
+      (t.source === 'Custom' && !t.done ? '<button class="btn btn-sm btn-danger" data-deltask="' + esc(t.id) + '" title="Delete this task">Delete</button>' : '') +
+    '</div>';
+  }
+
+  function renderToday() {
+    const today = D.today, week = addDays(today, 7);
+    const buckets = { late: [], today: [], soon: [], waiting: [], nodate: [] };
+    D.posts.forEach(function (p) {
+      const s = nextStep(p);
+      if (!s) return;
+      if (!p.date) { buckets.nodate.push([p, s]); return; }
+      if (s.type === 'waiting') { buckets.waiting.push([p, s]); return; }
+      if (s.due < today) buckets.late.push([p, s]);
+      else if (s.due === today) buckets.today.push([p, s]);
+      else if (s.due <= week) buckets.soon.push([p, s]);
+    });
+    const byDue = function (a, b) { return (a[1].due || '').localeCompare(b[1].due || '') || (a[0].date || '').localeCompare(b[0].date || ''); };
+    Object.keys(buckets).forEach(function (k) { buckets[k].sort(byDue); });
+    const tasks = D.tasks.filter(function (t) { return !t.done && t.due <= week; }).sort(function (a, b) { return a.due.localeCompare(b.due); });
+    const lateTasks = tasks.filter(function (t) { return t.due < today; }).length;
+
+    let h = '<h2>Today, ' + esc(fmt(today)) + '</h2><p class="sub">What needs doing now. Anything coming up can be done early: open it from here or the Month tab.</p>';
+    h += '<div class="pills">' +
+      '<span class="pill p-bad">' + (buckets.late.length + lateTasks) + ' overdue</span>' +
+      '<span class="pill p-warn">' + buckets.today.length + ' due today</span>' +
+      '<span class="pill p-info">' + buckets.waiting.length + ' waiting for approval</span>' +
+      '<span class="pill p-grey">' + buckets.soon.length + ' in the next 7 days</span></div>';
+
+    if (tasks.length) h += '<h3>Checklist</h3><div class="list">' + tasks.map(taskRow).join('') + '</div>';
+    h += section('Overdue posts', buckets.late, 'No posts are overdue.');
+    h += section('Due today', buckets.today, 'Nothing else due today.');
+    h += section('Next 7 days', buckets.soon, 'Nothing due in the next week.');
+    h += section('Waiting for approval', buckets.waiting, 'Nothing is waiting on Mike, Crissy or Wendy.');
+    if (buckets.nodate.length) h += section('Needs a post date', buckets.nodate, '');
+    setMain(h);
+  }
+  function section(title, rows, emptyText) {
+    if (!rows.length && !emptyText) return '';
+    return '<h3>' + esc(title) + '</h3>' + (rows.length
+      ? '<div class="list">' + rows.map(function (r) { return itemRow(r[0], r[1]); }).join('') + '</div>'
+      : '<div class="empty">' + esc(emptyText) + '</div>');
+  }
+
+  function renderMonth() {
+    const m = monthShown;
+    const built = D.builtMonths.indexOf(m) >= 0;
+    let posts = D.posts.filter(function (p) { return p.month === m; });
+    if (groupFilter !== 'All') posts = posts.filter(function (p) { return p.group === groupFilter; });
+    posts.sort(function (a, b) { return (a.date || '9999').localeCompare(b.date || '9999') || a.group.localeCompare(b.group); });
+
+    let h = '<div class="toolbar"><div class="month-nav">' +
+      '<button class="btn btn-sm" data-month="-1" aria-label="Previous month">&lsaquo;</button><strong>' + esc(monthName(m)) + '</strong>' +
+      '<button class="btn btn-sm" data-month="1" aria-label="Next month">&rsaquo;</button></div><div class="spacer"></div>' +
+      '<div class="seg" role="group" aria-label="Filter">' + ['All', 'LinkedIn', 'All Socials'].map(function (g) {
+        return '<button data-filter="' + g + '" aria-pressed="' + (groupFilter === g) + '">' + g + '</button>'; }).join('') + '</div>' +
+      (built ? '<button class="btn btn-sm" data-add="1">+ Add post</button>' : '') + '</div>';
+
+    if (!built) {
+      h += '<div class="empty" style="margin-top:16px"><p style="margin-bottom:12px">' + esc(monthName(m)) + ' hasn\'t been built yet.</p>' +
+        '<button class="btn btn-primary" data-build="' + m + '">Build ' + esc(monthName(m)) + '</button>' +
+        '<p class="help" style="margin-top:10px">Creates the LinkedIn and All Socials post slots, the monthly checklist, and posts for any holidays marked Yes.</p></div>';
+      setMain(h); return;
+    }
+    const counts = {};
+    posts.forEach(function (p) { counts[p.status] = (counts[p.status] || 0) + 1; });
+    h += '<div class="pills">' + ['Not started', 'Drafting', 'Changes requested', 'Ready for approval', 'Approved', 'Scheduled', 'Skipped']
+      .filter(function (s) { return counts[s]; })
+      .map(function (s) { return '<span class="status s-' + slug(s) + '" style="font-size:12px;padding:4px 10px">' + counts[s] + ' ' + esc(s) + '</span>'; }).join('') + '</div>';
+
+    const weeks = {};
+    posts.forEach(function (p) { const w = p.week || '—'; (weeks[w] = weeks[w] || []).push(p); });
+    Object.keys(weeks).sort().forEach(function (w) {
+      h += '<h3>' + (w === '—' ? 'No date yet' : 'Week ' + esc(w)) + '</h3><div class="list">' +
+        weeks[w].map(function (p) { return itemRow(p, nextStep(p)); }).join('') + '</div>';
+    });
+    if (!posts.length) h += '<div class="empty">No posts match this filter.</div>';
+    setMain(h);
+  }
+
+  function renderApprovals() {
+    const ready = D.posts.filter(function (p) { return p.status === 'Ready for approval'; })
+      .sort(function (a, b) { return (a.date || '').localeCompare(b.date || ''); });
+    let h = '<h2>Approvals</h2><p class="sub">Each post is approved on its own, copy and design together. Any one of Mike, Crissy or Wendy can approve, the same day.' +
+      (isApprover() ? '' : ' You can see what is waiting; approving needs Mike, Crissy or Wendy.') + '</p>';
+    if (!ready.length) { setMain(h + '<div class="empty">Nothing is waiting for approval.</div>'); return; }
+    h += ready.map(function (p) {
+      return '<div class="card" style="--cp:' + (CP_COLOR[p.checkpoint] || 'var(--border)') + '">' +
+        '<div class="meta" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">' +
+          '<span class="tag ' + (p.group === 'LinkedIn' ? 'tag-li' : 'tag-as') + '">' + esc(p.group) + '</span>' +
+          '<strong>' + esc(fmt(p.date)) + '</strong><span class="cp" style="--cp:' + (CP_COLOR[p.checkpoint] || 'inherit') + '">' + esc(p.checkpoint) + '</span>' +
+          (p.approvalDue ? '<span class="' + (p.approvalDue < D.today ? 'late' : '') + '" style="font-size:12px">Approve by ' + esc(fmt(p.approvalDue)) + '</span>' : '') + '</div>' +
+        '<h2 style="font-size:18px;margin-top:6px">' + esc(p.topic || 'Untitled post') + '</h2>' +
+        (p.changeNotes ? '<div class="notes">' + esc(p.changeNotes) + '</div>' : '') +
+        '<div class="caption">' + esc(p.caption) + '</div>' +
+        '<dl class="kv"><dt>Personas</dt><dd>' + esc(split(p.personas).map(short).join(', ')) + '</dd>' +
+          '<dt>Content type</dt><dd>' + esc(p.contentType) + (p.format ? ' · ' + esc(p.format) : '') + '</dd>' +
+          '<dt>Channels</dt><dd>' + esc(p.channels) + '</dd>' +
+          (p.cta ? '<dt>CTA</dt><dd>' + esc(p.cta) + '</dd>' : '') +
+          (p.link ? '<dt>Link</dt><dd><a href="' + esc(p.link) + '" target="_blank" rel="noopener">' + esc(p.link) + '</a></dd>' : '') + '</dl>' +
+        '<div class="toolbar" style="margin-top:14px">' +
+          (p.canva ? '<a class="btn btn-navy" href="' + esc(p.canva) + '" target="_blank" rel="noopener">Open the design in Canva &#8599;</a>' : '') +
+          '<button class="btn btn-sm" data-open="' + esc(p.id) + '">Open post</button><div class="spacer"></div>' +
+          (isApprover() ? '<button class="btn btn-danger" data-reqopen="' + esc(p.id) + '">Request changes</button>' +
+            '<button class="btn btn-ok" data-approve="' + esc(p.id) + '">Approve</button>' : '') +
+        '</div>' +
+        (isApprover() ? '<div class="reqbox"><textarea placeholder="What needs to change?" aria-label="What needs to change"></textarea>' +
+          '<button class="btn btn-primary btn-sm" data-reqsend="' + esc(p.id) + '">Send back to Natalie</button></div>' : '') +
+      '</div>';
+    }).join('');
+    setMain(h);
+  }
+
+  function renderChecklist() {
+    const months = Array.from(new Set(D.tasks.map(function (t) { return t.month; }))).sort();
+    if (!checklistMonth || months.indexOf(checklistMonth) < 0) {
+      checklistMonth = months.filter(function (m) { return D.tasks.some(function (t) { return t.month === m && !t.done; }); })[0] || months[months.length - 1] || D.today.slice(0, 7);
+    }
+    const tasks = D.tasks.filter(function (t) { return t.month === checklistMonth; }).sort(function (a, b) { return a.due.localeCompare(b.due); });
+    const done = tasks.filter(function (t) { return t.done; }).length;
+    let h = '<div class="toolbar"><h2 style="margin:0">Checklist</h2><div class="spacer"></div>' +
+      '<label class="help" for="clMonth" style="margin:0">Planning month</label><select id="clMonth" class="who">' +
+      months.map(function (m) { return '<option value="' + m + '"' + (m === checklistMonth ? ' selected' : '') + '>' + esc(monthName(m)) + '</option>'; }).join('') +
+      '</select></div><p class="sub">The monthly steps from Natalie\'s YBB checklist. Check them off any time, early is fine. ' + done + ' of ' + tasks.length + ' done.</p>';
+    h += tasks.length ? '<div class="list">' + tasks.map(taskRow).join('') + '</div>' : '<div class="empty">No checklist yet. Build the month on the Month tab.</div>';
+    h += '<h3>Add a task</h3><form class="toolbar" id="addTaskForm"><input type="text" name="title" placeholder="Task" required class="who" style="flex:1;min-width:180px">' +
+      '<input type="date" name="due" required class="who" value="' + esc(D.today) + '"><button class="btn btn-primary" type="submit">Add</button></form>';
+    setMain(h);
+  }
+
+  function renderHolidays() {
+    const from = D.today.slice(0, 7);
+    const months = Array.from(new Set(D.holidays.map(function (x) { return x.month; }))).filter(function (m) { return m >= from; }).sort();
+    let h = '<h2>Holidays</h2><p class="sub">Mark each holiday Yes or No. Holiday posts are added on top of the regular posts. After choosing, press "Add approved holidays" for that month.</p>';
+    months.forEach(function (m) {
+      const rows = D.holidays.filter(function (x) { return x.month === m; });
+      const yes = rows.filter(function (x) { return x.use === 'Yes'; }).length;
+      h += '<div class="toolbar" style="margin-top:22px"><h3 style="margin:0">' + esc(monthName(m)) + ' · ' + yes + ' chosen</h3><div class="spacer"></div>' +
+        '<button class="btn btn-sm" data-addhol="' + m + '"' + (yes ? '' : ' disabled') + '>Add approved holidays to ' + esc(MONTHS[Number(m.slice(5)) - 1]) + '</button></div><div class="list">' +
+        rows.map(function (x) {
+          return '<div class="hol"><div><strong>' + esc(x.when) + '</strong>' +
+            (!x.start ? '<div><input type="date" class="who" style="margin-top:4px;width:100%" data-holdate="' + esc(x.id) + '" aria-label="Set the date for ' + esc(x.name) + '"></div>' : '') + '</div>' +
+            '<div><div class="h-name">' + esc(x.name) + (x.added ? ' <span class="tag">added</span>' : '') + '</div><div class="h-idea">' + esc(x.idea) + '</div></div>' +
+            '<div><span class="tag ' + (x.channel === 'LinkedIn' ? 'tag-li' : x.channel === 'All Socials' ? 'tag-as' : '') + '">' + esc(x.channel) + '</span></div>' +
+            '<div class="seg yn">' + ['Yes', 'No'].map(function (v) {
+              return '<button data-hol="' + esc(x.id) + '" data-v="' + v + '" aria-pressed="' + (x.use === v) + '">' + v + '</button>'; }).join('') + '</div></div>';
+        }).join('') + '</div>';
+    });
+    setMain(h);
+  }
+
+  /* ═══════════ POST DRAWER ═══════════ */
+  function renderDrawer() {
+    const p = postById(openId);
+    if (!p) { closeDrawer(); return; }
+    const L = D.lists;
+    const isLI = p.group === 'LinkedIn';
+    const step = nextStep(p);
+    const locked = p.status === 'Skipped';
+    const personas = L.personas.filter(function (x) { return x.type === (isLI ? 'B2B' : 'B2C'); });
+    const chosenP = split(p.personas), chosenC = split(p.channels), chosenN = split(p.needs);
+    const formats = L.formats.filter(function (f) { return f.group === 'Both' || f.group === p.group; });
+    const opt = function (v, cur) { return '<option' + (v === cur ? ' selected' : '') + '>' + esc(v) + '</option>'; };
+    const cp = L.checkpoints.filter(function (c) { return c.name === p.checkpoint; })[0];
+
+    let h = '<div class="d-head" style="--cp:' + (CP_COLOR[p.checkpoint] || 'var(--border)') + '"><div class="grow">' +
+      '<div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)">' +
+        '<span class="tag ' + (isLI ? 'tag-li' : 'tag-as') + '">' + esc(p.group) + '</span>' +
+        (p.kind !== 'Regular' ? '<span class="tag">' + esc(p.kind) + '</span>' : '') +
+        '<span class="status s-' + slug(p.status) + '">' + esc(p.status) + '</span><span>' + esc(p.id) + '</span></div>' +
+      '<h2 id="dTitle">' + esc(p.topic || 'Untitled post') + '</h2></div>' +
+      '<button class="x" id="dClose" aria-label="Close">&times;</button></div><div class="d-body">';
+
+    h += '<div class="next">' + (step ? '<strong>Next step:</strong> ' + esc(step.label) + (step.due ? ' by ' + esc(fmt(step.due)) + ' (' + rel(step.due) + ')' : '') : '<strong>Done.</strong> Nothing left to do on this post.') +
+      (p.approvedBy ? '<br>Approved by ' + esc(p.approvedBy) + ' on ' + esc(p.approvedAt) : '') +
+      (p.scheduledBy ? '<br>Scheduled by ' + esc(p.scheduledBy) + ' on ' + esc(p.scheduledAt) : '') + '</div>';
+    if (p.changeNotes) h += '<div class="lbl" style="font-size:12px;font-weight:700;color:var(--muted)">Change requests</div><div class="notes">' + esc(p.changeNotes) + '</div>';
+    h += '<div id="reapprove" class="warnbox" hidden></div>';
+
+    h += '<form id="postForm" autocomplete="off"' + (locked ? ' inert' : '') + '>' +
+      '<div class="row2"><div class="field"><label for="f-date">Post date</label><input type="date" id="f-date" name="date" value="' + esc(p.date) + '"' +
+        ' min="' + esc(p.month) + '-01" max="' + esc(addDays(addMonths(p.month, 1) + '-01', -1)) + '"></div>' +
+      '<div class="field"><label for="f-cp">Checkpoint</label><select id="f-cp" name="checkpoint"><option value="">Choose…</option>' +
+        L.checkpoints.map(function (c) { return opt(c.name, p.checkpoint); }).join('') + '</select>' +
+        (cp ? '<div class="help">' + esc(cp.about) + '</div>' : '') + '</div></div>' +
+
+      '<div class="field"><span class="lbl">Persona(s)' + (isLI ? ' · LinkedIn is for referral partners' : ' · these channels are for customers') + '</span><div class="chips">' +
+        personas.map(function (x) {
+          return '<label class="chip" title="' + esc(x.about) + '"><input type="checkbox" name="personas" value="' + esc(x.name) + '"' + (chosenP.indexOf(x.name) >= 0 ? ' checked' : '') + '>' + esc(x.name) + '</label>';
+        }).join('') + '</div></div>' +
+
+      '<div class="row2"><div class="field"><label for="f-ct">Content type</label><select id="f-ct" name="contentType"><option value="">Choose…</option>' +
+        L.contentTypes.map(function (c) { return opt(c, p.contentType); }).join('') + '</select></div>' +
+      '<div class="field"><label for="f-fmt">Format</label><select id="f-fmt" name="format"><option value="">Choose…</option>' +
+        formats.map(function (f) { return opt(f.name, p.format); }).join('') + '</select></div></div>' +
+
+      '<div class="field"><span class="lbl">Channels</span>' + (isLI
+        ? '<div class="help" style="margin:0">LinkedIn company page. Personal profiles share it.</div><input type="hidden" name="channels" value="LinkedIn">'
+        : '<div class="chips">' + ['Facebook', 'Instagram', 'Google Business Profile'].map(function (c) {
+            return '<label class="chip"><input type="checkbox" name="channels" value="' + c + '"' + (chosenC.indexOf(c) >= 0 ? ' checked' : '') + '>' + c + '</label>'; }).join('') +
+          '</div><div class="help">Canva can schedule Facebook and Instagram (Instagram from a computer). Google Business Profile posts go up by hand on the post date.</div>') + '</div>' +
+
+      '<div class="field"><label for="f-topic">Topic / idea</label><input type="text" id="f-topic" name="topic" value="' + esc(p.topic) + '"></div>' +
+      '<div class="field"><label for="f-msg">Key message</label><textarea id="f-msg" name="message">' + esc(p.message) + '</textarea></div>' +
+      '<div class="row2"><div class="field"><label for="f-cta">Call to action</label><input type="text" id="f-cta" name="cta" value="' + esc(p.cta) + '"></div>' +
+      '<div class="field"><label for="f-link">Link</label><input type="url" id="f-link" name="link" value="' + esc(p.link) + '" placeholder="https://"></div></div>' +
+      '<div class="field"><label for="f-cap">Final caption</label><textarea id="f-cap" class="caption-in" name="caption" placeholder="The complete post copy, exactly as it will be published">' + esc(p.caption) + '</textarea><div class="counter" id="capCount"></div></div>' +
+      '<div class="field"><label for="f-canva">Canva design link</label><div class="inline-row"><input type="url" id="f-canva" name="canva" value="' + esc(p.canva) + '" placeholder="Share link to the final design">' +
+        (p.canva ? '<a class="btn btn-sm" href="' + esc(p.canva) + '" target="_blank" rel="noopener">Open &#8599;</a>' : '') + '</div>' +
+        (D.settings.assetsFolderUrl ? '<div class="help">Save source files in the <a href="' + esc(D.settings.assetsFolderUrl) + '" target="_blank" rel="noopener">Assets folder</a> under ' + esc(monthName(p.month)) + '.</div>' : '') + '</div>' +
+      '<div class="field"><span class="lbl">What we need</span><div class="chips">' + L.needs.map(function (n) {
+          return '<label class="chip" title="' + esc(n.note) + '"><input type="checkbox" name="needs" value="' + esc(n.name) + '"' + (chosenN.indexOf(n.name) >= 0 ? ' checked' : '') + '>' + esc(n.name) + '</label>'; }).join('') +
+        '</div><div class="help">Testimonials and reviews come from Crissy Shatzel or Wendy Alaniz.</div></div>' +
+      '<div class="field"><label for="f-notes">Asset / content notes</label><textarea id="f-notes" name="assetNotes">' + esc(p.assetNotes) + '</textarea></div>' +
+      '</form>';
+
+    if (p.status === 'Ready for approval' && isApprover()) {
+      h += '<div class="card" style="--cp:#15803d"><strong>Approve this post?</strong><p class="help">Approval covers the final caption above and the Canva design.</p>' +
+        '<div class="toolbar" style="margin-top:10px">' + (p.canva ? '<a class="btn btn-navy btn-sm" href="' + esc(p.canva) + '" target="_blank" rel="noopener">Open design &#8599;</a>' : '') +
+        '<div class="spacer"></div><button class="btn btn-danger btn-sm" data-reqopen="' + esc(p.id) + '">Request changes</button><button class="btn btn-ok btn-sm" data-approve="' + esc(p.id) + '">Approve</button></div>' +
+        '<div class="reqbox"><textarea placeholder="What needs to change?" aria-label="What needs to change"></textarea><button class="btn btn-primary btn-sm" data-reqsend="' + esc(p.id) + '">Send back to Natalie</button></div></div>';
+    }
+    h += '</div><div class="d-foot">';
+    if (!locked) h += '<button class="btn btn-primary" id="saveBtn" disabled>Save</button>';
+    if (['Not started', 'Drafting', 'Changes requested'].indexOf(p.status) >= 0) h += '<button class="btn btn-navy" data-send="' + esc(p.id) + '">Send for approval</button>';
+    if (p.status === 'Approved' && !onlyGbp(p)) h += '<button class="btn btn-ok" data-sched="' + esc(p.id) + '">Mark scheduled in Canva</button>';
+    if ((p.status === 'Approved' || p.status === 'Scheduled') && hasGbp(p)) h += '<button class="btn" data-gbp="' + esc(p.id) + '" data-v="' + (!p.gbpPosted) + '">' + (p.gbpPosted ? 'Unmark Google post' : 'Mark posted on Google') + '</button>';
+    h += '<div class="spacer"></div>';
+    if (p.status !== 'Scheduled') h += '<button class="btn btn-sm" data-skip="' + esc(p.id) + '" data-v="' + (p.status !== 'Skipped') + '">' + (p.status === 'Skipped' ? 'Un-skip' : 'Skip post') + '</button>';
+    if (p.kind !== 'Regular' && p.status !== 'Approved' && p.status !== 'Scheduled') h += '<button class="btn btn-sm btn-danger" data-delpost="' + esc(p.id) + '">Delete</button>';
+    h += '</div>';
+    $('#drawer').innerHTML = h;
+    $('#drawerWrap').hidden = false;
+    wireForm(p);
+  }
+
+  function formValues() {
+    const f = $('#postForm');
+    if (!f) return null;
+    const multi = function (name) { return $$('input[name="' + name + '"]:checked', f).map(function (i) { return i.value; }).join(', '); };
+    return {
+      date: f.date.value, checkpoint: f.checkpoint.value, personas: multi('personas'), contentType: f.contentType.value,
+      format: f.format.value, channels: f.channels.type === 'hidden' ? f.channels.value : multi('channels'),
+      topic: f.topic.value.trim(), message: f.message.value.trim(), cta: f.cta.value.trim(), link: f.link.value.trim(),
+      caption: f.caption.value.trim(), canva: f.canva.value.trim(), assetNotes: f.assetNotes.value.trim(), needs: multi('needs')
+    };
+  }
+  function changedFields(p, v) { return Object.keys(v).filter(function (k) { return String(v[k] || '') !== String(p[k] || ''); }); }
+
+  function wireForm(p) {
+    const f = $('#postForm'); if (!f) return;
+    const update = function () {
+      const v = formValues(); const ch = changedFields(p, v);
+      const btn = $('#saveBtn'); if (btn) btn.disabled = !ch.length;
+      const warn = $('#reapprove');
+      if (ch.length && (p.status === 'Approved' || p.status === 'Scheduled')) {
+        warn.hidden = false;
+        warn.textContent = 'Saving this change sends the post back for approval.' + (p.status === 'Scheduled' ? ' It is already scheduled: update or pause it in Canva until it is approved again.' : '');
+      } else warn.hidden = true;
+      const chans = split(v.channels);
+      const lim = chans.map(function (c) { return LIMITS[c]; }).filter(Boolean);
+      const max = lim.length ? Math.min.apply(null, lim) : 0;
+      const n = v.caption.length;
+      const c = $('#capCount');
+      c.textContent = n + ' characters' + (max ? ' · limit ' + max + ' (' + chans.filter(function (x) { return LIMITS[x] === max; }).join(', ') + ')' : '');
+      c.classList.toggle('over', !!max && n > max);
+    };
+    f.addEventListener('input', update); f.addEventListener('change', update);
+    f.addEventListener('submit', function (e) { e.preventDefault(); });
+    update();
+  }
+
+  function savePost() {
+    const p = postById(openId); const v = formValues();
+    if (!p || !v) return Promise.resolve(true);
+    const ch = changedFields(p, v);
+    if (!ch.length) return Promise.resolve(true);
+    if (!who) { askWho(); return Promise.resolve(false); }
+    const body = { id: p.id }; ch.forEach(function (k) { body[k] = v[k]; });
+    $('#saveBtn').disabled = true; $('#saveBtn').textContent = 'Saving…';
+    return postLong({ action: 'savePost', by: who, post: body }).then(function (r) {
+      return load(true).then(function () {
+        const now = postById(p.id);
+        const landed = now && ch.every(function (k) { return String(now[k] || '') === String(v[k] || ''); });
+        if (!landed) throw new Error('The save didn\'t go through. Check your connection and press Save again.');
+        if (r.warning) toast(r.warning, 'info');
+        toast(now.status === 'Ready for approval' && (p.status === 'Approved' || p.status === 'Scheduled') ? 'Saved. Sent back for approval.' : 'Saved.');
+        return true;
+      });
+    }).catch(function (e) { toast(e.message, 'err'); const b = $('#saveBtn'); if (b) { b.disabled = false; b.textContent = 'Save'; } return false; });
+  }
+
+  function act(params, okMsg) {
+    if (!who) { askWho(); return Promise.resolve(); }
+    return call(Object.assign({ by: who }, params)).then(function (r) {
+      toast(okMsg); return load(true).then(function () { return r; });
+    }).catch(function (e) { toast(e.message, 'err'); });
+  }
+
+  function openPost(id) { openId = id; renderDrawer(); setTimeout(function () { const x = $('#dClose'); if (x) x.focus(); }, 30); }
+  function closeDrawer() {
+    const p = openId && postById(openId); const v = formValues();
+    if (p && v && changedFields(p, v).length && !confirm('You have unsaved changes. Close without saving?')) return;
+    openId = null; $('#drawerWrap').hidden = true; $('#drawer').innerHTML = '';
+  }
+
+  /* ═══════════ SMALL DIALOGS ═══════════ */
+  function askWho() {
+    const wrap = $('#overlayWrap');
+    wrap.innerHTML = '<div class="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="whoT"><h2 id="whoT">Who\'s working?</h2>' +
+      '<p class="sub" style="margin:0">Your name goes on every save and approval.</p><div class="field"><select id="whoPick" class="who" style="width:100%">' +
+      '<option value="">Choose your name…</option>' + D.lists.team.map(function (n) { return '<option>' + esc(n) + '</option>'; }).join('') +
+      '</select></div><div class="actions"><button class="btn btn-primary" id="whoOk">Continue</button></div></div></div>';
+    $('#whoOk').onclick = function () { const v = $('#whoPick').value; if (!v) return; setWho(v); wrap.innerHTML = ''; };
+  }
+  function setWho(v) { who = v; try { localStorage.setItem('socialWho', v); } catch (e) {} render(); }
+
+  function addPostDialog() {
+    const m = monthShown;
+    const wrap = $('#overlayWrap');
+    wrap.innerHTML = '<div class="overlay"><form class="modal" id="apForm"><h2>Add a post to ' + esc(monthName(m)) + '</h2>' +
+      '<p class="sub" style="margin:0">For events, Your Brand items (anniversaries, new hires, awards) or an extra post. Before, day-of and after posts are added separately.</p>' +
+      '<div class="field"><label for="apKind">Kind</label><select id="apKind" class="who" style="width:100%"><option>Event</option><option>Brand</option><option>Extra</option></select></div>' +
+      '<div class="field"><label for="apGroup">Where</label><select id="apGroup" class="who" style="width:100%"><option>All Socials</option><option>LinkedIn</option></select></div>' +
+      '<div class="field"><label for="apDate">Post date</label><input type="date" id="apDate" class="who" style="width:100%" min="' + m + '-01" max="' + addDays(addMonths(m, 1) + '-01', -1) + '"></div>' +
+      '<div class="field"><label for="apTopic">Topic</label><input type="text" id="apTopic" class="who" style="width:100%" placeholder="e.g. Toy drive at the office"></div>' +
+      '<div class="actions"><button type="button" class="btn" id="apCancel">Cancel</button><button class="btn btn-primary" type="submit">Add post</button></div></form></div>';
+    $('#apCancel').onclick = function () { wrap.innerHTML = ''; };
+    $('#apForm').onsubmit = function (e) {
+      e.preventDefault();
+      act({ action: 'addPost', month: m, kind: $('#apKind').value, group: $('#apGroup').value, date: $('#apDate').value, topic: $('#apTopic').value.trim() }, 'Post added.')
+        .then(function (r) { wrap.innerHTML = ''; if (r && r.post) openPost(r.post.id); });
+    };
+  }
+
+  /* ═══════════ EVENTS ═══════════ */
+  document.addEventListener('click', function (e) {
+    const t = e.target.closest('button, a'); if (!t) return;
+    const d = t.dataset;
+    if (t.classList.contains('tab')) { view = d.view; try { localStorage.setItem('socialView', view); } catch (x) {} render(); return; }
+    if (t.id === 'refreshBtn') { load(); return; }
+    if (t.id === 'dClose') { closeDrawer(); return; }
+    if (t.id === 'saveBtn') { savePost(); return; }
+    if (d.open) { openPost(d.open); return; }
+    if (d.month) { monthShown = addMonths(monthShown, Number(d.month)); render(); return; }
+    if (d.filter) { groupFilter = d.filter; render(); return; }
+    if (d.add) { addPostDialog(); return; }
+    if (d.build) { act({ action: 'buildMonth', month: d.build }, monthName(d.build) + ' is built.'); return; }
+    if (d.addhol) {
+      const built = D.builtMonths.indexOf(d.addhol) >= 0;
+      if (!built && !confirm(monthName(d.addhol) + ' hasn\'t been built yet. Build it now? That also creates its regular post slots and checklist.')) return;
+      act({ action: 'buildMonth', month: d.addhol }, 'Approved holidays added to ' + monthName(d.addhol) + '.'); return;
+    }
+    if (d.hol) { const cur = D.holidays.filter(function (x) { return x.id === d.hol; })[0]; act({ action: 'setHoliday', id: d.hol, use: cur && cur.use === d.v ? '' : d.v }, 'Saved.'); return; }
+    if (d.approve) { act({ action: 'approve', id: d.approve }, 'Approved.'); return; }
+    if (d.reqopen) { const holder = t.closest('.card'); const b = holder && holder.querySelector('.reqbox'); if (b) { b.classList.toggle('open'); const ta = b.querySelector('textarea'); if (ta) ta.focus(); } return; }
+    if (d.reqsend) {
+      const box = t.closest('.reqbox'); const ta = box && box.querySelector('textarea');
+      const note = ta ? ta.value.trim() : '';
+      if (!note) { toast('Say what needs to change.', 'err'); return; }
+      act({ action: 'requestChanges', id: d.reqsend, note: note }, 'Sent back with your notes.'); return;
+    }
+    if (d.send) { savePost().then(function (ok) { if (ok) act({ action: 'sendForApproval', id: d.send }, 'Sent for approval.'); }); return; }
+    if (d.sched) { act({ action: 'markScheduled', id: d.sched }, 'Marked scheduled.'); return; }
+    if (d.gbp) { act({ action: 'markGbpPosted', id: d.gbp, value: d.v }, d.v === 'true' ? 'Marked posted on Google.' : 'Unmarked.'); return; }
+    if (d.skip) { act({ action: 'skipPost', id: d.skip, value: d.v }, d.v === 'true' ? 'Post skipped.' : 'Post restored.'); return; }
+    if (d.delpost) { if (confirm('Delete this post?')) act({ action: 'deletePost', id: d.delpost }, 'Post deleted.').then(function () { openId = null; $('#drawerWrap').hidden = true; }); return; }
+    if (d.deltask) { if (confirm('Delete this task?')) act({ action: 'deleteTask', id: d.deltask }, 'Task deleted.'); return; }
+  });
+  document.addEventListener('change', function (e) {
+    const t = e.target;
+    if (t.dataset.task) { act({ action: 'toggleTask', id: t.dataset.task, done: String(t.checked) }, t.checked ? 'Done.' : 'Reopened.'); return; }
+    if (t.id === 'whoSel') { setWho(t.value); return; }
+    if (t.id === 'clMonth') { checklistMonth = t.value; render(); return; }
+    if (t.dataset.holdate && t.value) {
+      const cur = D.holidays.filter(function (x) { return x.id === t.dataset.holdate; })[0];
+      if (cur && t.value.slice(0, 7) !== cur.month) { toast('Pick a date in ' + monthName(cur.month) + '.', 'err'); t.value = ''; return; }
+      act({ action: 'setHoliday', id: t.dataset.holdate, use: cur ? cur.use : '', start: t.value }, 'Date saved.');
+    }
+  });
+  document.addEventListener('submit', function (e) {
+    if (e.target.id !== 'addTaskForm') return;
+    e.preventDefault();
+    const f = e.target;
+    act({ action: 'addTask', title: f.title.value.trim(), due: f.due.value, month: checklistMonth }, 'Task added.');
+  });
+  $('#scrim').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && openId) closeDrawer(); });
+
+  /* ═══════════ START ═══════════ */
+  if (!PREVIEW && (SCRIPT_URL.indexOf('https://') !== 0 || !KEY)) {
+    setMain('');
+    showBanner(!KEY ? 'The dashboard key file (/team/social-secret.js) is missing on the server. Tell Mike.' : 'The dashboard isn\'t connected to the Google sheet yet. Tell Mike.');
+  } else {
+    load().then(function () { if (!who) askWho(); }).catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
