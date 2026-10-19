@@ -26,14 +26,14 @@
         --bg: #12171f; --bg-w: #1b222c; --bg-s: #232b36; --text: #e8ebef; --muted: #9aa5b3; --border: #334050;
         --brand: #8fb3e0; --presence: #2dd4bf; --growth: #a78bfa;
         --ok: #4ade80; --ok-bg: #12301f; --warn: #fbbf24; --warn-bg: #3a2a0c; --bad: #f87171; --bad-bg: #3b1515;
-        --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none;
+        --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none; color-scheme: dark;
       }
     }
     :root[data-theme="dark"] {
       --bg: #12171f; --bg-w: #1b222c; --bg-s: #232b36; --text: #e8ebef; --muted: #9aa5b3; --border: #334050;
       --brand: #8fb3e0; --presence: #2dd4bf; --growth: #a78bfa;
       --ok: #4ade80; --ok-bg: #12301f; --warn: #fbbf24; --warn-bg: #3a2a0c; --bad: #f87171; --bad-bg: #3b1515;
-      --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none;
+      --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none; color-scheme: dark;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
@@ -728,11 +728,27 @@
   function openPost(id) { openId = id; renderDrawer(); setTimeout(function () { const x = $('#dClose'); if (x) x.focus(); }, 30); }
   function closeDrawer() {
     const p = openId && postById(openId); const v = formValues();
-    if (p && v && changedFields(p, v).length && !confirm('You have unsaved changes. Close without saving?')) return;
-    openId = null; $('#drawerWrap').hidden = true; $('#drawer').innerHTML = '';
+    const shut = function () { openId = null; $('#drawerWrap').hidden = true; $('#drawer').innerHTML = ''; };
+    if (p && v && changedFields(p, v).length) {
+      ask('Close without saving your changes?', 'Close without saving', true).then(function (yes) { if (yes) shut(); });
+      return;
+    }
+    shut();
   }
 
   /* ═══════════ SMALL DIALOGS ═══════════ */
+  // In-page yes/no dialog. The browser's own pop-up dialogs are blocked in some app views.
+  function ask(message, okLabel, danger) {
+    return new Promise(function (resolve) {
+      const wrap = $('#overlayWrap');
+      wrap.innerHTML = '<div class="overlay"><div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="askT"><h2 id="askT" style="font-size:18px">' + esc(message) + '</h2>' +
+        '<div class="actions"><button class="btn" id="askNo">Cancel</button><button class="btn ' + (danger ? 'btn-danger' : 'btn-primary') + '" id="askYes">' + esc(okLabel || 'OK') + '</button></div></div></div>';
+      const done = function (v) { wrap.innerHTML = ''; resolve(v); };
+      $('#askNo').onclick = function () { done(false); };
+      $('#askYes').onclick = function () { done(true); };
+      $('#askYes').focus();
+    });
+  }
   function askWho() {
     const wrap = $('#overlayWrap');
     wrap.innerHTML = '<div class="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="whoT"><h2 id="whoT">Who\'s working?</h2>' +
@@ -776,8 +792,10 @@
     if (d.build) { act({ action: 'buildMonth', month: d.build }, monthName(d.build) + ' is built.'); return; }
     if (d.addhol) {
       const built = D.builtMonths.indexOf(d.addhol) >= 0;
-      if (!built && !confirm(monthName(d.addhol) + ' hasn\'t been built yet. Build it now? That also creates its regular post slots and checklist.')) return;
-      act({ action: 'buildMonth', month: d.addhol }, 'Approved holidays added to ' + monthName(d.addhol) + '.'); return;
+      const go = function () { act({ action: 'buildMonth', month: d.addhol }, 'Approved holidays added to ' + monthName(d.addhol) + '.'); };
+      if (built) go();
+      else ask(monthName(d.addhol) + ' isn\'t built yet. Build it now? That also creates its regular post slots and checklist.', 'Build ' + monthName(d.addhol)).then(function (yes) { if (yes) go(); });
+      return;
     }
     if (d.hol) { const cur = D.holidays.filter(function (x) { return x.id === d.hol; })[0]; act({ action: 'setHoliday', id: d.hol, use: cur && cur.use === d.v ? '' : d.v }, 'Saved.'); return; }
     if (d.approve) { act({ action: 'approve', id: d.approve }, 'Approved.'); return; }
@@ -792,8 +810,8 @@
     if (d.sched) { act({ action: 'markScheduled', id: d.sched }, 'Marked scheduled.'); return; }
     if (d.gbp) { act({ action: 'markGbpPosted', id: d.gbp, value: d.v }, d.v === 'true' ? 'Marked posted on Google.' : 'Unmarked.'); return; }
     if (d.skip) { act({ action: 'skipPost', id: d.skip, value: d.v }, d.v === 'true' ? 'Post skipped.' : 'Post restored.'); return; }
-    if (d.delpost) { if (confirm('Delete this post?')) act({ action: 'deletePost', id: d.delpost }, 'Post deleted.').then(function () { openId = null; $('#drawerWrap').hidden = true; }); return; }
-    if (d.deltask) { if (confirm('Delete this task?')) act({ action: 'deleteTask', id: d.deltask }, 'Task deleted.'); return; }
+    if (d.delpost) { const id = d.delpost; ask('Delete this post?', 'Delete post', true).then(function (yes) { if (yes) act({ action: 'deletePost', id: id }, 'Post deleted.').then(function () { openId = null; $('#drawerWrap').hidden = true; }); }); return; }
+    if (d.deltask) { const id = d.deltask; ask('Delete this task?', 'Delete task', true).then(function (yes) { if (yes) act({ action: 'deleteTask', id: id }, 'Task deleted.'); }); return; }
   });
   document.addEventListener('change', function (e) {
     const t = e.target;
@@ -813,7 +831,11 @@
     act({ action: 'addTask', title: f.title.value.trim(), due: f.due.value, month: checklistMonth }, 'Task added.');
   });
   $('#scrim').addEventListener('click', closeDrawer);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && openId) closeDrawer(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if ($('#askNo')) { $('#askNo').click(); return; }
+    if (openId && !$('#overlayWrap').innerHTML) closeDrawer();
+  });
 
   /* ═══════════ START ═══════════ */
   if (!PREVIEW && (SCRIPT_URL.indexOf('https://') !== 0 || !KEY)) {
