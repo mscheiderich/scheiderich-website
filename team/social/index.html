@@ -6,262 +6,306 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#1e3148">
+  <meta name="theme-color" content="#ffffff">
   <meta name="robots" content="noindex, nofollow" />
-  <title>Social Media Dashboard | The Scheiderich Agency</title>
+  <title>Social Media Plan | The Scheiderich Agency</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <style>
+    /* Layout: an app shell — a left menu of large buttons and one wide working column.
+       Built for a mouse user with limited fine motor control and dyslexia:
+       big, well-spaced targets; one legible typeface; plain words; icons + words for every state. */
     :root {
-      --navy: #1e3148; --orange: #d9682a;
-      --bg: #f6f4f1; --bg-w: #ffffff; --bg-s: #eeebe6;
-      --text: #1c2330; --muted: #5f6b79; --border: #dedad4;
-      --brand: #1e3148; --website: #d9682a; --presence: #0f766e; --growth: #6d28d9;
-      --ok: #15803d; --ok-bg: #dcfce7; --warn: #b45309; --warn-bg: #fef3c7;
-      --bad: #b91c1c; --bad-bg: #fee2e2; --info: #1d4ed8; --info-bg: #dbeafe;
-      --grey-bg: #f1f2f4; --shadow: 0 1px 4px rgba(30,49,72,.07);
+      color-scheme: light;
+      --bg: #ffffff;          /* page (Settings can swap for a soft tint) */
+      --panel: #f3f5f8;       /* quiet panels */
+      --line: #cfd6df;        /* borders */
+      --ink: #14213d;         /* main text */
+      --ink-2: #3d4a5c;       /* secondary text (still high contrast) */
+      --navy: #1e3148;        /* brand */
+      --action: #b44d16;      /* main action buttons (agency orange, darkened for contrast) */
+      --action-dark: #933d10;
+      --focus: #1a62d6;       /* keyboard focus ring */
+      --blue: #1846b8;  --blue-bg: #e7eefc;
+      --amber: #7a4d00; --amber-bg: #fff1cc;
+      --red: #a8231a;   --red-bg: #fde6e4;
+      --green: #17663a; --green-bg: #def3e6;
+      --gray: #45505f;  --gray-bg: #eceff3;
+      --cp-brand: #1e3148; --cp-website: #b44d16; --cp-presence: #0d6b62; --cp-growth: #5b31ad;
+      --font: 'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', sans-serif;
+      --r: 14px;
+      --tap: 3.4rem;          /* smallest clickable height (about 61px at the default size) */
     }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #12171f; --bg-w: #1b222c; --bg-s: #232b36; --text: #e8ebef; --muted: #9aa5b3; --border: #334050;
-        --brand: #8fb3e0; --presence: #2dd4bf; --growth: #a78bfa;
-        --ok: #4ade80; --ok-bg: #12301f; --warn: #fbbf24; --warn-bg: #3a2a0c; --bad: #f87171; --bad-bg: #3b1515;
-        --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none; color-scheme: dark;
-      }
+    html { font-size: 112.5%; }               /* 18px — a step above normal */
+    html[data-size="larger"] { font-size: 125%; }
+    html[data-size="largest"] { font-size: 140%; }
+    html[data-bg="warm"] { --bg: #fbf8f1; }
+    html[data-bg="cool"] { --bg: #f4f8fc; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 1rem; line-height: 1.6; letter-spacing: .01em; }
+    button, input, textarea, select { font: inherit; color: inherit; letter-spacing: inherit; }
+    h1, h2, h3 { line-height: 1.25; margin: 0; text-wrap: balance; }
+    h1 { font-size: 1.7rem; }
+    h2 { font-size: 1.3rem; }
+    p { margin: 0; }
+    a { color: var(--blue); }
+    :focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+    svg.i { width: 1.35em; height: 1.35em; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── Top bar ── */
+    .top { display: flex; align-items: center; gap: 1rem; padding: .75rem max(16px, env(safe-area-inset-right, 0px)) .75rem max(16px, env(safe-area-inset-left, 0px)); border-bottom: 2px solid var(--line); background: #fff; }
+    .brand { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+    .brand b { font-size: 1.25rem; color: var(--navy); }
+    .brand span { font-size: .85rem; color: var(--ink-2); }
+    .today-chip { font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: var(--tap); padding: .55rem 1.2rem; border-radius: 12px; border: 2px solid var(--line); background: #fff; color: var(--ink); font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; }
+    .btn:hover { border-color: var(--ink-2); background: var(--panel); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-main { background: var(--action); border-color: var(--action); color: #fff; }
+    .btn-main:hover { background: var(--action-dark); border-color: var(--action-dark); }
+    .btn-navy { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .btn-navy:hover { background: #142337; border-color: #142337; }
+    .btn-green { background: var(--green); border-color: var(--green); color: #fff; }
+    .btn-green:hover { background: #0f4f2c; border-color: #0f4f2c; }
+    .btn-quiet { border-color: transparent; background: transparent; color: var(--blue); }
+    .btn-quiet:hover { background: var(--blue-bg); border-color: transparent; }
+    .btn-big { min-height: 4rem; font-size: 1.15rem; padding: .7rem 1.6rem; }
+    .btn-wide { width: 100%; }
+    .row { display: flex; gap: .9rem; flex-wrap: wrap; align-items: center; }
+
+    /* ── Shell ── */
+    .shell { display: grid; grid-template-columns: 15.5rem 1fr; min-height: calc(100vh - 5rem); }
+    .side { border-right: 2px solid var(--line); padding: 1.25rem .9rem; display: flex; flex-direction: column; gap: .7rem; background: #fff; }
+    .nav-btn { display: flex; align-items: center; gap: .8rem; width: 100%; min-height: 3.8rem; padding: .6rem 1rem; border-radius: 12px; border: 2px solid transparent; background: transparent; font-weight: 700; font-size: 1.05rem; color: var(--ink); cursor: pointer; text-align: left; }
+    .nav-btn:hover { background: var(--panel); }
+    .nav-btn[aria-current="page"] { background: var(--navy); color: #fff; }
+    .nav-btn .badge { margin-left: auto; background: var(--action); color: #fff; border-radius: 999px; min-width: 1.8rem; padding: 0 .5rem; text-align: center; font-size: .9rem; }
+    main { padding: 1.5rem max(16px, env(safe-area-inset-right, 0px)) 4rem max(16px, env(safe-area-inset-left, 0px)); min-width: 0; }
+    .col { max-width: 54rem; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── Message bar (stays until closed) ── */
+    #msg:empty { display: none; }
+    .msg { position: sticky; top: .75rem; z-index: 20; max-width: 54rem; margin: 0 auto 1.25rem; display: flex; align-items: center; gap: 1rem; padding: .8rem 1rem .8rem 1.2rem; border-radius: var(--r); border: 2px solid; font-weight: 700; flex-wrap: wrap; }
+    .msg.ok { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+    .msg.err { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+    .msg.info { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+    .msg .grow { flex: 1; min-width: 12rem; }
+
+    /* ── Cards and lists ── */
+    .hero { border: 3px solid var(--navy); border-radius: 18px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; background: #fff; }
+    .hero .label { font-weight: 700; color: var(--ink-2); }
+    .hero h2 { font-size: 1.6rem; }
+    .section { display: flex; flex-direction: column; gap: .8rem; }
+    .section > h2 { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+    .count { font-size: .95rem; font-weight: 700; color: var(--ink-2); }
+    .item { display: grid; grid-template-columns: 7.5rem 1fr auto; gap: 1rem; align-items: center; width: 100%; min-height: 4.6rem; padding: .85rem 1.1rem; border: 2px solid var(--line); border-radius: var(--r); background: #fff; cursor: pointer; text-align: left; }
+    .item:hover { border-color: var(--navy); background: #fafbfd; }
+    .item .d { font-weight: 700; }
+    .item .d small { display: block; font-weight: 400; color: var(--ink-2); font-size: .85rem; }
+    .item .t { font-weight: 700; font-size: 1.05rem; }
+    .item .m { display: flex; gap: .5rem .9rem; flex-wrap: wrap; color: var(--ink-2); font-size: .9rem; margin-top: .2rem; align-items: center; }
+    .item .go { display: flex; align-items: center; gap: .4rem; color: var(--blue); font-weight: 700; }
+    .late { color: var(--red) !important; }
+    .empty { padding: 1.2rem; border-radius: var(--r); background: var(--panel); color: var(--ink-2); }
+    .status { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .65rem; border-radius: 999px; font-weight: 700; font-size: .9rem; }
+    .st-gray { background: var(--gray-bg); color: var(--gray); }
+    .st-blue { background: var(--blue-bg); color: var(--blue); }
+    .st-amber { background: var(--amber-bg); color: var(--amber); }
+    .st-red { background: var(--red-bg); color: var(--red); }
+    .st-green { background: var(--green-bg); color: var(--green); }
+    .st-sched { background: var(--green); color: #fff; }
+    .dot { display: inline-block; width: .8rem; height: .8rem; border-radius: 50%; background: var(--cp); margin-right: .1rem; }
+    .where { font-weight: 700; color: var(--navy); }
+
+    /* ── Checklist rows: the whole row is the checkbox ── */
+    .task { display: grid; grid-template-columns: 2.6rem 1fr; gap: 1rem; align-items: start; width: 100%; padding: 1rem 1.1rem; border: 2px solid var(--line); border-radius: var(--r); background: #fff; cursor: pointer; text-align: left; min-height: 4.6rem; }
+    .task:hover { border-color: var(--navy); }
+    .box { width: 2.4rem; height: 2.4rem; border: 3px solid var(--ink-2); border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #fff; }
+    .task[aria-pressed="true"] .box { background: var(--green); border-color: var(--green); color: #fff; }
+    .task[aria-pressed="true"] .tt { text-decoration: line-through; color: var(--ink-2); }
+    .tt { font-weight: 700; font-size: 1.05rem; }
+    .tm { color: var(--ink-2); font-size: .9rem; }
+    .task-wrap { display: flex; flex-direction: column; gap: .4rem; }
+    .task-detail { padding: .9rem 1.1rem; background: var(--panel); border-radius: var(--r); }
+
+    /* ── Choice buttons (replace dropdowns, checkboxes and date pickers) ── */
+    .choices { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+    .choices.wide { grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+    .choice { display: flex; align-items: flex-start; gap: .8rem; min-height: var(--tap); padding: .8rem 1rem; border: 2px solid var(--line); border-radius: var(--r); background: #fff; cursor: pointer; text-align: left; font-weight: 700; }
+    .choice:hover { border-color: var(--navy); }
+    .choice .tick { width: 1.8rem; height: 1.8rem; border: 3px solid var(--ink-2); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: .05rem; }
+    .choice.multi .tick { border-radius: 8px; }
+    .choice[aria-pressed="true"] { border-color: var(--navy); background: #eef2f8; box-shadow: inset 0 0 0 1px var(--navy); }
+    .choice[aria-pressed="true"] .tick { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .choice small { display: block; font-weight: 400; color: var(--ink-2); font-size: .9rem; margin-top: .15rem; }
+    .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; max-width: 34rem; }
+    .days .dow { text-align: center; font-weight: 700; color: var(--ink-2); font-size: .85rem; }
+    .day { min-height: 3.2rem; border: 2px solid var(--line); border-radius: 10px; background: #fff; font-weight: 700; cursor: pointer; }
+    .day:hover { border-color: var(--navy); }
+    .day[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    /* ── Fields ── */
+    .field { display: flex; flex-direction: column; gap: .45rem; }
+    .field > label, .field > .q { font-weight: 700; font-size: 1.05rem; }
+    .hint { color: var(--ink-2); font-size: .95rem; }
+    .field input, .field textarea { width: 100%; min-height: var(--tap); padding: .7rem .9rem; border: 2px solid var(--ink-2); border-radius: 12px; background: #fff; }
+    .field textarea { min-height: 7rem; resize: vertical; line-height: 1.6; }
+    .field textarea.caption { min-height: 14rem; }
+    .counter { font-weight: 700; color: var(--ink-2); }
+    .counter.over { color: var(--red); }
+
+    /* ── Post editor ── */
+    .ed-head { display: flex; flex-direction: column; gap: .8rem; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; }
+    .step { display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: var(--tap); border: 2px solid var(--line); border-radius: 12px; background: #fff; font-weight: 700; cursor: pointer; padding: .4rem .6rem; }
+    .step:hover { border-color: var(--navy); }
+    .step[aria-current="step"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .step .n { width: 1.7rem; height: 1.7rem; border-radius: 50%; border: 2px solid currentColor; display: inline-flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .step.done .n { background: var(--green); border-color: var(--green); color: #fff; }
+    .panel { border: 2px solid var(--line); border-radius: 18px; padding: 1.4rem; display: flex; flex-direction: column; gap: 1.6rem; background: #fff; }
+    .savebar { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; color: var(--ink-2); font-weight: 700; min-height: var(--tap); }
+    .savebar.err { color: var(--red); }
+    .notes { padding: 1rem 1.1rem; border-radius: var(--r); background: var(--red-bg); color: var(--red); border: 2px solid var(--red); display: flex; flex-direction: column; gap: .6rem; }
+    .notes p { white-space: pre-wrap; font-weight: 700; }
+    .warn { padding: 1rem 1.1rem; border-radius: var(--r); background: var(--amber-bg); color: var(--amber); border: 2px solid var(--amber); font-weight: 700; }
+    .caption-view { white-space: pre-wrap; padding: 1rem 1.1rem; border-radius: var(--r); background: var(--panel); font-size: 1.05rem; }
+    .design { border: 2px dashed var(--line); border-radius: var(--r); background: var(--panel); aspect-ratio: 1 / 1; max-width: 26rem; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; color: var(--ink-2); }
+    .design iframe { width: 100%; height: 100%; border: 0; border-radius: 10px; background: #fff; }
+    .design.has { border-style: solid; padding: 0; overflow: hidden; }
+    .facts { display: grid; grid-template-columns: 11rem 1fr; gap: .6rem 1rem; margin: 0; }
+    .facts dt { font-weight: 700; color: var(--ink-2); }
+    .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+    .need-list { display: flex; flex-direction: column; gap: .6rem; }
+    .need { display: flex; align-items: center; gap: .8rem; font-weight: 700; flex-wrap: wrap; }
+    .need .ok { color: var(--green); display: inline-flex; }
+    .need .no { color: var(--red); display: inline-flex; }
+
+    /* ── Dialogs ── */
+    .overlay { position: fixed; inset: 0; background: rgba(20,33,61,.55); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+    .modal { background: #fff; border-radius: 18px; padding: 1.6rem; width: min(40rem, 100%); display: flex; flex-direction: column; gap: 1.3rem; max-height: calc(100vh - 32px); overflow-y: auto; }
+    .modal .actions { display: flex; justify-content: flex-end; gap: .9rem; flex-wrap: wrap; }
+    .banner { max-width: 54rem; margin: 0 auto 1rem; padding: 1rem 1.2rem; border-radius: var(--r); background: var(--red-bg); color: var(--red); border: 2px solid var(--red); font-weight: 700; }
+    .loading { padding: 3rem 1rem; text-align: center; color: var(--ink-2); font-size: 1.1rem; }
+
+    @media (max-width: 860px) {
+      .shell { grid-template-columns: 1fr; }
+      .side { border-right: 0; border-bottom: 2px solid var(--line); display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); padding: .8rem 16px; }
+      .item { grid-template-columns: 1fr; gap: .4rem; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .facts { grid-template-columns: 1fr; gap: .2rem; }
+      .facts dd { margin-bottom: .6rem; }
+      .today-chip { display: none; }
+      .hide-sm { display: none; }
+      .brand b { font-size: 1.1rem; }
+      .brand span { white-space: nowrap; }
     }
-    :root[data-theme="dark"] {
-      --bg: #12171f; --bg-w: #1b222c; --bg-s: #232b36; --text: #e8ebef; --muted: #9aa5b3; --border: #334050;
-      --brand: #8fb3e0; --presence: #2dd4bf; --growth: #a78bfa;
-      --ok: #4ade80; --ok-bg: #12301f; --warn: #fbbf24; --warn-bg: #3a2a0c; --bad: #f87171; --bad-bg: #3b1515;
-      --info: #93c5fd; --info-bg: #13233f; --grey-bg: #262e3a; --shadow: none; color-scheme: dark;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
-    button, input, select, textarea { font: inherit; color: inherit; }
-    a { color: inherit; }
-
-    /* Header (matches the Agent Portal) */
-    .portal-header { background: #1e3148; height: 64px; padding: 0 32px; display: flex; align-items: center; gap: 16px; }
-    .portal-header-logo { font-family: 'Lora', serif; font-size: 18px; font-weight: 700; color: #fff; white-space: nowrap; text-decoration: none; }
-    .portal-header-label { flex: 1; text-align: center; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.6); letter-spacing: .08em; text-transform: uppercase; }
-    .portal-header-date { font-size: 13px; color: #fff; white-space: nowrap; }
-
-    .bar { background: var(--bg-w); border-bottom: 1px solid var(--border); padding: 10px 32px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .bar .greet { font-size: 15px; flex: 1; min-width: 180px; }
-    .bar label { font-size: 12px; color: var(--muted); }
-    .who { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-w); }
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-w); cursor: pointer; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; }
-    .btn:hover { border-color: var(--muted); }
-    .btn:disabled { opacity: .45; cursor: not-allowed; }
-    .btn-primary { background: #d9682a; border-color: #d9682a; color: #fff; }
-    .btn-primary:hover { background: #c45a1f; border-color: #c45a1f; }
-    .btn-navy { background: #1e3148; border-color: #1e3148; color: #fff; }
-    .btn-ok { background: #15803d; border-color: #15803d; color: #fff; }
-    .btn-danger { color: var(--bad); }
-    .btn-sm { padding: 5px 10px; font-size: 12px; }
-
-    .tabs { display: flex; gap: 4px; padding: 0 32px; background: var(--bg-w); border-bottom: 1px solid var(--border); overflow-x: auto; }
-    .tab { padding: 12px 14px; border: 0; background: none; cursor: pointer; font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; }
-    .tab[aria-selected="true"] { color: var(--text); border-bottom-color: #d9682a; }
-    .count { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 4px; border-radius: 10px; background: #d9682a; color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
-
-    main { max-width: 1100px; margin: 0 auto; padding: 28px 32px 80px; }
-    h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    h3 { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 26px 0 10px; }
-    .sub { color: var(--muted); margin-bottom: 18px; }
-    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 6px; }
-    .pill { padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; border: 1px solid transparent; }
-    .p-bad { background: var(--bad-bg); color: var(--bad); }
-    .p-warn { background: var(--warn-bg); color: var(--warn); }
-    .p-info { background: var(--info-bg); color: var(--info); }
-    .p-ok { background: var(--ok-bg); color: var(--ok); }
-    .p-grey { background: var(--grey-bg); color: var(--muted); }
-
-    .list { display: flex; flex-direction: column; gap: 8px; }
-    .item { display: grid; grid-template-columns: 96px 1fr auto; gap: 14px; align-items: center; width: 100%; text-align: left; background: var(--bg-w); border: 1px solid var(--border); border-left: 5px solid var(--cp, var(--border)); border-radius: 10px; padding: 12px 14px; cursor: pointer; box-shadow: var(--shadow); }
-    .item:hover { border-color: var(--muted); border-left-color: var(--cp, var(--muted)); }
-    .item .when { font-weight: 700; font-size: 13px; }
-    .item .when small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
-    .item .what { min-width: 0; }
-    .item .title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .item .meta { color: var(--muted); font-size: 12px; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; align-items: center; }
-    .item .act { text-align: right; font-size: 12px; font-weight: 600; white-space: nowrap; }
-    .late { color: var(--bad); }
-    .tag { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; background: var(--grey-bg); color: var(--muted); }
-    .tag-li { background: #e7eef8; color: #1e3148; }
-    .tag-as { background: #fdeee4; color: #a8461a; }
-    :root[data-theme="dark"] .tag-li { background: #1d2b40; color: #8fb3e0; }
-    :root[data-theme="dark"] .tag-as { background: #3a2316; color: #f0a070; }
-    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag-li { background: #1d2b40; color: #8fb3e0; } :root:not([data-theme="light"]) .tag-as { background: #3a2316; color: #f0a070; } }
-    .cp { font-weight: 700; color: var(--cp); }
-    .status { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; }
-    .s-not-started { background: var(--grey-bg); color: var(--muted); }
-    .s-drafting { background: var(--info-bg); color: var(--info); }
-    .s-ready-for-approval { background: var(--warn-bg); color: var(--warn); }
-    .s-changes-requested { background: var(--bad-bg); color: var(--bad); }
-    .s-approved { background: var(--ok-bg); color: var(--ok); }
-    .s-scheduled { background: var(--ok); color: var(--bg-w); }
-    .s-skipped { background: var(--grey-bg); color: var(--muted); text-decoration: line-through; }
-    .empty { padding: 18px; border: 1px dashed var(--border); border-radius: 10px; color: var(--muted); text-align: center; background: var(--bg-w); }
-
-    .task { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-w); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
-    .task input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; accent-color: #15803d; flex-shrink: 0; cursor: pointer; }
-    .task .t-title { font-weight: 600; }
-    .task.done .t-title { text-decoration: line-through; color: var(--muted); }
-    .task .t-meta { font-size: 12px; color: var(--muted); }
-    .task .t-meta.late { color: var(--bad); font-weight: 600; }
-    .task details { margin-top: 4px; font-size: 13px; color: var(--muted); }
-    .task summary { cursor: pointer; font-size: 12px; }
-    .task .t-body { flex: 1; min-width: 0; }
-
-    .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
-    .toolbar .spacer { flex: 1; }
-    .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .seg button { padding: 6px 12px; border: 0; background: var(--bg-w); cursor: pointer; font-weight: 600; font-size: 12px; color: var(--muted); }
-    .seg button[aria-pressed="true"] { background: #1e3148; color: #fff; }
-    .month-nav { display: flex; align-items: center; gap: 8px; }
-    .month-nav strong { font-family: 'Lora', serif; font-size: 20px; min-width: 170px; text-align: center; }
-
-    .card { background: var(--bg-w); border: 1px solid var(--border); border-left: 5px solid var(--cp, var(--border)); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); }
-    .card + .card { margin-top: 12px; }
-    .caption { white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 10px 0; font-size: 14px; }
-    .kv { display: grid; grid-template-columns: 120px 1fr; gap: 4px 12px; font-size: 13px; margin-top: 8px; }
-    .kv dt { color: var(--muted); }
-    .notes { white-space: pre-wrap; background: var(--bad-bg); color: var(--bad); border-radius: 8px; padding: 10px 12px; font-size: 13px; margin: 10px 0; }
-
-    .hol { display: grid; grid-template-columns: 130px 1fr 110px auto; gap: 12px; align-items: center; background: var(--bg-w); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
-    .hol .h-name { font-weight: 600; }
-    .hol .h-idea { font-size: 12px; color: var(--muted); }
-    .yn button[aria-pressed="true"][data-v="Yes"] { background: #15803d; color: #fff; }
-    .yn button[aria-pressed="true"][data-v="No"] { background: #6b7280; color: #fff; }
-
-    /* Post drawer */
-    .scrim { position: fixed; inset: 0; background: rgba(15,23,33,.45); z-index: 40; }
-    .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--bg-w); z-index: 50; display: flex; flex-direction: column; box-shadow: -8px 0 30px rgba(0,0,0,.18); }
-    .d-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
-    .d-head .grow { flex: 1; min-width: 0; }
-    .d-head h2 { font-size: 19px; }
-    .x { border: 0; background: none; font-size: 26px; line-height: 1; cursor: pointer; color: var(--muted); padding: 0 4px; }
-    .d-body { flex: 1; overflow-y: auto; padding: 18px 20px 30px; }
-    .d-foot { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: var(--bg-w); }
-    .d-foot .spacer { flex: 1; }
-    .next { background: var(--bg-s); border-radius: 8px; padding: 10px 12px; font-size: 13px; margin-bottom: 14px; }
-    .warnbox { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 10px 12px; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
-    .field { margin-bottom: 14px; }
-    .field > label, .field > .lbl { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; letter-spacing: .02em; }
-    .field input[type=text], .field input[type=url], .field input[type=date], .field select, .field textarea { width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-w); }
-    .field textarea { resize: vertical; min-height: 70px; }
-    .field textarea.caption-in { min-height: 170px; }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 18px; cursor: pointer; font-size: 13px; background: var(--bg-w); user-select: none; }
-    .chip input { accent-color: #d9682a; }
-    .chip:has(input:checked) { border-color: #d9682a; background: var(--warn-bg); }
-    .counter { font-size: 12px; color: var(--muted); text-align: right; margin-top: 2px; }
-    .counter.over { color: var(--bad); font-weight: 700; }
-    .inline-row { display: flex; gap: 8px; align-items: center; }
-    .inline-row input { flex: 1; }
-    .reqbox { margin-top: 10px; display: none; }
-    .reqbox.open { display: block; }
-    .reqbox textarea { width: 100%; min-height: 70px; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-w); margin-bottom: 8px; }
-
-    .overlay { position: fixed; inset: 0; background: rgba(15,23,33,.55); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; }
-    .modal { background: var(--bg-w); border-radius: 14px; padding: 24px; width: min(420px, 100%); }
-    .modal h2 { margin-bottom: 8px; }
-    .modal .field { margin-top: 14px; }
-    .modal .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
-
-    .banner { margin: 16px 32px 0; padding: 12px 16px; border-radius: 10px; background: var(--bad-bg); color: var(--bad); font-weight: 600; }
-    .loading { padding: 40px; text-align: center; color: var(--muted); }
-    .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center; width: calc(100% - 32px); max-width: 520px; }
-    .toast { padding: 10px 16px; border-radius: 8px; color: #fff; font-weight: 600; font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,.2); }
-    .toast-ok { background: #15803d; } .toast-err { background: #b91c1c; } .toast-info { background: #1e3148; }
-
-    @media (max-width: 760px) {
-      .portal-header { padding: 0 16px; }
-      .portal-header-label { display: none; }
-      .portal-header-logo { flex: 1; font-size: 16px; }
-      .bar, .tabs { padding-left: 16px; padding-right: 16px; }
-      main { padding: 20px 16px 80px; }
-      .item { grid-template-columns: 1fr; gap: 6px; }
-      .item .act { text-align: left; }
-      .hol { grid-template-columns: 1fr; gap: 6px; }
-      .row2 { grid-template-columns: 1fr; }
-      .kv { grid-template-columns: 1fr; }
-      .month-nav strong { min-width: 0; font-size: 17px; }
-      .banner { margin: 12px 16px 0; }
-    }
+    @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
   </style>
 </head>
 <body>
 
-<header class="portal-header">
-  <a class="portal-header-logo" href="/team/" title="Back to the Agent Portal">The Scheiderich Agency</a>
-  <div class="portal-header-label">Social Media Dashboard</div>
-  <div class="portal-header-date" id="hdrDate"></div>
+<header class="top">
+  <div class="brand"><b>Social Media Plan</b><span>The Scheiderich Agency</span></div>
+  <div class="today-chip" id="todayChip"></div>
+  <button class="btn" id="settingsBtn" type="button" aria-label="Settings: your name, text size and background"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span id="whoLabel">Settings</span></button>
 </header>
 
-<div class="bar">
-  <div class="greet" id="greet">Loading&hellip;</div>
-  <label for="whoSel">Working as</label>
-  <select id="whoSel" class="who" aria-label="Who is working"></select>
-  <button class="btn btn-sm" id="refreshBtn" type="button" title="Reload from the sheet">&#8635; Refresh</button>
-</div>
-
-<nav class="tabs" role="tablist" id="tabs">
-  <button class="tab" role="tab" data-view="today">Today</button>
-  <button class="tab" role="tab" data-view="month">Month</button>
-  <button class="tab" role="tab" data-view="approvals">Approvals<span class="count" id="apprCount" hidden></span></button>
-  <button class="tab" role="tab" data-view="checklist">Checklist</button>
-  <button class="tab" role="tab" data-view="holidays">Holidays</button>
-</nav>
-
-<div id="banner"></div>
-<main id="view"><div class="loading">Loading the plan&hellip;</div></main>
-
-<div id="drawerWrap" hidden>
-  <div class="scrim" id="scrim"></div>
-  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle"></aside>
+<div class="shell">
+  <nav class="side" id="nav" aria-label="Main menu"></nav>
+  <main>
+    <div id="banner"></div>
+    <div id="msg" role="status" aria-live="polite"></div>
+    <div id="view"><div class="loading">Loading your plan…</div></div>
+  </main>
 </div>
 <div id="overlayWrap"></div>
-<div class="toast-container" id="toasts" aria-live="polite"></div>
 
-<!-- Dashboard key. This file exists ONLY on the web server: it is gitignored and must never be
-     committed, because the GitHub repo is public. It sets window.SOCIAL_SCRIPT_URL and window.SOCIAL_SECRET.
-     /team/ is behind Cloudflare Access, so only logged-in staff can load it. -->
+<!-- Dashboard key + script address. This file exists ONLY on the web server: it is gitignored and must
+     never be committed, because the GitHub repo is public. It sets window.SOCIAL_SCRIPT_URL and
+     window.SOCIAL_SECRET. /team/ is behind Cloudflare Access, so only logged-in staff can load it. -->
 <script src="/team/social-secret.js"></script>
 <script>
 (function () {
   'use strict';
 
-  /* ═══════════ CONFIGURATION ═══════════ */
-  // Both values come from /team/social-secret.js, a two-line file that lives only on the server:
-  //   window.SOCIAL_SCRIPT_URL = 'https://script.google.com/macros/s/…/exec';
-  //   window.SOCIAL_SECRET = '…';
-  // The key must match DASH_KEY in the Google script's Script Properties.
+  /* ═══════════ CONFIGURATION ═══════════
+     Both values come from /team/social-secret.js, a two-line file that lives only on the server:
+       window.SOCIAL_SCRIPT_URL = 'https://script.google.com/macros/s/…/exec';
+       window.SOCIAL_SECRET = '…';
+     The key must match DASH_KEY in the Google script's Script Properties. */
   const SCRIPT_URL = String(window.SOCIAL_SCRIPT_URL || '');
   const KEY = String(window.SOCIAL_SECRET || '');
   const PREVIEW = !!window.SOCIAL_PREVIEW;
-
-  const CP_COLOR = { Brand: 'var(--brand)', Website: 'var(--website)', Presence: 'var(--presence)', Growth: 'var(--growth)' };
   const LIMITS = { LinkedIn: 3000, Instagram: 2200, 'Google Business Profile': 1500 };
 
+  /* Plain-language names shown on screen. The sheet keeps YBB's names. */
+  const STATUS = {
+    'Not started':        { word: 'Not started',          cls: 'st-gray',  icon: 'circle' },
+    'Drafting':           { word: 'Writing',              cls: 'st-blue',  icon: 'pencil' },
+    'Ready for approval': { word: 'Waiting for approval', cls: 'st-amber', icon: 'clock' },
+    'Changes requested':  { word: 'Needs changes',        cls: 'st-red',   icon: 'alert' },
+    'Approved':           { word: 'Approved',             cls: 'st-green', icon: 'check' },
+    'Scheduled':          { word: 'Scheduled',            cls: 'st-sched', icon: 'calendar' },
+    'Skipped':            { word: 'Skipped',              cls: 'st-gray',  icon: 'minus' }
+  };
+  const JOBS = {
+    Brand:    { plain: 'Who we are',                 about: 'Our team, our story, why we are different',       color: 'var(--cp-brand)' },
+    Website:  { plain: 'Send people to our website', about: 'A service, a quote page, a blog post or resource', color: 'var(--cp-website)' },
+    Presence: { plain: 'Teach something useful',     about: 'Tips, how-tos, answers to common questions',       color: 'var(--cp-presence)' },
+    Growth:   { plain: 'Build trust',                about: 'Reviews, results, referrals, events and offers',   color: 'var(--cp-growth)' }
+  };
+  const GROUP = { LinkedIn: 'LinkedIn', 'All Socials': 'Facebook, Instagram, Google' };
+
+  const ICONS = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+    list: '<path d="M10 6h11M10 12h11M10 18h11"/><path d="M3.5 6l1.2 1.2L7 5M3.5 12l1.2 1.2L7 11M3.5 18l1.2 1.2L7 17"/>',
+    gift: '<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s6 1 6 1zM12 8c2-4 6-4 6-1s-6 1-6 1z"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    circle: '<circle cx="12" cy="12" r="8"/>',
+    pencil: '<path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    alert: '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 17h.01"/>',
+    minus: '<path d="M6 12h12"/>',
+    arrowR: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    arrowL: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    speaker: '<path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',
+    stop: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
+    undo: '<path d="M9 5L4 10l5 5"/><path d="M4 10h10a6 6 0 0 1 0 12h-3"/>',
+    x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    approve: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+    open: '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+    paste: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/>'
+  };
+  function icon(name) { return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[name] || '') + '</svg>'; }
+
   /* ═══════════ STATE ═══════════ */
-  let D = null;                 // last response from "all"
+  let D = null;
   let view = 'today';
-  let monthShown = null;        // 'YYYY-MM'
+  let monthShown = null;
   let groupFilter = 'All';
-  let openId = null;
   let checklistMonth = null;
-  let who = '';
-  try { who = localStorage.getItem('socialWho') || ''; } catch (e) { who = ''; }
-  try { view = localStorage.getItem('socialView') || 'today'; } catch (e) {}
+  const openDetail = {};
+  let ed = null;            // post editor state
+  const SPEAK = {};         // read-aloud text by button id, filled while rendering
+  const prefs = { who: '', size: 'normal', bg: 'white', speak: 'on' };
+  try { Object.assign(prefs, JSON.parse(localStorage.getItem('socialPrefs') || '{}')); } catch (e) {}
+  function savePrefs() { try { localStorage.setItem('socialPrefs', JSON.stringify(prefs)); } catch (e) {} applyPrefs(); }
+  function applyPrefs() {
+    const h = document.documentElement;
+    if (prefs.size === 'normal') h.removeAttribute('data-size'); else h.setAttribute('data-size', prefs.size);
+    if (prefs.bg === 'white') h.removeAttribute('data-bg'); else h.setAttribute('data-bg', prefs.bg);
+  }
+  applyPrefs();
 
   /* ═══════════ DATA LAYER ═══════════
-     Reads and short writes use JSONP (a plain fetch against Apps Script fails on this site).
-     Saving a whole post can be too long for a URL, so it goes as a POST; that answer is
-     unreadable from the browser, so the page re-reads the sheet and checks the save landed. */
+     Reads and short changes go through a <script> tag (JSONP) — a plain fetch against Apps Script fails on this site.
+     A whole post can be too long for a web address, so it is POSTed, and the page then reads that post back
+     to confirm the save landed (a POST's answer can't be read from the browser). */
   function jsonp(params) {
     return new Promise(function (resolve, reject) {
       const cb = 'socialcb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
@@ -272,70 +316,54 @@
       const q = Object.assign({}, params, { k: KEY, callback: cb, t: Date.now() });
       s.src = SCRIPT_URL + '?' + Object.keys(q).filter(function (k) { return q[k] !== undefined && q[k] !== null; })
         .map(function (k) { const v = typeof q[k] === 'object' ? JSON.stringify(q[k]) : q[k]; return encodeURIComponent(k) + '=' + encodeURIComponent(v); }).join('&');
-      s.onerror = function () { cleanup(); reject(new Error('Could not reach the Google sheet')); };
-      timer = setTimeout(function () { cleanup(); reject(new Error('The Google sheet took too long to answer')); }, 25000);
+      s.onerror = function () { cleanup(); reject(new Error('Could not reach the Google sheet. Check the internet connection and try again.')); };
+      timer = setTimeout(function () { cleanup(); reject(new Error('The Google sheet took too long to answer. Try again.')); }, 25000);
       document.head.appendChild(s);
     });
   }
   function local(params) {
     return new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve(JSON.parse(JSON.stringify(window.handleRequest(Object.assign({}, params, { k: window.PREVIEW_KEY })))));
-      }, 120);
+      setTimeout(function () { resolve(JSON.parse(JSON.stringify(window.handleRequest(Object.assign({}, params, { k: window.PREVIEW_KEY }))))); }, 150);
     });
   }
   function call(params) {
-    const p = PREVIEW ? local(params) : jsonp(params);
-    return p.then(function (r) {
+    return (PREVIEW ? local(params) : jsonp(params)).then(function (r) {
       if (r && r.success === false) {
-        if (r.error === 'unauthorized') throw new Error('The dashboard key was not accepted. Hard-refresh (Ctrl + Shift + R). If it keeps happening, tell Mike.');
-        throw new Error(r.error || 'Something went wrong');
+        if (r.error === 'unauthorized') throw new Error('The dashboard key was not accepted. Reload the page. If it keeps happening, tell Mike.');
+        throw new Error(r.error || 'Something went wrong. Try again.');
       }
       return r;
     });
   }
   function postLong(params) {
     if (PREVIEW) return call(params);
-    return fetch(SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(Object.assign({}, params, { k: KEY }))
-    }).then(function () { return { success: true, unconfirmed: true }; });
+    return fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(Object.assign({}, params, { k: KEY })) })
+      .then(function () { return { success: true, unconfirmed: true }; });
   }
-
-  function load(quiet) {
-    if (!quiet) setMain('<div class="loading">Loading the plan&hellip;</div>');
-    return call({ action: 'all' }).then(function (r) {
-      D = r;
-      if (!monthShown) monthShown = defaultMonth();
-      render();
-      return r;
-    }).catch(function (e) { showBanner(e.message); throw e; });
+  function load() {
+    return call({ action: 'all' }).then(function (r) { D = r; if (!monthShown) monthShown = defaultMonth(); render(); return r; })
+      .catch(function (e) { $('#banner').innerHTML = '<div class="banner">' + esc(e.message) + '</div>'; $('#view').innerHTML = ''; throw e; });
   }
+  function replacePost(p) { const i = D.posts.findIndex(function (x) { return x.id === p.id; }); if (i >= 0) D.posts[i] = p; else D.posts.push(p); }
 
   /* ═══════════ HELPERS ═══════════ */
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function $(sel, root) { return (root || document).querySelector(sel); }
-  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
-  function setMain(html) { $('#view').innerHTML = html; }
-  function showBanner(msg) { $('#banner').innerHTML = msg ? '<div class="banner">' + esc(msg) + '</div>' : ''; }
-  function toast(msg, kind) {
-    const t = document.createElement('div');
-    t.className = 'toast toast-' + (kind || 'ok'); t.textContent = msg;
-    $('#toasts').appendChild(t);
-    setTimeout(function () { t.remove(); }, kind === 'err' ? 7000 : 3200);
-  }
-  function isoToDate(iso) { const a = iso.split('-').map(Number); return new Date(Date.UTC(a[0], a[1] - 1, a[2] || 1)); }
-  const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  function fmt(iso) { if (!iso) return 'No date'; const d = isoToDate(iso); return DOW[d.getUTCDay()] + ', ' + MON[d.getUTCMonth()] + ' ' + d.getUTCDate(); }
+  function isoDate(iso) { const a = iso.split('-').map(Number); return new Date(Date.UTC(a[0], a[1] - 1, a[2] || 1)); }
+  function fmt(iso) { if (!iso) return 'No date yet'; const d = isoDate(iso); return DOW[d.getUTCDay()].slice(0, 3) + ', ' + MONTHS[d.getUTCMonth()].slice(0, 3) + ' ' + d.getUTCDate(); }
+  function fmtLong(iso) { if (!iso) return 'No date yet'; const d = isoDate(iso); return DOW[d.getUTCDay()] + ', ' + MONTHS[d.getUTCMonth()] + ' ' + d.getUTCDate(); }
   function monthName(ym) { return MONTHS[Number(ym.slice(5, 7)) - 1] + ' ' + ym.slice(0, 4); }
-  function addDays(iso, n) { const d = isoToDate(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
-  function addMonths(ym, n) { const d = isoToDate(ym + '-01'); d.setUTCMonth(d.getUTCMonth() + n); return d.toISOString().slice(0, 7); }
-  function daysBetween(a, b) { return Math.round((isoToDate(b) - isoToDate(a)) / 86400000); }
-  function rel(due) {
+  function monthOnly(ym) { return MONTHS[Number(ym.slice(5, 7)) - 1]; }
+  function addDays(iso, n) { const d = isoDate(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function addMonths(ym, n) { const d = isoDate(ym + '-01'); d.setUTCMonth(d.getUTCMonth() + n); return d.toISOString().slice(0, 7); }
+  function lastDay(ym) { return addDays(addMonths(ym, 1) + '-01', -1); }
+  function daysFrom(a, b) { return Math.round((isoDate(b) - isoDate(a)) / 86400000); }
+  function when(due) {
     if (!due) return '';
-    const n = daysBetween(D.today, due);
+    const n = daysFrom(D.today, due);
     if (n === 0) return 'today';
     if (n === 1) return 'tomorrow';
     if (n === -1) return '1 day late';
@@ -343,200 +371,215 @@
     return 'in ' + n + ' days';
   }
   function split(s) { return String(s || '').split(/\s*[,;]\s*/).filter(Boolean); }
-  function short(name) { return String(name).split(' — ')[0]; }
-  function slug(s) { return String(s).toLowerCase().replace(/[^a-z]+/g, '-'); }
-  function isApprover() { return D && D.lists.approvers.indexOf(who) >= 0; }
-  function personaType(name) { const p = D.lists.personas.filter(function (x) { return x.name === name; })[0]; return p ? p.type : ''; }
-  function defaultMonth() {
-    // Show the month being worked on: next month once this month's posts are all scheduled, else this month.
-    const thisM = D.today.slice(0, 7);
-    if (D.builtMonths.indexOf(thisM) >= 0) return thisM;
-    const next = D.builtMonths.filter(function (m) { return m >= thisM; })[0];
-    return next || thisM;
-  }
+  function personName(n) { return String(n).split(' — ')[0]; }
+  function personRole(n) { return String(n).split(' — ')[1] || ''; }
+  function isApprover() { return !!D && D.lists.approvers.indexOf(prefs.who) >= 0; }
+  function first(name) { return String(name || '').split(' ')[0]; }
   function postById(id) { return D.posts.filter(function (p) { return p.id === id; })[0]; }
   function hasGbp(p) { return split(p.channels).indexOf('Google Business Profile') >= 0; }
   function onlyGbp(p) { const c = split(p.channels); return c.length === 1 && c[0] === 'Google Business Profile'; }
+  function title(p) { return p.topic || (p.kind === 'Regular' ? 'New post: ' + (JOBS[p.checkpoint] ? JOBS[p.checkpoint].plain.toLowerCase() : 'topic not chosen') : p.kind + ' post'); }
+  function statusBadge(s) { const m = STATUS[s] || STATUS['Not started']; return '<span class="status ' + m.cls + '">' + icon(m.icon) + esc(m.word) + '</span>'; }
+  function defaultMonth() {
+    const thisM = D.today.slice(0, 7);
+    if (D.builtMonths.indexOf(thisM) >= 0) return thisM;
+    return D.builtMonths.filter(function (m) { return m >= thisM; })[0] || thisM;
+  }
+  function speakBtn(id, label) {
+    if (prefs.speak !== 'on' || !('speechSynthesis' in window)) return '';
+    return '<button class="btn btn-quiet" type="button" data-speak="' + esc(id) + '">' + icon('speaker') + esc(label || 'Read aloud') + '</button>';
+  }
+  let speakingBtn = null;
+  function speak(text, btn) {
+    if (!('speechSynthesis' in window) || !text) return;
+    const synth = window.speechSynthesis;
+    if (speakingBtn === btn && synth.speaking) { synth.cancel(); return; }
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.92; u.lang = 'en-US';
+    const label = btn.innerHTML;
+    speakingBtn = btn;
+    btn.innerHTML = icon('stop') + 'Stop reading';
+    u.onend = u.onerror = function () { btn.innerHTML = label; if (speakingBtn === btn) speakingBtn = null; };
+    synth.speak(u);
+  }
 
-  // The one next step for a post, with when it's due.
+  // The one next step for a post.
   function nextStep(p) {
     switch (p.status) {
-      case 'Skipped': return null;
-      case 'Not started':
-      case 'Drafting': return { type: 'draft', label: 'Finish the copy and design', due: p.draftDue };
-      case 'Changes requested': return { type: 'changes', label: 'Make the requested changes', due: p.draftDue && p.draftDue < D.today ? p.draftDue : D.today };
+      case 'Not started': case 'Drafting': return { type: 'draft', label: 'Write and design this post', due: p.draftDue };
+      case 'Changes requested': return { type: 'changes', label: 'Fix what was asked', due: p.draftDue && p.draftDue < D.today ? p.draftDue : D.today };
       case 'Ready for approval': return { type: 'waiting', label: 'Waiting for approval', due: p.approvalDue };
-      case 'Approved':
-        if (onlyGbp(p)) return p.gbpPosted ? null : { type: 'gbp', label: 'Post on Google Business Profile', due: p.date };
-        return { type: 'schedule', label: 'Schedule in Canva', due: p.scheduleDue };
-      case 'Scheduled':
-        if (hasGbp(p) && !p.gbpPosted) return { type: 'gbp', label: 'Post on Google Business Profile', due: p.date };
-        return null;
+      case 'Approved': if (onlyGbp(p)) return p.gbpPosted ? null : { type: 'gbp', label: 'Post it on Google', due: p.date };
+        return { type: 'schedule', label: 'Schedule it in Canva', due: p.scheduleDue };
+      case 'Scheduled': return hasGbp(p) && !p.gbpPosted ? { type: 'gbp', label: 'Post it on Google', due: p.date } : null;
     }
     return null;
   }
 
+  /* Keep keyboard focus (and the cursor in a text box) where it was when the screen redraws. */
+  function focusKey(el) {
+    if (!el || el === document.body || !el.closest('#view, #nav, #msg')) return null;
+    if (el.id) return '#' + CSS.escape(el.id);
+    const k = Object.keys(el.dataset)[0];
+    if (!k) return null;
+    return '[data-' + k.replace(/[A-Z]/g, function (m) { return '-' + m.toLowerCase(); }) + '="' + CSS.escape(el.dataset[k]) + '"]';
+  }
+
+  /* ═══════════ MESSAGES (stay until closed) ═══════════ */
+  let undoFn = null;
+  function showMsg(text, kind, undo) {
+    undoFn = undo || null;
+    $('#msg').innerHTML = '<div class="msg ' + (kind || 'ok') + '">' + icon(kind === 'err' ? 'alert' : 'check') +
+      '<span class="grow">' + esc(text) + '</span>' +
+      (undo ? '<button class="btn" type="button" data-undo="1">' + icon('undo') + 'Undo</button>' : '') +
+      '<button class="btn btn-quiet" type="button" data-closemsg="1">' + icon('x') + 'Close</button></div>';
+  }
+  function clearMsg() { $('#msg').innerHTML = ''; undoFn = null; }
+
   /* ═══════════ RENDER ═══════════ */
   function render() {
-    $('#hdrDate').textContent = D ? fmt(D.today) : '';
-    renderWho();
-    const waiting = D.posts.filter(function (p) { return p.status === 'Ready for approval'; }).length;
-    const c = $('#apprCount'); c.hidden = !waiting; c.textContent = waiting;
-    $$('.tab').forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.view === view)); });
-    showBanner('');
-    if (view === 'today') renderToday();
-    else if (view === 'month') renderMonth();
-    else if (view === 'approvals') renderApprovals();
+    const a = document.activeElement;
+    const key = focusKey(a);
+    const caret = a && (a.tagName === 'TEXTAREA' || a.tagName === 'INPUT') ? [a.selectionStart, a.selectionEnd] : null;
+    $('#todayChip').textContent = fmtLong(D.today);
+    $('#whoLabel').innerHTML = prefs.who ? esc(first(prefs.who)) + '<span class="hide-sm"> · Settings</span>' : 'Settings';
+    renderNav();
+    if (view === 'post' && ed) renderEditor();
+    else if (view === 'calendar') renderCalendar();
+    else if (view === 'approvals' && isApprover()) renderApprovals();
     else if (view === 'checklist') renderChecklist();
-    else renderHolidays();
-    if (openId) renderDrawer();
+    else if (view === 'holidays') renderHolidays();
+    else { view = 'today'; renderToday(); }
+    if (key) { const el = $(key); if (el) { el.focus({ preventScroll: true }); if (caret && el.setSelectionRange) { try { el.setSelectionRange(caret[0], caret[1]); } catch (e) {} } } }
   }
 
-  function renderWho() {
-    const sel = $('#whoSel');
-    const opts = ['<option value="">Choose your name…</option>'].concat(D.lists.team.map(function (n) {
-      return '<option' + (n === who ? ' selected' : '') + '>' + esc(n) + '</option>';
-    }));
-    sel.innerHTML = opts.join('');
-    const h = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/New_York' }).format(new Date()));
-    const part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-    $('#greet').textContent = who ? part + ', ' + who.split(' ')[0] + '.' : 'Choose your name to start.';
+  function renderNav() {
+    const waiting = D.posts.filter(function (p) { return p.status === 'Ready for approval'; }).length;
+    const items = [['today', 'sun', 'Today'], ['calendar', 'calendar', 'Calendar']];
+    if (isApprover()) items.push(['approvals', 'approve', 'Approvals']);
+    items.push(['checklist', 'list', 'Checklist'], ['holidays', 'gift', 'Holidays']);
+    const cur = view === 'post' ? (ed && ed.from) || 'today' : view;
+    $('#nav').innerHTML = items.map(function (it) {
+      return '<button class="nav-btn" type="button" data-view="' + it[0] + '"' + (cur === it[0] ? ' aria-current="page"' : '') + '>' + icon(it[1]) + it[2] +
+        (it[0] === 'approvals' && waiting ? '<span class="badge"><span aria-hidden="true">' + waiting + '</span><span style="position:absolute;left:-9999px">, ' + waiting + ' waiting</span></span>' : '') + '</button>';
+    }).join('');
   }
+  function setView(html) { $('#view').innerHTML = '<div class="col">' + html + '</div>'; }
 
   function itemRow(p, step) {
-    const late = step && step.due && step.due < D.today;
-    const title = p.topic || (p.kind === 'Regular' ? 'Untitled ' + (p.checkpoint || '') + ' post' : p.kind + ' post');
-    return '<button class="item" data-open="' + esc(p.id) + '" style="--cp:' + (CP_COLOR[p.checkpoint] || 'var(--border)') + '">' +
-      '<div class="when">' + esc(p.date ? fmt(p.date) : 'No date') + '<small>Post date</small></div>' +
-      '<div class="what"><div class="title">' + esc(title) + '</div><div class="meta">' +
-        '<span class="tag ' + (p.group === 'LinkedIn' ? 'tag-li' : 'tag-as') + '">' + esc(p.group) + '</span>' +
-        (p.kind !== 'Regular' ? '<span class="tag">' + esc(p.kind) + '</span>' : '') +
-        (p.checkpoint ? '<span class="cp" style="--cp:' + CP_COLOR[p.checkpoint] + '">' + esc(p.checkpoint) + '</span>' : '') +
-        (p.personas ? '<span>' + esc(split(p.personas).map(short).join(', ')) + '</span>' : '') +
-        '<span class="status s-' + slug(p.status) + '">' + esc(p.status) + '</span>' +
-      '</div></div>' +
-      '<div class="act' + (late ? ' late' : '') + '">' + (step ? esc(step.label) + '<br><span>' + esc(step.due ? fmt(step.due) + ' · ' + rel(step.due) : '') + '</span>' : '') + '</div>' +
-    '</button>';
+    const late = step && step.due && step.due < D.today && step.type !== 'waiting';
+    const job = JOBS[p.checkpoint];
+    return '<button class="item" type="button" data-open="' + esc(p.id) + '">' +
+      '<div class="d">' + esc(fmt(p.date)) + '<small>Post day</small></div>' +
+      '<div><div class="t">' + esc(title(p)) + '</div><div class="m">' +
+        '<span class="where">' + esc(GROUP[p.group]) + '</span>' +
+        (job ? '<span><span class="dot" style="--cp:' + job.color + '"></span> ' + esc(job.plain) + '</span>' : '') +
+        statusBadge(p.status) + '</div></div>' +
+      '<div class="go' + (late ? ' late' : '') + '">' + (step && step.type !== 'waiting' ? esc(step.label) + ' · ' + esc(when(step.due)) : 'Open') + icon('arrowR') + '</div></button>';
   }
 
   function taskRow(t) {
     const late = !t.done && t.due < D.today;
-    return '<div class="task' + (t.done ? ' done' : '') + '">' +
-      '<input type="checkbox" data-task="' + esc(t.id) + '"' + (t.done ? ' checked' : '') + ' aria-label="Done: ' + esc(t.title) + '">' +
-      '<div class="t-body"><div class="t-title">' + esc(t.title) + '</div>' +
-      '<div class="t-meta' + (late ? ' late' : '') + '">Due ' + esc(fmt(t.due)) + (t.done ? ' · done by ' + esc(t.doneBy) : ' · ' + rel(t.due)) + ' · for ' + esc(monthName(t.month)) + '</div>' +
-      (t.detail ? '<details><summary>Details</summary>' + esc(t.detail) + '</details>' : '') +
-      '</div>' +
-      (t.source === 'Custom' && !t.done ? '<button class="btn btn-sm btn-danger" data-deltask="' + esc(t.id) + '" title="Delete this task">Delete</button>' : '') +
-    '</div>';
+    const open = openDetail[t.id];
+    SPEAK['task-' + t.id] = t.title + '. ' + (t.detail || '');
+    return '<div class="task-wrap"><button class="task" type="button" data-task="' + esc(t.id) + '" aria-pressed="' + t.done + '">' +
+      '<span class="box" aria-hidden="true">' + (t.done ? icon('check') : '') + '</span>' +
+      '<span><span class="tt">' + esc(t.title) + '</span><br><span class="tm' + (late ? ' late' : '') + '">' +
+        (t.done ? 'Done by ' + esc(first(t.doneBy)) : 'Due ' + esc(fmt(t.due)) + ' · ' + esc(when(t.due))) + '</span></span></button>' +
+      (t.detail ? '<div class="row"><button class="btn btn-quiet" type="button" data-detail="' + esc(t.id) + '" aria-expanded="' + !!open + '">' + (open ? 'Hide the steps' : 'Show the steps') + '</button>' + speakBtn('task-' + t.id) + '</div>' : '') +
+      (open ? '<div class="task-detail">' + esc(t.detail) + '</div>' : '') + '</div>';
+  }
+
+  function queue() {
+    const out = [];
+    D.posts.forEach(function (p) { const s = nextStep(p); if (s && s.type !== 'waiting' && p.date) out.push([p, s]); });
+    out.sort(function (a, b) { return a[1].due.localeCompare(b[1].due) || a[0].date.localeCompare(b[0].date); });
+    return out;
   }
 
   function renderToday() {
-    const today = D.today, week = addDays(today, 7);
-    const buckets = { late: [], today: [], soon: [], waiting: [], nodate: [] };
-    D.posts.forEach(function (p) {
-      const s = nextStep(p);
-      if (!s) return;
-      if (!p.date) { buckets.nodate.push([p, s]); return; }
-      if (s.type === 'waiting') { buckets.waiting.push([p, s]); return; }
-      if (s.due < today) buckets.late.push([p, s]);
-      else if (s.due === today) buckets.today.push([p, s]);
-      else if (s.due <= week) buckets.soon.push([p, s]);
-    });
-    const byDue = function (a, b) { return (a[1].due || '').localeCompare(b[1].due || '') || (a[0].date || '').localeCompare(b[0].date || ''); };
-    Object.keys(buckets).forEach(function (k) { buckets[k].sort(byDue); });
+    const week = addDays(D.today, 7);
+    const q = queue();
+    const dueNow = q.filter(function (x) { return x[1].due <= D.today; });
+    const soon = q.filter(function (x) { return x[1].due > D.today && x[1].due <= week; });
     const tasks = D.tasks.filter(function (t) { return !t.done && t.due <= week; }).sort(function (a, b) { return a.due.localeCompare(b.due); });
-    const lateTasks = tasks.filter(function (t) { return t.due < today; }).length;
+    const waiting = D.posts.filter(function (p) { return p.status === 'Ready for approval'; });
+    let h = '<h1>' + (prefs.who ? 'Hi ' + esc(first(prefs.who)) + '. ' : '') + 'Here is today.</h1>';
 
-    let h = '<h2>Today, ' + esc(fmt(today)) + '</h2><p class="sub">What needs doing now. Anything coming up can be done early: open it from here or the Month tab.</p>';
-    h += '<div class="pills">' +
-      '<span class="pill p-bad">' + (buckets.late.length + lateTasks) + ' overdue</span>' +
-      '<span class="pill p-warn">' + buckets.today.length + ' due today</span>' +
-      '<span class="pill p-info">' + buckets.waiting.length + ' waiting for approval</span>' +
-      '<span class="pill p-grey">' + buckets.soon.length + ' in the next 7 days</span></div>';
-
-    if (tasks.length) h += '<h3>Checklist</h3><div class="list">' + tasks.map(taskRow).join('') + '</div>';
-    h += section('Overdue posts', buckets.late, 'No posts are overdue.');
-    h += section('Due today', buckets.today, 'Nothing else due today.');
-    h += section('Next 7 days', buckets.soon, 'Nothing due in the next week.');
-    h += section('Waiting for approval', buckets.waiting, 'Nothing is waiting on Mike, Crissy or Wendy.');
-    if (buckets.nodate.length) h += section('Needs a post date', buckets.nodate, '');
-    setMain(h);
+    if (isApprover() && waiting.length) {
+      h += '<div class="hero"><span class="label">For you</span><h2>' + waiting.length + (waiting.length === 1 ? ' post is' : ' posts are') + ' waiting for your approval</h2>' +
+        '<div class="row"><button class="btn btn-main btn-big" type="button" data-view="approvals">Review them' + icon('arrowR') + '</button></div></div>';
+    }
+    const next = dueNow[0] || soon[0];
+    const nextTask = tasks[0];
+    if (next) {
+      const p = next[0], s = next[1];
+      SPEAK.hero = 'Do this next. ' + s.label + ': ' + title(p) + '. Due ' + fmtLong(s.due) + ', ' + when(s.due) + '. It posts on ' + fmtLong(p.date) + '.';
+      h += '<div class="hero"><span class="label">Do this next</span><h2>' + esc(s.label) + ': ' + esc(title(p)) + '</h2>' +
+        '<p class="' + (s.due < D.today ? 'late' : '') + '"><b>Due ' + esc(fmtLong(s.due)) + '</b> (' + esc(when(s.due)) + '). It posts on ' + esc(fmtLong(p.date)) + ' on ' + esc(GROUP[p.group]) + '.</p>' +
+        '<div class="row"><button class="btn btn-main btn-big" type="button" data-open="' + esc(p.id) + '">Start' + icon('arrowR') + '</button>' + speakBtn('hero') + '</div></div>';
+    } else if (nextTask) {
+      h += '<div class="hero"><span class="label">Do this next</span><h2>' + esc(nextTask.title) + '</h2><p>Due ' + esc(fmtLong(nextTask.due)) + ' (' + esc(when(nextTask.due)) + ').</p>' +
+        '<div class="row"><button class="btn btn-main btn-big" type="button" data-view="checklist">Open the checklist' + icon('arrowR') + '</button></div></div>';
+    } else {
+      h += '<div class="hero"><span class="label">All caught up</span><h2>Nothing is due right now.</h2><p>You can work ahead from the Calendar.</p>' +
+        '<div class="row"><button class="btn btn-navy btn-big" type="button" data-view="calendar">Open the calendar' + icon('arrowR') + '</button></div></div>';
+    }
+    if (tasks.length) h += '<section class="section"><h2>Checklist <span class="count">' + tasks.length + ' to do</span></h2>' + tasks.map(taskRow).join('') + '</section>';
+    const rest = dueNow.filter(function (x) { return x !== next; });
+    h += '<section class="section"><h2>Also due now <span class="count">' + rest.length + '</span></h2>' + (rest.length ? rest.map(function (x) { return itemRow(x[0], x[1]); }).join('') : '<p class="empty">Nothing else is due today.</p>') + '</section>';
+    const soonRest = soon.filter(function (x) { return x !== next; });
+    h += '<section class="section"><h2>Coming up this week <span class="count">' + soonRest.length + '</span></h2>' + (soonRest.length ? soonRest.map(function (x) { return itemRow(x[0], x[1]); }).join('') : '<p class="empty">Nothing else this week.</p>') + '</section>';
+    h += '<section class="section"><h2>Waiting for approval <span class="count">' + waiting.length + '</span></h2>' +
+      (waiting.length ? waiting.map(function (p) { return itemRow(p, nextStep(p)); }).join('') : '<p class="empty">Nothing is waiting on Mike, Crissy or Wendy.</p>') + '</section>';
+    setView(h);
   }
-  function section(title, rows, emptyText) {
-    if (!rows.length && !emptyText) return '';
-    return '<h3>' + esc(title) + '</h3>' + (rows.length
-      ? '<div class="list">' + rows.map(function (r) { return itemRow(r[0], r[1]); }).join('') + '</div>'
-      : '<div class="empty">' + esc(emptyText) + '</div>');
-  }
 
-  function renderMonth() {
+  function renderCalendar() {
     const m = monthShown;
     const built = D.builtMonths.indexOf(m) >= 0;
     let posts = D.posts.filter(function (p) { return p.month === m; });
     if (groupFilter !== 'All') posts = posts.filter(function (p) { return p.group === groupFilter; });
     posts.sort(function (a, b) { return (a.date || '9999').localeCompare(b.date || '9999') || a.group.localeCompare(b.group); });
-
-    let h = '<div class="toolbar"><div class="month-nav">' +
-      '<button class="btn btn-sm" data-month="-1" aria-label="Previous month">&lsaquo;</button><strong>' + esc(monthName(m)) + '</strong>' +
-      '<button class="btn btn-sm" data-month="1" aria-label="Next month">&rsaquo;</button></div><div class="spacer"></div>' +
-      '<div class="seg" role="group" aria-label="Filter">' + ['All', 'LinkedIn', 'All Socials'].map(function (g) {
-        return '<button data-filter="' + g + '" aria-pressed="' + (groupFilter === g) + '">' + g + '</button>'; }).join('') + '</div>' +
-      (built ? '<button class="btn btn-sm" data-add="1">+ Add post</button>' : '') + '</div>';
-
+    let h = '<div class="row" style="justify-content:space-between">' +
+      '<button class="btn" type="button" data-month="-1">' + icon('arrowL') + monthOnly(addMonths(m, -1)) + '</button>' +
+      '<h1>' + esc(monthName(m)) + '</h1>' +
+      '<button class="btn" type="button" data-month="1">' + monthOnly(addMonths(m, 1)) + icon('arrowR') + '</button></div>';
     if (!built) {
-      h += '<div class="empty" style="margin-top:16px"><p style="margin-bottom:12px">' + esc(monthName(m)) + ' hasn\'t been built yet.</p>' +
-        '<button class="btn btn-primary" data-build="' + m + '">Build ' + esc(monthName(m)) + '</button>' +
-        '<p class="help" style="margin-top:10px">Creates the LinkedIn and All Socials post slots, the monthly checklist, and posts for any holidays marked Yes.</p></div>';
-      setMain(h); return;
+      setView(h + '<div class="hero"><h2>' + esc(monthName(m)) + ' is not set up yet</h2><p>Setting it up adds the LinkedIn posts, the Facebook, Instagram and Google posts, the checklist, and posts for any holidays you chose.</p>' +
+        '<div class="row"><button class="btn btn-main btn-big" type="button" data-build="' + m + '">Set up ' + esc(monthOnly(m)) + '</button></div></div>');
+      return;
     }
-    const counts = {};
-    posts.forEach(function (p) { counts[p.status] = (counts[p.status] || 0) + 1; });
-    h += '<div class="pills">' + ['Not started', 'Drafting', 'Changes requested', 'Ready for approval', 'Approved', 'Scheduled', 'Skipped']
-      .filter(function (s) { return counts[s]; })
-      .map(function (s) { return '<span class="status s-' + slug(s) + '" style="font-size:12px;padding:4px 10px">' + counts[s] + ' ' + esc(s) + '</span>'; }).join('') + '</div>';
-
+    h += '<div class="choices" role="group" aria-label="Which posts to show">' + [['All', 'Show everything'], ['LinkedIn', 'LinkedIn only'], ['All Socials', 'Facebook, Instagram, Google only']].map(function (g) {
+      return '<button class="choice" type="button" data-filter="' + g[0] + '" aria-pressed="' + (groupFilter === g[0]) + '"><span class="tick" aria-hidden="true">' + (groupFilter === g[0] ? icon('check') : '') + '</span>' + g[1] + '</button>'; }).join('') + '</div>';
+    h += '<div class="row"><button class="btn btn-navy" type="button" data-add="1">' + icon('plus') + 'Add a post</button></div>';
     const weeks = {};
-    posts.forEach(function (p) { const w = p.week || '—'; (weeks[w] = weeks[w] || []).push(p); });
+    posts.forEach(function (p) { const w = p.week || '?'; (weeks[w] = weeks[w] || []).push(p); });
     Object.keys(weeks).sort().forEach(function (w) {
-      h += '<h3>' + (w === '—' ? 'No date yet' : 'Week ' + esc(w)) + '</h3><div class="list">' +
-        weeks[w].map(function (p) { return itemRow(p, nextStep(p)); }).join('') + '</div>';
+      const ps = weeks[w];
+      const done = ps.filter(function (p) { return p.status === 'Scheduled' || p.status === 'Skipped'; }).length;
+      h += '<section class="section"><h2>' + (w === '?' ? 'No date yet' : 'Week ' + esc(w)) + ' <span class="count">' + done + ' of ' + ps.length + ' scheduled</span></h2>' +
+        ps.map(function (p) { return itemRow(p, nextStep(p)); }).join('') + '</section>';
     });
-    if (!posts.length) h += '<div class="empty">No posts match this filter.</div>';
-    setMain(h);
+    if (!posts.length) h += '<p class="empty">No posts to show.</p>';
+    setView(h);
   }
 
   function renderApprovals() {
-    const ready = D.posts.filter(function (p) { return p.status === 'Ready for approval'; })
-      .sort(function (a, b) { return (a.date || '').localeCompare(b.date || ''); });
-    let h = '<h2>Approvals</h2><p class="sub">Each post is approved on its own, copy and design together. Any one of Mike, Crissy or Wendy can approve, the same day.' +
-      (isApprover() ? '' : ' You can see what is waiting; approving needs Mike, Crissy or Wendy.') + '</p>';
-    if (!ready.length) { setMain(h + '<div class="empty">Nothing is waiting for approval.</div>'); return; }
+    const ready = D.posts.filter(function (p) { return p.status === 'Ready for approval'; }).sort(function (a, b) { return (a.date || '').localeCompare(b.date || ''); });
+    let h = '<h1>Approvals</h1><p>Approve each post on its own: the words and the design together.</p>';
+    if (!ready.length) { setView(h + '<p class="empty">Nothing is waiting for approval.</p>'); return; }
     h += ready.map(function (p) {
-      return '<div class="card" style="--cp:' + (CP_COLOR[p.checkpoint] || 'var(--border)') + '">' +
-        '<div class="meta" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">' +
-          '<span class="tag ' + (p.group === 'LinkedIn' ? 'tag-li' : 'tag-as') + '">' + esc(p.group) + '</span>' +
-          '<strong>' + esc(fmt(p.date)) + '</strong><span class="cp" style="--cp:' + (CP_COLOR[p.checkpoint] || 'inherit') + '">' + esc(p.checkpoint) + '</span>' +
-          (p.approvalDue ? '<span class="' + (p.approvalDue < D.today ? 'late' : '') + '" style="font-size:12px">Approve by ' + esc(fmt(p.approvalDue)) + '</span>' : '') + '</div>' +
-        '<h2 style="font-size:18px;margin-top:6px">' + esc(p.topic || 'Untitled post') + '</h2>' +
-        (p.changeNotes ? '<div class="notes">' + esc(p.changeNotes) + '</div>' : '') +
-        '<div class="caption">' + esc(p.caption) + '</div>' +
-        '<dl class="kv"><dt>Personas</dt><dd>' + esc(split(p.personas).map(short).join(', ')) + '</dd>' +
-          '<dt>Content type</dt><dd>' + esc(p.contentType) + (p.format ? ' · ' + esc(p.format) : '') + '</dd>' +
-          '<dt>Channels</dt><dd>' + esc(p.channels) + '</dd>' +
-          (p.cta ? '<dt>CTA</dt><dd>' + esc(p.cta) + '</dd>' : '') +
-          (p.link ? '<dt>Link</dt><dd><a href="' + esc(p.link) + '" target="_blank" rel="noopener">' + esc(p.link) + '</a></dd>' : '') + '</dl>' +
-        '<div class="toolbar" style="margin-top:14px">' +
-          (p.canva ? '<a class="btn btn-navy" href="' + esc(p.canva) + '" target="_blank" rel="noopener">Open the design in Canva &#8599;</a>' : '') +
-          '<button class="btn btn-sm" data-open="' + esc(p.id) + '">Open post</button><div class="spacer"></div>' +
-          (isApprover() ? '<button class="btn btn-danger" data-reqopen="' + esc(p.id) + '">Request changes</button>' +
-            '<button class="btn btn-ok" data-approve="' + esc(p.id) + '">Approve</button>' : '') +
-        '</div>' +
-        (isApprover() ? '<div class="reqbox"><textarea placeholder="What needs to change?" aria-label="What needs to change"></textarea>' +
-          '<button class="btn btn-primary btn-sm" data-reqsend="' + esc(p.id) + '">Send back to Natalie</button></div>' : '') +
-      '</div>';
+      SPEAK['cap-' + p.id] = p.caption;
+      return '<div class="panel"><div class="row"><span class="where">' + esc(GROUP[p.group]) + '</span><b>Posts ' + esc(fmtLong(p.date)) + '</b>' +
+        (p.approvalDue ? '<span class="' + (p.approvalDue < D.today ? 'late' : '') + '">Approve by ' + esc(fmt(p.approvalDue)) + '</span>' : '') + '</div>' +
+        '<h2>' + esc(title(p)) + '</h2>' + (p.changeNotes ? '<div class="notes"><b>History</b><p>' + esc(p.changeNotes) + '</p></div>' : '') +
+        designBox(p) + '<div class="caption-view">' + esc(p.caption) + '</div><div class="row">' + speakBtn('cap-' + p.id, 'Read the words aloud') + '</div>' + factsList(p) +
+        '<div class="row"><button class="btn btn-green btn-big" type="button" data-approve="' + esc(p.id) + '">' + icon('approve') + 'Approve</button>' +
+        '<button class="btn btn-big" type="button" data-changes="' + esc(p.id) + '">' + icon('pencil') + 'Needs changes</button></div></div>';
     }).join('');
-    setMain(h);
+    setView(h);
   }
 
   function renderChecklist() {
@@ -546,303 +589,457 @@
     }
     const tasks = D.tasks.filter(function (t) { return t.month === checklistMonth; }).sort(function (a, b) { return a.due.localeCompare(b.due); });
     const done = tasks.filter(function (t) { return t.done; }).length;
-    let h = '<div class="toolbar"><h2 style="margin:0">Checklist</h2><div class="spacer"></div>' +
-      '<label class="help" for="clMonth" style="margin:0">Planning month</label><select id="clMonth" class="who">' +
-      months.map(function (m) { return '<option value="' + m + '"' + (m === checklistMonth ? ' selected' : '') + '>' + esc(monthName(m)) + '</option>'; }).join('') +
-      '</select></div><p class="sub">The monthly steps from Natalie\'s YBB checklist. Check them off any time, early is fine. ' + done + ' of ' + tasks.length + ' done.</p>';
-    h += tasks.length ? '<div class="list">' + tasks.map(taskRow).join('') + '</div>' : '<div class="empty">No checklist yet. Build the month on the Month tab.</div>';
-    h += '<h3>Add a task</h3><form class="toolbar" id="addTaskForm"><input type="text" name="title" placeholder="Task" required class="who" style="flex:1;min-width:180px">' +
-      '<input type="date" name="due" required class="who" value="' + esc(D.today) + '"><button class="btn btn-primary" type="submit">Add</button></form>';
-    setMain(h);
+    let h = '<h1>Monthly checklist</h1><p>The steps to plan each month. Check them off any time. Doing them early is fine.</p>';
+    if (months.length > 1) h += '<div class="choices" role="group" aria-label="Which month">' + months.map(function (m) {
+      return '<button class="choice" type="button" data-clmonth="' + m + '" aria-pressed="' + (m === checklistMonth) + '"><span class="tick" aria-hidden="true">' + (m === checklistMonth ? icon('check') : '') + '</span>Planning ' + esc(monthName(m)) + '</button>'; }).join('') + '</div>';
+    h += '<section class="section"><h2>Planning ' + esc(monthName(checklistMonth)) + ' <span class="count">' + done + ' of ' + tasks.length + ' done</span></h2>' +
+      (tasks.length ? tasks.map(taskRow).join('') : '<p class="empty">No checklist yet. Set up the month on the Calendar.</p>') + '</section>';
+    h += '<section class="section"><h2>Add your own task</h2><div class="field"><label for="newTask">What needs doing?</label><input id="newTask" type="text" spellcheck="true"></div>' +
+      '<div class="field"><span class="q">Which day is it due?</span>' + dayGrid(D.today.slice(0, 7), 'newtaskday', null) + '</div>' +
+      '<div class="row"><button class="btn btn-navy" type="button" data-addtask="1">' + icon('plus') + 'Add task</button></div></section>';
+    setView(h);
   }
 
   function renderHolidays() {
     const from = D.today.slice(0, 7);
-    const months = Array.from(new Set(D.holidays.map(function (x) { return x.month; }))).filter(function (m) { return m >= from; }).sort();
-    let h = '<h2>Holidays</h2><p class="sub">Mark each holiday Yes or No. Holiday posts are added on top of the regular posts. After choosing, press "Add approved holidays" for that month.</p>';
+    const months = Array.from(new Set(D.holidays.map(function (x) { return x.month; }))).filter(function (m) { return m >= from; }).sort().slice(0, 4);
+    let h = '<h1>Holidays</h1><p>Choose which holidays get a post. Holiday posts are extra, on top of the regular posts. This shows the next four months.</p>';
     months.forEach(function (m) {
       const rows = D.holidays.filter(function (x) { return x.month === m; });
       const yes = rows.filter(function (x) { return x.use === 'Yes'; }).length;
-      h += '<div class="toolbar" style="margin-top:22px"><h3 style="margin:0">' + esc(monthName(m)) + ' · ' + yes + ' chosen</h3><div class="spacer"></div>' +
-        '<button class="btn btn-sm" data-addhol="' + m + '"' + (yes ? '' : ' disabled') + '>Add approved holidays to ' + esc(MONTHS[Number(m.slice(5)) - 1]) + '</button></div><div class="list">' +
+      h += '<section class="section"><h2>' + esc(monthName(m)) + ' <span class="count">' + yes + ' chosen</span></h2>' +
         rows.map(function (x) {
-          return '<div class="hol"><div><strong>' + esc(x.when) + '</strong>' +
-            (!x.start ? '<div><input type="date" class="who" style="margin-top:4px;width:100%" data-holdate="' + esc(x.id) + '" aria-label="Set the date for ' + esc(x.name) + '"></div>' : '') + '</div>' +
-            '<div><div class="h-name">' + esc(x.name) + (x.added ? ' <span class="tag">added</span>' : '') + '</div><div class="h-idea">' + esc(x.idea) + '</div></div>' +
-            '<div><span class="tag ' + (x.channel === 'LinkedIn' ? 'tag-li' : x.channel === 'All Socials' ? 'tag-as' : '') + '">' + esc(x.channel) + '</span></div>' +
-            '<div class="seg yn">' + ['Yes', 'No'].map(function (v) {
-              return '<button data-hol="' + esc(x.id) + '" data-v="' + v + '" aria-pressed="' + (x.use === v) + '">' + v + '</button>'; }).join('') + '</div></div>';
-        }).join('') + '</div>';
+          SPEAK['hol-' + x.id] = x.name + '. ' + x.when + '. Idea: ' + x.idea;
+          const where = x.channel === 'All Socials' ? GROUP['All Socials'] : x.channel === 'Both' ? 'All channels' : x.channel;
+          return '<div class="panel" style="gap:.9rem;padding:1.1rem"><div><b>' + esc(x.name) + '</b><div class="hint">' + esc(x.when) + ' · ' + esc(where) + '</div><p class="hint" style="margin-top:.3rem">Idea: ' + esc(x.idea) + '</p></div>' +
+            '<div class="row">' + [['Yes', 'Use it'], ['No', 'Skip it']].map(function (v) {
+              return '<button class="choice" type="button" style="min-width:9rem" data-hol="' + esc(x.id) + '" data-v="' + v[0] + '" aria-pressed="' + (x.use === v[0]) + '"><span class="tick" aria-hidden="true">' + (x.use === v[0] ? icon('check') : '') + '</span>' + v[1] + '</button>'; }).join('') +
+            (!x.start ? '<button class="btn" type="button" data-holdate="' + esc(x.id) + '">' + icon('calendar') + 'Pick the date</button>' : '') + speakBtn('hol-' + x.id) + '</div></div>';
+        }).join('') +
+        '<div class="row"><button class="btn btn-main" type="button" data-addhol="' + m + '"' + (yes ? '' : ' disabled') + '>Add the chosen holidays to ' + esc(monthOnly(m)) + '</button></div></section>';
     });
-    setMain(h);
+    setView(h);
   }
 
-  /* ═══════════ POST DRAWER ═══════════ */
-  function renderDrawer() {
-    const p = postById(openId);
-    if (!p) { closeDrawer(); return; }
-    const L = D.lists;
-    const isLI = p.group === 'LinkedIn';
-    const step = nextStep(p);
-    const locked = p.status === 'Skipped';
-    const personas = L.personas.filter(function (x) { return x.type === (isLI ? 'B2B' : 'B2C'); });
-    const chosenP = split(p.personas), chosenC = split(p.channels), chosenN = split(p.needs);
-    const formats = L.formats.filter(function (f) { return f.group === 'Both' || f.group === p.group; });
-    const opt = function (v, cur) { return '<option' + (v === cur ? ' selected' : '') + '>' + esc(v) + '</option>'; };
-    const cp = L.checkpoints.filter(function (c) { return c.name === p.checkpoint; })[0];
-
-    let h = '<div class="d-head" style="--cp:' + (CP_COLOR[p.checkpoint] || 'var(--border)') + '"><div class="grow">' +
-      '<div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)">' +
-        '<span class="tag ' + (isLI ? 'tag-li' : 'tag-as') + '">' + esc(p.group) + '</span>' +
-        (p.kind !== 'Regular' ? '<span class="tag">' + esc(p.kind) + '</span>' : '') +
-        '<span class="status s-' + slug(p.status) + '">' + esc(p.status) + '</span><span>' + esc(p.id) + '</span></div>' +
-      '<h2 id="dTitle">' + esc(p.topic || 'Untitled post') + '</h2></div>' +
-      '<button class="x" id="dClose" aria-label="Close">&times;</button></div><div class="d-body">';
-
-    h += '<div class="next">' + (step ? '<strong>Next step:</strong> ' + esc(step.label) + (step.due ? ' by ' + esc(fmt(step.due)) + ' (' + rel(step.due) + ')' : '') : '<strong>Done.</strong> Nothing left to do on this post.') +
-      (p.approvedBy ? '<br>Approved by ' + esc(p.approvedBy) + ' on ' + esc(p.approvedAt) : '') +
-      (p.scheduledBy ? '<br>Scheduled by ' + esc(p.scheduledBy) + ' on ' + esc(p.scheduledAt) : '') + '</div>';
-    if (p.changeNotes) h += '<div class="lbl" style="font-size:12px;font-weight:700;color:var(--muted)">Change requests</div><div class="notes">' + esc(p.changeNotes) + '</div>';
-    h += '<div id="reapprove" class="warnbox" hidden></div>';
-
-    h += '<form id="postForm" autocomplete="off"' + (locked ? ' inert' : '') + '>' +
-      '<div class="row2"><div class="field"><label for="f-date">Post date</label><input type="date" id="f-date" name="date" value="' + esc(p.date) + '"' +
-        ' min="' + esc(p.month) + '-01" max="' + esc(addDays(addMonths(p.month, 1) + '-01', -1)) + '"></div>' +
-      '<div class="field"><label for="f-cp">Checkpoint</label><select id="f-cp" name="checkpoint"><option value="">Choose…</option>' +
-        L.checkpoints.map(function (c) { return opt(c.name, p.checkpoint); }).join('') + '</select>' +
-        (cp ? '<div class="help">' + esc(cp.about) + '</div>' : '') + '</div></div>' +
-
-      '<div class="field"><span class="lbl">Persona(s)' + (isLI ? ' · LinkedIn is for referral partners' : ' · these channels are for customers') + '</span><div class="chips">' +
-        personas.map(function (x) {
-          return '<label class="chip" title="' + esc(x.about) + '"><input type="checkbox" name="personas" value="' + esc(x.name) + '"' + (chosenP.indexOf(x.name) >= 0 ? ' checked' : '') + '>' + esc(x.name) + '</label>';
-        }).join('') + '</div></div>' +
-
-      '<div class="row2"><div class="field"><label for="f-ct">Content type</label><select id="f-ct" name="contentType"><option value="">Choose…</option>' +
-        L.contentTypes.map(function (c) { return opt(c, p.contentType); }).join('') + '</select></div>' +
-      '<div class="field"><label for="f-fmt">Format</label><select id="f-fmt" name="format"><option value="">Choose…</option>' +
-        formats.map(function (f) { return opt(f.name, p.format); }).join('') + '</select></div></div>' +
-
-      '<div class="field"><span class="lbl">Channels</span>' + (isLI
-        ? '<div class="help" style="margin:0">LinkedIn company page. Personal profiles share it.</div><input type="hidden" name="channels" value="LinkedIn">'
-        : '<div class="chips">' + ['Facebook', 'Instagram', 'Google Business Profile'].map(function (c) {
-            return '<label class="chip"><input type="checkbox" name="channels" value="' + c + '"' + (chosenC.indexOf(c) >= 0 ? ' checked' : '') + '>' + c + '</label>'; }).join('') +
-          '</div><div class="help">Canva can schedule Facebook and Instagram (Instagram from a computer). Google Business Profile posts go up by hand on the post date.</div>') + '</div>' +
-
-      '<div class="field"><label for="f-topic">Topic / idea</label><input type="text" id="f-topic" name="topic" value="' + esc(p.topic) + '"></div>' +
-      '<div class="field"><label for="f-msg">Key message</label><textarea id="f-msg" name="message">' + esc(p.message) + '</textarea></div>' +
-      '<div class="row2"><div class="field"><label for="f-cta">Call to action</label><input type="text" id="f-cta" name="cta" value="' + esc(p.cta) + '"></div>' +
-      '<div class="field"><label for="f-link">Link</label><input type="url" id="f-link" name="link" value="' + esc(p.link) + '" placeholder="https://"></div></div>' +
-      '<div class="field"><label for="f-cap">Final caption</label><textarea id="f-cap" class="caption-in" name="caption" placeholder="The complete post copy, exactly as it will be published">' + esc(p.caption) + '</textarea><div class="counter" id="capCount"></div></div>' +
-      '<div class="field"><label for="f-canva">Canva design link</label><div class="inline-row"><input type="url" id="f-canva" name="canva" value="' + esc(p.canva) + '" placeholder="Share link to the final design">' +
-        (p.canva ? '<a class="btn btn-sm" href="' + esc(p.canva) + '" target="_blank" rel="noopener">Open &#8599;</a>' : '') + '</div>' +
-        (D.settings.assetsFolderUrl ? '<div class="help">Save source files in the <a href="' + esc(D.settings.assetsFolderUrl) + '" target="_blank" rel="noopener">Assets folder</a> under ' + esc(monthName(p.month)) + '.</div>' : '') + '</div>' +
-      '<div class="field"><span class="lbl">What we need</span><div class="chips">' + L.needs.map(function (n) {
-          return '<label class="chip" title="' + esc(n.note) + '"><input type="checkbox" name="needs" value="' + esc(n.name) + '"' + (chosenN.indexOf(n.name) >= 0 ? ' checked' : '') + '>' + esc(n.name) + '</label>'; }).join('') +
-        '</div><div class="help">Testimonials and reviews come from Crissy Shatzel or Wendy Alaniz.</div></div>' +
-      '<div class="field"><label for="f-notes">Asset / content notes</label><textarea id="f-notes" name="assetNotes">' + esc(p.assetNotes) + '</textarea></div>' +
-      '</form>';
-
-    if (p.status === 'Ready for approval' && isApprover()) {
-      h += '<div class="card" style="--cp:#15803d"><strong>Approve this post?</strong><p class="help">Approval covers the final caption above and the Canva design.</p>' +
-        '<div class="toolbar" style="margin-top:10px">' + (p.canva ? '<a class="btn btn-navy btn-sm" href="' + esc(p.canva) + '" target="_blank" rel="noopener">Open design &#8599;</a>' : '') +
-        '<div class="spacer"></div><button class="btn btn-danger btn-sm" data-reqopen="' + esc(p.id) + '">Request changes</button><button class="btn btn-ok btn-sm" data-approve="' + esc(p.id) + '">Approve</button></div>' +
-        '<div class="reqbox"><textarea placeholder="What needs to change?" aria-label="What needs to change"></textarea><button class="btn btn-primary btn-sm" data-reqsend="' + esc(p.id) + '">Send back to Natalie</button></div></div>';
+  /* ═══════════ PIECES ═══════════ */
+  function dayGrid(ym, key, selected) {
+    const lead = (isoDate(ym + '-01').getUTCDay() + 6) % 7; // weeks start on Monday
+    const n = Number(lastDay(ym).slice(8));
+    let h = '<div class="days" role="group" aria-label="Days in ' + esc(monthName(ym)) + '">' + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(function (d) { return '<span class="dow" aria-hidden="true">' + d + '</span>'; }).join('');
+    for (let i = 0; i < lead; i++) h += '<span></span>';
+    for (let d = 1; d <= n; d++) {
+      const iso = ym + '-' + ('0' + d).slice(-2);
+      h += '<button class="day" type="button" data-' + key + '="' + iso + '" aria-pressed="' + (iso === selected) + '" aria-label="' + esc(fmtLong(iso)) + '">' + d + '</button>';
     }
-    h += '</div><div class="d-foot">';
-    if (!locked) h += '<button class="btn btn-primary" id="saveBtn" disabled>Save</button>';
-    if (['Not started', 'Drafting', 'Changes requested'].indexOf(p.status) >= 0) h += '<button class="btn btn-navy" data-send="' + esc(p.id) + '">Send for approval</button>';
-    if (p.status === 'Approved' && !onlyGbp(p)) h += '<button class="btn btn-ok" data-sched="' + esc(p.id) + '">Mark scheduled in Canva</button>';
-    if ((p.status === 'Approved' || p.status === 'Scheduled') && hasGbp(p)) h += '<button class="btn" data-gbp="' + esc(p.id) + '" data-v="' + (!p.gbpPosted) + '">' + (p.gbpPosted ? 'Unmark Google post' : 'Mark posted on Google') + '</button>';
-    h += '<div class="spacer"></div>';
-    if (p.status !== 'Scheduled') h += '<button class="btn btn-sm" data-skip="' + esc(p.id) + '" data-v="' + (p.status !== 'Skipped') + '">' + (p.status === 'Skipped' ? 'Un-skip' : 'Skip post') + '</button>';
-    if (p.kind !== 'Regular' && p.status !== 'Approved' && p.status !== 'Scheduled') h += '<button class="btn btn-sm btn-danger" data-delpost="' + esc(p.id) + '">Delete</button>';
-    h += '</div>';
-    $('#drawer').innerHTML = h;
-    $('#drawerWrap').hidden = false;
-    wireForm(p);
+    return h + '</div>';
+  }
+  function embedUrl(link) {
+    const m = String(link || '').match(/canva\.com\/design\/([A-Za-z0-9_-]+)/);
+    return m ? 'https://www.canva.com/design/' + m[1] + '/view?embed' : '';
+  }
+  function designBox(p) {
+    if (!p.canva) return '<div class="design">No design link yet</div>';
+    const url = embedUrl(p.canva);
+    let h = PREVIEW
+      ? '<div class="design">The Canva design shows here on the real dashboard.</div>'
+      : (url ? '<div class="design has"><iframe src="' + esc(url) + '" title="Canva design for ' + esc(title(p)) + '" loading="lazy" allowfullscreen></iframe></div>' : '<div class="design">This is not a Canva design link.</div>');
+    return h + '<div class="row"><a class="btn" href="' + esc(p.canva) + '" target="_blank" rel="noopener">' + icon('open') + 'Open the design in Canva</a></div>';
+  }
+  function factsList(p) {
+    const ps = split(p.personas).map(function (n) { return personName(n) + ' (' + personRole(n).replace(/^The /, '').toLowerCase() + ')'; }).join(', ');
+    return '<dl class="facts">' +
+      '<dt>For</dt><dd>' + esc(ps || 'Not chosen yet') + '</dd>' +
+      '<dt>Job</dt><dd>' + esc(JOBS[p.checkpoint] ? JOBS[p.checkpoint].plain + ' (' + p.checkpoint + ')' : 'Not chosen yet') + '</dd>' +
+      '<dt>Kind</dt><dd>' + esc(p.contentType || 'Not chosen yet') + (p.format ? ', ' + esc(p.format) : '') + '</dd>' +
+      '<dt>Where</dt><dd>' + esc(p.channels || 'Not chosen yet') + '</dd>' +
+      (p.cta ? '<dt>Asks people to</dt><dd>' + esc(p.cta) + '</dd>' : '') +
+      (p.link ? '<dt>Link</dt><dd><a href="' + esc(p.link) + '" target="_blank" rel="noopener">' + esc(p.link) + '</a></dd>' : '') + '</dl>';
   }
 
-  function formValues() {
-    const f = $('#postForm');
-    if (!f) return null;
-    const multi = function (name) { return $$('input[name="' + name + '"]:checked', f).map(function (i) { return i.value; }).join(', '); };
-    return {
-      date: f.date.value, checkpoint: f.checkpoint.value, personas: multi('personas'), contentType: f.contentType.value,
-      format: f.format.value, channels: f.channels.type === 'hidden' ? f.channels.value : multi('channels'),
-      topic: f.topic.value.trim(), message: f.message.value.trim(), cta: f.cta.value.trim(), link: f.link.value.trim(),
-      caption: f.caption.value.trim(), canva: f.canva.value.trim(), assetNotes: f.assetNotes.value.trim(), needs: multi('needs')
-    };
+  /* ═══════════ POST EDITOR ═══════════ */
+  const FIELDS = ['date', 'checkpoint', 'personas', 'contentType', 'format', 'channels', 'topic', 'message', 'cta', 'link', 'caption', 'canva', 'assetNotes', 'needs'];
+  const EDITABLE_STATUS = ['Not started', 'Drafting', 'Changes requested'];
+  const STEP_NAMES = ['Plan', 'Write', 'Design', 'Send'];
+  function openPost(id, from) {
+    const p = postById(id); if (!p) return;
+    const vals = {}; FIELDS.forEach(function (k) { vals[k] = p[k] || ''; });
+    const step = !p.checkpoint || !p.personas || !p.contentType ? 1 : !p.caption ? 2 : !p.canva ? 3 : 4;
+    ed = { id: id, step: p.status === 'Changes requested' ? 2 : step, editing: false, vals: vals, saved: 'idle', timer: null, lastUndo: null, from: from || 'today' };
+    view = 'post'; clearMsg(); render(); window.scrollTo(0, 0);
+    setTimeout(function () { const b = $('#edBack'); if (b) b.focus({ preventScroll: true }); }, 30);
   }
-  function changedFields(p, v) { return Object.keys(v).filter(function (k) { return String(v[k] || '') !== String(p[k] || ''); }); }
-
-  function wireForm(p) {
-    const f = $('#postForm'); if (!f) return;
-    const update = function () {
-      const v = formValues(); const ch = changedFields(p, v);
-      const btn = $('#saveBtn'); if (btn) btn.disabled = !ch.length;
-      const warn = $('#reapprove');
-      if (ch.length && (p.status === 'Approved' || p.status === 'Scheduled')) {
-        warn.hidden = false;
-        warn.textContent = 'Saving this change sends the post back for approval.' + (p.status === 'Scheduled' ? ' It is already scheduled: update or pause it in Canva until it is approved again.' : '');
-      } else warn.hidden = true;
-      const chans = split(v.channels);
-      const lim = chans.map(function (c) { return LIMITS[c]; }).filter(Boolean);
-      const max = lim.length ? Math.min.apply(null, lim) : 0;
-      const n = v.caption.length;
-      const c = $('#capCount');
-      c.textContent = n + ' characters' + (max ? ' · limit ' + max + ' (' + chans.filter(function (x) { return LIMITS[x] === max; }).join(', ') + ')' : '');
-      c.classList.toggle('over', !!max && n > max);
-    };
-    f.addEventListener('input', update); f.addEventListener('change', update);
-    f.addEventListener('submit', function (e) { e.preventDefault(); });
-    update();
+  function closePost() { flushSave().then(function () { view = ed ? ed.from : 'today'; ed = null; render(); window.scrollTo(0, 0); }); }
+  function isEditing(p) { return EDITABLE_STATUS.indexOf(p.status) >= 0 || (ed && ed.editing); }
+  function stepDone(n, v) {
+    if (n === 1) return !!(v.date && v.checkpoint && v.personas && v.contentType);
+    if (n === 2) return !!String(v.caption).trim();
+    if (n === 3) return !!(v.canva && v.channels);
+    return false;
   }
 
-  function savePost() {
-    const p = postById(openId); const v = formValues();
-    if (!p || !v) return Promise.resolve(true);
-    const ch = changedFields(p, v);
-    if (!ch.length) return Promise.resolve(true);
-    if (!who) { askWho(); return Promise.resolve(false); }
-    const body = { id: p.id }; ch.forEach(function (k) { body[k] = v[k]; });
-    $('#saveBtn').disabled = true; $('#saveBtn').textContent = 'Saving…';
-    return postLong({ action: 'savePost', by: who, post: body }).then(function (r) {
-      return load(true).then(function () {
-        const now = postById(p.id);
-        const landed = now && ch.every(function (k) { return String(now[k] || '') === String(v[k] || ''); });
-        if (!landed) throw new Error('The save didn\'t go through. Check your connection and press Save again.');
-        if (r.warning) toast(r.warning, 'info');
-        toast(now.status === 'Ready for approval' && (p.status === 'Approved' || p.status === 'Scheduled') ? 'Saved. Sent back for approval.' : 'Saved.');
-        return true;
+  function renderEditor() {
+    const p = postById(ed.id); if (!p) { view = 'today'; ed = null; render(); return; }
+    const v = ed.vals;
+    let h = '<div class="ed-head"><div class="row"><button class="btn" type="button" id="edBack" data-closepost="1">' + icon('arrowL') + 'Back to ' + esc({ today: 'Today', calendar: 'Calendar', approvals: 'Approvals', checklist: 'Checklist', holidays: 'Holidays' }[ed.from] || 'Today') + '</button></div>' +
+      '<div class="row"><span class="where">' + esc(GROUP[p.group]) + '</span>' + statusBadge(p.status) + '<span>Posts <b>' + esc(fmtLong(v.date)) + '</b></span>' + (p.kind !== 'Regular' ? '<span class="status st-gray">' + esc(p.kind) + '</span>' : '') + '</div>' +
+      '<h1>' + esc(v.topic || title(p)) + '</h1></div>';
+    if (p.changeNotes && (p.status === 'Changes requested' || p.status === 'Ready for approval')) {
+      SPEAK.notes = p.changeNotes;
+      h += '<div class="notes"><b>' + (p.status === 'Changes requested' ? 'What needs to change' : 'Notes') + '</b><p>' + esc(p.changeNotes) + '</p><div class="row">' + speakBtn('notes') + '</div></div>';
+    }
+    h += isEditing(p) ? editorSteps(p, v) : editorSummary(p);
+    setView(h);
+    wireEditor();
+  }
+
+  function editorSteps(p, v) {
+    let h = '';
+    if (ed.editing && (p.status === 'Approved' || p.status === 'Scheduled' || p.status === 'Ready for approval')) {
+      h += '<div class="warn">You are changing a post that was already approved. As soon as a change saves, it goes back to Mike, Crissy or Wendy for approval.' + (p.status === 'Scheduled' ? ' It is scheduled in Canva, so pause or update it there too.' : '') + '</div>';
+    }
+    h += '<nav class="steps" aria-label="Steps">' + STEP_NAMES.map(function (n, i) {
+      const k = i + 1, done = stepDone(k, v);
+      return '<button class="step' + (done ? ' done' : '') + '" type="button" data-step="' + k + '"' + (ed.step === k ? ' aria-current="step"' : '') + '><span class="n" aria-hidden="true">' + (done ? icon('check') : k) + '</span>' + n + (done ? '<span style="position:absolute;left:-9999px"> (done)</span>' : '') + '</button>';
+    }).join('') + '</nav>';
+    h += '<div class="panel">' + [step1, step2, step3, step4][ed.step - 1](p, v) +
+      '<div class="row" style="justify-content:space-between">' +
+      (ed.step > 1 ? '<button class="btn btn-big" type="button" data-step="' + (ed.step - 1) + '">' + icon('arrowL') + 'Back: ' + STEP_NAMES[ed.step - 2] + '</button>' : '<span></span>') +
+      (ed.step < 4 ? '<button class="btn btn-navy btn-big" type="button" data-step="' + (ed.step + 1) + '">Next: ' + STEP_NAMES[ed.step] + icon('arrowR') + '</button>' : '') + '</div></div>';
+    h += '<div class="savebar" id="savebar" aria-live="polite"></div>';
+    h += '<div class="row">' + (p.kind === 'Regular' ? '<button class="btn btn-quiet" type="button" data-skip="' + esc(p.id) + '">Skip this post this month</button>' : '<button class="btn btn-quiet" type="button" data-delpost="' + esc(p.id) + '">Delete this post</button>') + '</div>';
+    return h;
+  }
+
+  function step1(p, v) {
+    const isLI = p.group === 'LinkedIn';
+    const people = D.lists.personas.filter(function (x) { return x.type === (isLI ? 'B2B' : 'B2C'); });
+    const chosen = split(v.personas);
+    return '<div class="field"><span class="q">Which day does it post?</span><span class="hint">Chosen: <b>' + esc(fmtLong(v.date)) + '</b></span>' + dayGrid(p.month, 'pickday', v.date) + '</div>' +
+      '<div class="field"><span class="q">Who is it for?</span><span class="hint">' + (isLI ? 'LinkedIn is for our referral partners.' : 'Facebook, Instagram and Google are for our customers.') + ' You can pick both.</span>' +
+      '<div class="choices wide">' + people.map(function (x) {
+        const on = chosen.indexOf(x.name) >= 0;
+        return '<button class="choice multi" type="button" data-toggle="personas" data-val="' + esc(x.name) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span><span>' + esc(personName(x.name)) + '<small>' + esc(personRole(x.name)) + '</small></span></button>'; }).join('') + '</div></div>' +
+      '<div class="field"><span class="q">What is this post\'s job?</span><div class="choices wide">' + D.lists.checkpoints.map(function (c) {
+        const j = JOBS[c.name] || { plain: c.name, about: '', color: 'var(--navy)' }; const on = v.checkpoint === c.name;
+        return '<button class="choice" type="button" data-set="checkpoint" data-val="' + esc(c.name) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span><span><span class="dot" style="--cp:' + j.color + '"></span> ' + esc(j.plain) + '<small>' + esc(j.about) + ' · YBB: ' + esc(c.name) + '</small></span></button>'; }).join('') + '</div></div>' +
+      '<div class="field"><span class="q">What kind of post is it?</span><div class="choices">' + D.lists.contentTypes.map(function (c) {
+        const on = v.contentType === c;
+        return '<button class="choice" type="button" data-set="contentType" data-val="' + esc(c) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span>' + esc(c) + '</button>'; }).join('') + '</div></div>';
+  }
+
+  function capLimit(channels) {
+    const chans = split(channels);
+    const lim = chans.map(function (c) { return LIMITS[c]; }).filter(Boolean);
+    const max = lim.length ? Math.min.apply(null, lim) : 0;
+    return { max: max, who: chans.filter(function (c) { return LIMITS[c] === max; }).map(function (c) { return c === 'Google Business Profile' ? 'Google' : c; }).join(' and ') };
+  }
+  function capText(n, channels) {
+    const l = capLimit(channels);
+    if (!l.max) return n + ' letters';
+    return n > l.max ? n + ' letters. That is ' + (n - l.max) + ' too many for ' + l.who + '.' : n + ' of ' + l.max.toLocaleString() + ' letters allowed on ' + l.who;
+  }
+  function step2(p, v) {
+    const l = capLimit(v.channels);
+    SPEAK.caption = v.caption;
+    return '<div class="field"><label for="f-topic">What is the post about? (a short title)</label><input id="f-topic" data-f="topic" type="text" spellcheck="true" value="' + esc(v.topic) + '"></div>' +
+      '<div class="field"><label for="f-message">The main point, in one sentence</label><textarea id="f-message" data-f="message" spellcheck="true">' + esc(v.message) + '</textarea></div>' +
+      '<div class="field"><label for="f-caption">The words for the post</label><span class="hint" id="capHint">Write it exactly the way it will be posted. Spelling mistakes are underlined in red.</span>' +
+        '<textarea id="f-caption" class="caption" data-f="caption" spellcheck="true" lang="en-US" aria-describedby="capHint capCount">' + esc(v.caption) + '</textarea>' +
+        '<div class="row" style="justify-content:space-between"><span class="counter' + (l.max && v.caption.length > l.max ? ' over' : '') + '" id="capCount">' + capText(v.caption.length, v.channels) + '</span>' + speakBtn('caption', 'Read my words aloud') + '</div></div>' +
+      '<div class="field"><label for="f-cta">What should people do? (call to action)</label><span class="hint">For example: Call us for a quote.</span><input id="f-cta" data-f="cta" type="text" spellcheck="true" value="' + esc(v.cta) + '"></div>' +
+      '<div class="field"><label for="f-link">Web link (if there is one)</label><input id="f-link" data-f="link" type="url" value="' + esc(v.link) + '" placeholder="https://"></div>';
+  }
+
+  function step3(p, v) {
+    const isLI = p.group === 'LinkedIn';
+    const chans = split(v.channels), needs = split(v.needs);
+    const formats = D.lists.formats.filter(function (f) { return f.group === 'Both' || f.group === p.group; });
+    return '<div class="field"><label for="f-canva">Link to the finished design in Canva</label>' +
+        '<span class="hint">In Canva, click Share, then See all, then Embed, then Embed again. Copy the Smart embed link and paste it here. That lets the design show up for approval.</span>' +
+        '<div class="row"><input id="f-canva" data-f="canva" type="url" value="' + esc(v.canva) + '" style="flex:1;min-width:14rem" placeholder="https://www.canva.com/design/…">' +
+        '<button class="btn" type="button" data-paste="f-canva">' + icon('paste') + 'Paste link</button></div></div>' +
+      designBox(Object.assign({}, p, { canva: v.canva })) +
+      '<div class="field"><span class="q">What does the design look like?</span><div class="choices">' + formats.map(function (f) {
+        const on = v.format === f.name;
+        return '<button class="choice" type="button" data-set="format" data-val="' + esc(f.name) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span>' + esc(f.name) + '</button>'; }).join('') + '</div></div>' +
+      '<div class="field"><span class="q">Where does it post?</span>' + (isLI
+        ? '<p class="hint">The LinkedIn company page. Mike and the team share it from their own profiles.</p>'
+        : '<div class="choices">' + ['Facebook', 'Instagram', 'Google Business Profile'].map(function (c) {
+            const on = chans.indexOf(c) >= 0;
+            return '<button class="choice multi" type="button" data-toggle="channels" data-val="' + c + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span>' + (c === 'Google Business Profile' ? '<span>Google<small>Posted by hand on the day</small></span>' : c) + '</button>'; }).join('') + '</div>') + '</div>' +
+      '<div class="field"><span class="q">Still needed (optional)</span><div class="choices">' + D.lists.needs.map(function (n) {
+        const on = needs.indexOf(n.name) >= 0;
+        return '<button class="choice multi" type="button" data-toggle="needs" data-val="' + esc(n.name) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span><span>' + esc(n.name) + (n.note ? '<small>' + esc(n.note) + '</small>' : '') + '</span></button>'; }).join('') + '</div></div>' +
+      '<div class="field"><label for="f-notes">Notes for yourself (optional)</label><textarea id="f-notes" data-f="assetNotes" spellcheck="true">' + esc(v.assetNotes) + '</textarea></div>';
+  }
+
+  function step4(p, v) {
+    const checks = [
+      [!!v.date, 'Post day', 1], [!!v.personas, 'Who it is for', 1], [!!v.checkpoint, 'The post\'s job', 1], [!!v.contentType, 'Kind of post', 1],
+      [!!String(v.caption).trim(), 'The words for the post', 2], [!!v.canva, 'The Canva design link', 3], [!!v.channels, 'Where it posts', 3]
+    ];
+    const missing = checks.filter(function (c) { return !c[0]; });
+    const h = '<h2>Ready to send?</h2><div class="need-list">' + checks.map(function (c) {
+      return '<div class="need">' + (c[0] ? '<span class="ok">' + icon('check') + '</span>' + esc(c[1]) : '<span class="no">' + icon('x') + '</span>' + esc(c[1]) + ' is missing <button class="btn btn-quiet" type="button" data-step="' + c[2] + '">Go to step ' + c[2] + '</button>') + '</div>'; }).join('') + '</div>';
+    if (p.status === 'Ready for approval') return h + '<p class="warn">This post is already waiting for approval. Your changes went with it.</p>';
+    if (missing.length) return h + '<p class="hint">Fill in the missing parts, then come back here to send it.</p>';
+    return h + '<p>Mike, Crissy or Wendy will check the words and the design together.</p><div class="row"><button class="btn btn-main btn-big btn-wide" type="button" data-send="' + esc(p.id) + '">Send for approval' + icon('arrowR') + '</button></div>';
+  }
+
+  function editorSummary(p) {
+    SPEAK['sum-' + p.id] = p.caption;
+    let h = '<div class="panel">';
+    if (p.status === 'Ready for approval') h += '<h2>Waiting for approval</h2><p>Mike, Crissy or Wendy will check it. You don\'t need to do anything right now.</p>';
+    if (p.status === 'Approved') h += '<h2>' + (onlyGbp(p) ? 'Approved. Next: post it on Google on ' + esc(fmtLong(p.date)) : 'Approved. Next: schedule it in Canva') + '</h2><p>Approved by ' + esc(p.approvedBy) + '.</p>';
+    if (p.status === 'Scheduled') h += '<h2>' + (hasGbp(p) && !p.gbpPosted ? 'Scheduled. Next: post it on Google on ' + esc(fmtLong(p.date)) : 'All done') + '</h2><p>Approved by ' + esc(p.approvedBy) + '. Scheduled by ' + esc(first(p.scheduledBy)) + '.</p>';
+    if (p.status === 'Skipped') h += '<h2>This post is skipped</h2><p>It won\'t be posted this month.</p>';
+    let acts = '';
+    if (p.status === 'Approved' && !onlyGbp(p)) acts += '<button class="btn btn-main btn-big" type="button" data-sched="' + esc(p.id) + '">' + icon('calendar') + 'I scheduled it in Canva</button>';
+    if ((p.status === 'Approved' || p.status === 'Scheduled') && hasGbp(p) && !p.gbpPosted) acts += '<button class="btn btn-main btn-big" type="button" data-gbp="' + esc(p.id) + '">' + icon('check') + 'I posted it on Google</button>';
+    if (p.status === 'Ready for approval') acts += '<button class="btn btn-big" type="button" data-withdraw="' + esc(p.id) + '">' + icon('undo') + 'Take it back to keep working</button>';
+    if (p.status === 'Skipped') acts += '<button class="btn btn-main btn-big" type="button" data-unskip="' + esc(p.id) + '">Bring this post back</button>';
+    if (acts) h += '<div class="row">' + acts + '</div>';
+    if (p.status === 'Ready for approval' && isApprover()) h += '<div class="row"><button class="btn btn-green btn-big" type="button" data-approve="' + esc(p.id) + '">' + icon('approve') + 'Approve</button><button class="btn btn-big" type="button" data-changes="' + esc(p.id) + '">' + icon('pencil') + 'Needs changes</button></div>';
+    h += '</div>' + designBox(p) + (p.caption ? '<div class="caption-view">' + esc(p.caption) + '</div><div class="row">' + speakBtn('sum-' + p.id, 'Read the words aloud') + '</div>' : '') + factsList(p);
+    if (p.status === 'Approved' || p.status === 'Scheduled') {
+      h += '<div class="panel"><h2>Need to change something?</h2><p>Any change, including a change to the design in Canva, needs a new approval.</p><div class="row">' +
+        '<button class="btn" type="button" data-design="' + esc(p.id) + '">' + icon('alert') + 'I changed the design in Canva</button>' +
+        '<button class="btn" type="button" data-edit="1">' + icon('pencil') + 'Change the words or details</button>' +
+        (p.status === 'Scheduled' ? '<button class="btn btn-quiet" type="button" data-unsched="' + esc(p.id) + '">' + icon('undo') + 'It is not scheduled yet</button>' : '') + '</div></div>';
+    }
+    return h;
+  }
+
+  /* Typing saves by itself after a short pause. Buttons save right away. */
+  function wireEditor() {
+    paintSave();
+    $$('[data-f]').forEach(function (el) {
+      el.addEventListener('input', function () {
+        ed.vals[el.dataset.f] = el.value;
+        if (el.dataset.f === 'caption') {
+          SPEAK.caption = el.value;
+          const l = capLimit(ed.vals.channels); const c = $('#capCount');
+          if (c) { c.textContent = capText(el.value.length, ed.vals.channels); c.classList.toggle('over', !!l.max && el.value.length > l.max); }
+        }
+        if (el.dataset.f === 'canva') { clearTimeout(ed.canvaTimer); ed.canvaTimer = setTimeout(function () { flushSave().then(function () { if (view === 'post') render(); }); }, 1500); }
+        queueSave();
       });
-    }).catch(function (e) { toast(e.message, 'err'); const b = $('#saveBtn'); if (b) { b.disabled = false; b.textContent = 'Save'; } return false; });
+    });
+  }
+  function changedKeys() { const p = postById(ed.id); return FIELDS.filter(function (k) { return String(ed.vals[k] || '').trim() !== String(p[k] || ''); }); }
+  function queueSave() { ed.saved = 'pending'; paintSave(); clearTimeout(ed.timer); ed.timer = setTimeout(flushSave, 1400); }
+  function paintSave() {
+    const bar = $('#savebar'); if (!bar || !ed) return;
+    bar.classList.toggle('err', ed.saved === 'error');
+    bar.innerHTML = ({ idle: icon('check') + 'Everything is saved', pending: icon('pencil') + 'Saving in a moment…', saving: icon('clock') + 'Saving…', saved: icon('check') + 'Saved', error: icon('alert') + 'Not saved. Check the internet connection.' })[ed.saved] +
+      (ed.saved === 'error' ? '<button class="btn btn-main" type="button" data-retry="1">Try again</button>' : '') +
+      (ed.lastUndo && ed.saved !== 'error' ? '<button class="btn" type="button" data-undoedit="1">' + icon('undo') + 'Undo my last change</button>' : '');
+  }
+  let saveChain = Promise.resolve(true);
+  function flushSave(undoing) {
+    saveChain = saveChain.then(function () { return doSave(undoing); });
+    return saveChain;
+  }
+  function doSave(undoing) {
+    if (!ed) return Promise.resolve(true);
+    clearTimeout(ed.timer);
+    const p = postById(ed.id); const keys = changedKeys();
+    if (!keys.length) { if (ed.saved === 'pending') { ed.saved = 'idle'; paintSave(); } return Promise.resolve(true); }
+    if (!prefs.who) { askWho(); return Promise.resolve(false); }
+    const body = { id: p.id }, before = { id: p.id };
+    keys.forEach(function (k) { body[k] = String(ed.vals[k] || '').trim(); before[k] = p[k] || ''; });
+    ed.saved = 'saving'; paintSave();
+    const edRef = ed;
+    const wasApproved = p.status === 'Approved' || p.status === 'Scheduled';
+    return postLong({ action: 'savePost', by: prefs.who, post: body })
+      .then(function (r) { return r && r.post ? r : call({ action: 'getPost', id: p.id }); })
+      .then(function (r) {
+        if (!keys.every(function (k) { return String(r.post[k] || '') === body[k]; })) throw new Error('not saved');
+        replacePost(r.post);
+        if (ed !== edRef) return true;
+        ed.saved = 'saved'; ed.lastUndo = undoing ? null : before;
+        if (wasApproved && r.post.status === 'Ready for approval') { render(); showMsg('Your change is saved. The post went back for approval.' + (r.warning ? ' ' + r.warning : ''), 'info'); }
+        else if (keys.some(function (k) { return ['date', 'checkpoint', 'personas', 'contentType', 'format', 'channels', 'needs', 'canva'].indexOf(k) >= 0; }) || keys.indexOf('topic') >= 0 && !$('#f-topic')) render();
+        else { paintSave(); const h1 = $('.ed-head h1'); if (h1 && keys.indexOf('topic') >= 0) h1.textContent = ed.vals.topic || title(r.post); }
+        return true;
+      })
+      .catch(function (e) { if (ed === edRef) { ed.saved = 'error'; paintSave(); if (e && e.message && e.message !== 'not saved') showMsg(e.message, 'err'); } return false; });
   }
 
-  function act(params, okMsg) {
-    if (!who) { askWho(); return Promise.resolve(); }
-    return call(Object.assign({ by: who }, params)).then(function (r) {
-      toast(okMsg); return load(true).then(function () { return r; });
-    }).catch(function (e) { toast(e.message, 'err'); });
+  /* Status changes, with Undo in the message bar. */
+  function act(params, msg, undoParams, after) {
+    if (!prefs.who) { askWho(); return Promise.resolve(null); }
+    return call(Object.assign({ by: prefs.who }, params)).then(function (r) {
+      return call({ action: 'all' }).then(function (all) {
+        D = all; if (after) after(r); render();
+        showMsg(msg + (r && r.warning ? ' ' + r.warning : ''), r && r.warning ? 'info' : 'ok', undoParams ? function () { return act(undoParams, 'Undone.'); } : null);
+        return r;
+      });
+    }).catch(function (e) { showMsg(e.message, 'err'); return null; });
   }
 
-  function openPost(id) { openId = id; renderDrawer(); setTimeout(function () { const x = $('#dClose'); if (x) x.focus(); }, 30); }
-  function closeDrawer() {
-    const p = openId && postById(openId); const v = formValues();
-    const shut = function () { openId = null; $('#drawerWrap').hidden = true; $('#drawer').innerHTML = ''; };
-    if (p && v && changedFields(p, v).length) {
-      ask('Close without saving your changes?', 'Close without saving', true).then(function (yes) { if (yes) shut(); });
+  /* ═══════════ DIALOGS ═══════════ */
+  function modal(html, label) {
+    $('#overlayWrap').innerHTML = '<div class="overlay"><div class="modal" role="dialog" aria-modal="true" aria-label="' + esc(label || 'Dialog') + '">' + html + '</div></div>';
+    const f = $('#overlayWrap [aria-pressed="true"], #overlayWrap textarea, #overlayWrap input, #overlayWrap button'); if (f) f.focus();
+  }
+  function closeModal() { $('#overlayWrap').innerHTML = ''; }
+  function ask(text, yes) {
+    return new Promise(function (resolve) {
+      modal('<h2>' + esc(text) + '</h2><div class="actions"><button class="btn btn-big" type="button" id="askNo">No, go back</button><button class="btn btn-big btn-navy" type="button" id="askYes">' + esc(yes) + '</button></div>', 'Question');
+      $('#askNo').onclick = function () { closeModal(); resolve(false); };
+      $('#askYes').onclick = function () { closeModal(); resolve(true); };
+    });
+  }
+  function askWho() { settingsDialog(true); }
+  let settingsNameOnly = false;
+  function settingsDialog(nameOnly) {
+    settingsNameOnly = nameOnly;
+    const opt = function (key, val, label) { const on = prefs[key] === val; return '<button class="choice" type="button" data-pref="' + key + '" data-val="' + esc(val) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span>' + label + '</button>'; };
+    modal('<h2>' + (nameOnly ? 'Who is working?' : 'Settings') + '</h2>' +
+      '<div class="field"><span class="q">Your name</span><div class="choices">' + D.lists.team.map(function (n) { return opt('who', n, esc(n)); }).join('') + '</div></div>' +
+      (nameOnly ? '' :
+      '<div class="field"><span class="q">Text size</span><div class="choices">' + opt('size', 'normal', 'Large') + opt('size', 'larger', 'Larger') + opt('size', 'largest', 'Largest') + '</div></div>' +
+      '<div class="field"><span class="q">Background</span><span class="hint">A soft tint can be easier on the eyes than bright white.</span><div class="choices">' + opt('bg', 'white', 'Bright white') + opt('bg', 'warm', 'Soft cream') + opt('bg', 'cool', 'Soft blue') + '</div></div>' +
+      '<div class="field"><span class="q">Read-aloud buttons</span><div class="choices">' + opt('speak', 'on', 'Show them') + opt('speak', 'off', 'Hide them') + '</div></div>') +
+      '<div class="actions"><button class="btn btn-navy btn-big" type="button" id="setDone"' + (prefs.who ? '' : ' disabled') + '>Done</button></div>', nameOnly ? 'Who is working' : 'Settings');
+    $('#setDone').onclick = function () { if (!prefs.who) return; closeModal(); render(); };
+    $$('#overlayWrap [data-pref]').forEach(function (b) {
+      b.onclick = function () {
+        prefs[b.dataset.pref] = b.dataset.val; savePrefs(); render();
+        settingsDialog(settingsNameOnly);
+        const again = $('#overlayWrap [data-pref="' + b.dataset.pref + '"][data-val="' + CSS.escape(b.dataset.val) + '"]'); if (again) again.focus();
+      };
+    });
+  }
+  function addPostDialog() {
+    const m = monthShown; const st = { kind: 'Event', group: 'All Socials', date: '' };
+    function draw(focusSel) {
+      const keep = $('#apTopic') ? $('#apTopic').value : '';
+      const c = function (k, v, label) { const on = st[k] === v; return '<button class="choice" type="button" data-ap="' + k + '" data-val="' + esc(v) + '" aria-pressed="' + on + '"><span class="tick" aria-hidden="true">' + (on ? icon('check') : '') + '</span>' + label + '</button>'; };
+      modal('<h2>Add a post to ' + esc(monthName(m)) + '</h2><p class="hint">For an event, a team or brand moment, or an extra post. Before, day-of and after posts are added one at a time.</p>' +
+        '<div class="field"><span class="q">What is it?</span><div class="choices">' + c('kind', 'Event', 'An event') + c('kind', 'Brand', 'Brand or team news') + c('kind', 'Extra', 'An extra post') + '</div></div>' +
+        '<div class="field"><span class="q">Where does it go?</span><div class="choices">' + c('group', 'All Socials', 'Facebook, Instagram, Google') + c('group', 'LinkedIn', 'LinkedIn') + '</div></div>' +
+        '<div class="field"><span class="q">Which day?</span>' + dayGrid(m, 'apday', st.date) + '</div>' +
+        '<div class="field"><label for="apTopic">What is it about?</label><input id="apTopic" type="text" spellcheck="true" placeholder="For example: Toy drive at the office"></div>' +
+        '<div class="actions"><button class="btn btn-big" type="button" id="apCancel">Cancel</button><button class="btn btn-main btn-big" type="button" id="apAdd">Add the post</button></div>', 'Add a post');
+      $('#apTopic').value = keep;
+      if (focusSel) { const f = $(focusSel); if (f) f.focus(); }
+      $('#apCancel').onclick = closeModal;
+      $('#apAdd').onclick = function () {
+        const topic = $('#apTopic').value.trim(); closeModal();
+        act({ action: 'addPost', month: m, kind: st.kind, group: st.group, date: st.date, topic: topic }, 'Post added.', null,
+          function (r) { if (r && r.post) setTimeout(function () { openPost(r.post.id, 'calendar'); }, 0); });
+      };
+      $$('#overlayWrap [data-ap]').forEach(function (b) { b.onclick = function () { st[b.dataset.ap] = b.dataset.val; draw('#overlayWrap [data-ap="' + b.dataset.ap + '"][data-val="' + CSS.escape(b.dataset.val) + '"]'); }; });
+      $$('#overlayWrap [data-apday]').forEach(function (b) { b.onclick = function () { st.date = b.dataset.apday; draw('#overlayWrap [data-apday="' + st.date + '"]'); }; });
+    }
+    draw();
+  }
+  function changesDialog(id) {
+    modal('<h2>What needs to change?</h2><div class="field"><label for="chNote">Tell Natalie what to fix</label><textarea id="chNote" spellcheck="true"></textarea></div>' +
+      '<div class="actions"><button class="btn btn-big" type="button" id="chCancel">Cancel</button><button class="btn btn-main btn-big" type="button" id="chSend">Send it back</button></div>', 'Needs changes');
+    $('#chCancel').onclick = closeModal;
+    $('#chSend').onclick = function () {
+      const note = $('#chNote').value.trim(); if (!note) { $('#chNote').focus(); return; }
+      closeModal(); act({ action: 'requestChanges', id: id, note: note }, 'Sent back with your note.', { action: 'backToReady', id: id });
+    };
+  }
+  function holidayDateDialog(id) {
+    const x = D.holidays.filter(function (h) { return h.id === id; })[0]; if (!x) return;
+    modal('<h2>Which day is ' + esc(x.name) + '?</h2>' + dayGrid(x.month, 'hday', '') + '<div class="actions"><button class="btn btn-big" type="button" id="hdCancel">Cancel</button></div>', 'Pick the date');
+    $('#hdCancel').onclick = closeModal;
+    $$('#overlayWrap [data-hday]').forEach(function (b) { b.onclick = function () { closeModal(); act({ action: 'setHoliday', id: id, use: x.use, start: b.dataset.hday }, 'Date saved.'); }; });
+  }
+
+  /* ═══════════ CLICKS ═══════════ */
+  document.addEventListener('click', function (e) {
+    const t = e.target.closest('button, a');
+    if (!t || t.closest('#overlayWrap')) return;     // dialogs wire their own buttons
+    const d = t.dataset;
+    if (t.id === 'settingsBtn') { settingsDialog(false); return; }
+    if (d.view) {
+      const go = function () { ed = null; view = d.view; clearMsg(); render(); window.scrollTo(0, 0); };
+      if (view === 'post') flushSave().then(go); else go();
       return;
     }
-    shut();
-  }
-
-  /* ═══════════ SMALL DIALOGS ═══════════ */
-  // In-page yes/no dialog. The browser's own pop-up dialogs are blocked in some app views.
-  function ask(message, okLabel, danger) {
-    return new Promise(function (resolve) {
-      const wrap = $('#overlayWrap');
-      wrap.innerHTML = '<div class="overlay"><div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="askT"><h2 id="askT" style="font-size:18px">' + esc(message) + '</h2>' +
-        '<div class="actions"><button class="btn" id="askNo">Cancel</button><button class="btn ' + (danger ? 'btn-danger' : 'btn-primary') + '" id="askYes">' + esc(okLabel || 'OK') + '</button></div></div></div>';
-      const done = function (v) { wrap.innerHTML = ''; resolve(v); };
-      $('#askNo').onclick = function () { done(false); };
-      $('#askYes').onclick = function () { done(true); };
-      $('#askYes').focus();
-    });
-  }
-  function askWho() {
-    const wrap = $('#overlayWrap');
-    wrap.innerHTML = '<div class="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="whoT"><h2 id="whoT">Who\'s working?</h2>' +
-      '<p class="sub" style="margin:0">Your name goes on every save and approval.</p><div class="field"><select id="whoPick" class="who" style="width:100%">' +
-      '<option value="">Choose your name…</option>' + D.lists.team.map(function (n) { return '<option>' + esc(n) + '</option>'; }).join('') +
-      '</select></div><div class="actions"><button class="btn btn-primary" id="whoOk">Continue</button></div></div></div>';
-    $('#whoOk').onclick = function () { const v = $('#whoPick').value; if (!v) return; setWho(v); wrap.innerHTML = ''; };
-  }
-  function setWho(v) { who = v; try { localStorage.setItem('socialWho', v); } catch (e) {} render(); }
-
-  function addPostDialog() {
-    const m = monthShown;
-    const wrap = $('#overlayWrap');
-    wrap.innerHTML = '<div class="overlay"><form class="modal" id="apForm"><h2>Add a post to ' + esc(monthName(m)) + '</h2>' +
-      '<p class="sub" style="margin:0">For events, Your Brand items (anniversaries, new hires, awards) or an extra post. Before, day-of and after posts are added separately.</p>' +
-      '<div class="field"><label for="apKind">Kind</label><select id="apKind" class="who" style="width:100%"><option>Event</option><option>Brand</option><option>Extra</option></select></div>' +
-      '<div class="field"><label for="apGroup">Where</label><select id="apGroup" class="who" style="width:100%"><option>All Socials</option><option>LinkedIn</option></select></div>' +
-      '<div class="field"><label for="apDate">Post date</label><input type="date" id="apDate" class="who" style="width:100%" min="' + m + '-01" max="' + addDays(addMonths(m, 1) + '-01', -1) + '"></div>' +
-      '<div class="field"><label for="apTopic">Topic</label><input type="text" id="apTopic" class="who" style="width:100%" placeholder="e.g. Toy drive at the office"></div>' +
-      '<div class="actions"><button type="button" class="btn" id="apCancel">Cancel</button><button class="btn btn-primary" type="submit">Add post</button></div></form></div>';
-    $('#apCancel').onclick = function () { wrap.innerHTML = ''; };
-    $('#apForm').onsubmit = function (e) {
-      e.preventDefault();
-      act({ action: 'addPost', month: m, kind: $('#apKind').value, group: $('#apGroup').value, date: $('#apDate').value, topic: $('#apTopic').value.trim() }, 'Post added.')
-        .then(function (r) { wrap.innerHTML = ''; if (r && r.post) openPost(r.post.id); });
-    };
-  }
-
-  /* ═══════════ EVENTS ═══════════ */
-  document.addEventListener('click', function (e) {
-    const t = e.target.closest('button, a'); if (!t) return;
-    const d = t.dataset;
-    if (t.classList.contains('tab')) { view = d.view; try { localStorage.setItem('socialView', view); } catch (x) {} render(); return; }
-    if (t.id === 'refreshBtn') { load(); return; }
-    if (t.id === 'dClose') { closeDrawer(); return; }
-    if (t.id === 'saveBtn') { savePost(); return; }
-    if (d.open) { openPost(d.open); return; }
+    if (d.closemsg) { clearMsg(); return; }
+    if (d.undo && undoFn) { const f = undoFn; clearMsg(); f(); return; }
+    if (d.speak) { speak(SPEAK[d.speak] || '', t); return; }
+    if (d.open) { openPost(d.open, view === 'post' ? (ed && ed.from) : view); return; }
+    if (d.closepost) { closePost(); return; }
     if (d.month) { monthShown = addMonths(monthShown, Number(d.month)); render(); return; }
     if (d.filter) { groupFilter = d.filter; render(); return; }
     if (d.add) { addPostDialog(); return; }
-    if (d.build) { act({ action: 'buildMonth', month: d.build }, monthName(d.build) + ' is built.'); return; }
-    if (d.addhol) {
-      const built = D.builtMonths.indexOf(d.addhol) >= 0;
-      const go = function () { act({ action: 'buildMonth', month: d.addhol }, 'Approved holidays added to ' + monthName(d.addhol) + '.'); };
-      if (built) go();
-      else ask(monthName(d.addhol) + ' isn\'t built yet. Build it now? That also creates its regular post slots and checklist.', 'Build ' + monthName(d.addhol)).then(function (yes) { if (yes) go(); });
+    if (d.build) { act({ action: 'buildMonth', month: d.build }, monthName(d.build) + ' is set up.'); return; }
+    if (d.task) {
+      const tk = D.tasks.filter(function (x) { return x.id === d.task; })[0]; const now = !(tk && tk.done);
+      act({ action: 'toggleTask', id: d.task, done: String(now) }, now ? 'Checked off: ' + (tk ? tk.title : '') : 'Unchecked: ' + (tk ? tk.title : ''), { action: 'toggleTask', id: d.task, done: String(!now) });
       return;
     }
-    if (d.hol) { const cur = D.holidays.filter(function (x) { return x.id === d.hol; })[0]; act({ action: 'setHoliday', id: d.hol, use: cur && cur.use === d.v ? '' : d.v }, 'Saved.'); return; }
-    if (d.approve) { act({ action: 'approve', id: d.approve }, 'Approved.'); return; }
-    if (d.reqopen) { const holder = t.closest('.card'); const b = holder && holder.querySelector('.reqbox'); if (b) { b.classList.toggle('open'); const ta = b.querySelector('textarea'); if (ta) ta.focus(); } return; }
-    if (d.reqsend) {
-      const box = t.closest('.reqbox'); const ta = box && box.querySelector('textarea');
-      const note = ta ? ta.value.trim() : '';
-      if (!note) { toast('Say what needs to change.', 'err'); return; }
-      act({ action: 'requestChanges', id: d.reqsend, note: note }, 'Sent back with your notes.'); return;
+    if (d.detail) { openDetail[d.detail] = !openDetail[d.detail]; render(); return; }
+    if (d.clmonth) { checklistMonth = d.clmonth; render(); return; }
+    if (d.newtaskday) { $$('[data-newtaskday]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); }); return; }
+    if (d.addtask) {
+      const txt = ($('#newTask').value || '').trim(); const day = $('[data-newtaskday][aria-pressed="true"]');
+      if (!txt) { showMsg('Type what needs doing first.', 'err'); $('#newTask').focus(); return; }
+      if (!day) { showMsg('Pick the day it is due.', 'err'); return; }
+      act({ action: 'addTask', title: txt, due: day.dataset.newtaskday, month: checklistMonth }, 'Task added.');
+      return;
     }
-    if (d.send) { savePost().then(function (ok) { if (ok) act({ action: 'sendForApproval', id: d.send }, 'Sent for approval.'); }); return; }
-    if (d.sched) { act({ action: 'markScheduled', id: d.sched }, 'Marked scheduled.'); return; }
-    if (d.gbp) { act({ action: 'markGbpPosted', id: d.gbp, value: d.v }, d.v === 'true' ? 'Marked posted on Google.' : 'Unmarked.'); return; }
-    if (d.skip) { act({ action: 'skipPost', id: d.skip, value: d.v }, d.v === 'true' ? 'Post skipped.' : 'Post restored.'); return; }
-    if (d.delpost) { const id = d.delpost; ask('Delete this post?', 'Delete post', true).then(function (yes) { if (yes) act({ action: 'deletePost', id: id }, 'Post deleted.').then(function () { openId = null; $('#drawerWrap').hidden = true; }); }); return; }
-    if (d.deltask) { const id = d.deltask; ask('Delete this task?', 'Delete task', true).then(function (yes) { if (yes) act({ action: 'deleteTask', id: id }, 'Task deleted.'); }); return; }
-  });
-  document.addEventListener('change', function (e) {
-    const t = e.target;
-    if (t.dataset.task) { act({ action: 'toggleTask', id: t.dataset.task, done: String(t.checked) }, t.checked ? 'Done.' : 'Reopened.'); return; }
-    if (t.id === 'whoSel') { setWho(t.value); return; }
-    if (t.id === 'clMonth') { checklistMonth = t.value; render(); return; }
-    if (t.dataset.holdate && t.value) {
-      const cur = D.holidays.filter(function (x) { return x.id === t.dataset.holdate; })[0];
-      if (cur && t.value.slice(0, 7) !== cur.month) { toast('Pick a date in ' + monthName(cur.month) + '.', 'err'); t.value = ''; return; }
-      act({ action: 'setHoliday', id: t.dataset.holdate, use: cur ? cur.use : '', start: t.value }, 'Date saved.');
+    if (d.hol) {
+      const x = D.holidays.filter(function (h) { return h.id === d.hol; })[0]; const prev = x ? x.use : ''; const nextV = prev === d.v ? '' : d.v;
+      act({ action: 'setHoliday', id: d.hol, use: nextV }, (nextV === 'Yes' ? 'Chosen: ' : nextV === 'No' ? 'Skipped: ' : 'Cleared: ') + (x ? x.name : ''), { action: 'setHoliday', id: d.hol, use: prev });
+      return;
     }
+    if (d.holdate) { holidayDateDialog(d.holdate); return; }
+    if (d.addhol) {
+      const m = d.addhol;
+      const go = function () { act({ action: 'buildMonth', month: m }, 'The chosen holidays are in the ' + monthName(m) + ' plan.'); };
+      if (D.builtMonths.indexOf(m) >= 0) go(); else ask(monthName(m) + ' is not set up yet. Set it up now? That also adds its regular posts and checklist.', 'Yes, set it up').then(function (y) { if (y) go(); });
+      return;
+    }
+    if (d.approve) { act({ action: 'approve', id: d.approve }, 'Approved.', { action: 'backToReady', id: d.approve }); return; }
+    if (d.changes) { changesDialog(d.changes); return; }
+    if (d.retry) { flushSave(); return; }
+    if (d.undoedit && ed && ed.lastUndo) { const u = ed.lastUndo; Object.keys(u).forEach(function (k) { if (k !== 'id') ed.vals[k] = u[k]; }); ed.lastUndo = null; render(); flushSave(true); return; }
+    if (!ed || view !== 'post') return;
+    // Editor
+    if (d.step) { ed.step = Number(d.step); flushSave(); render(); window.scrollTo(0, 0); const cur = $('.step[aria-current="step"]'); if (cur) cur.focus({ preventScroll: true }); return; }
+    if (d.pickday) { ed.vals.date = d.pickday; render(); flushSave(); return; }
+    if (d.set) { ed.vals[d.set] = ed.vals[d.set] === d.val ? '' : d.val; render(); flushSave(); return; }
+    if (d.toggle) { const cur = split(ed.vals[d.toggle]); const i = cur.indexOf(d.val); if (i >= 0) cur.splice(i, 1); else cur.push(d.val); ed.vals[d.toggle] = cur.join(', '); render(); flushSave(); return; }
+    if (d.paste) {
+      const el = document.getElementById(d.paste);
+      const fallback = function () { el.focus(); showMsg('Click in the link box, then press the Ctrl key and the V key together to paste.', 'info'); };
+      if (navigator.clipboard && navigator.clipboard.readText) navigator.clipboard.readText().then(function (txt) { if (!txt) return fallback(); el.value = txt.trim(); el.dispatchEvent(new Event('input')); }).catch(fallback);
+      else fallback();
+      return;
+    }
+    if (d.send) { flushSave().then(function (ok) { if (ok) act({ action: 'sendForApproval', id: d.send }, 'Sent for approval.', { action: 'withdraw', id: d.send }); }); return; }
+    if (d.withdraw) { act({ action: 'withdraw', id: d.withdraw }, 'Taken back. You can keep working on it.', { action: 'sendForApproval', id: d.withdraw }, function () { if (ed) ed.step = 2; }); return; }
+    if (d.sched) { act({ action: 'markScheduled', id: d.sched }, 'Marked as scheduled.', { action: 'unschedule', id: d.sched }); return; }
+    if (d.unsched) { act({ action: 'unschedule', id: d.unsched }, 'Marked as not scheduled.', { action: 'markScheduled', id: d.unsched }); return; }
+    if (d.gbp) { act({ action: 'markGbpPosted', id: d.gbp, value: 'true' }, 'Marked as posted on Google.', { action: 'markGbpPosted', id: d.gbp, value: 'false' }); return; }
+    if (d.design) { const id = d.design; ask('Did you change the design in Canva? It will go back for approval.', 'Yes, I changed it').then(function (y) { if (y) act({ action: 'designChanged', id: id }, 'Thanks. It went back for approval.'); }); return; }
+    if (d.edit) { ask('Changing this post sends it back for approval. Go ahead?', 'Yes, make a change').then(function (y) { if (y && ed) { ed.editing = true; ed.step = 2; render(); } }); return; }
+    if (d.skip) { const id = d.skip; ask('Skip this post this month?', 'Yes, skip it').then(function (y) { if (y) act({ action: 'skipPost', id: id, value: 'true' }, 'Post skipped.', { action: 'skipPost', id: id, value: 'false' }); }); return; }
+    if (d.unskip) { act({ action: 'skipPost', id: d.unskip, value: 'false' }, 'The post is back.', { action: 'skipPost', id: d.unskip, value: 'true' }); return; }
+    if (d.delpost) { const id = d.delpost; ask('Delete this post for good?', 'Yes, delete it').then(function (y) { if (y) act({ action: 'deletePost', id: id }, 'Post deleted.', null, function () { if (ed) { view = ed.from; ed = null; } }); }); return; }
   });
-  document.addEventListener('submit', function (e) {
-    if (e.target.id !== 'addTaskForm') return;
-    e.preventDefault();
-    const f = e.target;
-    act({ action: 'addTask', title: f.title.value.trim(), due: f.due.value, month: checklistMonth }, 'Task added.');
-  });
-  $('#scrim').addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Escape') return;
-    if ($('#askNo')) { $('#askNo').click(); return; }
-    if (openId && !$('#overlayWrap').innerHTML) closeDrawer();
+    if (e.key !== 'Escape' || !$('#overlayWrap').innerHTML) return;
+    const no = $('#askNo') || $('#apCancel') || $('#chCancel') || $('#hdCancel');
+    if (no) no.click(); else if (prefs.who) closeModal();
   });
+  window.addEventListener('beforeunload', function (e) { if (ed && (ed.saved === 'pending' || ed.saved === 'saving')) { e.preventDefault(); e.returnValue = ''; } });
 
   /* ═══════════ START ═══════════ */
   if (!PREVIEW && (SCRIPT_URL.indexOf('https://') !== 0 || !KEY)) {
-    setMain('');
-    showBanner(!KEY ? 'The dashboard key file (/team/social-secret.js) is missing on the server. Tell Mike.' : 'The dashboard isn\'t connected to the Google sheet yet. Tell Mike.');
+    $('#view').innerHTML = '';
+    $('#banner').innerHTML = '<div class="banner">' + (!KEY ? 'The dashboard key file (/team/social-secret.js) is missing on the server. Tell Mike.' : 'The dashboard is not connected to the Google sheet yet. Tell Mike.') + '</div>';
   } else {
-    load().then(function () { if (!who) askWho(); }).catch(function () {});
+    load().then(function () { if (!prefs.who) askWho(); }).catch(function () {});
   }
 })();
 </script>
