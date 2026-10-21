@@ -39,6 +39,30 @@ AddOutputFilter INCLUDES .html
   </FilesMatch>
 </IfModule>
 
+# --- Referral Hub key: never stored by a browser or a shared cache ---
+# /team/hub-secret.js (server-only, gitignored) holds the Hub key. On Oct 20
+# 2026 the old key was still served after it changed. Cloudflare already
+# bypasses its cache for /team/, so the likely cause was the browser: the file
+# had no caching header, so the browser picked its own lifetime for it.
+# "no-store" means it is never written to any cache; "private" keeps shared
+# caches out.
+# Kept in this root file on purpose: no .htaccess under team/ is tracked, so
+# cPanel can never cause a pull conflict there. The filename is unique to /team/.
+<IfModule mod_headers.c>
+  <FilesMatch "^hub-secret\.js$">
+    Header set Cache-Control "no-store, private"
+  </FilesMatch>
+</IfModule>
+
+# --- Landing page registry: always revalidate ---
+# /team/landing-pages.js is the Referral Hub's list of landing pages. A page
+# added there must show up on the next Hub load, not after a browser's guess.
+<IfModule mod_headers.c>
+  <FilesMatch "^landing-pages\.js$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
 # --- Block web access to Markdown docs ---
 # Second layer behind .gitignore. PROJECT_STATUS.md and claude.md were tracked in
 # git and, because the repo IS the docroot, were publicly readable on the live site

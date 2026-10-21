@@ -491,6 +491,72 @@
       line-height: 1.55;
     }
 
+    /* ── Programs, owners, My Pages, row links (page-scoped, Oct 2026) ──
+       Reuses .badge, .filter-btn, .rh-rowbtn, .rh-stage-select and
+       .field-note; only what those cannot express is defined here. */
+    .rh-prog-home   { background: var(--navy-lt); color: var(--navy); }
+    .rh-prog-rental { background: #fdeee4; color: #9a4419; }
+    /* Edit partners mode: a selection column plus one action bar */
+    .rh-editbar { background: var(--navy-lt); gap: 10px; }
+    .rh-edit-count { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+    .rh-edit-group { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text); }
+    .rh-edit-status { flex-basis: 100%; font-size: 12.5px; color: var(--muted); }
+    .rh-edit-status.bad { color: #dc2626; font-weight: 600; }
+    .rh-sel-col { width: 34px; }
+    .rh-sel-col input { width: 16px; height: 16px; cursor: pointer; }
+    .rh-chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .rh-chip-count { margin-left: 5px; font-weight: 500; opacity: .75; }
+    .rh-toolbar-note { font-size: 12.5px; color: var(--muted); }
+    .rh-filter-select { height: 32px; width: auto; min-width: 150px; font-size: 12.5px; }
+
+    /* Partner-row links: one compact line per landing page — title, then a
+       navy "Link" (copy URL) and an orange "QR" (download code). Grows with
+       the number of pages; no menus or pop-ups. */
+    .rh-plinks { display: flex; flex-direction: column; gap: 4px; min-width: 210px; }
+    .rh-plink { display: flex; align-items: center; gap: 6px; }
+    .rh-plink-title { flex: 1; min-width: 0; font-size: 12.5px; color: var(--text); }
+    .rh-mini {
+      height: 22px;
+      padding: 0 9px;
+      border-radius: 4px;
+      border: 1px solid;
+      background: var(--bg-w);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+    }
+    .rh-mini-link { color: var(--navy); border-color: var(--navy); }
+    .rh-mini-link:hover { background: var(--navy); color: #fff; }
+    .rh-mini-qr { color: var(--orange-h); border-color: var(--orange); }
+    .rh-mini-qr:hover { background: var(--orange); color: #fff; }
+    .rh-th-hint { text-transform: none; letter-spacing: 0; font-weight: 500; margin-left: 6px; }
+    .rh-th-hint .rh-mini { height: 18px; padding: 0 6px; font-size: 10px; cursor: default; pointer-events: none; }
+    .rh-linknote { font-size: 11.5px; line-height: 1.4; padding: 3px 7px; display: inline-block; }
+
+    .rh-pages { display: flex; flex-direction: column; gap: 10px; }
+    .rh-page {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--bg);
+    }
+    .rh-page-meta { flex: 1 1 280px; min-width: 0; }
+    .rh-page-label { font-weight: 700; color: var(--navy); }
+    .rh-page-aud { font-size: 12px; color: var(--muted); }
+    .rh-page-url { font-size: 12.5px; color: var(--text); word-break: break-all; }
+    @media (max-width: 700px) {
+      .rh-filter-select { width: 100%; }
+      .rh-plinks { min-width: 0; flex: 1; }
+    }
+
     #qrScratch { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
     /* ── RESPONSIVE ── */
@@ -588,22 +654,19 @@
       <option value="">Select your name&hellip;</option>
     </select>
     <span class="rh-agentbar-note" id="agentBarNote">
-      Pick your name to see your link and your referrals. You can browse all partners without selecting.
+      Pick your name to see your pages and your referrals. You can browse all partners without selecting.
     </span>
   </div>
 
-  <!-- ── SECTION 1: MY LINK ── -->
+  <!-- ── SECTION 1: MY PAGES ──
+       Built from /team/landing-pages.js, the registry of every landing page. -->
   <section class="rh-card">
     <div class="rh-card-head">
-      <div class="rh-card-title">My Link</div>
+      <div class="rh-card-title">My Pages</div>
     </div>
     <div class="rh-card-body">
-      <p class="rh-card-sub">Your personal referral link. Anyone who uses it is credited to you.</p>
-      <div class="rh-link-row">
-        <div class="rh-link" id="myLink">&mdash;</div>
-        <button class="btn btn-primary" id="copyLinkBtn" onclick="copyMyLink()">Copy Link</button>
-        <button class="btn btn-outline" id="qrLinkBtn" onclick="downloadMyQr()">Download QR</button>
-      </div>
+      <p class="rh-card-sub">Every landing page that exists for you. Anyone who uses one of these links is credited to you.</p>
+      <div class="rh-pages" id="myPages"></div>
     </div>
   </section>
 
@@ -619,9 +682,32 @@
         <button class="filter-btn active" id="scope-mine" onclick="setPartnerScope('mine')">My partners</button>
         <button class="filter-btn"        id="scope-all"  onclick="setPartnerScope('all')">All partners</button>
       </div>
+      <!-- Agent filter: All partners only ("My partners" is already one agent) -->
+      <select class="rh-filter-select" id="ownerFilter" aria-label="Filter by agent" onchange="renderPartners()" style="display:none;"></select>
       <input class="filter-search" type="text" id="partnerSearch" placeholder="Search name, company, or code&hellip;" oninput="renderPartners()" />
       <div class="rh-card-spacer"></div>
+      <!-- Shown once the script supports bulk owner / program changes -->
+      <button class="filter-btn" id="editModeBtn" onclick="toggleEditMode()" style="display:none;">Edit partners</button>
       <button class="filter-btn" onclick="jumpToAdd()">+ Add a partner</button>
+    </div>
+    <div class="rh-toolbar" id="programBar">
+      <div class="rh-chips" id="programChips"></div>
+    </div>
+    <!-- Edit partners: tick partners on the left, then move them or set their program -->
+    <div class="rh-toolbar rh-editbar" id="editBar" style="display:none;">
+      <span class="rh-edit-count" id="editCount">0 selected</span>
+      <span class="rh-edit-group">Move to
+        <select class="rh-filter-select" id="bulkOwner" aria-label="Move selected partners to"></select>
+        <button class="rh-rowbtn primary" id="bulkOwnerBtn" onclick="applyBulk('owner')">Transfer</button>
+      </span>
+      <span class="rh-edit-group">Set program
+        <select class="rh-filter-select" id="bulkProgram" aria-label="Set program of selected partners"></select>
+        <button class="rh-rowbtn primary" id="bulkProgramBtn" onclick="applyBulk('program')">Apply</button>
+      </span>
+      <div class="rh-card-spacer"></div>
+      <button class="filter-btn" id="undoBtn" onclick="undoLastChange()" style="display:none;">Undo last change</button>
+      <button class="filter-btn active" onclick="toggleEditMode(false)">Done</button>
+      <span class="rh-edit-status" id="editStatus"></span>
     </div>
     <div id="partnerLoading" class="loading-state">
       <div class="spinner"></div>
@@ -631,10 +717,14 @@
       <table class="rh-table">
         <thead>
           <tr>
+            <th class="rh-sel-col" id="selTh" style="display:none;"><input type="checkbox" id="selAll"
+                onchange="toggleSelectAll(this.checked)" aria-label="Select all partners shown" /></th>
             <th>Partner Name</th>
             <th>Company</th>
+            <th>Owner</th>
+            <th>Program</th>
             <th>Stage</th>
-            <th>Actions</th>
+            <th>Links <span class="rh-th-hint"><span class="rh-mini rh-mini-link">Link</span> copies the URL &middot; <span class="rh-mini rh-mini-qr">QR</span> downloads the code</span></th>
           </tr>
         </thead>
         <tbody id="partnerBody"></tbody>
@@ -657,7 +747,7 @@
              never shows up in anyone's My-partners list. -->
         <div class="form-group full">
           <label>Assign To *</label>
-          <select id="f_assign" aria-label="Assign to" onchange="onAssignChange()"></select>
+          <select id="f_assign" aria-label="Assign to" onchange="onAssignPicked()"></select>
           <div class="field-note rh-note-muted" id="assignNote" style="display:none;"></div>
         </div>
         <div class="form-group">
@@ -671,7 +761,7 @@
         </div>
         <div class="form-group" id="grp_industry" style="display:none;">
           <label>Industry *</label>
-          <select id="f_industry" aria-label="Industry">
+          <select id="f_industry" aria-label="Industry" onchange="updateProgramDefault()">
             <option value="">Select industry&hellip;</option>
           </select>
           <div class="field-note">New company &mdash; this will be created.</div>
@@ -699,6 +789,12 @@
           <label>Stage</label>
           <select id="f_stage" aria-label="Stage"></select>
         </div>
+        <!-- Shown once the script returns a Programs list (Lists tab). -->
+        <div class="form-group" id="grp_program" style="display:none;">
+          <label>Program</label>
+          <select id="f_program" aria-label="Program" onchange="programTouched = true"></select>
+          <div class="field-note rh-note-muted">Set from the company&rsquo;s industry. Change it if this partner is different.</div>
+        </div>
         <div class="form-group full">
           <button class="btn btn-primary" id="addPartnerBtn" onclick="submitPartner()">Add Partner</button>
         </div>
@@ -718,6 +814,9 @@
       <div class="rh-card-spacer"></div>
       <div class="record-count" id="referralCount">Loading&hellip;</div>
     </div>
+    <div class="rh-toolbar" id="referralToolbar" style="display:none;">
+      <select class="rh-filter-select" id="coverageFilter" aria-label="Filter by coverage" onchange="renderReferrals()"></select>
+    </div>
     <div id="referralLoading" class="loading-state">
       <div class="spinner"></div>
       <span>Loading referrals&hellip;</span>
@@ -730,6 +829,7 @@
             <th>Client</th>
             <th>Partner</th>
             <th>Coverage</th>
+            <th id="leadTypeTh" style="display:none;">Lead type</th>
             <th>Status</th>
             <th>Intro Sent</th>
           </tr>
@@ -746,8 +846,8 @@
 </main>
 
 <p class="rh-disclosure">
-  This portal is protected by one shared team password &mdash; there is no individual login.
-  Anyone with the password can see every agent&rsquo;s partners and referrals, including yours.
+  Each person signs in to the team portal with their own email. Once signed in, everyone on the
+  team can see every agent&rsquo;s partners and referrals, including yours.
   Nothing here is private to you.
 </p>
 
@@ -760,6 +860,8 @@
 <!-- Hub key. This file exists ONLY on the web server — it is gitignored and
      must never be committed (the GitHub repo is public). See HUB_KEY below. -->
 <script src="/team/hub-secret.js"></script>
+<!-- Landing page registry (My Pages and the partner-row links). -->
+<script src="/team/landing-pages.js"></script>
 <script>
   /* ═══════════════════════════════════════
      CONFIGURATION
@@ -803,6 +905,25 @@
   let companyLookup = new Set();
   let industryList  = [];
   let stageList     = [];
+
+  // Programs and owner changes need the 2026-10-21 script (Version 7+). Its
+  // ?action=lists answer carries a `programs` key; Version 6 does not. Until
+  // then the Hub hides program controls and owner changes and keeps today's
+  // /refer/ links.
+  let programsSupported = false;  // the script knows setProgram / setOwner
+  let programList       = [];     // Lists tab "Programs" column, in sheet order
+  let programFilter     = 'all';  // 'all' | a program | '' (not set)
+  let companyIndustry   = new Map();  // lowercased company name -> Industry
+  let assignTouched     = false;  // Add form: owner picked by hand
+  let programTouched    = false;  // Add form: program picked by hand
+  let leadTypeSupported = false;  // referrals carry a Lead type
+
+  // Edit partners mode (bulk owner / program changes).
+  let editMode   = false;
+  let selected   = new Set();     // partner codes ticked in edit mode
+  let lastShown  = [];            // rows on screen after every filter
+  let lastChange = null;          // { field, label, entries:[{code, prev}] } for Undo
+  let bulkBusy   = false;
 
   /* ═══════════════════════════════════════
      DATA LAYER — reads are JSONP, writes are no-cors POST.
@@ -914,7 +1035,8 @@
       company: pick(raw, ['company', 'Company', 'companyName', 'Company Name']),
       stage:   pick(raw, ['stage', 'Stage', 'status', 'Status']),
       code:    pick(raw, ['code', 'Code', 'partnerCode', 'Partner Code', 'referralCode']),
-      agent:   pick(raw, ['agentSlug', 'agent', 'Agent', 'Agent Slug', 'owner', 'Owner', 'producer', 'Producer'])
+      agent:   pick(raw, ['agentSlug', 'agent', 'Agent', 'Agent Slug', 'owner', 'Owner', 'producer', 'Producer']),
+      program: pick(raw, ['program', 'Program'])
     };
   }
 
@@ -934,7 +1056,8 @@
       partner:   pick(raw, ['partner', 'Partner', 'partnerName', 'Partner Name', 'referredBy', 'Referred By']),
       coverage:  pick(raw, ['coverage', 'Coverage', 'lineOfBusiness', 'Line of Business', 'product', 'Product']),
       status:    pick(raw, ['status', 'Status', 'stage', 'Stage']),
-      introSent: pick(raw, ['introSent', 'Intro Sent', 'intro', 'Intro', 'introSentDate', 'Intro Sent Date'])
+      introSent: pick(raw, ['introSent', 'Intro Sent', 'intro', 'Intro', 'introSentDate', 'Intro Sent Date']),
+      leadType:  pick(raw, ['leadType', 'Lead type', 'Lead Type'])
     };
   }
 
@@ -945,17 +1068,32 @@
     return AGENTS.find(a => a.slug === slug) || null;
   }
 
-  // A partner row's owner may arrive as a slug, a first name, or a full
-  // name — resolve all three to the first name used in the referral URL.
-  function ownerFirstName(partner) {
+  // A partner's Owner Agent may hold a slug, a first name or a full name.
+  // Resolves to an AGENTS entry, or null. Never guesses: an owner that is
+  // not one of the seven agents stays unresolved and is flagged on the row.
+  function ownerAgent(partner) {
     const val = (partner.agent || '').toLowerCase().trim();
-    if (!val) return currentAgent ? currentAgent.first : '';
+    if (!val) return null;
     const bySlug = AGENTS.find(a => a.slug === val);
-    if (bySlug) return bySlug.first;
+    if (bySlug) return bySlug;
     const firstToken = val.split(/[\s\-_.]+/)[0];
-    const byFirst = AGENTS.find(a => a.first === firstToken);
-    if (byFirst) return byFirst.first;
-    return firstToken || (currentAgent ? currentAgent.first : '');
+    return AGENTS.find(a => a.first === firstToken) || null;
+  }
+
+  // 'assigned' | 'unassigned' (blank) | 'unknown' (a value no agent matches)
+  function ownerState(partner) {
+    if (!(partner.agent || '').trim()) return 'unassigned';
+    return ownerAgent(partner) ? 'assigned' : 'unknown';
+  }
+
+  // Whose pages a partner's links use: the OWNER, so a referral is credited
+  // to the agent the partner belongs to — whoever is viewing. Only an
+  // unassigned partner falls back to the agent selected at the top.
+  function linkAgentFor(partner) {
+    const state = ownerState(partner);
+    if (state === 'assigned') return { agent: ownerAgent(partner), fallback: false };
+    if (state === 'unknown')  return { agent: null, fallback: false };
+    return currentAgent ? { agent: currentAgent, fallback: true } : { agent: null, fallback: false };
   }
 
   // The dashboard card hands the agent off in ?agent=<slug>, the same
@@ -1019,12 +1157,7 @@
     document.getElementById('agentBar').classList.toggle('open', !has);
     document.getElementById('agentBarSelect').value = has ? currentAgent.slug : '';
 
-    const linkEl = document.getElementById('myLink');
-    linkEl.textContent = has ? SITE_BASE + currentAgent.first
-                             : 'Select your name to see your personal referral link.';
-    linkEl.classList.toggle('rh-link-empty', !has);
-    document.getElementById('copyLinkBtn').disabled = !has;
-    document.getElementById('qrLinkBtn').disabled   = !has;
+    renderMyPages();
 
     // "My partners" needs an identity; "All partners" never does.
     const mineBtn = document.getElementById('scope-mine');
@@ -1033,12 +1166,86 @@
     if (!has) partnerScope = 'all';
     mineBtn.classList.toggle('active', partnerScope === 'mine');
     document.getElementById('scope-all').classList.toggle('active', partnerScope === 'all');
+    syncOwnerFilter();
 
     document.getElementById('referralTitle').textContent = has ? 'My Referrals' : 'Referrals';
 
-    // Default the assignee to whoever is selected — the common case.
-    document.getElementById('f_assign').value = has ? currentAgent.slug : '';
+    // Default the assignee to whoever is selected at the top — the common
+    // case. A choice made by hand in the form is kept: switching the top
+    // agent must never silently re-own a partner that is being typed in.
+    if (!assignTouched) document.getElementById('f_assign').value = has ? currentAgent.slug : '';
     onAssignChange();
+  }
+
+  /* ═══════════════════════════════════════
+     MY PAGES — every landing page the registry lists for this agent
+  ═══════════════════════════════════════ */
+  function registryPages() {
+    return Array.isArray(window.LANDING_PAGES) ? window.LANDING_PAGES : null;
+  }
+
+  // Live pages whose file exists for this agent, in registry order.
+  function pagesForAgent(agent) {
+    const reg = registryPages();
+    if (!reg || !agent) return [];
+    return reg.filter(pg => pg && pg.live === true &&
+                            Array.isArray(pg.agents) && pg.agents.indexOf(agent.slug) !== -1);
+  }
+
+  function pageUrl(page, agent) {
+    return String(page.url).replace(/\{slug\}/g, agent.slug).replace(/\{first\}/g, agent.first);
+  }
+
+  function addParams(url, params) {
+    const q = Object.keys(params)
+      .filter(k => params[k])
+      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+      .join('&');
+    return q ? url + (url.indexOf('?') === -1 ? '?' : '&') + q : url;
+  }
+
+  // QR codes are tagged ?src=qr only on pages that read src.
+  function qrTarget(page, url) {
+    return page && page.readsSrc ? addParams(url, { src: 'qr' }) : url;
+  }
+
+  function renderMyPages() {
+    const box = document.getElementById('myPages');
+    if (!currentAgent) {
+      box.innerHTML = '<p class="rh-card-sub">Select your name to see your pages.</p>';
+      return;
+    }
+    const reg = registryPages();
+    if (!reg) {
+      // Registry failed to load: still offer the one page every agent has.
+      const url = SITE_BASE + currentAgent.first;
+      box.innerHTML = pageRowHtml({ label: 'Partner referral page', audience: 'Referral partners' },
+                                  url, url, `qr-${currentAgent.first}.png`) +
+        '<p class="field-note">The page list did not load, so only your referral page is shown. Tap Refresh.</p>';
+      return;
+    }
+    const pages = pagesForAgent(currentAgent);
+    box.innerHTML = pages.length
+      ? pages.map(pg => {
+          const url = pageUrl(pg, currentAgent);
+          // The partner referral QR keeps its original file name.
+          const file = pg.id === 'refer' ? `qr-${currentAgent.first}.png` : `qr-${currentAgent.first}-${pg.id}.png`;
+          return pageRowHtml(pg, url, qrTarget(pg, url), file);
+        }).join('')
+      : '<p class="rh-card-sub">No pages are listed for you yet.</p>';
+  }
+
+  function pageRowHtml(pg, url, qrText, file) {
+    return `
+      <div class="rh-page">
+        <div class="rh-page-meta">
+          <div class="rh-page-label">${escapeHtml(pg.label)}</div>
+          <div class="rh-page-aud">For: ${escapeHtml(pg.audience || '')}</div>
+          <div class="rh-page-url">${escapeHtml(url)}</div>
+        </div>
+        <button class="btn btn-primary" onclick="copyText('${jsAttr(url)}', 'Link copied')">Copy link</button>
+        <button class="btn btn-outline" onclick="downloadQr('${jsAttr(qrText)}', '${jsAttr(file)}')">Download QR</button>
+      </div>`;
   }
 
   /* ═══════════════════════════════════════
@@ -1093,12 +1300,14 @@
       document.getElementById('referralEmptyText').textContent =
         'Select your name above to see referrals sent to you.';
       document.getElementById('referralEmpty').style.display   = 'block';
+      document.getElementById('referralToolbar').style.display = 'none';
       return;
     }
 
     try {
       const res = await jsonp({ action: 'referrals', agent: currentAgent.slug });
       allReferrals = unwrapList(res, ['referrals']).map(normalizeReferral);
+      syncCoverageFilter();
       renderReferrals();
     } catch (e) {
       allReferrals = [];
@@ -1107,6 +1316,7 @@
       document.getElementById('referralEmptyText').textContent =
         'Could not load referrals. Tap Refresh to try again.';
       document.getElementById('referralEmpty').style.display   = 'block';
+      document.getElementById('referralToolbar').style.display = 'none';
     }
   }
 
@@ -1117,14 +1327,55 @@
       const src = (res && (res.data && !Array.isArray(res.data) ? res.data : res)) || {};
       industryList = toStringList(src.industries || src.Industries || src.industry || []);
       stageList    = toStringList(src.stages     || src.Stages     || src.stage    || []);
-      fillSelect('f_industry', industryList, '', 'Select industry…');
+      // Keep an industry already picked in the Add form across a reload.
+      const keepIndustry = document.getElementById('f_industry').value;
+      fillSelect('f_industry', industryList, industryList.indexOf(keepIndustry) !== -1 ? keepIndustry : '', 'Select industry…');
       refreshStageOptions();
+      // Version 7+ always sends `programs` (empty until setupPrograms runs).
+      programsSupported = Array.isArray(src.programs);
+      programList       = toStringList(src.programs || []);
     } catch (e) {
       // Lists are the one thing we cannot invent — leave Stage with the
       // documented default only, so an add still works.
       fillSelect('f_industry', [], '', 'Industry list unavailable');
       refreshStageOptions();
+      programsSupported = false;
+      programList       = [];
     }
+    refreshProgramField();
+    if (allPartners.length) renderPartners();   // lists may answer after partners
+  }
+
+  // Program dropdown in the Add form: only when the sheet has a Programs list.
+  function refreshProgramField() {
+    const show = programsSupported && programList.length > 0;
+    document.getElementById('grp_program').style.display = show ? 'flex' : 'none';
+    if (!show) return;
+    const keep = document.getElementById('f_program').value;
+    fillSelect('f_program', programList, programList.indexOf(keep) !== -1 ? keep : programList[0], null);
+    if (!programTouched) updateProgramDefault();
+  }
+
+  // MIRRORS programForIndustry_() in the Referrals script — change both
+  // together. Property management / apartments -> Rental, everything else ->
+  // Home. Returns '' when the sheet's list has neither value.
+  function programForIndustry(industry) {
+    const s = String(industry || '').toLowerCase();
+    const want = (s.indexOf('property management') !== -1 || s.indexOf('apartment') !== -1) ? 'rental' : 'home';
+    return programList.find(p => p.toLowerCase() === want) || '';
+  }
+
+  // Default the Add form's Program from the chosen company's Industry (or,
+  // for a new company, the Industry picked below it). A hand-picked program
+  // is left alone.
+  function updateProgramDefault() {
+    if (programTouched || !programsSupported || !programList.length) return;
+    const company  = (document.getElementById('f_company').value || '').trim().toLowerCase();
+    const industry = isNewCompany()
+      ? document.getElementById('f_industry').value
+      : (companyIndustry.get(company) || '');
+    const program = programForIndustry(industry) || programList[0];
+    document.getElementById('f_program').value = program;
   }
 
   // ?action=lists column B is the authority for stage names — it now
@@ -1159,12 +1410,19 @@
         (c && typeof c === 'object') ? pick(c, ['name', 'company', 'Company', 'Company Name', 'companyName']) : c
       )).filter(n => n !== 'Company Name');   // drop the echoed sheet header
       companyLookup = new Set(companyNames.map(c => c.toLowerCase()));
+      companyIndustry = new Map();
+      list.forEach(c => {
+        if (!c || typeof c !== 'object') return;
+        const n = pick(c, ['name', 'company', 'Company', 'Company Name', 'companyName']);
+        if (n) companyIndustry.set(n.toLowerCase(), pick(c, ['industry', 'Industry']));
+      });
       document.getElementById('companyList').innerHTML =
         companyNames.map(c => `<option value="${escapeHtml(c)}"></option>`).join('');
       onCompanyInput();
     } catch (e) {
-      companyNames  = [];
-      companyLookup = new Set();
+      companyNames    = [];
+      companyLookup   = new Set();
+      companyIndustry = new Map();
       onCompanyInput();
     }
   }
@@ -1204,28 +1462,68 @@
     partnerScope = scope;
     document.getElementById('scope-mine').classList.toggle('active', scope === 'mine');
     document.getElementById('scope-all').classList.toggle('active',  scope === 'all');
+    syncOwnerFilter();
     return loadPartners();
   }
 
-  function renderPartners() {
-    const q = (document.getElementById('partnerSearch').value || '').toLowerCase().trim();
+  // Agent filter — All partners only. Keeps its choice across reloads.
+  function syncOwnerFilter() {
+    const sel  = document.getElementById('ownerFilter');
+    const keep = sel.value || 'all';
+    sel.innerHTML =
+      '<option value="all">All agents</option>' +
+      '<option value="unassigned">Unassigned</option>' +
+      AGENTS.map(a => `<option value="${escapeHtml(a.slug)}">${escapeHtml(a.label)}</option>`).join('');
+    sel.value = keep;
+    sel.style.display = partnerScope === 'all' ? '' : 'none';
+  }
 
-    const filtered = q
-      ? allPartners.filter(p =>
-          (p.name + ' ' + p.company + ' ' + p.code).toLowerCase().includes(q))
-      : allPartners;
+  function setProgramFilter(value) {
+    programFilter = value;
+    renderPartners();
+  }
+
+  // Filters applied in order: scope (My/All), agent (All only), search, then
+  // program. Chip counts are taken BEFORE the program filter, so each chip
+  // says how many it would show with everything else as it is.
+  function renderPartners() {
+    const q      = (document.getElementById('partnerSearch').value || '').toLowerCase().trim();
+    const owner  = partnerScope === 'all' ? (document.getElementById('ownerFilter').value || 'all') : 'all';
+
+    const base = allPartners.filter(p => {
+      // "My partners": the server already filtered, but a partner reassigned
+      // away from this agent here must leave the list straight away.
+      if (partnerScope === 'mine' && currentAgent) {
+        const oa = ownerAgent(p);
+        if (!oa || oa.slug !== currentAgent.slug) return false;
+      }
+      if (owner === 'unassigned' && ownerState(p) !== 'unassigned') return false;
+      if (owner !== 'all' && owner !== 'unassigned') {
+        const oa = ownerAgent(p);
+        if (!oa || oa.slug !== owner) return false;
+      }
+      if (q && !(p.name + ' ' + p.company + ' ' + p.code).toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    renderProgramChips(base);
+    const filtered = (!programsSupported || programFilter === 'all')
+      ? base
+      : base.filter(p => (p.program || '') === programFilter);
+    lastShown = filtered;
+    syncEditUi();
 
     document.getElementById('partnerLoading').style.display = 'none';
 
     const total = allPartners.length;
-    document.getElementById('partnerCount').textContent = q
+    document.getElementById('partnerCount').textContent = filtered.length !== total
       ? `${filtered.length} of ${total} partner${total === 1 ? '' : 's'}`
       : `${total} partner${total === 1 ? '' : 's'}`;
 
     if (!filtered.length) {
       document.getElementById('partnerTableWrap').style.display = 'none';
       document.getElementById('partnerEmptyText').textContent = total
-        ? 'No partners match this search.'
+        ? 'No partners match these filters.'
         : (partnerScope === 'mine' ? 'No partners yet — add one below.' : 'No partners found.');
       document.getElementById('partnerEmpty').style.display = 'block';
       return;
@@ -1234,12 +1532,8 @@
     document.getElementById('partnerEmpty').style.display     = 'none';
     document.getElementById('partnerTableWrap').style.display = 'block';
 
-    document.getElementById('partnerBody').innerHTML = filtered.map((p, i) => {
-      const idx      = allPartners.indexOf(p);
-      const link     = partnerLink(p);
-      // Needs both a code and a resolvable owner — the owner's first name
-      // is the /refer/{name} segment the link is built on.
-      const hasCode  = !!p.code && !!ownerFirstName(p);
+    document.getElementById('partnerBody').innerHTML = filtered.map(p => {
+      const idx = allPartners.indexOf(p);
 
       // Any stage, forward or backward — going cold and landing in
       // Problems are real transitions, so nothing is filtered out here.
@@ -1251,23 +1545,381 @@
             ? `<span class="badge badge-stage">${escapeHtml(p.stage)}</span>`
             : '<span class="rh-muted-cell">no stage</span>');
 
-      const actions = hasCode
-        ? `<button class="rh-rowbtn" onclick="copyText('${jsAttr(link)}', 'Partner link copied')">Copy link</button>
-           <button class="rh-rowbtn" onclick="downloadQr('${jsAttr(link)}', 'qr-${jsAttr(p.code)}.png')">Download QR</button>`
-        : '<span class="rh-muted-cell">no code yet</span>';
-
       return `
         <tr>
+          ${editMode ? `<td class="rh-sel-col" data-label="Select">${p.code
+              ? `<input type="checkbox" aria-label="Select ${escapeHtml(p.name)}"${selected.has(String(p.code)) ? ' checked' : ''}
+                        onchange="toggleSelect('${jsAttr(p.code)}', this.checked)" />`
+              : '<span class="rh-muted-cell" title="No code — cannot be edited in bulk">&ndash;</span>'}</td>` : ''}
           <td data-label="Partner"><span class="rh-name">${escapeHtml(p.name) || '&mdash;'}</span></td>
           <td data-label="Company">${escapeHtml(p.company) || '&mdash;'}</td>
+          <td data-label="Owner">${ownerBadgeHtml(p)}</td>
+          <td data-label="Program">${programsSupported ? programBadgeHtml(p.program) : '<span class="rh-muted-cell">&mdash;</span>'}</td>
           <td data-label="Stage">${stageCell}</td>
-          <td data-label="Actions"><div class="rh-actions">${actions}</div></td>
+          <td data-label="Links">${partnerLinksHtml(p)}</td>
         </tr>`;
     }).join('');
   }
 
+  // Program chips: All, each program in the sheet's list (plus any other
+  // value found on a row), and "Not set" only when some rows have none.
+  function renderProgramChips(base) {
+    const bar = document.getElementById('programChips');
+    if (!programsSupported) {
+      programFilter = 'all';
+      bar.innerHTML = '<span class="rh-toolbar-note">Programs and owner changes appear after the Referrals script update.</span>';
+      return;
+    }
+    const values = programList.slice();
+    base.forEach(p => { if (p.program && values.indexOf(p.program) === -1) values.push(p.program); });
+    const notSet = base.filter(p => !p.program).length;
+    if (programFilter !== 'all' && programFilter !== '' && values.indexOf(programFilter) === -1) programFilter = 'all';
+    if (programFilter === '' && !notSet) programFilter = 'all';
+
+    const chip = (value, label, count) =>
+      `<button class="filter-btn${programFilter === value ? ' active' : ''}"
+               onclick="setProgramFilter('${jsAttr(value)}')">${escapeHtml(label)}<span class="rh-chip-count">${count}</span></button>`;
+    bar.innerHTML =
+      chip('all', 'All', base.length) +
+      values.map(v => chip(v, v, base.filter(p => p.program === v).length)).join('') +
+      (notSet ? chip('', 'Not set', notSet) : '');
+  }
+
+  function programBadgeHtml(program) {
+    if (!program) return '<span class="rh-muted-cell">not set</span>';
+    const cls = { home: 'rh-prog-home', rental: 'rh-prog-rental' }[program.toLowerCase()] || 'badge-neutral';
+    return `<span class="badge ${cls}">${escapeHtml(program)}</span>`;
+  }
+
+  function ownerBadgeHtml(p) {
+    const state = ownerState(p);
+    if (state === 'unassigned') return '<span class="badge badge-pending">Unassigned</span>';
+    if (state === 'unknown') {
+      return `<span class="badge badge-pending" title="Not one of the seven agents — reassign it">${escapeHtml(p.agent)}?</span>`;
+    }
+    return `<span class="badge badge-neutral">${escapeHtml(ownerAgent(p).label)}</span>`;
+  }
+
+
+  /* ═══════════════════════════════════════
+     PARTNER LINKS — follow the partner's program and OWNER
+     Home -> the owner's /refer/ page. Rental -> the owner's leasing-staff
+     page, plus the move-in packet once the registry marks it live. Before
+     the script update (or with no program set) every partner is treated as
+     Home, which is exactly the old behaviour.
+  ═══════════════════════════════════════ */
+  function effectiveProgram(p) {
+    return (programsSupported && p.program) ? p.program : 'Home';
+  }
+
+  // Code-accepting live pages for this agent, split into the program's own
+  // pages (main) and the rest (other).
+  function codePagesFor(p, agent) {
+    const program = effectiveProgram(p).toLowerCase();
+    const pages = pagesForAgent(agent).filter(pg => pg.acceptsCode);
+    return {
+      main:  pages.filter(pg => String(pg.program || '').toLowerCase() === program),
+      other: pages.filter(pg => String(pg.program || '').toLowerCase() !== program)
+    };
+  }
+
+  function partnerPageLink(p, page, agent) {
+    const url  = addParams(pageUrl(page, agent), { p: p.code });
+    // The home referral QR keeps its original file name (mouse pads).
+    const file = page.id === 'refer' ? `qr-${p.code}.png` : `qr-${p.code}-${page.id}.png`;
+    return { url: url, qr: qrTarget(page, url), file: file };
+  }
+
+  // The partner's main link, or null. Used by the add-partner result panel.
   function partnerLink(p) {
-    return SITE_BASE + ownerFirstName(p) + '?p=' + encodeURIComponent(p.code);
+    if (!p.code) return null;
+    const who = linkAgentFor(p);
+    if (!who.agent) return null;
+    if (!registryPages()) {
+      const url = SITE_BASE + who.agent.first + '?p=' + encodeURIComponent(p.code);
+      return { url: url, qr: url, file: `qr-${p.code}.png` };
+    }
+    const main = codePagesFor(p, who.agent).main;
+    return main.length ? partnerPageLink(p, main[0], who.agent) : null;
+  }
+
+  // One line per landing page: title, then Link (copy URL) and QR (download).
+  function linkLineHtml(title, link) {
+    return `<div class="rh-plink">
+              <span class="rh-plink-title">${escapeHtml(title)}</span>
+              <button class="rh-mini rh-mini-link" title="Copy this link"
+                      onclick="copyText('${jsAttr(link.url)}', 'Partner link copied')">Link</button>
+              <button class="rh-mini rh-mini-qr" title="Download a QR code for this link"
+                      onclick="downloadQr('${jsAttr(link.qr)}', '${jsAttr(link.file)}')">QR</button>
+            </div>`;
+  }
+
+  // Every code-accepting page the link agent has, the partner's own program
+  // first. The list simply grows with the number of pages.
+  function partnerLinksHtml(p) {
+    if (!p.code) return '<span class="rh-muted-cell">no code yet</span>';
+    const who = linkAgentFor(p);
+    if (!who.agent) {
+      return ownerState(p) === 'unknown'
+        ? '<span class="field-note rh-linknote">Owner not recognized &mdash; reassign it first.</span>'
+        : '<span class="field-note rh-linknote">Unassigned &mdash; select your name at the top or assign an owner.</span>';
+    }
+    const agent = who.agent;
+
+    // Registry missing: the old /refer/ link, so the Hub is never worse than before.
+    if (!registryPages()) {
+      return `<div class="rh-plinks">${linkLineHtml('Referral page', partnerLink(p))}</div>`;
+    }
+
+    const pages = codePagesFor(p, agent);
+    let html = '<div class="rh-plinks">';
+    if (!pages.main.length) {
+      html += `<span class="field-note rh-linknote">No ${escapeHtml(effectiveProgram(p))} page for ${escapeHtml(agent.label)} yet.</span>`;
+    }
+    html += pages.main.concat(pages.other)
+      .map(pg => linkLineHtml(pg.rowLabel || pg.label, partnerPageLink(p, pg, agent)))
+      .join('');
+    if (who.fallback) {
+      html += `<span class="rh-muted-cell">Unassigned &mdash; these links credit ${escapeHtml(agent.label)}.</span>`;
+    }
+    return html + '</div>';
+  }
+
+  /* ═══════════════════════════════════════
+     EDIT PARTNERS — bulk owner / program changes, write-then-verify
+     Tick partners on the left (the header box ticks every partner SHOWN),
+     then move them to an agent or set their program. One request per
+     change (setOwners / setPrograms), then the sheet is re-read and only
+     what the read confirms is reported. The last change can be undone.
+     Open to everyone in /team/; the script logs every move on the Log tab.
+  ═══════════════════════════════════════ */
+  const BULK_CHUNK = 200;   // codes per request
+
+  function toggleEditMode(on) {
+    editMode = (on === undefined) ? !editMode : !!on;
+    if (!editMode) selected = new Set();
+    setEditStatus('');
+    renderPartners();
+  }
+
+  // Bar, header checkbox and button states. Called by renderPartners().
+  function syncEditUi() {
+    const btn = document.getElementById('editModeBtn');
+    btn.style.display = programsSupported ? '' : 'none';
+    btn.classList.toggle('active', editMode);
+    if (!programsSupported && editMode) { editMode = false; selected = new Set(); }
+
+    document.getElementById('editBar').style.display = editMode ? 'flex' : 'none';
+    document.getElementById('selTh').style.display  = editMode ? '' : 'none';
+    if (!editMode) return;
+
+    // Options: agents for "Move to"; the sheet's programs for "Set program".
+    const ownerSel = document.getElementById('bulkOwner');
+    const keepOwner = ownerSel.value;
+    ownerSel.innerHTML = '<option value="">Choose an agent…</option>' +
+      AGENTS.map(a => `<option value="${escapeHtml(a.slug)}">${escapeHtml(a.label)}</option>`).join('');
+    ownerSel.value = keepOwner;
+    const progSel = document.getElementById('bulkProgram');
+    const keepProg = progSel.value;
+    progSel.innerHTML = '<option value="">Choose a program…</option>' +
+      programList.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+    progSel.value = programList.indexOf(keepProg) !== -1 ? keepProg : '';
+
+    // Selection only ever holds codes that are loaded.
+    const loaded = new Set(allPartners.filter(p => p.code).map(p => String(p.code)));
+    selected.forEach(c => { if (!loaded.has(c)) selected.delete(c); });
+
+    const shownCodes = lastShown.filter(p => p.code).map(p => String(p.code));
+    const shownSel   = shownCodes.filter(c => selected.has(c)).length;
+    const hidden     = selected.size - shownSel;
+    document.getElementById('editCount').textContent =
+      `${selected.size} selected` + (hidden ? ` (${hidden} hidden by filters)` : '');
+    const all = document.getElementById('selAll');
+    all.checked = shownCodes.length > 0 && shownSel === shownCodes.length;
+    all.indeterminate = shownSel > 0 && shownSel < shownCodes.length;
+
+    const none = selected.size === 0 || bulkBusy;
+    document.getElementById('bulkOwnerBtn').disabled   = none;
+    document.getElementById('bulkProgramBtn').disabled = none || !programList.length;
+    const undo = document.getElementById('undoBtn');
+    undo.style.display = lastChange ? '' : 'none';
+    undo.disabled = bulkBusy;
+  }
+
+  function toggleSelect(code, on) {
+    if (on) selected.add(String(code)); else selected.delete(String(code));
+    syncEditUi();
+  }
+
+  // Ticks (or clears) every partner currently SHOWN — never hidden ones.
+  function toggleSelectAll(on) {
+    lastShown.forEach(p => {
+      if (!p.code) return;
+      if (on) selected.add(String(p.code)); else selected.delete(String(p.code));
+    });
+    renderPartners();
+  }
+
+  function setEditStatus(text, bad) {
+    const el = document.getElementById('editStatus');
+    el.textContent = text || '';
+    el.className = 'rh-edit-status' + (bad ? ' bad' : '');
+  }
+
+  function partnerByCode(code) {
+    return allPartners.find(p => String(p.code) === String(code)) || null;
+  }
+
+  function ownerLabelOf(p) {
+    const st = ownerState(p);
+    if (st === 'unassigned') return 'unassigned';
+    return st === 'unknown' ? `"${p.agent}"` : 'from ' + ownerAgent(p).label;
+  }
+
+  // Sends one bulk change in chunks. Returns false on a network failure.
+  async function sendBulk(field, codes, value) {
+    for (let i = 0; i < codes.length; i += BULK_CHUNK) {
+      const chunk = codes.slice(i, i + BULK_CHUNK);
+      const res = await postToScript(field === 'owner'
+        ? { action: 'setOwners',   codes: chunk, owner: value }
+        : { action: 'setPrograms', codes: chunk, program: value });
+      if (!res.success) return false;
+    }
+    return true;
+  }
+
+  // Re-reads ALL partners (an owner change moves rows between agents) and
+  // checks each code against what it should now hold. Two looks, because
+  // the sheet can lag a moment behind the write.
+  async function confirmBulk(field, expected) {
+    let result = { ok: [], bad: Object.keys(expected) };
+    for (let attempt = 0; attempt < 2 && result.bad.length; attempt++) {
+      await wait(attempt === 0 ? 1500 : 2500);
+      let rows;
+      try {
+        const res = await jsonp({ action: 'partners' });
+        rows = unwrapList(res, ['partners']).map(normalizePartner).filter(notHeaderEcho);
+      } catch (e) {
+        continue;
+      }
+      const byCode = new Map(rows.map(r => [String(r.code), r]));
+      result = { ok: [], bad: [] };
+      Object.keys(expected).forEach(code => {
+        const r = byCode.get(code);
+        const have = r ? (field === 'owner' ? (r.agent || '').trim().toLowerCase() : (r.program || '')) : null;
+        const want = field === 'owner' ? String(expected[code]).toLowerCase() : expected[code];
+        if (r) {                       // trust the sheet: copy what it holds
+          const p = partnerByCode(code);
+          if (p) { p.agent = r.agent; p.program = r.program; }
+        }
+        (have === want ? result.ok : result.bad).push(code);
+      });
+    }
+    return result;
+  }
+
+  async function applyBulk(field) {
+    if (bulkBusy) return;
+    const codes = Array.from(selected);
+    if (!codes.length) return;
+    const value = document.getElementById(field === 'owner' ? 'bulkOwner' : 'bulkProgram').value;
+    if (!value) {
+      showToast(field === 'owner' ? 'Choose the agent to move them to.' : 'Choose a program.', 'error');
+      return;
+    }
+    const parts = codes.map(partnerByCode).filter(Boolean);
+    const target = field === 'owner' ? (agentBySlug(value) || { label: value }).label : value;
+
+    // Plain-language summary of what is about to happen.
+    const groups = new Map();
+    parts.forEach(p => {
+      const key = field === 'owner' ? ownerLabelOf(p) : (p.program ? 'from ' + p.program : 'not set');
+      groups.set(key, (groups.get(key) || 0) + 1);
+    });
+    const lines = Array.from(groups.entries()).map(([k, n]) => `  • ${n} ${k}`).join('\n');
+    const verb = field === 'owner' ? `Move ${parts.length} partner${parts.length === 1 ? '' : 's'} to ${target}`
+                                   : `Set ${parts.length} partner${parts.length === 1 ? '' : 's'} to the ${target} program`;
+    if (!window.confirm(`${verb}:\n${lines}\n\nEvery change is recorded on the Log tab. Continue?`)) return;
+
+    const prev = parts.map(p => ({ code: String(p.code), prev: field === 'owner' ? (p.agent || '').trim() : (p.program || '') }));
+    bulkBusy = true;
+    setEditStatus('Saving…');
+    syncEditUi();
+
+    const sent = await sendBulk(field, prev.map(e => e.code), value);
+    if (!sent) {
+      bulkBusy = false;
+      setEditStatus('Could not reach the server. Nothing was changed.', true);
+      showToast('Could not reach the server. Nothing changed.', 'error');
+      syncEditUi();
+      return;
+    }
+    setEditStatus('Confirming with the sheet…');
+    const expected = {};
+    prev.forEach(e => { expected[e.code] = value; });
+    const res = await confirmBulk(field, expected);
+    bulkBusy = false;
+
+    // Undo covers only partners that were confirmed AND actually changed.
+    const okSet = new Set(res.ok);
+    const undoable = prev.filter(e => okSet.has(e.code) &&
+      (field === 'owner' ? e.prev.toLowerCase() : e.prev) !== value);
+    lastChange = undoable.length ? { field: field, label: verb, entries: undoable } : null;
+
+    selected = new Set(res.bad);      // anything not confirmed stays ticked
+    renderPartners();
+    if (!res.bad.length) {
+      setEditStatus(`Done: ${res.ok.length} of ${prev.length} confirmed.`);
+      showToast(field === 'owner' ? `${res.ok.length} moved to ${target}` : `${res.ok.length} set to ${target}`, 'success');
+    } else {
+      const names = res.bad.map(c => (partnerByCode(c) || {}).name || c).slice(0, 8).join(', ');
+      setEditStatus(`${res.ok.length} of ${prev.length} confirmed. Not confirmed (still ticked): ${names}` +
+                    (res.bad.length > 8 ? ` and ${res.bad.length - 8} more` : '') + '. Tap Refresh, then try again.', true);
+      showToast('Some changes were not confirmed — see the bar above the list.', 'error');
+    }
+  }
+
+  // Puts the last confirmed change back, grouped by each partner's old value.
+  async function undoLastChange() {
+    if (!lastChange || bulkBusy) return;
+    const ch = lastChange;
+    // An owner that was not one of the agents cannot be written back.
+    const restorable = ch.entries.filter(e => ch.field !== 'owner' || e.prev === '' || agentBySlug(e.prev.toLowerCase()));
+    const skipped = ch.entries.length - restorable.length;
+    if (!window.confirm(`Undo "${ch.label}"?\n${restorable.length} partner${restorable.length === 1 ? '' : 's'} will go back to ` +
+                        `their previous ${ch.field === 'owner' ? 'owner' : 'program'}` +
+                        (skipped ? `\n(${skipped} had an unrecognized owner and stay as they are)` : '') + '.')) return;
+
+    bulkBusy = true;
+    setEditStatus('Undoing…');
+    syncEditUi();
+    const groups = new Map();
+    restorable.forEach(e => {
+      const v = ch.field === 'owner' ? e.prev.toLowerCase() : e.prev;
+      if (!groups.has(v)) groups.set(v, []);
+      groups.get(v).push(e.code);
+    });
+    for (const [value, codes] of groups) {
+      if (!(await sendBulk(ch.field, codes, value))) {
+        bulkBusy = false;
+        setEditStatus('Could not reach the server. Undo did not finish — tap Refresh and check.', true);
+        syncEditUi();
+        return;
+      }
+    }
+    const expected = {};
+    restorable.forEach(e => { expected[e.code] = ch.field === 'owner' ? e.prev.toLowerCase() : e.prev; });
+    const res = await confirmBulk(ch.field, expected);
+    bulkBusy = false;
+    lastChange = res.bad.length ? lastChange : null;
+    renderPartners();
+    if (!res.bad.length) {
+      setEditStatus(`Undone: ${res.ok.length} partner${res.ok.length === 1 ? '' : 's'} back as they were.`);
+      showToast('Last change undone', 'success');
+    } else {
+      setEditStatus(`Undo confirmed for ${res.ok.length} of ${restorable.length}. Tap Refresh and check the rest.`, true);
+      showToast('Undo was not fully confirmed.', 'error');
+    }
   }
 
   // Stage options for a row. The row's own stage is always present even if
@@ -1369,10 +2021,36 @@
   /* ═══════════════════════════════════════
      REFERRALS — RENDER
   ═══════════════════════════════════════ */
+  // Coverage filter: built from the coverage values actually present, with
+  // counts. The choice survives a reload while that value still exists.
+  function syncCoverageFilter() {
+    const sel  = document.getElementById('coverageFilter');
+    const keep = sel.value || 'all';
+    const counts = new Map();
+    allReferrals.forEach(r => {
+      const c = (r.coverage || '').trim() || '(none)';
+      counts.set(c, (counts.get(c) || 0) + 1);
+    });
+    const values = Array.from(counts.keys()).sort((a, b) => a.localeCompare(b));
+    sel.innerHTML = `<option value="all">All coverage (${allReferrals.length})</option>` +
+      values.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)} (${counts.get(v)})</option>`).join('');
+    sel.value = values.indexOf(keep) !== -1 ? keep : 'all';
+    document.getElementById('referralToolbar').style.display = allReferrals.length ? 'flex' : 'none';
+  }
+
   function renderReferrals() {
     document.getElementById('referralLoading').style.display = 'none';
 
-    const sorted = allReferrals.slice().sort((a, b) => {
+    // Version 7+ sends leadType on every referral; Version 6 never does.
+    leadTypeSupported = allReferrals.some(r => r.raw && typeof r.raw === 'object' && 'leadType' in r.raw);
+    document.getElementById('leadTypeTh').style.display = leadTypeSupported ? '' : 'none';
+
+    const cov = document.getElementById('coverageFilter').value || 'all';
+    const shown = cov === 'all'
+      ? allReferrals
+      : allReferrals.filter(r => ((r.coverage || '').trim() || '(none)') === cov);
+
+    const sorted = shown.slice().sort((a, b) => {
       const da = Date.parse(a.received), db = Date.parse(b.received);
       if (isNaN(da) && isNaN(db)) return 0;
       if (isNaN(da)) return 1;
@@ -1380,12 +2058,14 @@
       return db - da;
     });
 
-    document.getElementById('referralCount').textContent =
-      `${sorted.length} referral${sorted.length === 1 ? '' : 's'}`;
+    const total = allReferrals.length;
+    document.getElementById('referralCount').textContent = sorted.length !== total
+      ? `${sorted.length} of ${total} referral${total === 1 ? '' : 's'}`
+      : `${total} referral${total === 1 ? '' : 's'}`;
 
     if (!sorted.length) {
       document.getElementById('referralTableWrap').style.display = 'none';
-      document.getElementById('referralEmptyText').textContent   = 'No referrals yet.';
+      document.getElementById('referralEmptyText').textContent   = total ? 'No referrals with this coverage.' : 'No referrals yet.';
       document.getElementById('referralEmpty').style.display     = 'block';
       return;
     }
@@ -1408,6 +2088,7 @@
           <td data-label="Client"><span class="rh-name">${escapeHtml(r.client) || '&mdash;'}</span></td>
           <td data-label="Partner">${escapeHtml(r.partner) || '&mdash;'}</td>
           <td data-label="Coverage">${escapeHtml(r.coverage) || '&mdash;'}</td>
+          ${leadTypeSupported ? `<td data-label="Lead type">${escapeHtml(r.leadType) || '&mdash;'}</td>` : ''}
           <td data-label="Status">${status}</td>
           <td data-label="Intro Sent">${intro}</td>
         </tr>`;
@@ -1438,23 +2119,34 @@
     if (!grp) return;
     grp.style.display = isNewCompany() ? 'flex' : 'none';
     if (!isNewCompany()) document.getElementById('f_industry').classList.remove('err');
+    updateProgramDefault();
   }
 
-  // Surfaces ownership when it is not the obvious default, so adding on
-  // someone else's behalf is a deliberate act rather than an accident.
+  // Always says who will own the partner — the owner decides whose pages
+  // the partner's links credit. Highlighted when it is not the agent
+  // selected at the top, so adding for someone else is deliberate.
   function onAssignChange() {
     const slug  = document.getElementById('f_assign').value;
     const note  = document.getElementById('assignNote');
     const agent = slug ? agentBySlug(slug) : null;
 
-    const differs = agent && (!currentAgent || agent.slug !== currentAgent.slug);
-    if (differs) {
-      note.textContent = `This partner will belong to ${agent.label}.`;
+    if (agent) {
+      const differs = !currentAgent || agent.slug !== currentAgent.slug;
+      note.textContent = differs
+        ? `This partner will belong to ${agent.label}, not to you.`
+        : `This partner will belong to ${agent.label}.`;
+      note.classList.toggle('rh-note-muted', !differs);
       note.style.display = 'block';
     } else {
       note.style.display = 'none';
     }
     if (slug) document.getElementById('f_assign').classList.remove('err');
+  }
+
+  // A hand-picked owner sticks until the form is reset.
+  function onAssignPicked() {
+    assignTouched = true;
+    onAssignChange();
   }
 
   async function submitPartner() {
@@ -1497,11 +2189,14 @@
     // identifiable. If this read fails we simply fall back to name-only.
     const knownCodes = await snapshotCodes(assign);
 
-    const res = await postToScript({
+    const payload = {
       action: 'addPartner',
       name, company, industry, email, phone, title, recordType, stage,
       agentSlug: assign          // the assignee owns it, not whoever is viewing
-    });
+    };
+    // Version 6 ignores unknown fields, but only send it when the sheet has programs.
+    if (programsSupported && programList.length) payload.program = document.getElementById('f_program').value;
+    const res = await postToScript(payload);
 
     if (!res.success) {
       btn.disabled = false;
@@ -1600,12 +2295,18 @@
 
   function showNewPartnerLink(p) {
     const link = partnerLink(p);
+    if (!link) {
+      // No main page for this program/owner: show the row's own note and
+      // other pages, so the reason is visible here too.
+      showAddResult(`${p.name} added (code ${p.code})`, partnerLinksHtml(p));
+      return;
+    }
     showAddResult(
       `${p.name} added`,
       `<div class="rh-link-row">
-         <div class="rh-link">${escapeHtml(link)}</div>
-         <button class="btn btn-primary" onclick="copyText('${jsAttr(link)}', 'Partner link copied')">Copy Link</button>
-         <button class="btn btn-outline" onclick="downloadQr('${jsAttr(link)}', 'qr-${jsAttr(p.code)}.png')">Download QR</button>
+         <div class="rh-link">${escapeHtml(link.url)}</div>
+         <button class="btn btn-primary" onclick="copyText('${jsAttr(link.url)}', 'Partner link copied')">Copy Link</button>
+         <button class="btn btn-outline" onclick="downloadQr('${jsAttr(link.qr)}', '${jsAttr(link.file)}')">Download QR</button>
        </div>`
     );
   }
@@ -1631,6 +2332,8 @@
     const stageEl = document.getElementById('f_stage');
     if ([].some.call(stageEl.options, o => o.value === STAGE_DEFAULT)) stageEl.value = STAGE_DEFAULT;
     // Ownership falls back to whoever is viewing, not to the last assignee
+    assignTouched  = false;
+    programTouched = false;
     document.getElementById('f_assign').value = currentAgent ? currentAgent.slug : '';
     document.getElementById('f_assign').classList.remove('err');
     onAssignChange();
@@ -1658,11 +2361,6 @@
      Every clipboard and QR path is wrapped — a failure here shows a
      toast and never takes the page down.
   ═══════════════════════════════════════ */
-  function copyMyLink() {
-    if (!currentAgent) return;
-    copyText(SITE_BASE + currentAgent.first, 'Your link is copied');
-  }
-
   async function copyText(text, successMsg) {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -1733,11 +2431,6 @@
     } catch (e) {
       showToast('Could not generate the QR code. Refresh and try again.', 'error');
     }
-  }
-
-  function downloadMyQr() {
-    if (!currentAgent) return;
-    downloadQr(SITE_BASE + currentAgent.first, `qr-${currentAgent.first}.png`);
   }
 
   /* ═══════════════════════════════════════
