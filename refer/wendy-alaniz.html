@@ -186,6 +186,9 @@
     }
     .rf-notyou:hover { color: var(--orange); }
     .rf-partner-fields.is-hidden { display: none; }
+    /* Partner fields hide one by one, and only when the ?p= lookup filled them */
+    .rf-group.is-hidden, .rf-fieldset-title.is-hidden { display: none; }
+    .rf-row:has(> .rf-group.is-hidden) { grid-template-columns: minmax(0, 1fr); }   /* the field left in a row takes its width */
     /* ── Confirmation ── */
     #rf-done { display: none; }
     .rf-done-badge { font-size: 56px; color: #1e7d4f; line-height: 1; margin-bottom: 16px; }
@@ -454,20 +457,22 @@
         </div>
 
         <form id="rf-form">
+          <!-- With a recognised ?p= code each field below hides on its own, and
+               only when the lookup filled it. A hidden field is never required. -->
           <div class="rf-partner-fields" id="rf-partner-fields">
-            <div class="rf-fieldset-title">About you</div>
+            <div class="rf-fieldset-title" id="rf-pfields-title">About you</div>
             <div class="rf-row">
-              <div class="rf-group">
-                <label for="rf-pname">Your name *</label>
+              <div class="rf-group" id="rf-g-pname">
+                <label for="rf-pname">Your name<span class="rf-req"> *</span></label>
                 <input type="text" id="rf-pname" name="partnerName" autocomplete="name" required />
               </div>
-              <div class="rf-group">
-                <label for="rf-pcompany">Your company *</label>
+              <div class="rf-group" id="rf-g-pcompany">
+                <label for="rf-pcompany">Your company<span class="rf-req"> *</span></label>
                 <input type="text" id="rf-pcompany" name="partnerCompany" autocomplete="organization" required />
               </div>
             </div>
-            <div class="rf-group">
-              <label for="rf-pemail">Your email *</label>
+            <div class="rf-group" id="rf-g-pemail">
+              <label for="rf-pemail">Your email<span class="rf-req"> *</span></label>
               <input type="email" id="rf-pemail" name="partnerEmail" autocomplete="email" required />
             </div>
           </div>
@@ -584,6 +589,10 @@
   var SERVER_MSG  = "We weren't able to send that referral. Please call us at " + AGENT_PHONE + " and we'll take the details directly.";
 
   var form      = document.getElementById('rf-form');
+  // The page checks the fields itself (missingFieldsMessage), so a blocked
+  // send always says why next to the button; the browser's own pointer at
+  // the field is still shown.
+  form.noValidate = true;
   var submitBtn = document.getElementById('rf-submit');
   var flow      = document.getElementById('rf-flow');
   var done      = document.getElementById('rf-done');
@@ -683,7 +692,13 @@
   /* ═══════════════════════════════════════
      PREFILL FROM ?p=
      JSONP, because Apps Script blocks cross-origin fetch reads.
-     Response shape: { success, found, partner:{ code, name, company, email } }
+     Two response shapes, both handled:
+       full: { success, found, partner:{ code, name, company, email, display, first } }
+       trim: { success, found, partner:{ code, display, first } }
+     For a known code the script takes the partner's name, company and email
+     from the stored record, so a field the lookup FILLED can be hidden. A field
+     it did not fill stays visible and optional — except "Your name", which
+     signs the intro and stays required. A hidden field is never required.
   ═══════════════════════════════════════ */
   var partnerCode = '';
   var params      = new URLSearchParams(window.location.search);
@@ -708,19 +723,49 @@
     });
   }
 
+  var PARTNER_FIELDS = ['pname', 'pcompany', 'pemail'];
+
+  // Sets one partner field: its value, whether it hides, whether it is
+  // required. Hidden always means not required; the label's * follows.
+  function setPartnerField(key, value, hide, required) {
+    var input = el('rf-' + key);
+    var group = el('rf-g-' + key);
+    input.value = value;
+    group.classList.toggle('is-hidden', !!hide);
+    input.required = !hide && !!required;
+    var star = group.querySelector('.rf-req');
+    if (star) star.hidden = !input.required;
+  }
+
   function applyKnownPartner(p) {
-    el('rf-pname').value    = p.name    || '';
-    el('rf-pcompany').value = p.company || '';
-    el('rf-pemail').value   = p.email   || '';
+    var t = function (v) { return String(v || '').trim(); };
+    var name = t(p.name), company = t(p.company), email = t(p.email);
+    var first = t(p.first), display = t(p.display) || company;
     partnerCode = p.code || partnerCode;
-    el('rf-known-text').textContent = (p.name || '') + (p.company ? ', ' + p.company : '');
-    el('rf-known').classList.add('is-on');
-    el('rf-partner-fields').classList.add('is-hidden');
+
+    // Full name on file: hidden. The trimmed lookup sends only the first name:
+    // prefilled, visible and editable. Required either way.
+    setPartnerField('pname', name || first, !!name, true);
+    // Company: the record's, or its display name. Optional when empty.
+    setPartnerField('pcompany', company || display, !!(company || display), false);
+    // Email: hidden when on file; otherwise visible and optional (the script
+    // uses the stored email for a known code).
+    setPartnerField('pemail', email, !!email, false);
+    el('rf-pfields-title').classList.toggle('is-hidden',
+      PARTNER_FIELDS.every(function (k) { return el('rf-g-' + k).classList.contains('is-hidden'); }));
+
+    var label = name ? name + ((company || display) ? ', ' + (company || display) : '') : (display || first);
+    if (label) {
+      el('rf-known-text').textContent = label;
+      el('rf-known').classList.add('is-on');
+    }
   }
 
   el('rf-notyou').addEventListener('click', function () {
-    // Reveal the fields; the values stay so they can be corrected rather than retyped.
-    el('rf-partner-fields').classList.remove('is-hidden');
+    // Reveal every field, all required again; the values stay so they can be
+    // corrected rather than retyped.
+    PARTNER_FIELDS.forEach(function (k) { setPartnerField(k, el('rf-' + k).value, false, true); });
+    el('rf-pfields-title').classList.remove('is-hidden');
     el('rf-known').classList.remove('is-on');
     partnerCode = '';
     el('rf-pname').focus();
@@ -738,12 +783,37 @@
 
   /* ═══════════════════════════════════════
      TURNAROUND, CALCULATED CLIENT-SIDE
+     Read on the Eastern clock, because that is where the office is; a
+     partner's own time zone must not move it. After the 3 PM cutoff the next
+     BUSINESS day is named, so a Friday-afternoon or weekend referral says
+     Monday. Same rule as the rental referral page.
   ═══════════════════════════════════════ */
-  function turnaroundText() {
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  function easternNow() {
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', hour12: false
+      }).formatToParts(new Date());
+      var wd = '', hr = '';
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].type === 'weekday') wd = parts[i].value;
+        if (parts[i].type === 'hour')    hr = parts[i].value;
+      }
+      var day  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(wd);
+      var hour = parseInt(hr, 10) % 24;          // some engines report midnight as 24
+      if (day > -1 && !isNaN(hour)) return { day: day, hour: hour };
+    } catch (e) { /* fall through */ }
     var now = new Date();
-    var day = now.getDay();                       // 0 Sun … 6 Sat
-    if (day === 0 || day === 6) return 'by noon Monday';
-    return now.getHours() < 15 ? 'today' : 'before noon tomorrow';
+    return { day: now.getDay(), hour: now.getHours() };
+  }
+
+  function turnaroundText() {
+    var n = easternNow();                         // day: 0 Sun … 6 Sat
+    var weekend = (n.day === 0 || n.day === 6);
+    if (!weekend && n.hour < 15) return 'today';
+    if (!weekend && n.day <= 4) return 'before noon tomorrow';   // Mon–Thu after the cutoff (Thu = 4)
+    return 'before noon Monday';                                 // Fri after the cutoff, Sat, Sun
   }
 
   /* ═══════════════════════════════════════
@@ -788,15 +858,35 @@
     clearError();
     errorEl = document.createElement('p');
     errorEl.className = 'rf-err';
+    errorEl.setAttribute('role', 'alert');
     errorEl.textContent = msg;
     submitBtn.insertAdjacentElement('afterend', errorEl);
+  }
+
+  // '' when the form can be sent, otherwise a sentence naming each field
+  // that blocks it. A blocking field inside a hidden group is revealed, so
+  // the browser can point at it.
+  function missingFieldsMessage() {
+    var bad = Array.prototype.filter.call(form.elements, function (f) {
+      return f.willValidate && !f.checkValidity();
+    });
+    if (!bad.length) return '';
+    var names = bad.map(function (f) {
+      var hidden = f.closest('.is-hidden');
+      if (hidden) hidden.classList.remove('is-hidden');
+      var label = f.labels && f.labels[0] ? f.labels[0].textContent : (f.name || 'a field');
+      return label.replace(/\*/g, '').trim();
+    });
+    return 'Please check: ' + names.join(', ') + '.';
   }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     clearError();
 
-    if (!form.reportValidity()) { return; }
+    // Never fail silently: name what is missing, next to the button.
+    var missing = missingFieldsMessage();
+    if (missing) { showError(missing); form.reportValidity(); return; }
 
     var company = el('rf-pcompany').value.trim();
     var code    = partnerCode || makePartnerCode(company);

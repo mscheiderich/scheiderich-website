@@ -23,7 +23,7 @@
   <meta property="og:description" content="Leasing teams and property managers: refer residents to Jennifer Lawler for fast renters insurance quotes, coverage that lists your property the way your lease requires, and proof sent where you need it." />
   <meta property="og:url" content="https://thescheiderichagency.com/rental-referral/jennifer-lawler/" />
   <meta property="og:image" content="https://thescheiderichagency.com/jennifer-lawler.png" />
-  <meta property="og:image:alt" content="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency in Buford, GA" />
+  <meta property="og:image:alt" content="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
@@ -200,6 +200,7 @@
     .rr-row { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 14px; }
     .rr-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; min-width: 0; }
     .rr-group.is-hidden { display: none; }
+    .rr-row:has(> .rr-group.is-hidden) { grid-template-columns: minmax(0, 1fr); }   /* the field left in a row takes its width */
     .rr-group label, .rr-field-label { font-size: 14px; font-weight: 600; color: var(--rr-ink); }
     /* 16px stops iOS zooming the page when a field takes focus. */
     .rr-group input, .rr-group select, .rr-group textarea {
@@ -536,10 +537,10 @@
       <div class="rr-hero-side">
         <div class="rr-band" aria-hidden="true"></div>
         <div class="rr-photo-card">
-          <img src="/jennifer-lawler.png" alt="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency in Buford, GA" /><!-- [AGENT] photo filename + alt -->
+          <img src="/jennifer-lawler.png" alt="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency" /><!-- [AGENT] photo filename + alt -->
           <div class="rr-photo-text">
             <span class="rr-photo-name">Jennifer Lawler</span><!-- [AGENT] name -->
-            <span class="rr-photo-title">Licensed Insurance Agent · Buford, GA</span>
+            <span class="rr-photo-title">Licensed Insurance Agent · The Scheiderich Agency</span>
           </div>
         </div>
       </div>
@@ -573,7 +574,7 @@
           <div class="rr-ico"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-7-6.3-7-11.5a7 7 0 0114 0C19 14.7 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
           <div>
             <h3>Local</h3>
-            <p>An office in downtown Buford, and a real person who answers your questions.</p>
+            <p>A local insurance agency, and a real person who answers your questions.</p>
           </div>
         </li>
       </ul>
@@ -641,19 +642,20 @@
         <!-- "Your name" is never hidden or prefilled: leasing staff change, and
              whoever is at the desk enters their own name. With a recognised ?p=
              code the property and email fields are hidden — but only when the
-             lookup actually filled them, so a required field is never hidden
-             while empty. -->
+             lookup actually filled them. A hidden field is never required, and
+             an email the record lacks is optional (the script uses the stored
+             one for a known code). -->
         <div class="rr-group">
           <label for="rr-pname">Your name *</label>
           <input type="text" id="rr-pname" name="partnerName" autocomplete="name" required />
         </div>
         <div class="rr-row">
           <div class="rr-group" id="rr-g-pcompany">
-            <label for="rr-pcompany">Property or company name *</label>
+            <label for="rr-pcompany">Property or company name<span class="rr-req"> *</span></label>
             <input type="text" id="rr-pcompany" name="partnerCompany" autocomplete="organization" required />
           </div>
           <div class="rr-group" id="rr-g-pemail">
-            <label for="rr-pemail">Your email *</label>
+            <label for="rr-pemail">Your email<span class="rr-req"> *</span></label>
             <input type="email" id="rr-pemail" name="partnerEmail" autocomplete="email" required />
           </div>
         </div>
@@ -1054,10 +1056,16 @@
   var SERVER_MSG  = "We weren't able to send that referral. Please call us at " + AGENT_PHONE + " and we'll take the details directly.";
 
   var form      = document.getElementById('rr-referral-form');
+  // The page checks the fields itself (missingFieldsMessage), so a blocked
+  // send always says why next to the button; the browser's own pointer at
+  // the field is still shown.
+  form.noValidate = true;
   var submitBtn = document.getElementById('rr-submit');
   var flow      = document.getElementById('rr-flow');
   var done      = document.getElementById('rr-done');
   var errorEl   = null;
+  // The button names the agent, from the settings above ("Send to Jennifer").
+  submitBtn.textContent = 'Send to ' + AGENT_FIRST;
   var originalBtnText = submitBtn.textContent;
 
   var el = function (id) { return document.getElementById(id); };
@@ -1172,11 +1180,16 @@
   /* ═══════════════════════════════════════
      PREFILL FROM ?p=
      JSONP, because Apps Script blocks cross-origin fetch reads.
-     Response shape: { success, found, partner:{ code, name, company, email } }
+     Two response shapes, both handled:
+       full: { success, found, partner:{ code, name, company, email, display, first } }
+       trim: { success, found, partner:{ code, display, first } }
 
      Apartment partners are usually office records rather than one person, so
      this page treats the lookup differently from /refer/: it fills and hides
-     the property name and email, and leaves "Your name" empty and visible.
+     the property name (the record's company, or its display name) and the
+     email, and leaves "Your name" empty and visible. A field the lookup did
+     not fill stays visible; the property name stays required (the intro and
+     text name it), the email becomes optional.
   ═══════════════════════════════════════ */
   var partnerCode = '';
   var pParam      = params.get('p');
@@ -1200,17 +1213,27 @@
     });
   }
 
+  // Sets one partner field: its value, whether it hides, whether it is
+  // required. Hidden always means not required; the label's * follows.
+  function setPartnerField(key, value, hide, required) {
+    var input = el('rr-' + key);
+    var group = el('rr-g-' + key);
+    input.value = value;
+    group.classList.toggle('is-hidden', !!hide);
+    input.required = !hide && !!required;
+    var star = group.querySelector('.rr-req');
+    if (star) star.hidden = !input.required;
+  }
+
   function applyKnownPartner(p) {
-    var company = String(p.company || '').trim();
-    var email   = String(p.email   || '').trim();
+    var t = function (v) { return String(v || '').trim(); };
+    var company = t(p.company) || t(p.display);
+    var email   = t(p.email);
     partnerCode = p.code || partnerCode;
-    el('rr-pcompany').value = company;
-    el('rr-pemail').value   = email;
-    // Hide a field only when the record actually filled it. A required field
-    // that is both empty and hidden blocks the submit with no visible reason.
-    if (company) el('rr-g-pcompany').classList.add('is-hidden');
-    if (email)   el('rr-g-pemail').classList.add('is-hidden');
-    var label = company || String(p.name || '').trim();
+    // Hide a field only when the record actually filled it.
+    setPartnerField('pcompany', company, !!company, true);
+    setPartnerField('pemail', email, !!email, false);
+    var label = company || t(p.name) || t(p.first);
     if (label) {
       el('rr-known-text').textContent = label;
       el('rr-known').classList.add('is-on');
@@ -1219,9 +1242,10 @@
   }
 
   el('rr-notyou').addEventListener('click', function () {
-    // Reveal the fields; the values stay so they can be corrected rather than retyped.
-    el('rr-g-pcompany').classList.remove('is-hidden');
-    el('rr-g-pemail').classList.remove('is-hidden');
+    // Reveal the fields, required again; the values stay so they can be
+    // corrected rather than retyped.
+    setPartnerField('pcompany', el('rr-pcompany').value, false, true);
+    setPartnerField('pemail', el('rr-pemail').value, false, true);
     el('rr-known').classList.remove('is-on');
     partnerCode = '';
     el('rr-pcompany').focus();
@@ -1297,7 +1321,7 @@
     var property = (d.partnerCompany || '').trim();
     return 'Hi ' + first + ',\n\n' +
       'As part of your lease at ' + property + ", you'll need renters insurance on file. " +
-      "I've passed your information to " + AGENT_NAME + ' at The Scheiderich Agency, a local office in downtown Buford. ' +
+      "I've passed your information to " + AGENT_NAME + ' at The Scheiderich Agency, a local insurance agency. ' +
       "She'll reach out to help you get a quote and make sure the policy lists " + property +
       ' as the interested party, the way your lease requires.\n\n' +
       "You're welcome to use any insurance company. " + AGENT_FIRST + ' is just a quick, local option.\n\n' +
@@ -1336,11 +1360,31 @@
     submitBtn.insertAdjacentElement('afterend', errorEl);
   }
 
+  // '' when the form can be sent, otherwise a sentence naming each field
+  // that blocks it. A blocking field inside a hidden group is revealed, so
+  // the browser can point at it.
+  function missingFieldsMessage() {
+    var bad = Array.prototype.filter.call(form.elements, function (f) {
+      return f.willValidate && !f.checkValidity();
+    });
+    if (!bad.length) return '';
+    var names = bad.map(function (f) {
+      var hidden = f.closest('.is-hidden');
+      if (hidden) hidden.classList.remove('is-hidden');
+      if (f.type === 'checkbox') return 'the resident agreement box';
+      var label = f.labels && f.labels[0] ? f.labels[0].textContent : (f.name || 'a field');
+      return label.replace(/\*/g, '').trim();
+    });
+    return 'Please check: ' + names.join(', ') + '.';
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     clearError();
 
-    if (!form.reportValidity()) { return; }
+    // Never fail silently: name what is missing, next to the button.
+    var missing = missingFieldsMessage();
+    if (missing) { showError(missing); form.reportValidity(); return; }
 
     var name    = el('rr-pname').value.trim();
     var company = el('rr-pcompany').value.trim();
