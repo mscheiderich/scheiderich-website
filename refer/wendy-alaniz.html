@@ -205,6 +205,15 @@
     #rf-body { min-height: 290px; font-size: 14px; line-height: 1.62; }
     .rf-intro-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
     .rf-intro-btns .btn { white-space: normal; height: auto; min-height: var(--btn-h); padding-top: 11px; padding-bottom: 11px; }
+    /* "Intro sent" panel: takes the buttons' place after the email button is
+       used. The live region is always in the page (empty = no height) so a
+       screen reader announces it when it fills. */
+    .rf-sent.is-on { margin-top: 20px; padding: 18px 20px; border-left: 4px solid #1e7d4f; background: #eef7f1; border-radius: 8px; }
+    .rf-sent-h { font-family: 'Lora', serif; font-size: 18px; color: var(--text); margin-bottom: 6px; }
+    .rf-sent-h:focus { outline: none; }
+    .rf-sent p { font-size: 14.5px; color: var(--text); line-height: 1.6; margin-bottom: 10px; }
+    .rf-sent-copy { background: none; border: none; padding: 0; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--navy); text-decoration: underline; cursor: pointer; text-align: left; }
+    .rf-sent-copy:hover { color: var(--orange); }
     .rf-link-box {
       background: var(--bg-s); border: 1px solid var(--border); border-radius: var(--r-lg);
       padding: 24px 26px; margin-top: 28px;
@@ -346,7 +355,7 @@
 
       <!-- Timeline — horizontal, shown above 560px -->
       <div class="rf-tl rf-tl-h">
-        <svg viewBox="0 0 660 190" width="100%" height="auto" role="img"
+        <svg viewBox="0 0 660 190" width="100%" role="img"
              aria-labelledby="tlh-title tlh-desc" preserveAspectRatio="xMidYMid meet">
           <title id="tlh-title">Referral timeline</title>
           <desc id="tlh-desc">Six steps in order: contract signed, then the referral — the point at which to send it to us — then inspection, binder issued, closing disclosure prepared, and closing.</desc>
@@ -382,7 +391,7 @@
 
       <!-- Timeline — vertical, shown at 560px and below -->
       <div class="rf-tl rf-tl-v">
-        <svg viewBox="0 0 320 325" width="100%" height="auto" role="img"
+        <svg viewBox="0 0 320 325" width="100%" role="img"
              aria-labelledby="tlv-title tlv-desc" preserveAspectRatio="xMidYMid meet">
           <title id="tlv-title">Referral timeline</title>
           <desc id="tlv-desc">Six steps in order: contract signed, then the referral — the point at which to send it to us — then inspection, binder issued, closing disclosure prepared, and closing.</desc>
@@ -555,6 +564,7 @@
           <button type="button" class="btn btn-outline" id="rf-copy">Copy the text</button>
           <a href="#" class="btn btn-outline" id="rf-sms">Text it instead</a>
         </div>
+        <div class="rf-sent" id="rf-sent" aria-live="polite"></div>
       </div>
 
       <div class="rf-link-box">
@@ -962,8 +972,11 @@
 
     // Rebuild the href first so navigation carries the current text, then fire the
     // beacon. Neither call preventDefault, so mailto:/sms: open immediately.
-    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); });
-    sms.addEventListener('click',    function () { refresh(); sendIntroBeacon('sms'); });
+    // After the click has gone through (mailto opens as before), the buttons
+    // give way to a "done" panel — webmail usually opens in a new tab and this
+    // page would otherwise look unchanged.
+    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); setTimeout(function () { showIntroSent('email'); }, 0); });
+    sms.addEventListener('click',    function () { refresh(); sendIntroBeacon('sms'); setTimeout(function () { showIntroSent('sms'); }, 0); });
 
     copy.addEventListener('click', function () {
       sendIntroBeacon('copy');
@@ -972,6 +985,33 @@
     el('rf-copylink').addEventListener('click', function () {
       copyText(el('rf-mylink').value, el('rf-copylink'), 'Copy link');
     });
+  }
+
+  /* The "done" panel for the email and text buttons. Same agent and the same
+     contact time as the confirmation above (turnaroundText). The copy link is
+     for a partner whose device has no mail or messages app set up. */
+  function showIntroSent(kind) {
+    var panel = el('rf-sent');
+    if (panel.classList.contains('is-on')) return;
+    var isSms = kind === 'sms';
+    var first = AGENT_NAME.split(/\s+/)[0];
+    var copyLabel = isSms ? "Didn't open? Copy the text message instead" : "Didn't open? Copy the email text instead";
+    panel.innerHTML =
+      '<h3 class="rf-sent-h" id="rf-sent-h" tabindex="-1">' +
+        (isSms ? 'Your text message is open in your messages app' : 'Your intro email is open in a new tab') + '</h3>' +
+      '<p>' + (isSms ? "Hit Send there, then come back here. You're all set. "
+                     : "Hit Send there, then close that tab. You're all set. ") +
+      first + ' will have a quote back to you ' + turnaroundText() + '.</p>' +
+      '<button type="button" class="rf-sent-copy" id="rf-sent-copy">' + copyLabel + '</button>';
+    panel.classList.add('is-on');
+    document.querySelector('.rf-intro-btns').style.display = 'none';
+    el('rf-sent-copy').addEventListener('click', function () {
+      sendIntroBeacon('copy');
+      var text = isSms ? smsFromCurrent(el('rf-body').value)
+                       : 'Subject: ' + el('rf-subject').value + '\n\n' + el('rf-body').value;
+      copyText(text, el('rf-sent-copy'), copyLabel);
+    });
+    try { el('rf-sent-h').focus(); } catch (e) { /* older engines */ }
   }
 
   function copyText(text, btn, restore) {

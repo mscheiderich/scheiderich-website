@@ -273,6 +273,15 @@
     .rr-intro-box .rr-group input, .rr-intro-box .rr-group textarea { background: #fff; }
     #rr-body { min-height: 330px; }
     .rr-intro-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    /* "Intro sent" panel: takes the buttons' place after the email or text
+       button is used. The live region is always in the page (empty = no
+       height) so a screen reader announces it when it fills. */
+    .rr-sent.is-on { margin-top: 4px; padding: 18px 18px; border-left: 4px solid #1e7d4f; background: #e3f2ea; border-radius: 12px; }
+    .rr-intro-box .rr-sent-h { font-size: 18px; color: var(--rr-ink); margin-bottom: 6px; }
+    .rr-sent-h:focus { outline: none; }
+    .rr-sent p { font-size: 15px; color: var(--rr-ink); line-height: 1.6; margin-bottom: 10px; }
+    .rr-sent-copy { background: none; border: none; padding: 0; font: inherit; font-size: 14px; font-weight: 600; color: var(--rr-navy); text-decoration: underline; cursor: pointer; text-align: left; }
+    .rr-sent-copy:hover { color: var(--rr-orange); }
     .rr-link-box { background: var(--rr-info); border-radius: 18px; padding: 22px 16px; margin-top: 18px; }
     .rr-link-box h3 { font-size: 17px; color: var(--rr-ink); margin-bottom: 6px; }
     .rr-link-box p { font-size: 14.5px; color: var(--rr-ink-2); line-height: 1.6; margin-bottom: 14px; }
@@ -857,6 +866,7 @@
           <button type="button" class="rr-btn rr-btn-outline" id="rr-copy">Copy the text</button>
           <a href="#" class="rr-btn rr-btn-outline" id="rr-sms">Text it instead</a>
         </div>
+        <div class="rr-sent" id="rr-sent" aria-live="polite"></div>
       </div>
 
       <div class="rr-link-box">
@@ -1490,8 +1500,10 @@
 
     // Rebuild the href first so navigation carries the current text, then fire the
     // beacon. Neither call preventDefault, so mailto:/sms: open immediately.
-    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); });
-    sms.addEventListener('click',    function () { sendIntroBeacon('sms'); });
+    // After the click has gone through (mailto:/sms: open as before), the
+    // buttons give way to a "done" panel — otherwise this page looks unchanged.
+    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); setTimeout(function () { showIntroSent('email', d); }, 0); });
+    sms.addEventListener('click',    function () { sendIntroBeacon('sms'); setTimeout(function () { showIntroSent('sms', d); }, 0); });
 
     copy.addEventListener('click', function () {
       sendIntroBeacon('copy');
@@ -1784,6 +1796,39 @@
       io.observe(items[i]);
     }
   })();
+
+  /* The "done" panel for the email and text buttons. Same agent and the same
+     contact time as the confirmation above (contactTimeText). The copy link is
+     for a partner whose device has no mail or messages app set up. */
+  function showIntroSent(kind, d) {
+    var panel = el('rr-sent');
+    if (panel.classList.contains('is-on')) return;
+    var who  = firstWord(d.clientName) || 'your resident';
+    var when = AGENT_FIRST + ' will contact ' + who + ' ' + contactTimeText() + '.';
+    var isSms = kind === 'sms';
+    var copyLabel = isSms ? "Didn't open? Copy the text message instead" : "Didn't open? Copy the email text instead";
+    panel.innerHTML =
+      '<h3 class="rr-sent-h" id="rr-sent-h" tabindex="-1">' +
+        (isSms ? 'Your text message is open in your messages app' : 'Your intro email is open in a new tab') + '</h3>' +
+      '<p>' + (isSms ? "Hit Send there, then come back here. You're all set. "
+                     : "Hit Send there, then close that tab. You're all set. ") + escapeText(when) + '</p>' +
+      '<button type="button" class="rr-sent-copy" id="rr-sent-copy">' + copyLabel + '</button>';
+    panel.classList.add('is-on');
+    document.querySelector('.rr-intro-btns').style.display = 'none';
+    el('rr-sent-copy').addEventListener('click', function () {
+      sendIntroBeacon('copy');
+      var text = isSms ? buildSms(d)
+                       : 'Subject: ' + el('rr-subject').value + '\n\n' + el('rr-body').value;
+      copyText(text, el('rr-sent-copy'), copyLabel);
+    });
+    try { el('rr-sent-h').focus(); } catch (e) { /* older engines */ }
+  }
+
+  // The resident's name comes from the form, so it is escaped before it goes
+  // into the panel's HTML.
+  function escapeText(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
 
   function copyText(text, btn, restore) {
     var finish = function () {
