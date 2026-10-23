@@ -862,7 +862,7 @@
         </div>
 
         <div class="rr-intro-btns">
-          <a href="#" class="rr-btn rr-btn-primary" id="rr-mailto">Open in my email</a>
+          <a href="#" class="rr-btn rr-btn-primary" id="rr-mailto" target="_blank" rel="noopener">Open in my email</a>
           <button type="button" class="rr-btn rr-btn-outline" id="rr-copy">Copy the text</button>
           <a href="#" class="rr-btn rr-btn-outline" id="rr-sms">Text it instead</a>
         </div>
@@ -1502,8 +1502,8 @@
     // beacon. Neither call preventDefault, so mailto:/sms: open immediately.
     // After the click has gone through (mailto:/sms: open as before), the
     // buttons give way to a "done" panel — otherwise this page looks unchanged.
-    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); setTimeout(function () { showIntroSent('email', d); }, 0); });
-    sms.addEventListener('click',    function () { sendIntroBeacon('sms'); setTimeout(function () { showIntroSent('sms', d); }, 0); });
+    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); setTimeout(function () { showIntroSent('email', d); }, INTRO_PANEL_DELAY); });
+    sms.addEventListener('click',    function () { sendIntroBeacon('sms'); setTimeout(function () { showIntroSent('sms', d); }, INTRO_PANEL_DELAY); });
 
     copy.addEventListener('click', function () {
       sendIntroBeacon('copy');
@@ -1797,31 +1797,33 @@
     }
   })();
 
-  /* The "done" panel for the email and text buttons. Same agent and the same
-     contact time as the confirmation above (contactTimeText). The copy link is
-     for a partner whose device has no mail or messages app set up. */
+  /* The "done" panel for the email and text buttons. It appears BELOW the
+     buttons about a second after the click and never hides, replaces or
+     disables them, and never moves focus — so it cannot get in the way of the
+     mailto:/sms: link opening. The aria-live region announces it. Same agent
+     and contact time as the confirmation above (contactTimeText). The copy
+     link is for a partner whose device has no mail or messages app set up. */
+  var INTRO_PANEL_DELAY = 1000;
+
   function showIntroSent(kind, d) {
     var panel = el('rr-sent');
-    if (panel.classList.contains('is-on')) return;
     var who  = firstWord(d.clientName) || 'your resident';
     var when = AGENT_FIRST + ' will contact ' + who + ' ' + contactTimeText() + '.';
     var isSms = kind === 'sms';
     var copyLabel = isSms ? "Didn't open? Copy the text message instead" : "Didn't open? Copy the email text instead";
     panel.innerHTML =
-      '<h3 class="rr-sent-h" id="rr-sent-h" tabindex="-1">' +
-        (isSms ? 'Your text message is open in your messages app' : 'Your intro email is open in a new tab') + '</h3>' +
+      '<h3 class="rr-sent-h">' +
+        (isSms ? 'Your text message should be open now' : 'Your intro email should be open now') + '</h3>' +
       '<p>' + (isSms ? "Hit Send there, then come back here. You're all set. "
-                     : "Hit Send there, then close that tab. You're all set. ") + escapeText(when) + '</p>' +
+                     : "Hit Send there, then come back to this tab. You're all set. ") + escapeText(when) + '</p>' +
       '<button type="button" class="rr-sent-copy" id="rr-sent-copy">' + copyLabel + '</button>';
     panel.classList.add('is-on');
-    document.querySelector('.rr-intro-btns').style.display = 'none';
     el('rr-sent-copy').addEventListener('click', function () {
       sendIntroBeacon('copy');
       var text = isSms ? buildSms(d)
                        : 'Subject: ' + el('rr-subject').value + '\n\n' + el('rr-body').value;
       copyText(text, el('rr-sent-copy'), copyLabel);
     });
-    try { el('rr-sent-h').focus(); } catch (e) { /* older engines */ }
   }
 
   // The resident's name comes from the form, so it is escaped before it goes

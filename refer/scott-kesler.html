@@ -560,7 +560,7 @@
         </div>
 
         <div class="rf-intro-btns">
-          <a href="#" class="btn btn-primary" id="rf-mailto">Open in my email</a>
+          <a href="#" class="btn btn-primary" id="rf-mailto" target="_blank" rel="noopener">Open in my email</a>
           <button type="button" class="btn btn-outline" id="rf-copy">Copy the text</button>
           <a href="#" class="btn btn-outline" id="rf-sms">Text it instead</a>
         </div>
@@ -976,8 +976,8 @@
     // After the click has gone through (mailto opens as before), the buttons
     // give way to a "done" panel — webmail usually opens in a new tab and this
     // page would otherwise look unchanged.
-    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); setTimeout(function () { showIntroSent('email'); }, 0); });
-    sms.addEventListener('click',    function () { refresh(); sendIntroBeacon('sms'); setTimeout(function () { showIntroSent('sms'); }, 0); });
+    mailto.addEventListener('click', function () { refresh(); sendIntroBeacon('email'); setTimeout(function () { showIntroSent('email'); }, INTRO_PANEL_DELAY); });
+    sms.addEventListener('click',    function () { refresh(); sendIntroBeacon('sms'); setTimeout(function () { showIntroSent('sms'); }, INTRO_PANEL_DELAY); });
 
     copy.addEventListener('click', function () {
       sendIntroBeacon('copy');
@@ -988,31 +988,33 @@
     });
   }
 
-  /* The "done" panel for the email and text buttons. Same agent and the same
-     contact time as the confirmation above (turnaroundText). The copy link is
-     for a partner whose device has no mail or messages app set up. */
+  /* The "done" panel for the email and text buttons. It appears BELOW the
+     buttons about a second after the click and never hides, replaces or
+     disables them, and never moves focus — so it cannot get in the way of the
+     mailto:/sms: link opening. The aria-live region announces it. Same agent
+     and contact time as the confirmation above (turnaroundText). The copy link
+     is for a partner whose device has no mail or messages app set up. */
+  var INTRO_PANEL_DELAY = 1000;
+
   function showIntroSent(kind) {
     var panel = el('rf-sent');
-    if (panel.classList.contains('is-on')) return;
     var isSms = kind === 'sms';
     var first = AGENT_NAME.split(/\s+/)[0];
     var copyLabel = isSms ? "Didn't open? Copy the text message instead" : "Didn't open? Copy the email text instead";
     panel.innerHTML =
-      '<h3 class="rf-sent-h" id="rf-sent-h" tabindex="-1">' +
-        (isSms ? 'Your text message is open in your messages app' : 'Your intro email is open in a new tab') + '</h3>' +
+      '<h3 class="rf-sent-h">' +
+        (isSms ? 'Your text message should be open now' : 'Your intro email should be open now') + '</h3>' +
       '<p>' + (isSms ? "Hit Send there, then come back here. You're all set. "
-                     : "Hit Send there, then close that tab. You're all set. ") +
+                     : "Hit Send there, then come back to this tab. You're all set. ") +
       first + ' will have a quote back to you ' + turnaroundText() + '.</p>' +
       '<button type="button" class="rf-sent-copy" id="rf-sent-copy">' + copyLabel + '</button>';
     panel.classList.add('is-on');
-    document.querySelector('.rf-intro-btns').style.display = 'none';
     el('rf-sent-copy').addEventListener('click', function () {
       sendIntroBeacon('copy');
       var text = isSms ? smsFromCurrent(el('rf-body').value)
                        : 'Subject: ' + el('rf-subject').value + '\n\n' + el('rf-body').value;
       copyText(text, el('rf-sent-copy'), copyLabel);
     });
-    try { el('rf-sent-h').focus(); } catch (e) { /* older engines */ }
   }
 
   function copyText(text, btn, restore) {
