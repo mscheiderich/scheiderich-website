@@ -58,8 +58,8 @@ window.LANDING_PAGES = [
     url: 'https://thescheiderichagency.com/renters/{slug}/',
     acceptsCode: true,
     readsSrc: true,
-    live: false,                 // not built yet — never shown until true
-    agents: []
+    live: true,
+    agents: ['jennifer-lawler']
   },
   {
     id: 'agent',

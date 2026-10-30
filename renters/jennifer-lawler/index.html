@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  RENTERS PAGE: {agent}. Residents asking for renters insurance for themselves.
+  Everything you see comes from the shared body, /includes/renters-body.html.
+  This file holds only the agent's settings and the <head> text.
+
+  TO CLONE FOR ANOTHER AGENT
+    1. Copy this folder to /renters/{agent-slug}/index.html
+    2. Change the [AGENT] values in THIS file only:
+         - title, description, og:title, og:description   the agent's name
+         - og:url                                         /renters/{agent-slug}/
+         - og:image, og:image:alt                         the agent's photo and alt text
+         - the six SSI settings below:
+             RN_NAME       full name, as shown under the photo
+             RN_FIRST      first name ("Text Jennifer", "Send to Jennifer")
+             RN_SLUG       agent slug. Routes the lead in the Referrals sheet.
+             RN_PHOTO      photo path, from the site root
+             RN_PHOTO_ALT  photo alt text
+             RN_PRONOUN    She / He / They, capitalized ("She'll call you today")
+         - agentText in the script below: the agent's text number, digits only.
+           Every "Text" button reads it. Today it is the office line.
+    3. Never edit /includes/renters-body.html for one agent. It is shared.
+    4. The slug must already be on the Referrals sheet's Settings tab (A:B),
+       the same as for the agent's /refer/ page.
+    5. Add the slug to the 'renters' entry in /team/landing-pages.js
+       (agents list) in the same commit.
+    6. Do NOT add it to sitemap.xml. noindex, nofollow (set in the shared
+       body), the same documented exception as /refer/ and /rental-referral/.
+
+  No email address or source value is set here: the page emails no one
+  itself (the Referrals script routes by slug), and the source is built from
+  the slug ("renters-{slug}"), the same way the script labels it.
+-->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1e3148">
+
+  <!-- [AGENT] name in the title and description -->
+  <title>Renters Insurance for Your Lease | Jennifer Lawler | The Scheiderich Agency</title>
+  <meta name="description" content="Moving in? Jennifer Lawler sets up renters insurance the way your lease requires — the right liability limit, your property listed, and proof sent. A local agency that handles the paperwork." />
+
+  <!-- Link preview: what a resident sees when this link is texted to them.
+       [AGENT] name, slug and photo. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="The Scheiderich Agency" />
+  <meta property="og:title" content="Renters Insurance for Your Lease | Jennifer Lawler | The Scheiderich Agency" />
+  <meta property="og:description" content="Moving in? Jennifer Lawler sets up renters insurance the way your lease requires — the right liability limit, your property listed, and proof sent. A local agency that handles the paperwork." />
+  <meta property="og:url" content="https://thescheiderichagency.com/renters/jennifer-lawler/" />
+  <meta property="og:image" content="https://thescheiderichagency.com/jennifer-lawler.png" />
+  <meta property="og:image:alt" content="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency" />
+
+  <!-- [AGENT] settings. Printed into the page by the server, so the name and
+       photo show even with JavaScript off. -->
+  <!--#set var="RN_NAME"      value="Jennifer Lawler" -->
+  <!--#set var="RN_FIRST"     value="Jennifer" -->
+  <!--#set var="RN_SLUG"      value="jennifer-lawler" -->
+  <!--#set var="RN_PHOTO"     value="/jennifer-lawler.png" -->
+  <!--#set var="RN_PHOTO_ALT" value="Jennifer Lawler, Licensed Insurance Agent at The Scheiderich Agency" -->
+  <!--#set var="RN_PRONOUN"   value="She" -->
+
+  <script>
+    window.RENTERS_PAGE = {
+      agentText: '7702684418'   // [AGENT] AGENT_TEXT: digits only. The office line until the agent has her own.
+    };
+  </script>
+
+<!-- The shared body closes </head> and opens <body>. -->
+<!--#include virtual="/includes/renters-body.html" -->
+</html>
