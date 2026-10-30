@@ -1235,6 +1235,8 @@
       : '<p class="rh-card-sub">No pages are listed for you yet.</p>';
   }
 
+  // "Open page" is a real link to the same plain URL as Copy link (no ?p=,
+  // no ?src=), so opening it never counts as a partner visit or a QR scan.
   function pageRowHtml(pg, url, qrText, file) {
     return `
       <div class="rh-page">
@@ -1245,6 +1247,8 @@
         </div>
         <button class="btn btn-primary" onclick="copyText('${jsAttr(url)}', 'Link copied')">Copy link</button>
         <button class="btn btn-outline" onclick="downloadQr('${jsAttr(qrText)}', '${jsAttr(file)}')">Download QR</button>
+        <a class="btn btn-outline" href="${escapeHtml(url)}" target="_blank" rel="noopener"
+           aria-label="Open ${escapeHtml(pg.label)} in a new tab">Open page</a>
       </div>`;
   }
 
