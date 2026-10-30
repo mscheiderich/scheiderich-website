@@ -47,7 +47,8 @@ window.LANDING_PAGES = [
     acceptsCode: true,
     readsSrc: true,
     live: true,
-    agents: ['jennifer-lawler']
+    agents: ['jennifer-lawler', 'mark-hill', 'scott-kesler', 'iris-salgado',
+             'crissy-shatzel']
   },
   {
     id: 'renters',
@@ -59,7 +60,8 @@ window.LANDING_PAGES = [
     acceptsCode: true,
     readsSrc: true,
     live: true,
-    agents: ['jennifer-lawler']
+    agents: ['jennifer-lawler', 'mark-hill', 'scott-kesler', 'iris-salgado',
+             'crissy-shatzel']
   },
   {
     id: 'agent',

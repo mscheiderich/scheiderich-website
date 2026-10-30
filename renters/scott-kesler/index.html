@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+<!--
+  AGENT PAGE: SETTINGS FILE. The same shape for every agent and both page types:
+    /rental-referral/{agent-slug}/index.html   leasing staff  (body: /includes/rental-referral-body.html)
+    /renters/{agent-slug}/index.html           residents      (body: /includes/renters-body.html)
+  Everything a visitor sees comes from the shared body. This file holds only
+  the agent's settings and the <head>, which reads the same settings.
+
+  TO ADD AN AGENT
+    1. Copy both of an existing agent's files to /rental-referral/{agent-slug}/
+       and /renters/{agent-slug}/ (index.html in each).
+    2. Change the settings block below, the same in BOTH files:
+         AGENT_NAME       full name: under the photo and in the title
+         AGENT_FIRST      first name ("Text Mark", "Send to Mark")
+         AGENT_SLUG       agent slug. Routes leads in the Referrals sheet.
+         AGENT_PRONOUN    She / He / They, capitalized ("He'll call you today")
+         AGENT_PHOTO      headshot path from the site root. When a new headshot
+                          arrives, this one line changes.
+         AGENT_PHOTO_ALT  headshot alt text
+         AGENT_EMAIL      CC on the partner intro email; the "Prefer email?" link
+         AGENT_TEXT       the agent's text and call number, as 770-555-1234.
+                          Every "Text" button and every shown number reads it.
+         AGENT_SPANISH    yes or no. "no" hides the English & Spanish pill, the
+                          language buttons and the Spanish FAQ on both pages.
+         AGENT_BACKUP     who covers when the agent is out (partner page FAQ)
+       Nothing else in this file changes.
+    3. Never edit a shared body for one agent.
+    4. The slug must already be on the Referrals sheet's Settings tab (A:B),
+       the same as for the agent's /refer/ page.
+    5. Add the slug to the 'rental-referral' and 'renters' entries in
+       /team/landing-pages.js (agents) in the same commit.
+    6. Do NOT add either page to sitemap.xml. Both are noindex, nofollow (set
+       in the shared bodies), the same documented exception as /refer/.
+-->
+  <!-- Settings. Printed into the page by the server, so they show even with JavaScript off. -->
+  <!--#set var="AGENT_NAME"      value="Scott Kesler" -->
+  <!--#set var="AGENT_FIRST"     value="Scott" -->
+  <!--#set var="AGENT_SLUG"      value="scott-kesler" -->
+  <!--#set var="AGENT_PRONOUN"   value="He" -->
+  <!--#set var="AGENT_PHOTO"     value="/scott-kesler.png" -->
+  <!--#set var="AGENT_PHOTO_ALT" value="Scott Kesler, licensed insurance agent at The Scheiderich Agency" -->
+  <!--#set var="AGENT_EMAIL"     value="ScottKesler2@Allstate.com" -->
+  <!--#set var="AGENT_TEXT"      value="770-268-4418" -->
+  <!--#set var="AGENT_SPANISH"   value="no" -->
+  <!--#set var="AGENT_BACKUP"    value="Another licensed agent on our team" -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1e3148">
+
+  <title>Renters Insurance for Your Lease | <!--#echo var="AGENT_NAME" --> | The Scheiderich Agency</title>
+  <meta name="description" content="Moving in? <!--#echo var="AGENT_NAME" --> sets up renters insurance the way your lease requires — the right liability limit, your property listed, and proof sent. A local agency that handles the paperwork." />
+
+  <!-- Link preview: what people see when this link is texted or emailed to them. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="The Scheiderich Agency" />
+  <meta property="og:title" content="Renters Insurance for Your Lease | <!--#echo var="AGENT_NAME" --> | The Scheiderich Agency" />
+  <meta property="og:description" content="Moving in? <!--#echo var="AGENT_NAME" --> sets up renters insurance the way your lease requires — the right liability limit, your property listed, and proof sent. A local agency that handles the paperwork." />
+  <meta property="og:url" content="https://thescheiderichagency.com/renters/<!--#echo var="AGENT_SLUG" -->/" />
+  <meta property="og:image" content="https://thescheiderichagency.com<!--#echo var="AGENT_PHOTO" -->" />
+  <meta property="og:image:alt" content="<!--#echo var="AGENT_PHOTO_ALT" -->" />
+
+<!-- The shared body closes </head> and opens <body>. -->
+<!--#include virtual="/includes/renters-body.html" -->
+</html>
