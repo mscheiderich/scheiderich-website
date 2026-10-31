@@ -859,11 +859,13 @@
 
 
 <!-- ═══ POP-UP FORMS ═══
-     Opened by the two "We'll come to you" cards. Both post to the agency
-     Formspree form, the same one the contact page and the agent pages use, so
-     they arrive in the agency inbox. They are NOT referrals and never touch
-     the Referrals sheet.
-     _subject and partner_code are filled in by the script at submit time. -->
+     Opened by the two "We'll come to you" cards. Where they are sent is the
+     POPUP_BACKEND setting in the script below: the agency Formspree form
+     (the agency inbox), or the Referrals script, which emails the agent and
+     records the request on its Log tab only. They are NOT referrals and never
+     add a Referrals or Partners row.
+     _subject and partner_code are filled in by the script at submit time
+     (Formspree only; the Referrals script builds its own subject). -->
 <dialog class="rr-modal" id="rr-modal-req" aria-labelledby="rr-req-title">
   <div class="rr-modal-head">
     <h2 id="rr-req-title">Send us your requirements</h2>
@@ -880,41 +882,41 @@
       <div class="rr-row">
         <div class="rr-group">
           <label for="rr-req-name">Your name *</label>
-          <input type="text" id="rr-req-name" name="name" data-fill="name" autocomplete="name" required />
+          <input type="text" id="rr-req-name" name="name" maxlength="100" data-fill="name" autocomplete="name" required />
         </div>
         <div class="rr-group">
           <label for="rr-req-property">Property name *</label>
-          <input type="text" id="rr-req-property" name="property_name" data-fill="company" autocomplete="organization" required />
+          <input type="text" id="rr-req-property" name="property_name" maxlength="120" data-fill="company" autocomplete="organization" required />
         </div>
         <div class="rr-group">
           <label for="rr-req-email">Your email *</label>
-          <input type="email" id="rr-req-email" name="email" data-fill="email" autocomplete="email" required />
+          <input type="email" id="rr-req-email" name="email" maxlength="120" data-fill="email" autocomplete="email" required />
         </div>
         <div class="rr-group">
           <label for="rr-req-phone">Your phone</label>
-          <input type="tel" id="rr-req-phone" name="phone" data-fill="phone" autocomplete="tel" />
+          <input type="tel" id="rr-req-phone" name="phone" maxlength="40" data-fill="phone" autocomplete="tel" />
         </div>
       </div>
 
       <div class="rr-group">
         <label for="rr-req-limit">Required liability limit</label>
-        <input type="text" id="rr-req-limit" name="required_liability_limit" autocomplete="off" />
+        <input type="text" id="rr-req-limit" name="required_liability_limit" maxlength="60" autocomplete="off" />
       </div>
       <div class="rr-group">
         <label for="rr-req-legal">Property legal name for the interested-party listing *</label>
-        <input type="text" id="rr-req-legal" name="interested_party_legal_name" autocomplete="off" required />
+        <input type="text" id="rr-req-legal" name="interested_party_legal_name" maxlength="200" autocomplete="off" required />
       </div>
       <div class="rr-group">
         <label for="rr-req-address">Mailing address for interested-party notices *</label>
-        <textarea class="rr-ta-sm" id="rr-req-address" name="interested_party_notice_address" autocomplete="off" required></textarea>
+        <textarea class="rr-ta-sm" id="rr-req-address" name="interested_party_notice_address" maxlength="500" autocomplete="off" required></textarea>
       </div>
       <div class="rr-group">
         <label for="rr-req-proof">Where proof of insurance should be sent (email)</label>
-        <input type="email" id="rr-req-proof" name="proof_of_insurance_email" autocomplete="off" />
+        <input type="email" id="rr-req-proof" name="proof_of_insurance_email" maxlength="120" autocomplete="off" />
       </div>
       <div class="rr-group">
         <label for="rr-req-notes">Anything else we should know</label>
-        <textarea class="rr-ta-sm" id="rr-req-notes" name="anything_else"></textarea>
+        <textarea class="rr-ta-sm" id="rr-req-notes" name="anything_else" maxlength="2000"></textarea>
       </div>
 
       <!-- Spam trap — hidden from humans -->
@@ -948,19 +950,19 @@
       <div class="rr-row">
         <div class="rr-group">
           <label for="rr-vis-name">Your name *</label>
-          <input type="text" id="rr-vis-name" name="name" data-fill="name" autocomplete="name" required />
+          <input type="text" id="rr-vis-name" name="name" maxlength="100" data-fill="name" autocomplete="name" required />
         </div>
         <div class="rr-group">
           <label for="rr-vis-property">Property name *</label>
-          <input type="text" id="rr-vis-property" name="property_name" data-fill="company" autocomplete="organization" required />
+          <input type="text" id="rr-vis-property" name="property_name" maxlength="120" data-fill="company" autocomplete="organization" required />
         </div>
         <div class="rr-group">
           <label for="rr-vis-email">Your email *</label>
-          <input type="email" id="rr-vis-email" name="email" data-fill="email" autocomplete="email" required />
+          <input type="email" id="rr-vis-email" name="email" maxlength="120" data-fill="email" autocomplete="email" required />
         </div>
         <div class="rr-group">
           <label for="rr-vis-phone">Your phone</label>
-          <input type="tel" id="rr-vis-phone" name="phone" data-fill="phone" autocomplete="tel" />
+          <input type="tel" id="rr-vis-phone" name="phone" maxlength="40" data-fill="phone" autocomplete="tel" />
         </div>
       </div>
 
@@ -980,11 +982,11 @@
 
       <div class="rr-group">
         <label for="rr-vis-times">Good days and times</label>
-        <input type="text" id="rr-vis-times" name="good_days_and_times" autocomplete="off" />
+        <input type="text" id="rr-vis-times" name="good_days_and_times" maxlength="200" autocomplete="off" />
       </div>
       <div class="rr-group">
         <label for="rr-vis-notes">Notes</label>
-        <textarea class="rr-ta-sm" id="rr-vis-notes" name="notes"></textarea>
+        <textarea class="rr-ta-sm" id="rr-vis-notes" name="notes" maxlength="2000"></textarea>
       </div>
 
       <!-- Spam trap — hidden from humans -->
@@ -1027,6 +1029,14 @@
   var PAGE_URL     = 'https://thescheiderichagency.com/rental-referral/' + AGENT_SLUG + '/';
   var SOURCE       = 'rental-referral-' + AGENT_SLUG;
   var COVERAGE     = 'Renters';                // line of business, sent with every referral
+
+  // Where the two pop-up forms (requirements / property visit) are sent:
+  //   'formspree'  the agency Formspree form; arrives in info@ (until the switch)
+  //   'script'     the Referrals script (action rentalRequest), which emails the
+  //                right agent directly. Switch ONLY after the Referrals script
+  //                version with rentalRequest is deployed: the older version
+  //                files a pop-up as a blank referral.
+  var POPUP_BACKEND = 'formspree';
 
   var NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at " + AGENT_PHONE + ".";
   var SERVER_MSG  = "We weren't able to send that referral. Please call us at " + AGENT_PHONE + " and we'll take the details directly.";
@@ -1483,10 +1493,17 @@
 
   /* ═══════════════════════════════════════
      POP-UP FORMS — requirements and property visit
-     These go to the agency Formspree form, not the Referrals script. The
-     submission is the same pattern the agent pages use: FormData posted with
-     an Accept: application/json header, res.ok decides success, and a failed
-     send leaves every field as typed.
+     Sent where POPUP_BACKEND (SETTINGS, above) says:
+       'formspree'  the agency Formspree form, the same pattern the agent pages
+                    use: FormData posted with an Accept: application/json
+                    header, res.ok decides success.
+       'script'     the Referrals script, action rentalRequest, the same
+                    no-cors pattern as the referral form: a resolved request
+                    means it left the browser (the reply can't be read). The
+                    script routes it like a referral: the partner's owner when
+                    a known ?p= code is present, else this page's agent.
+     Either way a failed send leaves every field as typed, and the confirmation
+     and the GA4 event are the same.
   ═══════════════════════════════════════ */
   var FORM_URL = 'https://formspree.io/f/mgoqnelq';
   var POPUP_NETWORK_MSG = "We couldn't reach our server. Please check your connection and try again, or call us at " + AGENT_PHONE + ".";
@@ -1526,6 +1543,42 @@
   function unlockScroll() {
     document.body.classList.remove('rr-modal-open');
     document.body.style.paddingRight = '';
+  }
+
+  // Formspree: exactly the request the pop-ups have always sent.
+  function sendToFormspree(form) {
+    return fetch(FORM_URL, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    }).then(function (res) {
+      if (!res.ok) {
+        var err = new Error('server');
+        err.isServerError = true;
+        throw err;
+      }
+    });
+  }
+
+  // Referrals script: the form's own fields, minus the Formspree-only ones
+  // (_source, _subject, _gotcha, partner_code), plus kind, this page's agent,
+  // the partner code when there is one, and the spam trap as "website".
+  // Each field's maxlength matches the script's limit; the script refuses
+  // anything longer rather than cutting it, so the two must stay in step.
+  function sendToScript(form, kind) {
+    var data = { action: 'rentalRequest', kind: kind, agentSlug: AGENT_SLUG };
+    if (partnerCode) data.partnerCode = partnerCode;
+    new FormData(form).forEach(function (value, name) {
+      if (name.charAt(0) === '_' || name === 'partner_code') return;
+      data[name] = String(value).replace(/\r\n?/g, '\n').trim();   // a line break counts as one character, as in maxlength
+    });
+    data.website = form.querySelector('[name="_gotcha"]').value;
+    return fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(data)
+    });
   }
 
   function setupPopup(cfg) {
@@ -1648,17 +1701,9 @@
       submitBtn.textContent = 'Sending…';
       submitBtn.disabled = true;
 
-      fetch(FORM_URL, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: new FormData(form)
-      })
-      .then(function (res) {
-        if (!res.ok) {
-          var err = new Error('server');
-          err.isServerError = true;
-          throw err;
-        }
+      var sending = POPUP_BACKEND === 'script' ? sendToScript(form, cfg.kind) : sendToFormspree(form);
+      sending
+      .then(function () {
         sent = true;
         try {
           if (typeof gtag === 'function') {
@@ -1680,8 +1725,8 @@
     });
   }
 
-  setupPopup({ dialog: 'rr-modal-req', opener: 'rr-open-req', leadType: 'rental_requirements', subject: 'Rental requirements' });
-  setupPopup({ dialog: 'rr-modal-vis', opener: 'rr-open-vis', leadType: 'rental_visit',        subject: 'Property visit request' });
+  setupPopup({ dialog: 'rr-modal-req', opener: 'rr-open-req', kind: 'requirements', leadType: 'rental_requirements', subject: 'Rental requirements' });
+  setupPopup({ dialog: 'rr-modal-vis', opener: 'rr-open-vis', kind: 'visit',        leadType: 'rental_visit',        subject: 'Property visit request' });
 
   /* ═══════════════════════════════════════
      TEXT BUTTONS
