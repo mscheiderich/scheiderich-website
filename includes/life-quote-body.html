@@ -1,0 +1,1091 @@
+<!--
+  LIFE QUOTE PAGE: SHARED BODY
+  Included by every /life-quote/{agent-slug}/index.html at the end of its <head>.
+  It finishes the head (fonts, schema, styles, analytics), closes </head>, and
+  holds the whole <body>. Agent details come from the AGENT_ settings in the
+  agent's own file. Spanish (AGENT_SPANISH = yes) adds the language switch, the
+  badge, two FAQs and the language field; the Spanish text is the labeled
+  SPANISH block in the script near the bottom of this file.
+
+  One file for every agent. Never put one agent's details in this file.
+-->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <!-- Person and FAQPage schema, from the agent's settings. The FAQ answers must
+       match the visible FAQ text word for word. -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "<!--#echo var="AGENT_NAME" -->",
+      "jobTitle": "Licensed Insurance Agent",
+      "url": "https://thescheiderichagency.com/agents/<!--#echo var="AGENT_SLUG" -->.html",
+      "image": "https://thescheiderichagency.com<!--#echo var="AGENT_PHOTO" -->",
+      "telephone": "+1-<!--#echo var="AGENT_TEXT" -->",
+      "worksFor": {
+        "@type": "InsuranceAgency",
+        "name": "The Scheiderich Agency",
+        "url": "https://thescheiderichagency.com/",
+        "telephone": "+1-770-268-4418",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "60 W Park St",
+          "addressLocality": "Buford",
+          "addressRegion": "GA",
+          "postalCode": "30518",
+          "addressCountry": "US"
+        }
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is term or whole life better?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Neither is better across the board. Term usually costs less upfront for a set period; whole and universal last for life and build cash value. The right choice depends on what you're protecting and for how long."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a medical exam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some policies require one and some don't. It depends on the coverage amount, your age, and the product. <!--#echo var="AGENT_FIRST" --> will tell you what to expect for the options you're considering."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to get covered?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some policies can be approved quickly; others take several weeks for underwriting. <!--#echo var="AGENT_FIRST" --> will give you a realistic timeline for your situation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it cost anything to talk with <!--#echo var="AGENT_FIRST" -->?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "<!--#echo var="AGENT_COST_ANSWER" -->"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What information do I need to get started?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Just your name, phone number, and email. <!--#echo var="AGENT_FIRST" --> will ask anything else <!--#echo var="AGENT_PRONOUN_LC" --> needs during your call."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <style>
+    <!--#include virtual="/includes/site-css.html" -->
+    /* ═══════════════════════════════════════
+       LIFE QUOTE LANDING PAGE — page-scoped styles
+       Every class here is prefixed lq- and exists only on this page type.
+       Nothing overrides a shared class from /includes/site-css.html.
+       Written mobile-first: the base rules are the phone layout, and the two
+       min-width blocks at the bottom add columns as room appears.
+    ═══════════════════════════════════════ */
+    /* ── Hero ── */
+    .lq-hero { background: var(--navy); position: relative; overflow: hidden; }
+    .lq-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 72% 28%, rgba(217,104,42,.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 5%  80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    /* One column with the photo first from source order; two columns (photo LEFT,
+       text RIGHT) above the nav breakpoint. Same pattern as /agents/ and /refer/.
+       Exactly one photo element exists in the markup. */
+    .lq-hero-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      justify-items: center;
+      padding: 52px 0 48px;
+      max-width: 820px;              /* WIDE — matches the form section */
+      margin-left: auto; margin-right: auto;
+    }
+    .lq-hero-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 44px rgba(0,0,0,.30);
+      background: var(--navy-lt);
+      width: 100%; max-width: 220px;
+    }
+    .lq-hero-photo img { width: 100%; height: auto; display: block; }
+    .lq-hero-text { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .lq-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.48); margin-bottom: 18px;
+    }
+    .lq-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+    .lq-hero h1 { font-size: clamp(28px, 3.6vw, 44px); color: #fff; font-weight: 700; margin-bottom: 16px; }
+    /* Running prose stays left-aligned; centring it hurts readability. */
+    .lq-hero-sub { font-size: 16.5px; color: rgba(255,255,255,.64); line-height: 1.68; margin-bottom: 30px; text-align: left; }
+    .lq-hero-btns { display: flex; flex-direction: column; align-items: stretch; align-self: stretch; gap: 12px; }
+    .lq-hero-btns .btn { width: 100%; }
+    /* ── Sections ── */
+    .lq-sec { padding: 56px 0; }
+    .lq-sec-w { background: var(--bg-w); }
+    .lq-sec-alt { background: var(--bg-s); }
+    /* The sticky header is 66px tall; keep the form heading clear of it when the
+       hero button scrolls here. */
+    #lq-form { scroll-margin-top: 80px; }
+    /* ── Section widths ──
+       Two values only, both centred, matching the referral pages:
+         WIDE   820px — hero, card grids and the form
+         NARROW 660px — prose, steps and the FAQ */
+    .lq-wide, .lq-narrow { margin-left: auto; margin-right: auto; }
+    .lq-wide   { max-width: 820px; }
+    .lq-narrow { max-width: 660px; }
+    .lq-label {
+      display: block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+    }
+    .lq-h2 { font-size: clamp(23px, 2.6vw, 33px); margin-bottom: 22px; }
+    .lq-sub { font-size: 16px; color: var(--muted); line-height: 1.68; margin-bottom: 26px; }
+    .lq-note { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+    /* ── Why people buy — four cards ── */
+    .lq-reasons { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .lq-reason {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+    .lq-reason-ico {
+      width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+      background: var(--navy-lt); display: flex; align-items: center; justify-content: center;
+    }
+    .lq-reason-ico svg { width: 18px; height: 18px; color: var(--navy); }
+    .lq-reason h3 { font-size: 16.5px; margin-bottom: 5px; }
+    .lq-reason p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    /* ── Term / whole / universal comparison ── */
+    .lq-compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .lq-type {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 24px 20px; box-shadow: var(--sh-sm);
+    }
+    .lq-type h3 { font-size: 17px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid var(--orange); }
+    .lq-type p { font-size: 14px; color: var(--muted); line-height: 1.62; }
+    .lq-compare-note { font-size: 15.5px; color: var(--text); line-height: 1.68; margin-top: 26px; }
+    /* ── Calculator ── */
+    .lq-calc-btns { display: flex; flex-direction: column; gap: 12px; }
+    /* Long button labels must wrap on a phone rather than push past the viewport. */
+    .lq-calc-btns .btn, .lq-done .btn {
+      white-space: normal; height: auto; min-height: var(--btn-h);
+      padding-top: 11px; padding-bottom: 11px; text-align: center;
+    }
+    /* ── How it works — three steps ── */
+    .lq-steps { list-style: none; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .lq-step {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+    .lq-step-num {
+      font-family: 'Lora', serif; font-size: 13px; font-weight: 700;
+      color: var(--orange); letter-spacing: .1em; flex-shrink: 0; padding-top: 3px;
+    }
+    .lq-step h3 { font-size: 16.5px; margin-bottom: 5px; }
+    .lq-step p { font-size: 14px; color: var(--muted); line-height: 1.62; }
+    /* ── Meet the agent ── */
+    .lq-bio { font-size: 16px; color: var(--muted); line-height: 1.72; margin-bottom: 20px; }
+    .lq-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 14px; font-weight: 600; color: var(--navy); transition: gap .2s, color .2s;
+    }
+    .lq-link:hover { gap: 10px; color: var(--orange); }
+    .lq-link svg { width: 13px; height: 13px; }
+    /* ── FAQ ── */
+    .lq-faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .lq-faq-item { background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 24px 22px; }
+    .lq-faq-q { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .lq-faq-a { font-size: 14px; color: var(--muted); line-height: 1.66; }
+    /* ── Form ── */
+    .lq-form-card {
+      background: var(--bg-w); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 30px 22px; box-shadow: var(--sh-md);
+    }
+    .lq-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 17px; }
+    .lq-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+    /* 16px on phones stops iOS zooming the page when a field takes focus. */
+    .lq-group input, .lq-group select {
+      height: 46px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--text);
+      background: var(--bg); transition: border-color .2s, box-shadow .2s;
+      outline: none; width: 100%; min-width: 0;
+    }
+    .lq-group input:focus, .lq-group select:focus {
+      border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,49,72,.08); background: var(--bg-w);
+    }
+    .lq-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235f6b79' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      background-size: 16px; padding-right: 36px;
+    }
+    .lq-row { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .lq-consent { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+    /* Readable as a link without shouting — the consent line should stay quiet. */
+    .lq-consent a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+    .lq-consent a:hover { color: var(--orange); }
+    .lq-err { color: #c0392b; font-size: 13.5px; margin-top: 12px; line-height: 1.5; }
+    /* ── Confirmation (replaces the form inline) ── */
+    .lq-done { text-align: center; padding: 8px 0; }
+    .lq-done:focus { outline: none; }
+    .lq-done-badge { font-size: 56px; color: #1e7d4f; line-height: 1; margin-bottom: 16px; }
+    .lq-done-h { font-size: clamp(23px, 3vw, 30px); margin-bottom: 12px; overflow-wrap: anywhere; }
+    .lq-done-lead { font-size: 16px; color: var(--muted); line-height: 1.68; margin-bottom: 24px; }
+    .lq-done-lead a { font-weight: 600; white-space: nowrap; }
+
+    /* ── Spanish (AGENT_SPANISH) ──
+       lq-es-only: only on pages with Spanish on. lq-es-off: only on pages with it off.
+       lq-in-en / lq-in-es: the agent's bio, one set per page language. */
+    .lq-es-no .lq-es-only, .lq-es-yes .lq-es-off { display: none !important; }
+    html[lang="es"] .lq-in-en, html:not([lang="es"]) .lq-in-es { display: none !important; }
+    .lq-bio:empty { display: none; }
+    .lq-langbar { position: relative; z-index: 2; display: flex; justify-content: flex-end; padding-top: 16px; }
+    html:not(.lq-js) .lq-langbar { display: none; }   /* no JavaScript: no switch, the page stays in English */
+    .lq-langbar-in {
+      display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
+    }
+    .lq-langbar button {
+      min-height: 44px; min-width: 44px; padding: 0 16px; border: 0; border-radius: 999px;
+      background: transparent; color: rgba(255,255,255,.86); cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    }
+    .lq-langbar button[aria-pressed="true"] { background: #fff; color: var(--navy); }
+    .lq-langbar button:focus-visible { outline: 3px solid #f2a476; outline-offset: 2px; }
+    .lq-badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;
+      padding: 7px 14px; border-radius: 999px; background: #2b4462;
+      color: #f2a476; font-size: 13.5px; font-weight: 600; line-height: 1.3;
+    }
+
+    /* ── 641px and up — columns appear. Mirrors the site's 640px breakpoint. ── */
+    @media (min-width: 641px) {
+      .lq-sec { padding: 76px 0; }
+      .lq-hero-btns { flex-direction: row; flex-wrap: wrap; justify-content: center; align-self: auto; }
+      .lq-hero-btns .btn { width: auto; }
+      .lq-reasons { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+      .lq-compare { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .lq-type { padding: 24px 18px; }
+      .lq-calc-btns { flex-direction: row; flex-wrap: wrap; }
+      .lq-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+      .lq-form-card { padding: 40px 36px; }
+      .lq-group input, .lq-group select { font-size: 14px; }
+    }
+    /* ── 1101px and up — hero goes two-column. Mirrors the 1100px mobile-nav
+       breakpoint in /includes/site-css.html so header and hero switch together. ── */
+    @media (min-width: 1101px) {
+      .lq-hero-grid {
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 52px; align-items: center; justify-items: stretch;
+        padding: 72px 0 68px;
+      }
+      .lq-hero-photo { max-width: none; }
+      .lq-hero-text { align-items: flex-start; text-align: left; }
+      .lq-hero-btns { justify-content: flex-start; }
+    }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HPQZJLZB78"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HPQZJLZB78');
+  </script>
+</head>
+<body class="lq-es-<!--#echo var="AGENT_SPANISH" -->">
+<!-- The agent's settings from the agent's own file, for the script below. -->
+<span id="agent-settings" hidden
+      data-slug="<!--#echo var="AGENT_SLUG" -->"
+      data-name="<!--#echo var="AGENT_NAME" -->"
+      data-first="<!--#echo var="AGENT_FIRST" -->"
+      data-text="<!--#echo var="AGENT_TEXT" -->"
+      data-spanish="<!--#echo var="AGENT_SPANISH" -->"></span>
+
+<!-- NAV -->
+<!--#include virtual="/includes/header.html" -->
+
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="lq-hero" aria-labelledby="lq-h1">
+  <div class="container">
+    <!-- Language switch: pages with Spanish on only. -->
+    <div class="lq-langbar lq-es-only">
+      <div class="lq-langbar-in" role="group" aria-label="Language / Idioma">
+        <button type="button" data-set-lang="en" aria-pressed="true" lang="en">English</button>
+        <button type="button" data-set-lang="es" aria-pressed="false" lang="es">Español</button>
+      </div>
+    </div>
+    <div class="lq-hero-grid">
+
+      <!-- The ONLY photo element on this page. Its position at both sizes is
+           handled in CSS: source order on mobile, grid column on desktop. -->
+      <div class="lq-hero-photo">
+        <img src="<!--#echo var="AGENT_PHOTO" -->" alt="<!--#echo var="AGENT_PHOTO_ALT" -->" data-i18n-alt="photo_alt" />
+      </div>
+
+      <div class="lq-hero-text">
+        <div class="lq-badge lq-es-only">Hablo español · English &amp; Spanish</div>
+        <div class="lq-eyebrow"><span class="lq-dot"></span> <span data-i18n="eyebrow"><!--#echo var="AGENT_NAME" --> · Licensed Insurance Agent</span></div>
+        <h1 id="lq-h1" data-i18n="h1">Life insurance that fits your life, not a sales script</h1>
+        <p class="lq-hero-sub lq-es-off">
+          Term, whole, or universal life — <!--#echo var="AGENT_FIRST" --> takes the time to understand what you're protecting, walks you through how each option works, and helps you choose what makes sense for you.
+        </p>
+        <p class="lq-hero-sub lq-es-only" data-i18n="hero_sub">Life insurance explained clearly, in English or Spanish, whichever your family is most comfortable with.</p>
+        <div class="lq-hero-btns">
+          <a href="#lq-form" class="btn btn-primary" data-i18n="btn_talk">Talk with <!--#echo var="AGENT_FIRST" --></a>
+          <a href="tel:+1<!--#echo var="AGENT_TEXT" -->" class="btn btn-ghost-w" data-agent-tel data-i18n="btn_call">Call <!--#echo var="AGENT_TEXT" --></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 2. WHY PEOPLE BUY ═══ -->
+<section class="lq-sec lq-sec-w" aria-labelledby="lq-why-h2">
+  <div class="container">
+    <div class="lq-wide">
+      <span class="lq-label" data-i18n="why_label">Where it starts</span>
+      <h2 class="lq-h2" id="lq-why-h2" data-i18n="why_h2">Why people buy life insurance</h2>
+      <div class="lq-reasons">
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <div>
+            <h3 data-i18n="why1_h">Replace your income</h3>
+            <p data-i18n="why1_p">So your family can keep up with bills if you're gone.</p>
+          </div>
+        </div>
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div>
+            <h3 data-i18n="why2_h">Protect the house</h3>
+            <p data-i18n="why2_p">Help pay off or keep up with a mortgage.</p>
+          </div>
+        </div>
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+          <div>
+            <h3 data-i18n="why3_h">Plan for the kids</h3>
+            <p data-i18n="why3_p">Childcare, education, and the years in between.</p>
+          </div>
+        </div>
+
+        <div class="lq-reason">
+          <div class="lq-reason-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+          <div>
+            <h3 data-i18n="why4_h">Cover final costs</h3>
+            <p data-i18n="why4_p">So loved ones aren't handling expenses during a hard time.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 3. TERM, WHOLE, OR UNIVERSAL ═══ -->
+<section class="lq-sec lq-sec-alt" aria-labelledby="lq-types-h2">
+  <div class="container">
+    <div class="lq-wide">
+      <span class="lq-label" data-i18n="types_label">The options</span>
+      <h2 class="lq-h2" id="lq-types-h2" data-i18n="types_h2">Term, whole, or universal — what's the difference?</h2>
+      <div class="lq-compare">
+
+        <div class="lq-type">
+          <h3 data-i18n="t1_h">Term life</h3>
+          <p data-i18n="t1_p">Coverage for a set period, such as 10, 20, or 30 years. <!--#echo var="AGENT_TERM_LINE" --> Good fit when the need has an end date, like a mortgage or raising kids.</p>
+        </div>
+
+        <div class="lq-type">
+          <h3 data-i18n="t2_h">Whole life</h3>
+          <p data-i18n="t2_p">Coverage for your lifetime with level premiums. Builds cash value over time. Costs more than term for the same coverage amount.</p>
+        </div>
+
+        <div class="lq-type">
+          <h3 data-i18n="t3_h">Universal life</h3>
+          <p data-i18n="t3_p">Lifetime coverage with more flexibility in premiums and death benefit. Builds cash value, and how that value grows depends on the policy type and interest rates.</p>
+        </div>
+
+      </div>
+      <p class="lq-compare-note" data-i18n="compare_note">There's no single right answer. Many people combine types. <!--#echo var="AGENT_FIRST" --> will walk through the tradeoffs with you before you decide anything.</p>
+      <p class="lq-note" data-i18n="types_note">Product availability, features, and costs vary by carrier and by individual. Coverage is subject to underwriting.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 4. HOW MUCH COVERAGE ═══ -->
+<section class="lq-sec lq-sec-w" aria-labelledby="lq-amount-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label" data-i18n="amount_label">The amount</span>
+      <h2 class="lq-h2" id="lq-amount-h2" data-i18n="amount_h2">How much coverage do I need?</h2>
+      <p class="lq-sub" data-i18n="amount_sub">A common starting point is the DIME method, which adds up four things: your Debt, the Income your family would need to replace, your Mortgage balance, and Education costs for your children.</p>
+      <div class="lq-calc-btns">
+        <a href="/life-insurance-calculator.html" class="btn btn-primary" data-i18n="calc_btn">Try the life insurance calculator</a>
+      </div>
+      <p class="lq-note" data-i18n="calc_note">The calculator gives an educational estimate, not a quote or an offer of coverage.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 5. HOW IT WORKS ═══ -->
+<section class="lq-sec lq-sec-alt" aria-labelledby="lq-how-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label" data-i18n="how_label">The process</span>
+      <h2 class="lq-h2" id="lq-how-h2" data-i18n="how_h2">How it works</h2>
+      <ol class="lq-steps">
+
+        <li class="lq-step">
+          <div class="lq-step-num" aria-hidden="true">01</div>
+          <div>
+            <h3 data-i18n="s1_h">Send your contact info</h3>
+            <p data-i18n="s1_p">Just your name, phone, and email.</p>
+          </div>
+        </li>
+
+        <li class="lq-step">
+          <div class="lq-step-num" aria-hidden="true">02</div>
+          <div>
+            <h3 data-i18n="s2_h"><!--#echo var="AGENT_FIRST" --> reaches out</h3>
+            <p data-i18n="s2_p">A real conversation about your goals, your family, and your budget.</p>
+          </div>
+        </li>
+
+        <li class="lq-step">
+          <div class="lq-step-num" aria-hidden="true">03</div>
+          <div>
+            <h3 data-i18n="s3_h">Compare your options</h3>
+            <p data-i18n="s3_p"><!--#echo var="AGENT_PRONOUN" --> explains each one plainly so you can decide what's right, with no pressure.</p>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 6. MEET THE AGENT ═══ -->
+<section class="lq-sec lq-sec-w" aria-labelledby="lq-meet-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label" data-i18n="meet_label">Your agent</span>
+      <h2 class="lq-h2" id="lq-meet-h2" data-i18n="meet_h2">Meet <!--#echo var="AGENT_FIRST" --></h2>
+      <!-- The agent's bio from the settings: up to three paragraphs per language.
+           An empty setting leaves no gap. -->
+      <p class="lq-bio lq-in-en"><!--#echo var="AGENT_BIO" --></p>
+      <p class="lq-bio lq-in-en"><!--#echo var="AGENT_BIO_2" --></p>
+      <p class="lq-bio lq-in-en"><!--#echo var="AGENT_BIO_3" --></p>
+      <p class="lq-bio lq-in-es" lang="es"><!--#echo var="AGENT_BIO_ES" --></p>
+      <p class="lq-bio lq-in-es" lang="es"><!--#echo var="AGENT_BIO_ES_2" --></p>
+      <p class="lq-bio lq-in-es" lang="es"><!--#echo var="AGENT_BIO_ES_3" --></p>
+      <a href="/agents/<!--#echo var="AGENT_SLUG" -->.html" class="lq-link">
+        <span data-i18n="profile_link">Read <!--#echo var="AGENT_FIRST" -->'s full profile</span>
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 7. FAQ ═══
+     The first five questions and answers also appear in the FAQPage schema in
+     <head>. Change one, change the other. The last two show only on pages with
+     Spanish on. -->
+<section class="lq-sec lq-sec-alt" aria-labelledby="lq-faq-h2">
+  <div class="container">
+    <div class="lq-narrow">
+      <span class="lq-label" data-i18n="faq_label">Questions</span>
+      <h2 class="lq-h2" id="lq-faq-h2" data-i18n="faq_h2">Common questions</h2>
+      <div class="lq-faq">
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q" data-i18n="q1">Is term or whole life better?</h3>
+          <p class="lq-faq-a" data-i18n="a1">Neither is better across the board. Term usually costs less upfront for a set period; whole and universal last for life and build cash value. The right choice depends on what you're protecting and for how long.</p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q" data-i18n="q2">Do I need a medical exam?</h3>
+          <p class="lq-faq-a" data-i18n="a2">Some policies require one and some don't. It depends on the coverage amount, your age, and the product. <!--#echo var="AGENT_FIRST" --> will tell you what to expect for the options you're considering.</p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q" data-i18n="q3">How long does it take to get covered?</h3>
+          <p class="lq-faq-a" data-i18n="a3">Some policies can be approved quickly; others take several weeks for underwriting. <!--#echo var="AGENT_FIRST" --> will give you a realistic timeline for your situation.</p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q" data-i18n="q4">Does it cost anything to talk with <!--#echo var="AGENT_FIRST" -->?</h3>
+          <p class="lq-faq-a" data-i18n="a4"><!--#echo var="AGENT_COST_ANSWER" --></p>
+        </div>
+
+        <div class="lq-faq-item">
+          <h3 class="lq-faq-q" data-i18n="q5">What information do I need to get started?</h3>
+          <p class="lq-faq-a" data-i18n="a5">Just your name, phone number, and email. <!--#echo var="AGENT_FIRST" --> will ask anything else <!--#echo var="AGENT_PRONOUN_LC" --> needs during your call.</p>
+        </div>
+
+        <div class="lq-faq-item lq-es-only">
+          <h3 class="lq-faq-q" data-i18n="q6">Can we do everything in Spanish?</h3>
+          <p class="lq-faq-a" data-i18n="a6">Yes. The conversations, the explanations and your questions can all be in Spanish. Some insurance company documents may be available in English only; if so, <!--#echo var="AGENT_FIRST" --> will walk your family through them in Spanish before anyone signs.</p>
+        </div>
+
+        <div class="lq-faq-item lq-es-only">
+          <h3 class="lq-faq-q" data-i18n="q7">Can my family join the call?</h3>
+          <p class="lq-faq-a" data-i18n="a7">Yes. Your family is welcome to join, in person, by phone or by video, in whichever language they're most comfortable with.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ 8. THE FORM ═══
+     Contact details only. Do not add health, age, date of birth, income or
+     tobacco questions to this form. -->
+<section class="lq-sec" id="lq-form" aria-labelledby="lq-form-h2">
+  <div class="container">
+    <div class="lq-wide">
+      <span class="lq-label" data-i18n="form_label">Get started</span>
+      <h2 class="lq-h2" id="lq-form-h2" data-i18n="form_h2">Let's talk about your options</h2>
+
+      <div class="lq-form-card">
+        <form id="life-form" action="https://script.google.com/macros/s/AKfycbwnVURz6q5Uuo39rVwSOQGEbJYlq-BRA7dp4BzAK68-QxpcaFCA-fnVw_caQf9RBKE0/exec" method="POST">
+          <!-- Backend: the Life Leads Apps Script web app URL. One script serves
+               every agent's page and routes by the hidden agent field below. The
+               action is also the no-JavaScript fallback; the script accepts plain
+               form posts. -->
+          <input type="hidden" name="agent" value="<!--#echo var="AGENT_SLUG" -->" /><!-- must match a key in the script's CONFIG.NOTIFY -->
+          <!-- Set by the script below from the ?src= URL parameter; stays "direct" without one. -->
+          <input type="hidden" name="src" value="direct" />
+          <!-- Lead ID, set by the script below at submit time. -->
+          <input type="hidden" name="id" value="" />
+          <!-- Spam trap. Real visitors never see or reach this field. Positioned
+               off-screen rather than display:none, because some bots skip fields
+               that are display:none. -->
+          <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+            <label>Leave this blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <div class="lq-row">
+            <div class="lq-group">
+              <label for="lq-name" data-i18n="l_name">Full name *</label>
+              <input type="text" id="lq-name" name="name" autocomplete="name" required />
+            </div>
+            <div class="lq-group">
+              <label for="lq-phone" data-i18n="l_phone">Phone *</label>
+              <input type="tel" id="lq-phone" name="phone" autocomplete="tel" required />
+            </div>
+          </div>
+
+          <div class="lq-group">
+            <label for="lq-email" data-i18n="l_email">Email *</label>
+            <input type="email" id="lq-email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="lq-row">
+            <div class="lq-group">
+              <label for="lq-best-time" data-i18n="l_best">Best time to reach you</label>
+              <select id="lq-best-time" name="best_time">
+                <option value="" selected data-i18n="opt_choose">Choose one (optional)</option>
+                <option value="Morning" data-i18n="opt_morning">Morning</option>
+                <option value="Afternoon" data-i18n="opt_afternoon">Afternoon</option>
+                <option value="Evening" data-i18n="opt_evening">Evening</option>
+                <option value="Anytime" data-i18n="opt_anytime">Anytime</option>
+              </select>
+            </div>
+            <div class="lq-group">
+              <label for="lq-interest" data-i18n="l_interest">I'd like to talk about</label>
+              <select id="lq-interest" name="interest">
+                <option value="" selected data-i18n="opt_choose">Choose one (optional)</option>
+                <option value="Term life" data-i18n="opt_term">Term life</option>
+                <option value="Whole life" data-i18n="opt_whole">Whole life</option>
+                <option value="Universal life" data-i18n="opt_universal">Universal life</option>
+                <option value="Not sure yet — help me compare" data-i18n="opt_notsure">Not sure yet — help me compare</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Pages with Spanish on: the visitor's preferred language. Its default
+               follows the page language until the visitor picks one. -->
+          <div class="lq-group lq-es-only">
+            <label for="lq-language" data-i18n="l_language">Preferred language</label>
+            <select id="lq-language" name="language">
+              <option value="English">English</option>
+              <option value="Spanish" lang="es">Español</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;" data-i18n="submit">Send to <!--#echo var="AGENT_FIRST" --></button>
+          <p class="lq-err" id="lq-err" role="alert" hidden></p>
+
+          <p class="lq-consent" data-i18n="consent">By submitting, you agree to be contacted by The Scheiderich Agency by phone, text, or email about life insurance. See our <a href="/terms-of-use.html">Terms of Use</a> and <a href="/privacy-policy.html">Privacy Policy</a>.</p>
+        </form>
+
+        <!-- ═══ 9. CONFIRMATION — shown in place of the form on success ═══ -->
+        <div class="lq-done" id="lq-done" hidden>
+          <div class="lq-done-badge" aria-hidden="true">&#10003;</div>
+          <h3 class="lq-done-h"><span data-i18n="done_thanks">Thanks</span><span id="lq-done-name"></span>.</h3>
+          <p class="lq-done-lead" data-i18n="done_lead"><!--#echo var="AGENT_FIRST" --> has your information and will reach out personally. If you'd like to talk sooner, call the office at <a href="tel:+17702684418">770-268-4418</a>.</p>
+          <a href="/life-insurance-calculator.html" class="btn btn-outline" data-i18n="done_calc">Try the life insurance calculator while you wait</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<!--#include virtual="/includes/footer.html" -->
+
+<script>
+  /* ═══════════════════════════════════════
+     LANGUAGE (pages with AGENT_SPANISH = yes)
+     The page is written in English. On a page with Spanish on, the switch at the
+     top swaps every element marked data-i18n to the Spanish text below and
+     back, sets <html lang>, and remembers the choice in this browser.
+     ?lang=es (or ?lang=en) opens the page in that language.
+     With Spanish off nothing here changes the page.
+  ═══════════════════════════════════════ */
+  var LQ = (function () {
+    var S = document.getElementById('agent-settings').dataset;
+    var spanish = S.spanish === 'yes';
+
+    /* ═══════════════════════════════════════
+       SPANISH: every Spanish string on the page, in one place to proofread.
+       (The agent's own bio is in the agent's settings file.)
+       {first}, {name} and {text} are filled from the agent's settings.
+       Neutral Latin American Spanish, "usted".
+    ═══════════════════════════════════════ */
+    var ES = {
+      title:        'Seguro de vida en Georgia con {name} | The Scheiderich Agency',
+      photo_alt:    '{name}, agente de seguros bilingüe con licencia en The Scheiderich Agency',
+      eyebrow:      '{name} · Agente de seguros con licencia',
+      h1:           'Un seguro de vida pensado para su vida, no para un guion de ventas',
+      hero_sub:     'El seguro de vida, explicado con claridad, en español o en inglés: en el idioma en que su familia se sienta más cómoda.',
+      btn_talk:     'Hable con {first}',
+      btn_call:     'Llame al {text}',
+
+      why_label:    'Por dónde empezar',
+      why_h2:       'Por qué las personas compran un seguro de vida',
+      why1_h:       'Reemplazar sus ingresos',
+      why1_p:       'Para que su familia pueda seguir pagando las cuentas si usted llega a faltar.',
+      why2_h:       'Proteger su casa',
+      why2_p:       'Para ayudar a pagar la hipoteca o mantenerse al día con ella.',
+      why3_h:       'Pensar en los hijos',
+      why3_p:       'El cuidado de los niños, sus estudios y todos los años que vienen.',
+      why4_h:       'Cubrir los gastos finales',
+      why4_p:       'Para que sus seres queridos no tengan que ocuparse de esos gastos en un momento difícil.',
+
+      types_label:  'Las opciones',
+      types_h2:     'A término, vida entera o universal: ¿cuál es la diferencia?',
+      t1_h:         'Seguro de vida a término',
+      t1_p:         'Cobertura por un período fijo, por ejemplo 10, 20 o 30 años. Por lo general cuesta menos al principio que una cobertura de por vida. Es una buena opción cuando la necesidad tiene fecha de fin, como una hipoteca o la crianza de los hijos.',
+      t2_h:         'Seguro de vida entera',
+      t2_p:         'Cobertura para toda la vida, con primas que no cambian. Acumula valor en efectivo con el tiempo. Cuesta más que un seguro a término por la misma cantidad de cobertura.',
+      t3_h:         'Seguro de vida universal',
+      t3_p:         'Cobertura para toda la vida, con más flexibilidad en las primas y en el beneficio por fallecimiento. Acumula valor en efectivo, y la forma en que crece ese valor depende del tipo de póliza y de las tasas de interés.',
+      compare_note: 'No hay una sola respuesta correcta. Muchas personas combinan distintos tipos. {first} revisará con usted las ventajas y desventajas antes de que decida nada.',
+      types_note:   'La disponibilidad, las características y los costos de los productos varían según la compañía de seguros y según cada persona. La cobertura está sujeta a la aprobación de la aseguradora.',
+
+      amount_label: 'La cantidad',
+      amount_h2:    '¿Cuánta cobertura necesito?',
+      amount_sub:   'Un buen punto de partida es el método DIME, que suma cuatro cosas: sus deudas (Debt), los ingresos (Income) que su familia necesitaría reemplazar, el saldo de su hipoteca (Mortgage) y los gastos de educación (Education) de sus hijos.',
+      calc_btn:     'Pruebe la calculadora de seguro de vida (en inglés)',
+      calc_note:    'La calculadora da un cálculo aproximado con fines educativos. No es una cotización ni una oferta de cobertura.',
+
+      how_label:    'El proceso',
+      how_h2:       'Cómo funciona',
+      s1_h:         'Envíe sus datos de contacto',
+      s1_p:         'Solo su nombre, teléfono y correo electrónico.',
+      s2_h:         '{first} se comunica con usted',
+      s2_p:         'Una conversación de verdad sobre sus metas, su familia y su presupuesto.',
+      s3_h:         'Compare sus opciones',
+      s3_p:         'Le explica cada una con palabras sencillas para que usted decida qué le conviene, sin presiones.',
+
+      meet_label:   'Su agente',
+      meet_h2:      'Conozca a {first}',
+      profile_link: 'Ver el perfil completo de {first}',
+
+      faq_label:    'Preguntas',
+      faq_h2:       'Preguntas frecuentes',
+      q1:           '¿Qué es mejor, un seguro a término o uno de vida entera?',
+      a1:           'Ninguno es mejor en todos los casos. El seguro a término suele costar menos al principio durante un período fijo; los de vida entera y universal duran toda la vida y acumulan valor en efectivo. La mejor opción depende de lo que usted quiere proteger y por cuánto tiempo.',
+      q2:           '¿Necesito un examen médico?',
+      a2:           'Algunas pólizas lo piden y otras no. Depende de la cantidad de cobertura, de su edad y del producto. {first} le dirá qué esperar con las opciones que esté considerando.',
+      q3:           '¿Cuánto tiempo se tarda en tener cobertura?',
+      a3:           'Algunas pólizas se aprueban rápido; otras tardan varias semanas mientras la aseguradora revisa la solicitud. {first} le dará un plazo realista para su caso.',
+      q4:           '¿Cuesta algo hablar con {first}?',
+      a4:           'No. Hablar con {first} y comparar cotizaciones no tiene ningún costo ni compromiso.',
+      q5:           '¿Qué información necesito para empezar?',
+      a5:           'Solo su nombre, su número de teléfono y su correo electrónico. {first} le preguntará lo demás durante la llamada.',
+      q6:           '¿Podemos hacer todo en español?',
+      a6:           'Sí. Las conversaciones, las explicaciones y sus preguntas pueden ser en español. Es posible que algunos documentos de la compañía de seguros estén disponibles solo en inglés; en ese caso, {first} se los explicará a su familia en español antes de que alguien firme.',
+      q7:           '¿Mi familia puede participar en la llamada?',
+      a7:           'Sí. Su familia puede participar en persona, por teléfono o por videollamada, en el idioma en que se sienta más cómoda.',
+
+      form_label:   'Empecemos',
+      form_h2:      'Hablemos de sus opciones',
+      l_name:       'Nombre completo *',
+      l_phone:      'Teléfono *',
+      l_email:      'Correo electrónico *',
+      l_best:       'Mejor horario para llamarle',
+      l_interest:   'Me gustaría hablar de',
+      l_language:   'Idioma preferido',
+      opt_choose:   'Elija una (opcional)',
+      opt_morning:  'En la mañana',
+      opt_afternoon:'En la tarde',
+      opt_evening:  'En la noche',
+      opt_anytime:  'A cualquier hora',
+      opt_term:     'Seguro a término',
+      opt_whole:    'Vida entera',
+      opt_universal:'Vida universal',
+      opt_notsure:  'Todavía no sé; ayúdeme a comparar',
+      submit:       'Enviar a {first}',
+      sending:      'Enviando…',
+      consent:      'Al enviar este formulario, usted acepta que The Scheiderich Agency se comunique con usted por teléfono, mensaje de texto o correo electrónico sobre seguros de vida. Consulte nuestros <a href="/terms-of-use.html">Términos de uso</a> y nuestra <a href="/privacy-policy.html">Política de privacidad</a> (en inglés).',
+      v_required:   'Por favor, complete este campo.',
+      v_email:      'Escriba un correo electrónico válido.',
+      fail:         'No pudimos confirmar que su solicitud llegó. Por favor, llame al 770-268-4418 y con gusto le atendemos.',
+
+      done_thanks:  'Gracias',
+      done_lead:    '{first} ya tiene sus datos y se comunicará con usted personalmente. Si desea hablar antes, llame a la oficina al <a href="tel:+17702684418">770-268-4418</a>.',
+      done_calc:    'Pruebe la calculadora de seguro de vida (en inglés) mientras espera'
+    };
+
+    // English strings the script itself uses. The page's English text is read from the page.
+    var EN_JS = {
+      fail: "We couldn't confirm your request went through. Please call 770-268-4418 and we'll take care of you.",
+      sending: 'Sending…'
+    };
+
+    var lang = 'en';
+    var nodes = [];
+    var alts = [];
+    var titleEn = document.title;
+    var languagePicked = false;   // the visitor chose a preferred language in the form
+
+    function fill(s) {
+      return String(s).replace(/\{first\}/g, S.first).replace(/\{name\}/g, S.name).replace(/\{text\}/g, S.text);
+    }
+    function t(key) {
+      if (lang === 'es' && ES[key] != null) return fill(ES[key]);
+      for (var i = 0; i < nodes.length; i++) if (nodes[i].key === key) return nodes[i].text;
+      return EN_JS[key];
+    }
+
+    var all = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < all.length; i++) {
+      nodes.push({ el: all[i], key: all[i].getAttribute('data-i18n'), html: all[i].innerHTML, text: all[i].textContent });
+    }
+    var altEls = document.querySelectorAll('[data-i18n-alt]');
+    for (var j = 0; j < altEls.length; j++) alts.push({ el: altEls[j], key: altEls[j].getAttribute('data-i18n-alt'), en: altEls[j].alt });
+
+    // The "Call" button: tel:+1 and the digits of the agent's number.
+    var tels = document.querySelectorAll('[data-agent-tel]');
+    for (var k = 0; k < tels.length; k++) tels[k].href = 'tel:+1' + String(S.text || '').replace(/\D/g, '');
+
+    function apply(l) {
+      lang = l;
+      document.documentElement.lang = l;
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        if (n.el.disabled) continue;   // the button while "Sending…"
+        n.el.innerHTML = (l === 'es' && ES[n.key] != null) ? fill(ES[n.key]) : n.html;
+      }
+      for (var a = 0; a < alts.length; a++) alts[a].el.alt = (l === 'es' && ES[alts[a].key] != null) ? fill(ES[alts[a].key]) : alts[a].en;
+      document.title = l === 'es' ? fill(ES.title) : titleEn;
+      var btns = document.querySelectorAll('[data-set-lang]');
+      for (var b = 0; b < btns.length; b++) btns[b].setAttribute('aria-pressed', btns[b].getAttribute('data-set-lang') === l ? 'true' : 'false');
+      var live = document.querySelectorAll('[data-i18n-live]');
+      for (var v = 0; v < live.length; v++) if (!live[v].hidden) live[v].textContent = t(live[v].getAttribute('data-i18n-live'));
+      var sel = document.getElementById('lq-language');
+      if (sel && !languagePicked) sel.value = l === 'es' ? 'Spanish' : 'English';
+      // Messages already set on fields belong to the old language.
+      var f = document.getElementById('life-form');
+      if (f) for (var e = 0; e < f.elements.length; e++) if (f.elements[e].setCustomValidity) f.elements[e].setCustomValidity('');
+    }
+
+    if (spanish) {
+      document.documentElement.classList.add('lq-js');   // the switch shows only when it can work
+      var start = 'en';
+      try {
+        var stored = window.localStorage.getItem('lq-lang');
+        if (stored === 'es' || stored === 'en') start = stored;
+      } catch (e) { /* no storage: English */ }
+      try {
+        var q = new URLSearchParams(window.location.search).get('lang');
+        if (q === 'es' || q === 'en') start = q;   // a shared ?lang= link wins
+      } catch (e) { /* keep */ }
+      apply(start);
+      var sw = document.querySelectorAll('[data-set-lang]');
+      for (var s = 0; s < sw.length; s++) {
+        sw[s].addEventListener('click', function () {
+          var l = this.getAttribute('data-set-lang');
+          apply(l);
+          try { window.localStorage.setItem('lq-lang', l); } catch (e) { /* not remembered */ }
+        });
+      }
+      var langSel = document.getElementById('lq-language');
+      if (langSel) langSel.addEventListener('change', function () { languagePicked = true; });
+      var lf = document.getElementById('life-form');
+      if (lf) lf.addEventListener('input', function (ev) { if (ev.target.setCustomValidity) ev.target.setCustomValidity(''); });
+      // The browser checks the fields before the submit code runs, so the Spanish
+      // message is set as each field is flagged.
+      if (lf) lf.addEventListener('invalid', function (ev) {
+        var f = ev.target;
+        if (!f.setCustomValidity) return;
+        f.setCustomValidity('');
+        if (lang !== 'es') return;
+        if (f.validity.valueMissing) f.setCustomValidity(ES.v_required);
+        else if (f.validity.typeMismatch) f.setCustomValidity(ES.v_email);
+      }, true);
+    }
+
+    return {
+      spanish: spanish,
+      t: t,
+      // Spanish messages for the browser's own field check, when the page is in Spanish.
+      validityMessages: function (form) {
+        if (!spanish) return;
+        for (var i = 0; i < form.elements.length; i++) {
+          var f = form.elements[i];
+          if (!f.willValidate || !f.setCustomValidity) continue;
+          f.setCustomValidity('');
+          if (lang !== 'es') continue;
+          if (f.validity.valueMissing) f.setCustomValidity(ES.v_required);
+          else if (f.validity.typeMismatch) f.setCustomValidity(ES.v_email);
+        }
+      }
+    };
+  })();
+
+  /* Life quote form — Life Leads Apps Script backend.
+     No agent-specific value lives in this script. The backend URL is read from
+     the form's action attribute and the agent slug from the hidden agent field. */
+  (function () {
+    var form = document.getElementById('life-form');
+    if (!form) return;
+    var LIFE_SCRIPT_URL = form.getAttribute('action');
+    var done      = document.getElementById('lq-done');
+    var doneName  = document.getElementById('lq-done-name');
+    var errEl     = document.getElementById('lq-err');
+    var submitBtn = form.querySelector('[type="submit"]');
+    // The button's label and the failure message follow the page language (LQ.t).
+
+    function field(name) { return form.querySelector('[name="' + name + '"]'); }
+
+    /* Campaign tag: ?src=qr, ?src=facebook, ?src=email, ?src=flyer.
+       "direct" when the parameter is absent. Reduced to a short safe token
+       because it is stored with the submission and sent to analytics. */
+    var src = 'direct';
+    try {
+      var raw = new URLSearchParams(window.location.search).get('src');
+      if (raw) {
+        raw = raw.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+        if (raw) src = raw;
+      }
+    } catch (e) { /* keep "direct" */ }
+    field('src').value = src;
+
+    /* Without fetch the plain form action still posts to the script. */
+    if (!window.fetch) return;
+
+    /* ═══════════════════════════════════════
+       LEAD ID
+       Generated here because the write uses mode:'no-cors', which makes the
+       response unreadable. The page must know its own row ID to check that the
+       row landed.
+
+       Format: LIFE-yyMMdd-XXXX. The alphabet leaves out I, O, 0 and 1 so an ID
+       read over the phone cannot be misheard.
+
+       The date MUST be Eastern, not the browser's local date. A visitor in
+       Pacific time at 10pm is already on the next day in Atlanta. Same rule as
+       the referral pages.
+    ═══════════════════════════════════════ */
+    function easternStamp(date) {
+      try {
+        var parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/New_York',
+          year: '2-digit', month: '2-digit', day: '2-digit'
+        }).formatToParts(date);
+        var get = function (type) {
+          for (var i = 0; i < parts.length; i++) if (parts[i].type === type) return parts[i].value;
+          return '';
+        };
+        var stamp = get('year') + get('month') + get('day');
+        if (/^\d{6}$/.test(stamp)) return stamp;
+      } catch (e) { /* fall through */ }
+      // Fallback for engines without IANA time zone support: fixed -05:00 offset.
+      // Off by an hour during EDT, which only matters between 11pm and midnight.
+      var p2 = function (n) { return ('0' + n).slice(-2); };
+      var d = new Date(date.getTime() + (date.getTimezoneOffset() - 300) * 60000);
+      return p2(d.getFullYear() % 100) + p2(d.getMonth() + 1) + p2(d.getDate());
+    }
+
+    function makeLeadId() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var suffix = '';
+      for (var i = 0; i < 4; i++) {
+        suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return 'LIFE-' + easternStamp(new Date()) + '-' + suffix;
+    }
+
+    /* ═══════════════════════════════════════
+       READ-BACK CHECK
+       JSONP, because Apps Script blocks cross-origin fetch reads.
+       Response shape: callbackName({ found: true|false })
+       Calls onResult with true, false, or null. null means no usable answer:
+       the script failed to load, returned something else, or 10 seconds passed.
+       The script tag and the global callback are removed on every path.
+    ═══════════════════════════════════════ */
+    function checkLead(id, onResult) {
+      var cbName  = 'lifeLeadCb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+      var s       = document.createElement('script');
+      var settled = false;
+      var timer;
+
+      function dropCallback() {
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+      }
+      function finish(result, mayStillArrive) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        if (mayStillArrive) {
+          // A response that turns up after the timeout must not throw; it
+          // removes this stub when it lands.
+          window[cbName] = dropCallback;
+        } else {
+          dropCallback();
+        }
+        if (s.parentNode) s.parentNode.removeChild(s);
+        onResult(result);
+      }
+
+      window[cbName] = function (data) { finish(!!(data && data.found === true), false); };
+      s.onerror = function () { finish(null, false); };
+      // Loaded without calling back, e.g. an error page instead of JSONP.
+      s.onload  = function () { finish(null, false); };
+      timer = setTimeout(function () { finish(null, true); }, 10000);
+
+      s.src = LIFE_SCRIPT_URL + '?action=check&id=' + encodeURIComponent(id) +
+              '&callback=' + cbName + '&t=' + Date.now();
+      document.head.appendChild(s);
+    }
+
+    function fail() {
+      /* Re-enable and leave every field as typed so nothing is lost. */
+      submitBtn.disabled = false;
+      submitBtn.textContent = LQ.t('submit');
+      errEl.textContent = LQ.t('fail');
+      errEl.setAttribute('data-i18n-live', 'fail');   // re-translated if the language changes
+      errEl.hidden = false;
+    }
+
+    /* Only ever called after a read-back confirmed the row exists. */
+    function succeed() {
+      var first = (field('name').value || '').trim().split(/\s+/)[0];
+      doneName.textContent = first ? ', ' + first : '';
+
+      if (typeof gtag === 'function') {
+        var ev = { form: 'life-quote-' + field('agent').value, src: src };
+        if (LQ.spanish) ev.language = field('language').value;   // pages with Spanish on only
+        gtag('event', 'generate_lead', ev);
+      }
+
+      form.hidden = true;
+      done.hidden = false;
+      done.setAttribute('tabindex', '-1');
+      done.focus({ preventScroll: true });
+      done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      errEl.hidden = true;
+      LQ.validityMessages(form);   // Spanish messages when the page is in Spanish
+      if (!form.reportValidity()) { return; }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = LQ.t('sending');
+
+      var id = makeLeadId();
+      field('id').value = id;
+
+      /* no-cors makes the response opaque: a resolved promise means the request
+         left the browser, not that the script accepted it. Never trust it;
+         confirm by reading the row back. */
+      var lead = {
+        id:        id,
+        agent:     field('agent').value,
+        name:      field('name').value.trim(),
+        phone:     field('phone').value.trim(),
+        email:     field('email').value.trim(),
+        best_time: field('best_time').value,
+        interest:  field('interest').value,
+        src:       src,
+        website:   field('website').value
+      };
+      // Pages with Spanish on: the preferred language, English or Spanish.
+      if (LQ.spanish) lead.language = field('language').value === 'Spanish' ? 'Spanish' : 'English';
+      fetch(LIFE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(lead)
+      })
+      .then(function () {
+        /* Write, wait 1.5s, read back. Not found gets one more look after
+           2.5s; no usable answer is a failure straight away. */
+        setTimeout(function () {
+          checkLead(id, function (found) {
+            if (found === true) { succeed(); return; }
+            if (found === null) { fail(); return; }
+            setTimeout(function () {
+              checkLead(id, function (foundAgain) {
+                if (foundAgain === true) { succeed(); } else { fail(); }
+              });
+            }, 2500);
+          });
+        }, 1500);
+      })
+      .catch(fail);
+    });
+  })();
+</script>
+</body>

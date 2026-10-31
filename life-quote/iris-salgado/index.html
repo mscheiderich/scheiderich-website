@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+<!--
+  LIFE QUOTE PAGE: SETTINGS FILE for one agent.
+  Everything a visitor sees comes from /includes/life-quote-body.html. This file
+  holds only the agent's settings and the <head>, which reads them too.
+
+  TO ADD AN AGENT
+    1. Copy this file to /life-quote/{agent-slug}/index.html.
+    2. Change the settings below. Nothing else in this file changes.
+    3. Add the slug and email to CONFIG.NOTIFY in the Life Leads Apps Script,
+       then deploy it as a NEW VERSION of the existing deployment (never New
+       deployment: that changes the URL). Until then the script rejects the
+       agent's leads and the page shows its "couldn't confirm" message.
+    4. Add the slug to the 'life-quote' entry in /team/landing-pages.js
+       (agents), and to 'life-quote-es' too if AGENT_SPANISH is yes.
+    5. Do NOT add the page to sitemap.xml (noindex campaign page).
+
+  SETTINGS
+    AGENT_NAME, AGENT_FIRST, AGENT_SLUG   name, first name, slug
+    AGENT_PRONOUN / AGENT_PRONOUN_LC      She / she (He / he, They / they)
+    AGENT_PHOTO, AGENT_PHOTO_ALT          headshot path and alt text. A new
+                                          headshot is a one-line change.
+    AGENT_EMAIL                           for reference: the routing email in
+                                          the script's CONFIG.NOTIFY
+    AGENT_TEXT                            the agent's phone, as 770-555-1234
+                                          ("Call" button and schema)
+    AGENT_SPANISH                         yes or no (see the shared body)
+    AGENT_TERM_LINE, AGENT_COST_ANSWER    two lines of page wording (term life
+                                          card, "Does it cost anything" answer)
+    AGENT_BIO, _2, _3                     "Meet {First}" paragraphs, English
+    AGENT_BIO_ES, _ES_2, _ES_3            the same in Spanish (Spanish on only)
+  Leave a bio setting empty ("") if it is not used. No double quotes or $ in
+  any value.
+-->
+  <!-- Settings. Printed into the page by the server, so they show even with JavaScript off. -->
+  <!--#set var="AGENT_NAME"        value="Iris Salgado" -->
+  <!--#set var="AGENT_FIRST"       value="Iris" -->
+  <!--#set var="AGENT_SLUG"        value="iris-salgado" -->
+  <!--#set var="AGENT_PRONOUN"     value="She" -->
+  <!--#set var="AGENT_PRONOUN_LC"  value="she" -->
+  <!--#set var="AGENT_PHOTO"       value="/iris-salgado.png" -->
+  <!--#set var="AGENT_PHOTO_ALT"   value="Iris Salgado, licensed bilingual insurance agent at The Scheiderich Agency" -->
+  <!--#set var="AGENT_EMAIL"       value="irissalgado@allstate.com" -->
+  <!--#set var="AGENT_TEXT"        value="770-799-7814" -->
+  <!--#set var="AGENT_SPANISH"     value="yes" -->
+  <!--#set var="AGENT_TERM_LINE"   value="Usually costs less upfront than lifetime coverage." -->
+  <!--#set var="AGENT_COST_ANSWER" value="No. There's no cost and no obligation to talk or to compare quotes." -->
+  <!--#set var="AGENT_BIO"         value="Iris Salgado is a licensed insurance agent at The Scheiderich Agency and is licensed in Georgia for life insurance. She works with families in English and Spanish, from the first conversation through the application and after the policy is in place. Many of the families she helps are part of the Hispanic community in Buford and Gwinnett County." -->
+  <!--#set var="AGENT_BIO_2"       value="Families are welcome to bring relatives into the conversation, in the language each person is comfortable with. In a bilingual household, nobody has to choose: one person can ask in Spanish and another in English, and everyone hears the same answer." -->
+  <!--#set var="AGENT_BIO_3"       value="She explains the documents and the choices in plain language, so nobody signs something they don't understand. The questions that come up later go to the same person, in the same language." -->
+
+  <!-- ═══ SPANISH: the agent's bio in Spanish (proofread here) ═══ -->
+  <!--#set var="AGENT_BIO_ES"      value="Iris Salgado es agente de seguros con licencia en The Scheiderich Agency y tiene licencia en Georgia para seguros de vida. Trabaja con las familias en español y en inglés, desde la primera conversación, durante la solicitud y después de que la póliza ya está vigente. Muchas de las familias a las que ayuda son parte de la comunidad hispana de Buford y del condado de Gwinnett." -->
+  <!--#set var="AGENT_BIO_ES_2"    value="Sus familiares pueden participar en la conversación, cada uno en el idioma en que se sienta más cómodo. En un hogar bilingüe nadie tiene que escoger: una persona puede preguntar en español y otra en inglés, y todos escuchan la misma respuesta." -->
+  <!--#set var="AGENT_BIO_ES_3"    value="Iris explica los documentos y las opciones con palabras sencillas, para que nadie firme algo que no entiende. Las preguntas que surjan más adelante las atiende la misma persona, en el mismo idioma." -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1e3148">
+  <title>Life Insurance in Georgia with <!--#echo var="AGENT_NAME" --> | The Scheiderich Agency</title>
+  <meta name="description" content="Talk through term, whole, and universal life insurance with <!--#echo var="AGENT_NAME" -->, a licensed insurance agent at The Scheiderich Agency. Personal guidance for Georgia families." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://thescheiderichagency.com/life-quote/<!--#echo var="AGENT_SLUG" -->/" />
+
+<!-- The shared body closes </head> and opens <body>. -->
+<!--#include virtual="/includes/life-quote-body.html" -->
+</html>

@@ -86,6 +86,18 @@ window.LANDING_PAGES = [
     acceptsCode: false,
     readsSrc: true,
     live: true,
-    agents: ['jennifer-lawler']
+    agents: ['jennifer-lawler', 'iris-salgado']
+  },
+  {
+    id: 'life-quote-es',
+    rowLabel: 'Life (Español)',
+    label: 'Life (Español)',
+    audience: 'Consumers (life insurance, in Spanish)',
+    program: '',                 // the same page as life-quote, opened in Spanish
+    url: 'https://thescheiderichagency.com/life-quote/{slug}/?lang=es',
+    acceptsCode: false,
+    readsSrc: true,
+    live: true,
+    agents: ['iris-salgado']     // agents whose life page has Spanish on
   }
 ];
